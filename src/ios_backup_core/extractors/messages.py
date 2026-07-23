@@ -23,6 +23,7 @@ from ios_backup_core.text import (
     parse_attributed_body,
     parse_link_payload,
     clean_message_text,
+    text_looks_contaminated,
 )
 from ios_backup_core.timestamps import apple_to_iso, iso_to_apple
 
@@ -334,8 +335,22 @@ class MessageExtractor:
                 else:
                     msg_type = "text"
 
-                if not msg_text and has_attributed_body and msg_type == "text":
-                    msg_text, msg_type = parse_attributed_body(row["attributedBody"])
+                # Prefer attributedBody when text is missing OR looks contaminated.
+                # The text column often keeps TypedStream / data-detector junk
+                # ("WversionYdd-result", "'()*Z)+X...XDateTime/", "%&'-./4:>?…")
+                # while attributedBody still has the real user-visible string.
+                if (
+                    has_attributed_body
+                    and msg_type == "text"
+                    and row["attributedBody"]
+                    and (not msg_text or text_looks_contaminated(msg_text))
+                ):
+                    attr_text, attr_type = parse_attributed_body(row["attributedBody"])
+                    cleaned_attr = clean_message_text(attr_text) if attr_text else ""
+                    if cleaned_attr and not text_looks_contaminated(cleaned_attr):
+                        msg_text = attr_text
+                        if attr_type != "text":
+                            msg_type = attr_type
 
                 if msg_text:
                     msg_text = clean_message_text(msg_text)

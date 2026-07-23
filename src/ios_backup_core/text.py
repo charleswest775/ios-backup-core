@@ -26,6 +26,39 @@ _RE_JUNK_START = re.compile(r'^[ \n"\uFFFD\uFFFC]+')
 _RE_JUNK_END = re.compile(r'[ \n"\uFFFD\uFFFC]+$')
 _RE_APPLE_CONST = re.compile(r'^k[A-Z][A-Z0-9\-_]{10,}')
 
+# Balloon / data-detector leftovers that spill into the sms.db text column.
+# Validated against imessage-exporter vs openextract HTML extracts.
+# NOTE: short tags like Time/Date always require a TypedStream prefix or
+# trailing slash so we never strip the word "time" from normal sentences.
+_RE_DATA_DETECTOR = re.compile(
+    r'\[link\]'
+    r'|\[?(?:PhoneNumber|PostalAddress|Address|CalendarEvent|FlightInformation)/[^\]\n]*\]?'
+    r'|WversionYdd-result'
+    r'|XDateTime/'
+    r'|TTime/'
+    r'|TDate/'
+    r'|\\TimeDuration\.?'
+    r'|\\DateDuration\.?'
+    r'|\^PhysicalAmount/'
+    r'|WHttpURL/'
+    r'|XAuthCode\.?'
+    r'|(?:DateTime|TimeDuration|DateDuration|PhysicalAmount|HttpURL|AuthCode)/',
+)
+
+# Junk characters that can appear before a phone number like "(555) 123-4567".
+# Only match when followed by '(digits)', so the number's opening '(' is kept.
+# e.g. "'()*Z)+X^(555) 123-4567" → "(555) 123-4567"
+_RE_PHONE_TYPEDSTREAM_PREFIX = re.compile(
+    r"(^|[\s\n])['\"()*+^ZX]+(?=\(\d{2,3}\))",
+)
+
+# Junk prefix before a detected date/time/URL span in the SMS text column.
+# e.g. "'()*Z)+X3:30 todayXDateTime/" — the real message is usually in attributedBody
+_RE_TYPEDSTREAM_DD_PREFIX = re.compile(
+    r"^'\(\)\*Z\)\+X[\\\^\[\]]?"
+    r"|^\&'\(\)Z\(\*X[\\\^\[\]]?",
+)
+
 # ---------------------------------------------------------------------------
 # Bundle ID → message type mapping (authoritative column check first)
 # ---------------------------------------------------------------------------
@@ -300,22 +333,70 @@ def parse_link_payload(data: bytes) -> dict:
         return {}
 
 
+def has_data_detector_junk(text: str) -> bool:
+    """True when text still has tags like DateTime/, [link], or WversionYdd-result."""
+    if not text:
+        return False
+    if text.strip() == "WversionYdd-result":
+        return True
+    if _RE_TYPEDSTREAM_DD_PREFIX.search(text):
+        return True
+    return bool(_RE_DATA_DETECTOR.search(text))
+
+
+def _looks_like_punct_soup(text: str) -> bool:
+    """True if text is mostly punctuation/symbols with no spaces — not a real message."""
+    s = text.strip()
+    if len(s) < 8 or " " in s or "\n" in s:
+        return False
+    if "://" in s or "@" in s:
+        return False
+    ascii_punct = sum(1 for ch in s if ord(ch) < 128 and not ch.isalnum() and not ch.isspace())
+    alnum = sum(1 for ch in s if ch.isalnum())
+    return ascii_punct >= 5 and ascii_punct >= max(1, alnum) * 0.35
+
+
+def text_looks_contaminated(text: str) -> bool:
+    """True when the SMS text column looks corrupted and attributedBody is safer.
+
+    Examples of bad text-column values: ``%&'-./4:>?CKOPQRUXY]U``,
+    ``WversionYdd-result``. The real message is often still in attributedBody
+    (e.g. ``12 on Friday?``, ``6pm``).
+    """
+    if not text:
+        return False
+    if has_data_detector_junk(text):
+        return True
+    if _RE_PHONE_TYPEDSTREAM_PREFIX.search(text):
+        return True
+    return _looks_like_punct_soup(text)
+
+
 def clean_message_text(text: str) -> str:
     """Clean raw message text: strip object replacement chars, Apple internal
-    identifiers, UUIDs, media filenames, junk characters, and TypedStream
-    string-length prefix artifacts.
+    identifiers, UUIDs, media filenames, junk characters, TypedStream
+    string-length prefix artifacts, and data-detector leftovers.
 
-    Extracted from the inline cleanup block in messages.py:get_messages()
-    (lines 689-724). Logic is unchanged — do not rewrite.
+    Note: if the text column is only junk (``WversionYdd-result``,
+    ``$%&,-.39=>…``), this cannot recover the real message. Callers should
+    check ``text_looks_contaminated`` and use attributedBody instead.
     """
     if not text:
         return text
+
+    # Entire-column stubs / soup — not recoverable from this column.
+    if text.strip() == "WversionYdd-result" or _looks_like_punct_soup(text):
+        return ""
 
     # Strip object replacement / replacement characters and trim
     text = text.replace('\ufffc', '').replace('\ufffd', '').strip()
     text = _RE_KIMMSG.sub('', text)
     text = _RE_UUID.sub('', text)
     text = _RE_MEDIA_FILE.sub('', text)
+
+    # Strip TypedStream data-detector wrappers before generic detector cleanup
+    text = _RE_TYPEDSTREAM_DD_PREFIX.sub('', text)
+    text = _RE_DATA_DETECTOR.sub('', text)
 
     # Remove junk wrapper quotes, spaces, or newlines left from stripping
     text = _RE_JUNK_START.sub('', text)
@@ -346,5 +427,16 @@ def clean_message_text(text: str) -> str:
         )
         if any(abs(l - _declared) <= 8 for l in _lens):
             text = _remainder
+
+    # TypedStream residue that sits immediately before an embedded phone number
+    text = _RE_PHONE_TYPEDSTREAM_PREFIX.sub(r'\1', text)
+
+    # Collapse whitespace left after stripping tags (keep intentional newlines)
+    text = re.sub(r'[ \t]+\n', '\n', text)
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    text = text.strip()
+
+    if text and _looks_like_punct_soup(text):
+        return ""
 
     return text

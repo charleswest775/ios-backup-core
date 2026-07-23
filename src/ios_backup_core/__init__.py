@@ -10,7 +10,11 @@ from ios_backup_core.timestamps import (
     APPLE_EPOCH_OFFSET,
     NANOSECOND_THRESHOLD,
 )
-from ios_backup_core.text import parse_attributed_body, clean_message_text
+from ios_backup_core.text import (
+    parse_attributed_body,
+    clean_message_text,
+    text_looks_contaminated,
+)
 from ios_backup_core.contacts import normalize_phone, resolve_contact, ContactResolver
 
 __version__ = "0.1.0"
@@ -32,6 +36,7 @@ __all__ = [
     # Text parsing
     "parse_attributed_body",
     "clean_message_text",
+    "text_looks_contaminated",
     # Contacts
     "normalize_phone",
     "resolve_contact",

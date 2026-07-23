@@ -5,7 +5,11 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from ios_backup_core.text import parse_attributed_body, clean_message_text
+from ios_backup_core.text import (
+    parse_attributed_body,
+    clean_message_text,
+    text_looks_contaminated,
+)
 
 
 def _make_bplist_attributed_string(text: str) -> bytes:
@@ -90,6 +94,9 @@ class TestCleanMessageText:
         msg = "Hey, are you coming tonight?"
         assert clean_message_text(msg) == msg
 
+    def test_preserves_word_time(self):
+        assert clean_message_text("What time on Monday?") == "What time on Monday?"
+
     def test_empty_string_unchanged(self):
         assert clean_message_text("") == ""
 
@@ -108,3 +115,64 @@ class TestCleanMessageText:
         result = clean_message_text(text)
         # Should NOT strip: declared=90, len("Hello")=5, diff=85 >> 8
         assert result == text or result == "Hello"  # regex cleanup may trim leading junk
+
+    def test_strips_link_placeholder(self):
+        text = (
+            "Red Bean · Atlanta, Georgia\n"
+            "https://maps.app.goo.gl/aBcDeFgHiJkLmNoPqR?g_st=iw\n"
+            "[link]"
+        )
+        result = clean_message_text(text)
+        assert "[link]" not in result
+        assert "https://maps.app.goo.gl/" in result
+        assert "Red Bean" in result
+
+    def test_strips_phone_junk_keeps_name_and_parens(self):
+        text = "Eric Sanderson\n'()*Z)+X^(555) 123-4567[PhoneNumber/"
+        assert clean_message_text(text) == "Eric Sanderson\n(555) 123-4567"
+
+    def test_preserves_phone_parens_without_junk_prefix(self):
+        text = "Eric Sanderson\n(555) 123-4567[PhoneNumber/"
+        assert clean_message_text(text) == "Eric Sanderson\n(555) 123-4567"
+
+    def test_wversion_stub_becomes_empty(self):
+        assert clean_message_text("WversionYdd-result") == ""
+
+    def test_punct_soup_becomes_empty(self):
+        assert clean_message_text("$%&,-.39=>CK\"OPQTWX\\bfghijU") == ""
+        assert clean_message_text("%&'-./4:>?CKOPQRUXY]U") == ""
+
+    def test_datetime_wrap_strips_to_span(self):
+        result = clean_message_text("'()*Z)+X3:30 todayXDateTime/")
+        assert "DateTime" not in result
+        assert "3:30 today" in result
+
+
+class TestTextLooksContaminated:
+    def test_detects_link_tag(self):
+        assert text_looks_contaminated("hello\n[link]")
+
+    def test_detects_typedstream_soup(self):
+        assert text_looks_contaminated("%&'-./4:>?CKOPQRUXY]U")
+        assert text_looks_contaminated('$%&,-.39=>CK"OPQTWX\\bfghijU')
+        assert text_looks_contaminated("$%&,-.39=>BHLMNOPU[_`abehlrvwxU")
+
+    def test_detects_wversion_stub(self):
+        assert text_looks_contaminated("WversionYdd-result")
+
+    def test_detects_datetime_wrap(self):
+        assert text_looks_contaminated("'()*Z)+X3:30 todayXDateTime/")
+        assert text_looks_contaminated("'()*Z)+X^Lunch tomorrowXDateTime/")
+        assert text_looks_contaminated("Tuesday around 5XDateTime/")
+
+    def test_detects_httpurl_wrap(self):
+        assert text_looks_contaminated(
+            "&https://www.examplesitehost.com/books/WHttpURL/"
+        )
+
+    def test_allows_normal_messages(self):
+        assert not text_looks_contaminated("12 on Friday?")
+        assert not text_looks_contaminated("Sounds good. Let's do it.")
+        assert not text_looks_contaminated("What time on Monday?")
+        assert not text_looks_contaminated("I can do June 21")
+        assert not text_looks_contaminated("Beach day on 11/11?")
