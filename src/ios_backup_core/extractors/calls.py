@@ -10,12 +10,59 @@ Changes:
   - APPLE_EPOCH_OFFSET imported from ios_backup_core.timestamps
 """
 
+import plistlib
 import sqlite3
+import unicodedata
 from datetime import datetime, timezone
 from typing import Optional
 
 from ios_backup_core.contacts import clean_phone_number, resolve_contact
 from ios_backup_core.timestamps import APPLE_EPOCH_OFFSET, apple_to_iso
+
+
+def _clean_text(value) -> str:
+    """Return *value* as display-safe text.
+
+    Third-party (CallKit) providers such as Teams/Skype can store ZADDRESS /
+    ZNAME as raw bytes, a binary plist, or text containing control and
+    private-use characters, which showed up as garbage in the call list.
+    """
+    if value is None:
+        return ""
+    if isinstance(value, (bytes, bytearray)):
+        raw = bytes(value)
+        if raw.startswith(b"bplist00"):
+            try:
+                decoded = plistlib.loads(raw)
+                value = decoded if isinstance(decoded, str) else ""
+            except Exception:
+                value = ""
+        else:
+            value = raw.decode("utf-8", errors="ignore")
+    text = "".join(
+        c for c in str(value)
+        # Drop control, format (bidi marks etc.), private-use, surrogate and
+        # unassigned code points and U+FFFD — but keep the zero-width joiner
+        # so multi-part emoji in names survive.
+        if c == "\u200d"
+        or (unicodedata.category(c) not in ("Cc", "Cf", "Co", "Cs", "Cn") and c != "\ufffd")
+    )
+    return " ".join(text.split())
+
+
+def _call_status(direction: str, answered, duration) -> str:
+    """Derive answered/missed.
+
+    ZANSWERED only describes incoming calls: iOS leaves it 0 on outgoing calls
+    even when they connected, so outgoing calls were shown as "missed" with a
+    positive duration (#59 in openextract). A non-zero duration means the call
+    connected, whichever way it went.
+    """
+    if (duration or 0) > 0:
+        return "answered"
+    if direction == "incoming" and answered:
+        return "answered"
+    return "missed"
 
 
 class CallExtractor:
@@ -70,8 +117,10 @@ class CallExtractor:
             columns = [info[1] for info in cursor.fetchall()]
             service_col = "ZSERVICE_PROVIDER" if "ZSERVICE_PROVIDER" in columns else "NULL"
             video_col = "ZIS_VIDEO" if "ZIS_VIDEO" in columns else "NULL"
+            name_col = "ZNAME" if "ZNAME" in columns else "NULL"
             rows = cursor.execute(f"""
-                SELECT Z_PK, ZADDRESS AS address, ZDATE AS date, ZDURATION AS duration,
+                SELECT Z_PK, ZADDRESS AS address, {name_col} AS name,
+                       ZDATE AS date, ZDURATION AS duration,
                        ZCALLTYPE AS call_type, ZORIGINATED AS originated,
                        ZANSWERED AS answered,
                        {service_col} AS service_provider,
@@ -81,7 +130,7 @@ class CallExtractor:
         except sqlite3.Error:
             try:
                 rows = cursor.execute("""
-                    SELECT ROWID AS Z_PK, address, date, duration,
+                    SELECT ROWID AS Z_PK, address, NULL AS name, date, duration,
                            flags AS call_type, read AS answered,
                            NULL AS originated, NULL AS service_provider, NULL AS is_video
                     FROM call ORDER BY date DESC
@@ -221,23 +270,18 @@ class CallExtractor:
         call_fingerprints: set = set()
 
         for row in all_rows:
-            address = row["address"] or ""
-            contact_name = resolve_contact(address, contacts) or address or "Unknown"
+            address = _clean_text(row["address"])
+            name = _clean_text(row["name"])
+            contact_name = resolve_contact(address, contacts) or name or address or "Unknown"
             originated = row["originated"]
-            answered = row["answered"]
 
+            # sqlite3.Row has no .get(); index columns directly.
             if originated is not None:
                 direction = "outgoing" if originated else "incoming"
             else:
-                direction = "outgoing" if row.get("call_type", 0) == 5 else "incoming"
+                direction = "outgoing" if row["call_type"] == 5 else "incoming"
 
-            if answered is not None:
-                status = "answered" if answered else "missed"
-            else:
-                if direction == "incoming":
-                    status = "answered" if row.get("duration", 0) > 0 else "missed"
-                else:
-                    status = "answered"
+            status = _call_status(direction, row["answered"], row["duration"])
 
             provider = row["service_provider"]
             app_name = "Phone"
@@ -273,7 +317,7 @@ class CallExtractor:
                 "address": address,
                 "contact_name": contact_name,
                 "date": apple_to_iso(apple_ts),
-                "duration": row["duration"],
+                "duration": row["duration"] or 0,
                 "direction": direction,
                 "status": status,
                 "app": app_name,

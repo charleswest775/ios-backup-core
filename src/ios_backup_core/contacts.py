@@ -26,6 +26,35 @@ def normalize_phone(phone: str) -> str:
     return digits
 
 
+# Most national numbering plans outside North America have 9-digit subscriber
+# numbers (FR, ES, PT, BE, ...), so the "last 10 digits" rule above can't match
+# "+33 6 12 34 56 78" against "06 12 34 56 78". As a last resort we compare the
+# last 9 digits. Keys are prefixed with "~" so they never collide with real
+# identifiers; a suffix shared by two different contacts is stored as "" and
+# never matched.
+_SUFFIX_DIGITS = 9
+
+
+def phone_suffix_key(phone: str) -> str:
+    """Return the last-9-digits lookup key for *phone*, or "" if too short."""
+    digits = re.sub(r"[^\d]", "", phone or "")
+    if len(digits) < _SUFFIX_DIGITS:
+        return ""
+    return "~" + digits[-_SUFFIX_DIGITS:]
+
+
+def add_phone_suffix_key(contacts: dict, phone: str, name: str) -> None:
+    """Index *phone* by suffix in *contacts*, blanking keys that are ambiguous."""
+    key = phone_suffix_key(phone)
+    if not key:
+        return
+    existing = contacts.get(key)
+    if existing is None:
+        contacts[key] = name
+    elif existing != name:
+        contacts[key] = ""
+
+
 def clean_phone_number(address: str) -> str:
     """Strip non-numeric characters for better matching, except '+'.
 
@@ -82,7 +111,8 @@ def resolve_contact(identifier: str, contacts: dict) -> str:
     if norm and len(norm) == 10 and f"+1{norm}" in contacts:
         return contacts[f"+1{norm}"]
 
-    return ""
+    # International vs. national format (e.g. +33 6… vs 06…): last 9 digits
+    return contacts.get(phone_suffix_key(identifier)) or ""
 
 
 class ContactResolver:
@@ -163,6 +193,7 @@ class ContactResolver:
                     if normalized:
                         contacts[normalized] = persons[person_id]
                         contacts[f"+1{normalized}"] = persons[person_id]
+                    add_phone_suffix_key(contacts, phone, persons[person_id])
 
             # Map email addresses to person names
             for row in conn.execute("""
