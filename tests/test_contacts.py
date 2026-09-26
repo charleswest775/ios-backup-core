@@ -4,7 +4,9 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from ios_backup_core.contacts import normalize_phone, clean_phone_number, resolve_contact
+from ios_backup_core.contacts import (
+    add_phone_suffix_key, clean_phone_number, normalize_phone, phone_suffix_key, resolve_contact,
+)
 
 
 class TestNormalizePhone:
@@ -92,3 +94,41 @@ class TestResolveContact:
 
     def test_empty_identifier_returns_empty(self):
         assert resolve_contact("", {}) == ""
+
+
+class TestInternationalMatching:
+    """openextract #57: national vs. international formats outside North America."""
+
+    def _contacts(self, *entries):
+        contacts = {}
+        for phone, name in entries:
+            add_phone_suffix_key(contacts, phone, name)
+        return contacts
+
+    def test_international_call_matches_national_contact(self):
+        contacts = self._contacts(("06 12 34 56 78", "Émile"))
+        assert resolve_contact("+33 6 12 34 56 78", contacts) == "Émile"
+
+    def test_national_call_matches_international_contact(self):
+        contacts = self._contacts(("+34 612 345 678", "Lucía"))
+        assert resolve_contact("612345678", contacts) == "Lucía"
+
+    def test_non_breaking_spaces(self):
+        contacts = self._contacts(("06 12 34 56 78", "Émile"))
+        assert resolve_contact("+33612345678", contacts) == "Émile"
+
+    def test_ambiguous_suffix_is_not_matched(self):
+        contacts = self._contacts(("+33 6 12 34 56 78", "Émile"), ("+34 612 345 678", "Lucía"))
+        assert resolve_contact("0612345678", contacts) == ""
+
+    def test_same_person_twice_is_not_ambiguous(self):
+        contacts = self._contacts(("+33 6 12 34 56 78", "Émile"), ("06 12 34 56 78", "Émile"))
+        assert resolve_contact("0612345678", contacts) == "Émile"
+
+    def test_short_numbers_not_suffix_matched(self):
+        assert phone_suffix_key("12345") == ""
+        contacts = self._contacts(("12345", "Short"))
+        assert resolve_contact("912345", contacts) == ""
+
+    def test_suffix_keys_never_equal_real_identifiers(self):
+        assert phone_suffix_key("+33612345678").startswith("~")
