@@ -18,6 +18,7 @@ from datetime import datetime
 from typing import Optional
 from urllib.parse import urlparse
 
+from ios_backup_core.backup import open_database
 from ios_backup_core.timestamps import apple_to_iso, firefox_to_iso, webkit_to_iso
 
 # Chromium visit transition core types for iframe loads. These are not page
@@ -29,14 +30,6 @@ UNENCRYPTED_SAFARI_NOTICE = (
     "unencrypted backups. To include it, turn on \"Encrypt local backup\" "
     "and back up the iPhone again."
 )
-
-
-def _open_database(backup, relative_path: str, domain: str) -> Optional[str]:
-    """Return a readable path for a SQLite DB, merging -wal/-shm when possible."""
-    get_database = getattr(backup, "get_database", None)
-    if callable(get_database):
-        return get_database(relative_path, domain=domain)
-    return backup.get_file(relative_path, domain=domain)
 
 
 def _connect(db_path: str) -> sqlite3.Connection:
@@ -124,7 +117,7 @@ class BrowserHistoryExtractor:
             if (domain, path) in seen:
                 continue
             seen.add((domain, path))
-            db_path = _open_database(backup, path, domain)
+            db_path = open_database(backup, path, domain)
             if db_path:
                 found.append(db_path)
         return found
@@ -134,12 +127,12 @@ class BrowserHistoryExtractor:
         found = []
         for domain in self.FIREFOX_DOMAINS:
             for path in self.FIREFOX_LEGACY_PATHS:
-                db_path = _open_database(backup, path, domain)
+                db_path = open_database(backup, path, domain)
                 if db_path:
                     found.append((db_path, "legacy"))
                     break
             for path in self.FIREFOX_PLACES_PATHS:
-                db_path = _open_database(backup, path, domain)
+                db_path = open_database(backup, path, domain)
                 if db_path:
                     found.append((db_path, "places"))
                     break
@@ -149,7 +142,7 @@ class BrowserHistoryExtractor:
                     for f in backup.list_files(path_like=pattern):
                         domain = f.get("domain", "")
                         if "mozilla" in domain.lower() or "firefox" in domain.lower():
-                            db_path = _open_database(backup, f["path"], domain)
+                            db_path = open_database(backup, f["path"], domain)
                             if db_path:
                                 found.append((db_path, schema))
             except Exception:
@@ -174,7 +167,7 @@ class BrowserHistoryExtractor:
             lowered = domain.lower()
             for key, fragment in self.CHROMIUM_BROWSERS:
                 if fragment in lowered:
-                    db_path = _open_database(backup, f["path"], domain)
+                    db_path = open_database(backup, f["path"], domain)
                     if db_path:
                         found.setdefault(key, []).append(db_path)
                     break

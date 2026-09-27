@@ -85,3 +85,13 @@ def build_select(columns: list[str], available: set[str]) -> list[str]:
         )
     """
     return [col for col in columns if col in available]
+
+
+def table_names(conn: sqlite3.Connection) -> set[str]:
+    """Return the names of all tables in the database."""
+    return {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+
+
+def column_names(conn: sqlite3.Connection, table: str) -> set[str]:
+    """Return the column names of *table*, or an empty set if it doesn't exist."""
+    return {r[1] for r in conn.execute(f"PRAGMA table_info({table})")}

@@ -315,6 +315,19 @@ class LocalBackupAccessor:
             return None
 
 
+def open_database(backup, relative_path: str, domain: str = "HomeDomain") -> Optional[str]:
+    """Return a readable local path for a SQLite database in the backup.
+
+    Uses the accessor's WAL-aware ``get_database`` when it has one (see
+    LocalBackupAccessor.get_database) and falls back to ``get_file`` for
+    other BackupAccessor implementations.
+    """
+    get_database = getattr(backup, "get_database", None)
+    if callable(get_database):
+        return get_database(relative_path, domain=domain)
+    return backup.get_file(relative_path, domain=domain)
+
+
 # ---------------------------------------------------------------------------
 # Factory helpers
 # ---------------------------------------------------------------------------
@@ -500,3 +513,13 @@ class BackupReader:
         extractor = VoicemailExtractor()
         contacts = self.contacts()
         return extractor.list_voicemails(self._accessor, contacts)
+
+    def voice_memos(self):
+        """List Voice Memos recordings."""
+        from ios_backup_core.extractors.voice_memos import VoiceMemoExtractor
+        return VoiceMemoExtractor().list_voice_memos(self._accessor)
+
+    def calendar_events(self, calendar_id: Optional[int] = None):
+        """List calendar events and calendars."""
+        from ios_backup_core.extractors.calendar_events import CalendarExtractor
+        return CalendarExtractor().list_events(self._accessor, calendar_id=calendar_id)
