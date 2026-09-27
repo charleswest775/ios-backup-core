@@ -7,8 +7,10 @@ Electron/sidecar-specific pieces removed. Logging stripped — library is silent
 The BackupReader high-level API wires all extractors together for convenience.
 """
 
+import hashlib
 import os
 import plistlib
+import shutil
 import sqlite3
 import sys
 import tempfile
@@ -60,6 +62,9 @@ class BackupAccessor(Protocol):
         Each entry is a dict with keys: 'hash', 'domain', 'path'.
         """
         ...
+
+
+_SQLITE_SIDECARS = ("-wal", "-shm", "-journal")
 
 
 # ---------------------------------------------------------------------------
@@ -125,9 +130,13 @@ class LocalBackupAccessor:
             cached = self._file_cache[cache_key]
             return cached if cached else None
 
+        # Prefix with a short domain hash: different domains can hold files at
+        # the same relative path (e.g. both Firefox app groups ship
+        # profile.profile/browser.db), and they must not overwrite each other.
+        domain_tag = hashlib.sha1(domain.encode("utf-8")).hexdigest()[:8]
         output_path = os.path.join(
             self._temp_dir,
-            relative_path.replace("/", "--").replace("\\", "--"),
+            domain_tag + "--" + relative_path.replace("/", "--").replace("\\", "--"),
         )
 
         if self._encrypted and self._decrypted_backup:
@@ -158,6 +167,45 @@ class LocalBackupAccessor:
 
         self._file_cache[cache_key] = None
         return None
+
+    def get_database(self, relative_path: str, domain: str = "HomeDomain") -> Optional[str]:
+        """Return a path to a SQLite database with its -wal/-shm/-journal files beside it.
+
+        iOS often leaves recent writes in the write-ahead log. In an
+        unencrypted backup every file is stored under its own hash, so SQLite
+        never finds the WAL next to the main file and silently shows stale
+        data. When sidecars exist, copy the set into the temp dir under
+        matching names so SQLite merges them on open.
+        """
+        main = self.get_file(relative_path, domain)
+        if not main:
+            return None
+        sidecars = {}
+        for suffix in _SQLITE_SIDECARS:
+            path = self.get_file(relative_path + suffix, domain)
+            if path:
+                sidecars[suffix] = path
+        if all(path == main + suffix for suffix, path in sidecars.items()):
+            return main  # no sidecars, or already co-located (decrypted copies)
+
+        cache_key = f"db:{domain}:{relative_path}"
+        cached = self._file_cache.get(cache_key)
+        if cached:
+            return cached
+        dest_dir = tempfile.mkdtemp(prefix="db_", dir=self._temp_dir)
+        dest = os.path.join(dest_dir, os.path.basename(relative_path) or "database")
+        try:
+            shutil.copyfile(main, dest)
+            for suffix, path in sidecars.items():
+                shutil.copyfile(path, dest + suffix)
+        except OSError as e:
+            print(
+                f"[backup.get_database] copy failed for {domain}:{relative_path}: {e}",
+                file=sys.stderr, flush=True,
+            )
+            return main
+        self._file_cache[cache_key] = dest
+        return dest
 
     def list_files(
         self,
@@ -215,7 +263,6 @@ class LocalBackupAccessor:
 
     def cleanup(self) -> None:
         """Remove the temporary directory used for extracted files."""
-        import shutil
         if os.path.exists(self._temp_dir):
             shutil.rmtree(self._temp_dir, ignore_errors=True)
 
@@ -442,7 +489,7 @@ class BackupReader:
         return extractor.list_notes(self._accessor)
 
     def browser_history(self, **kwargs):
-        """List browser history (Safari + Firefox)."""
+        """List browser history (Safari, Firefox, Chrome, Edge, Brave)."""
         from ios_backup_core.extractors.browser_history import BrowserHistoryExtractor
         extractor = BrowserHistoryExtractor()
         return extractor.list_browser_history(self._accessor, **kwargs)
