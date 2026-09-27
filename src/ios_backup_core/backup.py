@@ -523,3 +523,8 @@ class BackupReader:
         """List calendar events and calendars."""
         from ios_backup_core.extractors.calendar_events import CalendarExtractor
         return CalendarExtractor().list_events(self._accessor, calendar_id=calendar_id)
+
+    def health(self):
+        """Summarize Apple Health data: daily metrics, sleep and workouts."""
+        from ios_backup_core.extractors.health import HealthExtractor
+        return HealthExtractor().get_summary(self._accessor)
