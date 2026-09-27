@@ -8,6 +8,7 @@ from ios_backup_core.extractors.voicemail import VoicemailExtractor
 from ios_backup_core.extractors.photos import PhotoExtractor
 from ios_backup_core.extractors.voice_memos import VoiceMemoExtractor
 from ios_backup_core.extractors.calendar_events import CalendarExtractor
+from ios_backup_core.extractors.health import HealthExtractor
 
 __all__ = [
     "MessageExtractor",
@@ -18,4 +19,5 @@ __all__ = [
     "PhotoExtractor",
     "VoiceMemoExtractor",
     "CalendarExtractor",
+    "HealthExtractor",
 ]
