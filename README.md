@@ -12,7 +12,7 @@ Extracted and consolidated from [OpenExtract](https://github.com/openextract/ope
 - **PRAGMA-based schema detection** — probes sms.db for optional columns present only on newer iOS versions
 - **Protobuf wire-format walker** — extracts strings from Notes gzip+proto blobs
 - **BackupAccessor protocol** — pluggable backup source; ships with `LocalBackupAccessor` for on-disk backups (encrypted via iphone-backup-decrypt, or unencrypted)
-- **Extractors** for Messages, Calls, Notes, Browser History (Safari + Firefox), Voicemail, Photos
+- **Extractors** for Messages, Calls, Notes, Browser History (Safari, Chrome, Edge, Brave, Firefox), Voicemail, Photos
 
 ## Install
 

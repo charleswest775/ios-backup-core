@@ -1,24 +1,84 @@
 """
-Browser history extraction from Safari and Firefox iOS backups.
+Browser history extraction from iOS backups.
 
-Extracted from openextract/python/browser_history.py:BrowserHistoryExtractor.
-Changes:
-  - export_browser_history_csv() removed — UI concern
-  - apple_date_to_iso import replaced with ios_backup_core.timestamps.apple_to_iso
-  - Inline Firefox timestamp conversion replaced with firefox_to_iso()
-  - Diagnostic stderr print kept (non-fatal, informs callers about raw data ranges)
+Supported browsers:
+  - Safari   — HomeDomain Library/Safari/History.db, plus any per-profile
+               History.db files (Safari profiles, iOS 17+)
+  - Firefox  — legacy browser.db and places.db in the Mozilla app groups
+  - Chrome, Edge, Brave — Chromium "History" databases in each app's domain
+
+Each visit is returned as a dict with a stable shape (see _visit()). Parse
+failures are collected in an ``errors`` list instead of being swallowed, so
+callers can tell "no history" apart from "history we couldn't read".
 """
 
 import sqlite3
 import sys
-from datetime import datetime, timezone
+from datetime import datetime
+from typing import Optional
 from urllib.parse import urlparse
 
-from ios_backup_core.timestamps import apple_to_iso, firefox_to_iso
+from ios_backup_core.timestamps import apple_to_iso, firefox_to_iso, webkit_to_iso
+
+# Chromium visit transition core types for iframe loads. These are not page
+# visits the user made, so they are left out (same as Chrome's history page).
+_CHROMIUM_SUBFRAME_TRANSITIONS = (3, 4)  # AUTO_SUBFRAME, MANUAL_SUBFRAME
+
+UNENCRYPTED_SAFARI_NOTICE = (
+    "This backup isn't encrypted, and iOS leaves Safari history out of "
+    "unencrypted backups. To include it, turn on \"Encrypt local backup\" "
+    "and back up the iPhone again."
+)
+
+
+def _open_database(backup, relative_path: str, domain: str) -> Optional[str]:
+    """Return a readable path for a SQLite DB, merging -wal/-shm when possible."""
+    get_database = getattr(backup, "get_database", None)
+    if callable(get_database):
+        return get_database(relative_path, domain=domain)
+    return backup.get_file(relative_path, domain=domain)
+
+
+def _connect(db_path: str) -> sqlite3.Connection:
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA query_only = TRUE")
+    conn.execute("PRAGMA cache_size = -10000")
+    conn.execute("PRAGMA temp_store = MEMORY")
+    return conn
+
+
+def _tables(conn: sqlite3.Connection) -> set:
+    return {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+
+
+def _columns(conn: sqlite3.Connection, table: str) -> set:
+    return {r[1] for r in conn.execute(f"PRAGMA table_info({table})")}
+
+
+def _extract_domain(url: str) -> str:
+    try:
+        netloc = urlparse(url).netloc
+        return netloc if netloc else url
+    except Exception:
+        return url
+
+
+def _visit(visit_id: str, url: str, title: str, domain: str,
+           visit_date: Optional[str], browser: str, visit_count) -> dict:
+    return {
+        "visit_id": visit_id,
+        "url": url,
+        "title": title,
+        "domain": domain,
+        "visit_date": visit_date,
+        "browser": browser,
+        "visit_count": visit_count,
+    }
 
 
 class BrowserHistoryExtractor:
-    """Extracts browser history from Safari and Firefox in iOS backups."""
+    """Extracts browser history from Safari, Firefox and Chromium browsers."""
 
     SAFARI_HISTORY_PATH = "Library/Safari/History.db"
     SAFARI_DOMAIN = "HomeDomain"
@@ -36,72 +96,134 @@ class BrowserHistoryExtractor:
         "AppDomainGroup-group.org.mozilla.ios.Fennec",
     ]
 
-    def _ensure_wal(self, backup, relative_path: str, domain: str) -> None:
-        """Extract WAL/SHM files alongside the main DB so SQLite can merge them."""
-        backup.get_file(relative_path + "-wal", domain=domain)
-        backup.get_file(relative_path + "-shm", domain=domain)
+    # (browser key, lowercase bundle-id fragment of the app's backup domain).
+    # All of these ship Chromium's History schema (urls + visits tables).
+    CHROMIUM_BROWSERS = [
+        ("chrome", "com.google.chrome.ios"),
+        ("edge", "com.microsoft.msedge"),
+        ("brave", "com.brave.ios.browser"),
+    ]
+
+    BROWSERS = ["safari", "firefox"] + [key for key, _ in CHROMIUM_BROWSERS]
+
+    # ── Discovery ────────────────────────────────────────────────────────────
+
+    def _find_safari_dbs(self, backup) -> list:
+        """Return [db_path] for the default Safari history and any profile copies."""
+        candidates = [(self.SAFARI_HISTORY_PATH, self.SAFARI_DOMAIN)]
+        try:
+            for f in backup.list_files(path_like="%Safari%History.db"):
+                domain = f.get("domain", "")
+                if domain == "HomeDomain" or "safari" in domain.lower():
+                    candidates.append((f["path"], domain))
+        except Exception:
+            pass
+
+        found, seen = [], set()
+        for path, domain in candidates:
+            if (domain, path) in seen:
+                continue
+            seen.add((domain, path))
+            db_path = _open_database(backup, path, domain)
+            if db_path:
+                found.append(db_path)
+        return found
 
     def _find_all_firefox_dbs(self, backup) -> list:
         """Return list of (db_path, schema) for all Firefox history databases found."""
         found = []
         for domain in self.FIREFOX_DOMAINS:
             for path in self.FIREFOX_LEGACY_PATHS:
-                db_path = backup.get_file(path, domain=domain)
+                db_path = _open_database(backup, path, domain)
                 if db_path:
-                    self._ensure_wal(backup, path, domain)
                     found.append((db_path, "legacy"))
                     break
             for path in self.FIREFOX_PLACES_PATHS:
-                db_path = backup.get_file(path, domain=domain)
+                db_path = _open_database(backup, path, domain)
                 if db_path:
-                    self._ensure_wal(backup, path, domain)
                     found.append((db_path, "places"))
                     break
         if not found:
             try:
-                for pattern, schema in [("%browser.db%", "legacy"), ("%places.db%", "places")]:
+                for pattern, schema in [("%browser.db", "legacy"), ("%places.db", "places")]:
                     for f in backup.list_files(path_like=pattern):
                         domain = f.get("domain", "")
                         if "mozilla" in domain.lower() or "firefox" in domain.lower():
-                            db_path = backup.get_file(f["path"], domain=domain)
+                            db_path = _open_database(backup, f["path"], domain)
                             if db_path:
-                                self._ensure_wal(backup, f["path"], domain)
                                 found.append((db_path, schema))
             except Exception:
                 pass
         return found
 
-    def _has_safari_visits(self, backup) -> bool:
-        db_path = backup.get_file(self.SAFARI_HISTORY_PATH, domain=self.SAFARI_DOMAIN)
-        if not db_path:
-            return False
-        self._ensure_wal(backup, self.SAFARI_HISTORY_PATH, self.SAFARI_DOMAIN)
+    def _find_chromium_dbs(self, backup) -> dict:
+        """Return {browser_key: [db_path, ...]} for Chromium-based browsers.
+
+        Chromium keeps one History file per profile, e.g.
+        Library/Application Support/Google/Chrome/Default/History. Rather than
+        hard-code per-app paths, find every file named History in a known
+        browser's domain; the schema check at read time rejects anything else.
+        """
+        found: dict = {}
+        try:
+            files = backup.list_files(path_like="%/History")
+        except Exception:
+            return found
+        for f in files:
+            domain = f.get("domain", "")
+            lowered = domain.lower()
+            for key, fragment in self.CHROMIUM_BROWSERS:
+                if fragment in lowered:
+                    db_path = _open_database(backup, f["path"], domain)
+                    if db_path:
+                        found.setdefault(key, []).append(db_path)
+                    break
+        return found
+
+    # ── Probe ────────────────────────────────────────────────────────────────
+
+    @staticmethod
+    def _has_rows(db_path: str, table: str) -> bool:
         try:
             conn = sqlite3.connect(db_path)
-            count = conn.execute("SELECT COUNT(*) FROM history_visits").fetchone()[0]
-            conn.close()
-            return count > 0
+            try:
+                return conn.execute(f"SELECT 1 FROM {table} LIMIT 1").fetchone() is not None
+            finally:
+                conn.close()
         except Exception:
             return False
 
-    def _has_firefox_visits(self, backup) -> bool:
-        for db_path, schema in self._find_all_firefox_dbs(backup):
-            try:
-                conn = sqlite3.connect(db_path)
-                table = "visits" if schema == "legacy" else "moz_historyvisits"
-                count = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-                conn.close()
-                if count > 0:
-                    return True
-            except Exception:
-                pass
-        return False
-
     def has_browser_history(self, backup) -> dict:
-        """Quick probe — returns True only when history is actually readable."""
-        safari = self._has_safari_visits(backup)
-        firefox = self._has_firefox_visits(backup)
-        return {"safari": safari, "firefox": firefox, "has_any": safari or firefox}
+        """Quick probe — a browser counts only when its history is actually readable.
+
+        Returns one boolean per browser key, plus ``browsers`` (the keys that
+        have history), ``has_any``, and ``notice`` — a user-facing explanation
+        when Safari history is missing because the backup isn't encrypted.
+        """
+        result = {key: False for key in self.BROWSERS}
+        result["safari"] = any(
+            self._has_rows(p, "history_visits") for p in self._find_safari_dbs(backup)
+        )
+        result["firefox"] = any(
+            self._has_rows(p, "visits" if schema == "legacy" else "moz_historyvisits")
+            for p, schema in self._find_all_firefox_dbs(backup)
+        )
+        for key, paths in self._find_chromium_dbs(backup).items():
+            result[key] = any(self._has_rows(p, "visits") for p in paths)
+
+        browsers = [key for key in self.BROWSERS if result[key]]
+        result["browsers"] = browsers
+        result["has_any"] = bool(browsers)
+        result["notice"] = self._notice(backup, result["safari"])
+        return result
+
+    @staticmethod
+    def _notice(backup, has_safari: bool) -> Optional[str]:
+        if has_safari or getattr(backup, "encrypted", True):
+            return None
+        return UNENCRYPTED_SAFARI_NOTICE
+
+    # ── Listing ──────────────────────────────────────────────────────────────
 
     def list_browser_history(
         self,
@@ -110,21 +232,37 @@ class BrowserHistoryExtractor:
         offset: int = 0,
         limit: int = 0,
     ) -> dict:
-        """List browser history visits, optionally filtered by browser."""
+        """List browser history visits, optionally filtered to one browser key."""
         all_visits = []
         browsers_found = []
+        errors: list = []
 
-        if browser in ("all", "safari"):
-            safari_visits, _ = self._get_safari_history(backup)
-            if safari_visits:
-                all_visits.extend(safari_visits)
+        def want(key: str) -> bool:
+            return browser in ("all", key)
+
+        if want("safari"):
+            visits = self._get_safari_history(backup, errors)
+            if visits:
+                all_visits.extend(visits)
                 browsers_found.append("safari")
 
-        if browser in ("all", "firefox"):
-            firefox_visits, _ = self._get_firefox_history(backup)
-            if firefox_visits:
-                all_visits.extend(firefox_visits)
+        if want("firefox"):
+            visits, _ = self._get_firefox_history(backup)
+            if visits:
+                all_visits.extend(visits)
                 browsers_found.append("firefox")
+
+        if any(want(key) for key, _ in self.CHROMIUM_BROWSERS):
+            for key, paths in self._find_chromium_dbs(backup).items():
+                if not want(key):
+                    continue
+                visits = []
+                for i, db_path in enumerate(paths):
+                    prefix = key[0] if i == 0 else f"{key[0]}{i}"
+                    visits.extend(self._read_chromium_db(db_path, key, prefix, errors))
+                if visits:
+                    all_visits.extend(visits)
+                    browsers_found.append(key)
 
         all_visits.sort(key=lambda v: v.get("visit_date") or "")
 
@@ -158,131 +296,162 @@ class BrowserHistoryExtractor:
             "total": total,
             "offset": offset,
             "limit": limit,
-            "browsers_found": browsers_found,
+            "browsers_found": [key for key in self.BROWSERS if key in browsers_found],
+            "errors": errors,
+            "notice": self._notice(backup, "safari" in browsers_found),
         }
 
-    def _extract_domain(self, url: str) -> str:
-        try:
-            netloc = urlparse(url).netloc
-            return netloc if netloc else url
-        except Exception:
-            return url
+    # ── Safari ───────────────────────────────────────────────────────────────
 
-    def _get_safari_history(self, backup) -> tuple:
-        """Get Safari browser history. Returns (visits_list, total_count)."""
-        db_path = backup.get_file(self.SAFARI_HISTORY_PATH, domain=self.SAFARI_DOMAIN)
-        if not db_path:
-            return [], 0
-        self._ensure_wal(backup, self.SAFARI_HISTORY_PATH, self.SAFARI_DOMAIN)
+    def _get_safari_history(self, backup, errors: list) -> list:
+        visits = []
+        for i, db_path in enumerate(self._find_safari_dbs(backup)):
+            prefix = "s" if i == 0 else f"s{i}"
+            visits.extend(self._read_safari_db(db_path, prefix, errors))
+        # A visit synced into several profile databases shows up once.
+        seen, deduped = set(), []
+        for v in visits:
+            key = (v["url"], v["visit_date"])
+            if key not in seen:
+                seen.add(key)
+                deduped.append(v)
+        return deduped
 
+    def _read_safari_db(self, db_path: str, id_prefix: str, errors: list) -> list:
         visits = []
         try:
-            conn = sqlite3.connect(db_path)
-            conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
-            conn.execute("PRAGMA synchronous = OFF")
-            conn.execute("PRAGMA cache_size = -10000")
-            conn.execute("PRAGMA temp_store = MEMORY")
-            cursor = conn.cursor()
-
+            conn = _connect(db_path)
             try:
-                diag = cursor.execute(
-                    "SELECT COUNT(*), MIN(visit_time), MAX(visit_time) FROM history_visits"
-                ).fetchone()
-                print(
-                    f"[browser_history] Safari diag: total_rows={diag[0]}, "
-                    f"min_visit_time={diag[1]}, max_visit_time={diag[2]}, "
-                    f"min_converted={apple_to_iso(diag[1])}, "
-                    f"max_converted={apple_to_iso(diag[2])}",
-                    file=sys.stderr, flush=True,
-                )
-            except Exception as de:
-                print(f"[browser_history] Safari diag error: {de}", file=sys.stderr, flush=True)
-
-            rows = cursor.execute("""
-                SELECT
-                    hv.id AS visit_id,
-                    hi.url,
-                    hv.title,
-                    hi.domain_expansion,
-                    hv.visit_time,
-                    hi.visit_count
-                FROM history_visits hv
-                JOIN history_items hi ON hv.history_item = hi.id
-                ORDER BY hv.visit_time DESC
-            """).fetchall()
-
-            for row in rows:
-                url = row["url"] or ""
-                domain = row["domain_expansion"] or self._extract_domain(url)
-                visit_date = apple_to_iso(row["visit_time"])
-
-                visits.append({
-                    "visit_id": f"s_{row['visit_id']}",
-                    "url": url,
-                    "title": row["title"] or "",
-                    "domain": domain,
-                    "visit_date": visit_date,
-                    "browser": "safari",
-                    "visit_count": row["visit_count"],
-                })
-
-            conn.close()
+                if not {"history_visits", "history_items"} <= _tables(conn):
+                    errors.append({
+                        "browser": "safari",
+                        "message": "The history database has a layout this version doesn't recognize.",
+                    })
+                    return []
+                rows = conn.execute("""
+                    SELECT
+                        hv.id AS visit_id,
+                        hi.url,
+                        hv.title,
+                        hi.domain_expansion,
+                        hv.visit_time,
+                        hi.visit_count
+                    FROM history_visits hv
+                    JOIN history_items hi ON hv.history_item = hi.id
+                    ORDER BY hv.visit_time DESC
+                """).fetchall()
+            finally:
+                conn.close()
         except Exception as e:
             print(f"[browser_history] Safari parse error: {e}", file=sys.stderr, flush=True)
+            errors.append({"browser": "safari", "message": f"Couldn't read the history database ({e})."})
+            return []
 
-        return visits, len(visits)
+        for row in rows:
+            url = row["url"] or ""
+            visits.append(_visit(
+                visit_id=f"{id_prefix}_{row['visit_id']}",
+                url=url,
+                title=row["title"] or "",
+                domain=row["domain_expansion"] or _extract_domain(url),
+                visit_date=apple_to_iso(row["visit_time"]),
+                browser="safari",
+                visit_count=row["visit_count"],
+            ))
+        return visits
+
+    # ── Chromium (Chrome, Edge, Brave) ───────────────────────────────────────
+
+    def _read_chromium_db(self, db_path: str, browser: str, id_prefix: str,
+                          errors: list) -> list:
+        visits = []
+        try:
+            conn = _connect(db_path)
+            try:
+                if not {"urls", "visits"} <= _tables(conn):
+                    # A file named History that isn't Chromium's — not an error.
+                    return []
+                where = []
+                if "hidden" in _columns(conn, "urls"):
+                    where.append("u.hidden = 0")
+                if "transition" in _columns(conn, "visits"):
+                    subframes = ", ".join(str(t) for t in _CHROMIUM_SUBFRAME_TRANSITIONS)
+                    where.append(f"(v.transition & 255) NOT IN ({subframes})")
+                where_sql = ("WHERE " + " AND ".join(where)) if where else ""
+                rows = conn.execute(f"""
+                    SELECT v.id AS visit_id, u.url, u.title, v.visit_time, u.visit_count
+                    FROM visits v
+                    JOIN urls u ON v.url = u.id
+                    {where_sql}
+                    ORDER BY v.visit_time DESC
+                """).fetchall()
+            finally:
+                conn.close()
+        except Exception as e:
+            print(f"[browser_history] {browser} parse error: {e}", file=sys.stderr, flush=True)
+            errors.append({"browser": browser, "message": f"Couldn't read the history database ({e})."})
+            return []
+
+        for row in rows:
+            url = row["url"] or ""
+            visits.append(_visit(
+                visit_id=f"{id_prefix}_{row['visit_id']}",
+                url=url,
+                title=row["title"] or "",
+                domain=_extract_domain(url),
+                visit_date=webkit_to_iso(row["visit_time"]),
+                browser=browser,
+                visit_count=row["visit_count"],
+            ))
+        return visits
+
+    # ── Firefox ──────────────────────────────────────────────────────────────
 
     def _read_firefox_db(self, db_path: str, schema: str, id_prefix: str) -> list:
         """Read visits from a single Firefox database."""
         visits = []
         try:
-            conn = sqlite3.connect(db_path)
-            conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
-            conn.execute("PRAGMA synchronous = OFF")
-            conn.execute("PRAGMA cache_size = -10000")
-            conn.execute("PRAGMA temp_store = MEMORY")
-            cursor = conn.cursor()
-
-            if schema == "legacy":
-                # Timestamps: microseconds since Unix epoch
-                rows = cursor.execute("""
-                    SELECT v.id AS visit_id, h.url, h.title, v.date, 1000000 AS divisor
-                    FROM visits v
-                    JOIN history h ON v.siteID = h.id
-                    WHERE h.is_deleted = 0
-                    ORDER BY v.date DESC
-                """).fetchall()
-            else:
-                # Timestamps: milliseconds since Unix epoch
-                rows = cursor.execute("""
-                    SELECT v.id AS visit_id, p.url, p.title, v.visit_date AS date, 1000 AS divisor
-                    FROM moz_historyvisits v
-                    JOIN moz_places p ON v.place_id = p.id
-                    WHERE p.hidden = 0
-                    ORDER BY v.visit_date DESC
-                """).fetchall()
-
-            for row in rows:
-                url = row["url"] or ""
-                visit_date = firefox_to_iso(row["date"], divisor=row["divisor"])
-                visits.append({
-                    "visit_id": f"{id_prefix}_{row['visit_id']}",
-                    "url": url,
-                    "title": row["title"] or "",
-                    "domain": self._extract_domain(url),
-                    "visit_date": visit_date,
-                    "browser": "firefox",
-                    "visit_count": None,
-                })
-
-            conn.close()
+            conn = _connect(db_path)
+            try:
+                if schema == "legacy":
+                    # Timestamps: microseconds since Unix epoch
+                    rows = conn.execute("""
+                        SELECT v.id AS visit_id, h.url, h.title, v.date, 1000000 AS divisor
+                        FROM visits v
+                        JOIN history h ON v.siteID = h.id
+                        WHERE h.is_deleted = 0
+                        ORDER BY v.date DESC
+                    """).fetchall()
+                else:
+                    # Timestamps: milliseconds since Unix epoch
+                    rows = conn.execute("""
+                        SELECT v.id AS visit_id, p.url, p.title, v.visit_date AS date,
+                               1000 AS divisor
+                        FROM moz_historyvisits v
+                        JOIN moz_places p ON v.place_id = p.id
+                        WHERE p.hidden = 0
+                        ORDER BY v.visit_date DESC
+                    """).fetchall()
+            finally:
+                conn.close()
         except Exception as e:
             print(
                 f"[browser_history] Firefox parse error ({schema}): {e}",
                 file=sys.stderr, flush=True,
             )
+            return []
+
+        for row in rows:
+            url = row["url"] or ""
+            visits.append(_visit(
+                visit_id=f"{id_prefix}_{row['visit_id']}",
+                url=url,
+                title=row["title"] or "",
+                domain=_extract_domain(url),
+                visit_date=firefox_to_iso(row["date"], divisor=row["divisor"]),
+                browser="firefox",
+                visit_count=None,
+            ))
         return visits
 
     def _get_firefox_history(self, backup) -> tuple:
