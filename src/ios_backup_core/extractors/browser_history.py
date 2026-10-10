@@ -214,7 +214,9 @@ class BrowserHistoryExtractor:
 
             for row in rows:
                 url = row["url"] or ""
-                domain = row["domain_expansion"] or self._extract_domain(url)
+                # Not domain_expansion: Safari stores a short label there
+                # ("nhl" for www.nhl.com, "support.garmin"), not a host name.
+                domain = self._extract_domain(url)
                 visit_date = apple_to_iso(row["visit_time"])
 
                 visits.append({
