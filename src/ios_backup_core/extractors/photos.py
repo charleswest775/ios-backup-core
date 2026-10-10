@@ -98,13 +98,18 @@ class PhotoExtractor:
             db_path = backup.get_file("PhotoData/Photos.sqlite", domain="CameraRollDomain")
         if not db_path or not os.path.exists(db_path):
             return None
-        # Photos.sqlite is a WAL database. Backups don't include its -shm file,
-        # and a read-only connection can't create one, so the plain "mode=ro"
-        # open fails on the first query (sqlite3.connect itself succeeds).
-        # Probe each candidate; "immutable=1" reads the main file without
-        # touching -wal/-shm and never writes next to the backup's files.
+        # Photos.sqlite is a WAL database and backups don't include its -shm.
+        # A "mode=ro" connection still needs a -shm: on Linux SQLite creates one
+        # next to the file (inside the user's backup folder for unencrypted
+        # backups); on macOS the open fails on the first query. With no -wal
+        # there is nothing beyond the main file to read, so open it
+        # "immutable=1", which never touches -wal/-shm. Only when a -wal sits
+        # beside it try "mode=ro" first, so its rows are read too.
         base = Path(db_path).resolve().as_uri()
-        for uri in (f"{base}?mode=ro", f"{base}?mode=ro&immutable=1"):
+        uris = [f"{base}?mode=ro&immutable=1"]
+        if os.path.exists(db_path + "-wal"):
+            uris.insert(0, f"{base}?mode=ro")
+        for uri in uris:
             conn = None
             try:
                 conn = sqlite3.connect(uri, uri=True)
