@@ -134,6 +134,14 @@ class TestCleanMessageText:
         msg = "Hey, are you coming tonight?"
         assert clean_message_text(msg) == msg
 
+    def test_preserves_quotes_at_the_ends(self):
+        # Found by backupgen's answer key: closing quotes were being stripped.
+        for msg in ('He said "yes"', '"Quoted" at the start', '"Fully quoted"'):
+            assert clean_message_text(msg) == msg
+
+    def test_strips_quotes_left_by_removed_identifiers(self):
+        assert clean_message_text('"__kIMFileTransferGUIDAttributeName" hello') == "hello"
+
     def test_empty_string_unchanged(self):
         assert clean_message_text("") == ""
 
