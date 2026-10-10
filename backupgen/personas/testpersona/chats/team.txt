@@ -1,0 +1,12 @@
+chat: team
+with: riley, jordan
+service: iMessage
+name: Test Team
+
+== 2021-10-31
+01:30 riley: Clocks go back tonight
+01:45 jordan: Twice the 1:30!
+02:10 me: 🎉
+02:11 riley +like
+== 2024-12-24
+10:00 jordan: Happy holidays, team

@@ -1,0 +1,16 @@
+chat: riley
+with: riley
+service: iMessage
+
+== 2021-03-27
+23:50 me: Clocks go forward tonight 🕐
+23:55 riley: Thanks for the reminder!
+== 2021-03-28
+09:05 riley: Lost an hour of sleep anyway 😴
+09:06 me +laugh
+09:07 me: Grüß dich, by the way — I'm practising my German. Ça va? Ελληνικά too. שלום. 你好
+== 2023-07-04
+12:00 riley: This one is long on purpose: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+12:01 me +love
+== 2025-11-30
+18:00 me: Last message of the test period.

@@ -1,0 +1,7 @@
+chat: jordan
+with: jordan
+service: SMS
+
+== 2021-06-01
+08:30 jordan: Your code is 482193
+08:31 me: Got it, thanks

@@ -1,0 +1,237 @@
+{
+ "database": "AddressBookImages.sqlitedb",
+ "ios": "13.3.1",
+ "build": "17D50",
+ "source": "public backup pub-hickman-13.3.1 (definitions only)",
+ "harvested": "2026-10-10",
+ "pragmas": {
+  "user_version": 0,
+  "page_size": 8192,
+  "journal_mode": "wal",
+  "auto_vacuum": 1,
+  "encoding": "UTF-8"
+ },
+ "objects": [
+  {
+   "type": "table",
+   "name": "_SqliteDatabaseProperties",
+   "table": "_SqliteDatabaseProperties",
+   "sql": "CREATE TABLE _SqliteDatabaseProperties (key TEXT, value TEXT, UNIQUE(key))"
+  },
+  {
+   "type": "table",
+   "name": "ABThumbnailImage",
+   "table": "ABThumbnailImage",
+   "sql": "CREATE TABLE ABThumbnailImage (ROWID INTEGER PRIMARY KEY, record_id INTEGER, format INTEGER, derived_from_format INTEGER, data BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "ABFullSizeImage",
+   "table": "ABFullSizeImage",
+   "sql": "CREATE TABLE ABFullSizeImage (ROWID INTEGER PRIMARY KEY, record_id INTEGER, crop_x INTEGER, crop_y INTEGER, crop_width INTEGER, data BLOB)"
+  },
+  {
+   "type": "index",
+   "name": "ABImageRecordIDFormatIndex",
+   "table": "ABThumbnailImage",
+   "sql": "CREATE UNIQUE INDEX ABImageRecordIDFormatIndex ON ABThumbnailImage(record_id, format)"
+  },
+  {
+   "type": "index",
+   "name": "ABFullSizeImageRecordIDIndex",
+   "table": "ABFullSizeImage",
+   "sql": "CREATE UNIQUE INDEX ABFullSizeImageRecordIDIndex ON ABFullSizeImage(record_id)"
+  }
+ ],
+ "columns": {
+  "_SqliteDatabaseProperties": [
+   {
+    "name": "key",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABThumbnailImage": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "record_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "format",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "derived_from_format",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "data",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABFullSizeImage": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "record_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "crop_x",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "crop_y",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "crop_width",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "data",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ]
+ },
+ "shape": {
+  "_SqliteDatabaseProperties": {
+   "key": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "value": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "ABThumbnailImage": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "record_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "format": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "derived_from_format": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "data": {
+    "null_rate": 0.25,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "png"
+    ]
+   }
+  },
+  "ABFullSizeImage": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "record_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "crop_x": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "crop_y": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "crop_width": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "data": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "png"
+    ]
+   }
+  }
+ }
+}
