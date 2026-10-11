@@ -22,6 +22,7 @@ from ios_backup_core.extractors.calls import CallExtractor
 from ios_backup_core.extractors.messages import MessageExtractor
 from ios_backup_core.extractors.notes import NoteExtractor
 from ios_backup_core.extractors.photos import PhotoExtractor
+from ios_backup_core.extractors.voicemail import VoicemailExtractor
 from ios_backup_core.timestamps import apple_to_iso
 
 MAY_2023 = 705_373_000.0  # seconds since 2001-01-01, 2023-05-09
@@ -102,6 +103,19 @@ def test_blob_call_address_is_decoded(tmp_path):
     call = {c["call_id"]: c for c in CallExtractor().list_calls(backup, {"+15555550100": "Pat"})["calls"]}[5]
     assert call["address"] == "+15555550100"
     assert call["contact_name"] == "Pat"
+
+
+def test_voicemail_caller_name_resolves_like_calls(tmp_path):
+    db = _db(
+        tmp_path / "voicemail.db",
+        "CREATE TABLE voicemail (ROWID INTEGER PRIMARY KEY, sender TEXT, date INTEGER, duration INTEGER, "
+        "flags INTEGER, trashed_date INTEGER, token TEXT);",
+        [("INSERT INTO voicemail VALUES (1, '+447700900003', 1622533240, 38, 3, 0, 'Complete')", ())],
+    )
+    backup = _FakeBackup({("HomeDomain", "Library/Voicemail/voicemail.db"): db})
+    # The card stores the number as typed; the voicemail has it in E.164.
+    contacts = {"+44 7700 900003": "Jordan Test", "7700900003": "Jordan Test", "+17700900003": "Jordan Test"}
+    assert VoicemailExtractor().list_voicemails(backup, contacts)["voicemails"][0]["contact_name"] == "Jordan Test"
 
 
 def test_facetime_video_comes_from_call_type_without_is_video(tmp_path):
