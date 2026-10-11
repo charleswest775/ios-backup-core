@@ -25,6 +25,7 @@ from backupgen.writers import calls as calls_writer
 from backupgen.writers import contacts as contacts_writer
 from backupgen.writers import messages as messages_writer
 from backupgen.writers import notes as notes_writer
+from backupgen.writers import photos as photos_writer
 from backupgen.writers import safari as safari_writer
 from backupgen.writers import voicemail as voicemail_writer
 
@@ -123,6 +124,14 @@ def generate(
             if password is not None:
                 writer.add_file("HomeDomain", "Library/Safari/History.db", history)
                 written["browser_history"] = visits
+        if persona.photos is not None:
+            photos: list = []
+            library = build(tmp / "Photos.sqlite", snapshot.schema, "Photos.sqlite",
+                            lambda db: photos.extend(photos_writer.populate(db, persona, snapshot, rng)))
+            writer.add_file("CameraRollDomain", "Media/PhotoData/Photos.sqlite", library)
+            for photo in photos:
+                writer.add_file("CameraRollDomain", photo.relative_path, photo.data)
+            written["photos"] = photos
 
     backup_dir = writer.finalize()
 
@@ -204,6 +213,13 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
         ],
         "browser_history": [
             {"date": v.date.isoformat(), "url": v.url, "title": v.title} for v in written.get("browser_history", [])
+        ],
+        "photos": [
+            {
+                "id": p.id, "filename": p.filename, "date": p.date.isoformat(), "width": p.width, "height": p.height,
+                "favorite": p.favorite, "trashed": p.trashed, "lat": p.lat, "lon": p.lon, "albums": p.albums,
+            }
+            for p in written.get("photos", [])
         ],
         "absent": {t: "encrypted_only" if t in left_out else "none" for t in DATA_TYPES if t not in present},
     }

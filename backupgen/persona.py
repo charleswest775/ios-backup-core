@@ -46,6 +46,12 @@ A pack is a folder under ``personas/``:
 
 - ``safari.txt`` (optional): ``09:15 https://example.org/page | Page title`` under
   ``== date`` headings, one line per visit.
+- ``photos.json`` (optional): the camera roll, ``{"photos": [...]}``. Each photo has an
+  ``id``, ``taken`` (local time, ``YYYY-MM-DDTHH:MM``), optional ``lat``/``lon``, ``place``,
+  ``favorite``, ``trashed`` and ``albums`` (album titles). The pixels come either from
+  ``url`` (an openly licensed original, checked against its ``sha1`` and cached; record
+  ``licence``, ``credit`` and ``commons_page`` with it) or from ``placeholder``
+  (``{"size": [640, 480], "color": "#88aacc"}``, drawn locally, for tests).
 
 Real dates are written as they happened. ``shift_years`` moves them onto the
 device-era calendar (Einstein's 1905 plays out in 2021), so that backup formats
@@ -166,6 +172,22 @@ class Visit:
 
 
 @dataclass
+class Photo:
+    id: str
+    real_time: datetime  # when it was taken, local wall-clock time
+    lat: Optional[float]
+    lon: Optional[float]
+    place: str
+    favorite: bool
+    trashed: bool
+    albums: list[str]
+    url: str  # an openly licensed original, or "" for a placeholder
+    sha1: str
+    placeholder: Optional[tuple[int, int, str]]  # (width, height, "#rrggbb")
+    where: str
+
+
+@dataclass
 class Snapshot:
     id: str
     backup_date: datetime  # aware
@@ -200,6 +222,7 @@ class Persona:
     voicemails: Optional[list[Voicemail]] = None
     notes: Optional[list[Note]] = None
     visits: Optional[list[Visit]] = None
+    photos: Optional[list[Photo]] = None
 
     def device_time(self, real: datetime) -> datetime:
         """Move a real wall-clock time onto the device calendar and return it as an aware UTC time."""
@@ -363,6 +386,29 @@ def _parse_visits(path: Path) -> list[Visit]:
     return visits
 
 
+def _parse_photos(path: Path) -> list[Photo]:
+    photos, seen = [], set()
+    for n, raw in enumerate(json.loads(path.read_text(encoding="utf-8"))["photos"], 1):
+        where = f"{path.name} photo {n} ({raw.get('id', '?')})"
+        if raw["id"] in seen:
+            raise PersonaError(f"{where}: duplicate id")
+        seen.add(raw["id"])
+        placeholder = raw.get("placeholder")
+        if bool(placeholder) == bool(raw.get("url")):
+            raise PersonaError(f"{where}: needs either url (with sha1) or placeholder")
+        if raw.get("url") and not raw.get("sha1"):
+            raise PersonaError(f"{where}: a url needs the original's sha1")
+        if ("lat" in raw) != ("lon" in raw):
+            raise PersonaError(f"{where}: lat and lon go together")
+        photos.append(Photo(
+            raw["id"], datetime.fromisoformat(raw["taken"]), raw.get("lat"), raw.get("lon"), raw.get("place", ""),
+            bool(raw.get("favorite")), bool(raw.get("trashed")), list(raw.get("albums", [])),
+            raw.get("url", ""), raw.get("sha1", ""),
+            (*placeholder["size"], placeholder["color"]) if placeholder else None, where,
+        ))
+    return photos
+
+
 def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
     folder = root / persona_id
     raw = json.loads((folder / "persona.json").read_text(encoding="utf-8"))
@@ -390,8 +436,9 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
     voicemails = _parse_voicemails(folder / "voicemails.txt", contacts) if (folder / "voicemails.txt").exists() else None
     notes = [_parse_note(p) for p in sorted((folder / "notes").glob("*.txt"))] if (folder / "notes").is_dir() else None
     visits = _parse_visits(folder / "safari.txt") if (folder / "safari.txt").exists() else None
+    photos = _parse_photos(folder / "photos.json") if (folder / "photos.json").exists() else None
     start, end = (date.fromisoformat(d) for d in raw["real_period"])
-    records = [m for chat in chats for m in chat.messages] + (calls or []) + (voicemails or []) + (notes or []) + (visits or [])
+    records = [m for chat in chats for m in chat.messages] + (calls or []) + (voicemails or []) + (notes or []) + (visits or []) + (photos or [])
     for record in records:
         if not start <= record.real_time.date() <= end:
             raise PersonaError(f"{record.where}: {record.real_time.date()} is outside the persona's period {start}–{end}")
@@ -418,6 +465,7 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
         voicemails=voicemails,
         notes=notes,
         visits=visits,
+        photos=photos,
     )
 
 

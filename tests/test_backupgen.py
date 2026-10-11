@@ -26,6 +26,7 @@ from ios_backup_core.extractors.browser_history import BrowserHistoryExtractor  
 from ios_backup_core.extractors.calls import CallExtractor  # noqa: E402
 from ios_backup_core.extractors.messages import MessageExtractor  # noqa: E402
 from ios_backup_core.extractors.notes import NoteExtractor  # noqa: E402
+from ios_backup_core.extractors.photos import PhotoExtractor  # noqa: E402
 from ios_backup_core.extractors.voicemail import VoicemailExtractor  # noqa: E402
 from ios_backup_core.text import parse_attributed_body  # noqa: E402
 
@@ -215,6 +216,38 @@ def test_note_text_keeps_list_items_without_their_markers(tmp_path):
     assert notes["Groceries"]["folder"] == "Notes"
 
 
+@pytest.mark.xfail(strict=True, reason="Photos.sqlite ships without -shm and main's read-only open fails; fixed by PR #12")
+@pytest.mark.parametrize("snapshot", ["ios15", "ios26"])
+def test_photos_read_back(tmp_path, snapshot):
+    backup_dir = generate("testpersona", snapshot, tmp_path)
+    expected = json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))
+    accessor = open_local_backup(str(backup_dir))
+    photos = PhotoExtractor().list_photos(accessor, 0, 100)["photos"]
+    assert sorted((p["filename"], p["width"], p["height"], p["favorite"]) for p in photos) == sorted(
+        (p["filename"], p["width"], p["height"], p["favorite"]) for p in expected["photos"] if not p["trashed"]
+    )
+
+
+def test_photos_look_like_the_device_wrote_them(tmp_path):
+    from PIL import Image
+
+    backup_dir = generate("testpersona", "ios26", tmp_path)
+    expected = {p["id"]: p for p in json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))["photos"]}
+    accessor = open_local_backup(str(backup_dir))
+    with Image.open(accessor.get_file("Media/DCIM/100APPLE/IMG_0002.JPG", "CameraRollDomain")) as image:
+        exif = image.getexif()
+        assert (exif[0x010F], exif[0x0110]) == ("Apple", "iPhone 15") and image.size == (600, 800)
+        assert exif.get_ifd(0x8825)[1] == "N" and exif.get_ifd(0x8825)[3] == "W"
+        assert exif.get_ifd(0x8769)[0x9011] == "+01:00"  # London in April
+    db = sqlite3.connect(Path(accessor.get_file("Media/PhotoData/Photos.sqlite", "CameraRollDomain")).as_uri() + "?immutable=1", uri=True)
+    rows = dict(db.execute("SELECT ZFILENAME, ZLATITUDE FROM ZASSET"))
+    assert rows[expected["desk"]["filename"]] == -180.0  # no location
+    assert db.execute("SELECT COUNT(*) FROM Z_RT_Asset_boundedByRect").fetchone()[0] == 4
+    albums = dict(db.execute("SELECT ZTITLE, ZCACHEDCOUNT FROM ZGENERICALBUM WHERE ZKIND = 2"))
+    assert albums == {"Weekends": 2, "Best": 2}  # the trashed photo leaves its album
+    assert db.execute("SELECT ZTRASHEDSTATE FROM ZASSET WHERE ZFILENAME = ?", (expected["blurry"]["filename"],)).fetchone() == (1,)
+
+
 def test_unencrypted_backups_leave_out_call_history(tmp_path):
     backup_dir = generate("testpersona", "ios26", tmp_path)
     expected = json.loads((tmp_path / EXPECTED).read_text())
@@ -231,7 +264,7 @@ def test_encrypting_changes_only_what_apple_leaves_out(tmp_path):
     generate("testpersona", "ios26", tmp_path / "plain", seed=7)
     generate("testpersona", "ios26", tmp_path / "enc", password="pw", seed=7)
     plain, enc = (json.loads((tmp_path / d / EXPECTED).read_text()) for d in ("plain", "enc"))
-    for key in ("contacts", "conversations", "voicemails", "notes"):
+    for key in ("contacts", "conversations", "voicemails", "notes", "photos"):
         assert plain[key] == enc[key], key
 
 
