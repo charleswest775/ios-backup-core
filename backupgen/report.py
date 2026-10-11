@@ -1,8 +1,9 @@
 """Render a persona pack as a Markdown review document (``python -m backupgen report <persona>``).
 
-Shows the conceit and time shift, the sourced timeline, the topics kept out, the contacts and every
-conversation with both its real and on-device dates, so a reviewer can check
-facts and tone without reading JSON.
+Shows the conceit and time shift, the sourced timeline, the topics kept out, the contacts, every
+conversation with both its real and on-device dates, and the calls, voicemails, notes, Safari
+history and photos (with each photo's licence and credit), so a reviewer can check facts and
+tone without reading JSON.
 """
 
 from __future__ import annotations
@@ -29,7 +30,10 @@ def render(persona: Persona) -> str:
     w(f"| Device | {persona.device_name} |")
     w(f"| Licence | {persona.licence} |")
     total = sum(len(c.messages) for c in persona.chats)
-    w(f"| Size | {len(persona.contacts) + 1} contacts, {len(persona.chats)} conversations, {total} messages |\n")
+    extras = [(persona.calls, "calls"), (persona.voicemails, "voicemails"), (persona.notes, "notes"),
+              (persona.visits, "Safari visits"), (persona.photos, "photos")]
+    more = "".join(f", {len(items)} {label}" for items, label in extras if items is not None)
+    w(f"| Size | {len(persona.contacts) + 1} contacts, {len(persona.chats)} conversations, {total} messages{more} |\n")
 
     w("## Backups (snapshots)\n")
     w("| Snapshot | Backup date (on device) | Real-world equivalent | iPhone | iOS |\n|---|---|---|---|---|")
@@ -90,7 +94,74 @@ def render(persona: Persona) -> str:
             who = contact.first or contact.display_name
             if m.reaction:
                 w(f"- {m.real_time:%H:%M} *{who} reacted {m.reaction}*")
+            elif m.photo:
+                w(f"- {m.real_time:%H:%M} **{who}:** *[photo {m.photo}]*")
             else:
                 w(f"- {m.real_time:%H:%M} **{who}:** {m.text}")
         w("")
+    _calls(persona, w)
+    _notes(persona, w)
+    _visits(persona, w)
+    _photos(persona, w)
     return "\n".join(out) + "\n"
+
+
+def _who(persona: Persona, who: str) -> str:
+    return who if who.startswith("+") else persona.contacts[who].display_name
+
+
+def _minutes(seconds: int) -> str:
+    return f"{seconds // 60}m{seconds % 60:02d}s" if seconds else "missed"
+
+
+def _calls(persona: Persona, w) -> None:
+    if persona.calls is not None:
+        w("## Calls\n")
+        w("| When | Who | Direction | Length | Service |\n|---|---|---|---|---|")
+        for c in persona.calls:
+            w(f"| {c.real_time:%Y-%m-%d %H:%M} | {_who(persona, c.who)} | {'out' if c.outgoing else 'in'} | "
+              f"{_minutes(c.duration)} | {c.service} |")
+        w("")
+    if persona.voicemails is not None:
+        w("## Voicemails\n")
+        w("| When | From | Length | Message |\n|---|---|---|---|")
+        for v in persona.voicemails:
+            w(f"| {v.real_time:%Y-%m-%d %H:%M} | {_who(persona, v.who)} | {_minutes(v.duration)} | {v.transcript} |")
+        w("")
+
+
+def _notes(persona: Persona, w) -> None:
+    if persona.notes is None:
+        return
+    w("## Notes\n")
+    for note in persona.notes:
+        title, _, body = note.text.partition("\n")
+        pinned = ", pinned" if note.pinned else ""
+        w(f"### {title}\n")
+        w(f"*{note.folder}{pinned}. Created {note.created:%Y-%m-%d %H:%M}, modified {note.modified:%Y-%m-%d %H:%M}. "
+          f"File: `notes/{note.id}.txt`*\n")
+        w("\n".join(f"> {line}" if line else ">" for line in body.strip("\n").split("\n")) + "\n")
+
+
+def _visits(persona: Persona, w) -> None:
+    if persona.visits is None:
+        return
+    w("## Safari\n")
+    hosts = Counter(v.url.split("/")[2] for v in persona.visits)
+    w("Most visited: " + ", ".join(f"{host} ({n})" for host, n in hosts.most_common(10)) + "\n")
+    w("| When | Page | URL |\n|---|---|---|")
+    for v in persona.visits:
+        w(f"| {v.real_time:%Y-%m-%d %H:%M} | {v.title} | {v.url} |")
+    w("")
+
+
+def _photos(persona: Persona, w) -> None:
+    if persona.photos is None:
+        return
+    w("## Photos\n")
+    w("| Id | Taken | Place | Albums | Licence | Credit |\n|---|---|---|---|---|---|")
+    for p in persona.photos:
+        flags = (" ★" if p.favorite else "") + (" (deleted)" if p.trashed else "")
+        source = f"[{p.licence or 'source'}]({p.source})" if p.source else (p.licence or "placeholder")
+        w(f"| {p.id}{flags} | {p.real_time:%Y-%m-%d %H:%M} | {p.place} | {', '.join(p.albums)} | {source} | {p.credit} |")
+    w("")

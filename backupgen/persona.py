@@ -186,6 +186,9 @@ class Photo:
     sha1: str
     placeholder: Optional[tuple[int, int, str]]  # (width, height, "#rrggbb")
     where: str
+    licence: str = ""
+    credit: str = ""
+    source: str = ""  # the original's page, e.g. on Wikimedia Commons
 
 
 @dataclass
@@ -407,6 +410,7 @@ def _parse_photos(path: Path) -> list[Photo]:
             bool(raw.get("favorite")), bool(raw.get("trashed")), list(raw.get("albums", [])),
             raw.get("url", ""), raw.get("sha1", ""),
             (*placeholder["size"], placeholder["color"]) if placeholder else None, where,
+            raw.get("licence", ""), raw.get("credit", ""), raw.get("commons_page", ""),
         ))
     return photos
 
