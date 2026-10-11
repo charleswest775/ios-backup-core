@@ -50,7 +50,8 @@ A pack is a folder under ``personas/``:
   ``id``, ``taken`` (local time, ``YYYY-MM-DDTHH:MM``), optional ``lat``/``lon``, ``place``,
   ``favorite``, ``trashed`` and ``albums`` (album titles). The pixels come either from
   ``url`` (an openly licensed original, checked against its ``sha1`` and cached; record
-  ``licence``, ``credit`` and ``commons_page`` with it) or from ``placeholder``
+  ``licence``, ``credit`` and ``commons_page`` with it; ``thumb_url``/``thumb_sha1`` name a
+  smaller rendition to fetch first) or from ``placeholder``
   (``{"size": [640, 480], "color": "#88aacc"}``, drawn locally, for tests).
 
 Real dates are written as they happened. ``shift_years`` moves them onto the
@@ -189,6 +190,8 @@ class Photo:
     licence: str = ""
     credit: str = ""
     source: str = ""  # the original's page, e.g. on Wikimedia Commons
+    thumb_url: str = ""  # a smaller rendition of the original, tried first
+    thumb_sha1: str = ""
 
 
 @dataclass
@@ -411,6 +414,7 @@ def _parse_photos(path: Path) -> list[Photo]:
             raw.get("url", ""), raw.get("sha1", ""),
             (*placeholder["size"], placeholder["color"]) if placeholder else None, where,
             raw.get("licence", ""), raw.get("credit", ""), raw.get("commons_page", ""),
+            raw.get("thumb_url", ""), raw.get("thumb_sha1", ""),
         ))
     return photos
 

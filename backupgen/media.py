@@ -2,7 +2,10 @@
 
 Originals are openly licensed images listed in a persona's photos.json by URL and SHA-1.
 They're downloaded once into a cache ($BACKUPGEN_MEDIA_CACHE, or ~/.cache/backupgen/media)
-and checked against the SHA-1, so a changed or tampered file is never used. Each is
+and checked against the SHA-1, so a changed or tampered file is never used. Originals can
+run to tens of megabytes, so a photo can also name a smaller rendition (``thumb_url`` and
+``thumb_sha1``, e.g. Wikimedia's 1920 px thumbnail); if that has changed, the original is
+used instead. Each is
 then scaled down and saved the way an iPhone camera would label it: Apple make and
 model, the time taken with its UTC offset, and GPS coordinates.
 """
@@ -13,6 +16,8 @@ import hashlib
 import io
 import os
 import random
+import time
+import urllib.error
 import urllib.request
 from datetime import datetime
 from pathlib import Path
@@ -40,11 +45,18 @@ def fetch(url: str, sha1: str) -> bytes:
         if hashlib.sha1(data).hexdigest() == sha1:
             return data
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    try:
-        with urllib.request.urlopen(request, timeout=60) as response:
-            data = response.read()
-    except OSError as e:
-        raise MediaError(f"couldn't download {url}: {e}") from e
+    for attempt in range(6):
+        try:
+            with urllib.request.urlopen(request, timeout=60) as response:
+                data = response.read()
+            break
+        except urllib.error.HTTPError as e:
+            if e.code != 429 or attempt == 5:
+                raise MediaError(f"couldn't download {url}: {e}") from e
+            # Wikimedia limits how fast one client may download; wait as long as it asks.
+            time.sleep(int(e.headers.get("Retry-After") or 20 * (attempt + 1)))
+        except OSError as e:
+            raise MediaError(f"couldn't download {url}: {e}") from e
     if hashlib.sha1(data).hexdigest() != sha1:
         raise MediaError(f"{url} doesn't match its SHA-1 {sha1}; the file has changed")
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -80,7 +92,13 @@ class Renderer:
                 # Seeded per photo, so a placeholder looks the same whichever writer draws it first.
                 image = placeholder(width, height, color, random.Random(f"{self.persona.id}/{photo.id}"))
             else:
-                image = Image.open(io.BytesIO(fetch(photo.url, photo.sha1)))
+                try:
+                    if not photo.thumb_url:
+                        raise MediaError("no smaller rendition")
+                    data = fetch(photo.thumb_url, photo.thumb_sha1)
+                except MediaError:
+                    data = fetch(photo.url, photo.sha1)
+                image = Image.open(io.BytesIO(data))
             taken = self.persona.device_time(photo.real_time).astimezone(self.persona.tz)
             self._done[photo_id] = camera_jpeg(image, taken, self.snapshot.product_name, self.snapshot.ios,
                                                photo.lat, photo.lon)

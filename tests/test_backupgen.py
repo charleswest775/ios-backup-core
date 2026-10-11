@@ -268,6 +268,34 @@ def test_photo_messages_carry_the_camera_roll_jpeg(tmp_path):
     assert sent_file == camera_roll
 
 
+def test_photos_fall_back_to_the_original_when_the_rendition_changed(tmp_path, monkeypatch):
+    import io
+    from types import SimpleNamespace
+
+    from PIL import Image
+
+    from backupgen import media
+    from backupgen.persona import Photo
+
+    original = io.BytesIO()
+    Image.new("RGB", (40, 30), "#336699").save(original, "JPEG")
+    asked = []
+
+    def fake_fetch(url, sha1):
+        asked.append(url)
+        if url == "https://example.org/thumb.jpg":
+            raise media.MediaError("changed")
+        return original.getvalue()
+
+    monkeypatch.setattr(media, "fetch", fake_fetch)
+    photo = Photo("p", datetime(2024, 1, 1, 12), None, None, "", False, False, [], "https://example.org/original.jpg",
+                  "0" * 40, None, "test", thumb_url="https://example.org/thumb.jpg", thumb_sha1="1" * 40)
+    persona = load_persona("testpersona")
+    persona.photos = [photo]
+    data, width, height = media.Renderer(persona, SimpleNamespace(product_name="iPhone 15", ios="17.3")).jpeg("p")
+    assert asked == ["https://example.org/thumb.jpg", "https://example.org/original.jpg"] and (width, height) == (40, 30)
+
+
 def test_unencrypted_backups_leave_out_call_history(tmp_path):
     backup_dir = generate("testpersona", "ios26", tmp_path)
     expected = json.loads((tmp_path / EXPECTED).read_text())
