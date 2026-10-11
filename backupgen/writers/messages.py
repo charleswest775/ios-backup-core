@@ -82,11 +82,16 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
             })
         return handle_ids[key]
 
-    # Keep only what had happened before the backup was made.
+    # Keep only what had happened before the backup was made. Messages written in the same minute
+    # keep their order in the transcript, so a tapback never lands before what it reacts to.
     timeline: list[tuple[datetime, Chat, Message]] = []
     for chat in persona.chats:
+        previous = None
         for message in chat.messages:
             when = persona.device_time(message.real_time) + timedelta(seconds=rng.randrange(60))
+            if previous is not None and when <= previous:
+                when = previous + timedelta(seconds=1 + rng.randrange(5))
+            previous = when
             if when <= snapshot.backup_date:
                 timeline.append((when, chat, message))
     timeline.sort(key=lambda entry: entry[0])

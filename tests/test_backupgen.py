@@ -288,6 +288,21 @@ def test_encrypting_changes_only_what_apple_leaves_out(tmp_path):
         assert plain[key] == enc[key], key
 
 
+def test_messages_in_one_minute_keep_their_order(tmp_path):
+    import shutil
+
+    shutil.copytree(SCHEMAS_DIR.parent / "personas" / "testpersona", tmp_path / "packs" / "testpersona")
+    (tmp_path / "packs" / "testpersona" / "chats" / "burst.txt").write_text(
+        "chat: burst\nwith: riley, jordan\nname: Burst\n\n== 2024-01-01\n"
+        "12:00 riley: one\n12:00 me: two\n12:00 jordan +like\n12:00 me: three\n", encoding="utf-8")
+    persona = load_persona("testpersona", root=tmp_path / "packs")
+    for seed in range(20):  # independent random seconds used to reorder these for some seeds
+        generate("testpersona", "ios26", tmp_path / str(seed), seed=seed, persona=persona)
+        messages = json.loads((tmp_path / str(seed) / EXPECTED).read_text(encoding="utf-8"))["messages"]
+        burst = [m["text"] for m in messages if m["date"].startswith("2024-01-01T12:0")]
+        assert burst == ["one", "two", "Liked “two”", "three"], seed
+
+
 def test_same_phone_keeps_its_udid(tmp_path):
     udids = {}
     for snapshot, password in [("ios17", None), ("ios26", None), ("ios26", "pw")]:
