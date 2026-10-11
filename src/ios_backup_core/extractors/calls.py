@@ -23,6 +23,17 @@ class CallExtractor:
 
     CALL_HISTORY_PATH = "Library/CallHistoryDB/CallHistory.storedata"
 
+    @staticmethod
+    def _is_db_path(rel_path: str) -> bool:
+        return rel_path.endswith((".storedata", ".db"))
+
+    def _db_listed(self, backup) -> bool:
+        """True if the manifest lists a call history database, readable or not."""
+        return any(
+            self._is_db_path(entry.get("path", ""))
+            for entry in backup.list_files(path_like="%CallHistory%")
+        )
+
     def _find_db_paths(self, backup) -> list:
         """Return all candidate call history DB paths by searching the manifest.
 
@@ -38,7 +49,7 @@ class CallExtractor:
             domain = entry.get("domain", "HomeDomain")
             file_hash = entry.get("hash", "")
 
-            if not (rel_path.endswith(".storedata") or rel_path.endswith(".db")):
+            if not self._is_db_path(rel_path):
                 if rel_path.endswith("-wal") or rel_path.endswith("-shm"):
                     backup.get_file(rel_path, domain=domain)
                 continue
@@ -205,7 +216,19 @@ class CallExtractor:
         offset: int = 0,
         limit: int = 200,
     ) -> dict:
-        """List call history records, supplemented with FaceTime and voicemail records."""
+        """List call history records, supplemented with FaceTime and voicemail records.
+
+        When there are no records, ``calls`` is empty and ``empty_reason`` says why:
+
+        - ``"requires_encryption"``: the backup is unencrypted and has no call
+          history. Apple leaves call history out of unencrypted backups, so
+          ``error`` also carries the advice to turn on encryption.
+        - ``"not_in_backup"``: the backup is encrypted but has no call history.
+        - ``"no_records"``: the call history database exists but holds no calls.
+
+        A call history database that is listed in the backup but can't be read
+        is an ``error``, with no ``empty_reason``.
+        """
         db_paths = self._find_db_paths(backup)
 
         all_rows = []
@@ -291,11 +314,25 @@ class CallExtractor:
         _merge(self._read_facetime_from_sms(backup, contacts))
 
         if not call_records:
-            msg = errors[0] if errors else (
-                "Call history not found. Apple requires backups to be encrypted to include "
-                "call logs. Please enable 'Encrypt local backup' in iTunes/Finder."
-            )
-            return {"calls": [], "error": msg}
+            empty = {"calls": [], "total": 0, "offset": offset, "limit": limit}
+            if errors:
+                empty["error"] = errors[0]
+            elif db_paths:
+                empty["empty_reason"] = "no_records"
+            elif self._db_listed(backup):
+                empty["error"] = (
+                    "Call history is in this backup but could not be read. "
+                    "The backup may be incomplete or damaged."
+                )
+            elif backup.encrypted:
+                empty["empty_reason"] = "not_in_backup"
+            else:
+                empty["empty_reason"] = "requires_encryption"
+                empty["error"] = (
+                    "Call history not found. Apple requires backups to be encrypted to include "
+                    "call logs. Please enable 'Encrypt local backup' in iTunes/Finder."
+                )
+            return empty
 
         call_records.sort(key=lambda r: r["_unix_ts"] or 0, reverse=True)
         total = len(call_records)
