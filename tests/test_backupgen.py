@@ -168,11 +168,7 @@ def test_answer_key_lists_absent_data_types(tmp_path):
                                                       "calendar", "voice_memos", "health")}
 
 
-@pytest.mark.parametrize("snapshot", [
-    pytest.param("ios15", marks=pytest.mark.xfail(
-        strict=True, reason="iOS 15 stores ZADDRESS as a BLOB, which crashes list_calls; fixed by PR #12")),
-    "ios17", "ios26",
-])
+@pytest.mark.parametrize("snapshot", ["ios15", "ios17", "ios26"])
 def test_calls_and_voicemails_read_back(tmp_path, snapshot):
     backup_dir = generate("testpersona", snapshot, tmp_path, password="pw")
     expected = json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))
@@ -205,7 +201,8 @@ def test_notes_and_safari_read_back(tmp_path, snapshot):
     assert sorted((v["url"], v["title"], v["visit_date"]) for v in visits) == sorted(
         (v["url"], v["title"], v["date"]) for v in expected["browser_history"]
     )
-    assert {v["domain"] for v in visits} <= {"en.wikipedia", "example", "timeanddate"}
+    # The reader shows the URL's host; domain_expansion is only a label like "en.wikipedia".
+    assert {v["domain"] for v in visits} == {"en.wikipedia.org", "www.example.org", "www.timeanddate.com"}
 
 
 def test_note_text_keeps_list_items_without_their_markers(tmp_path):
@@ -216,7 +213,6 @@ def test_note_text_keeps_list_items_without_their_markers(tmp_path):
     assert notes["Groceries"]["folder"] == "Notes"
 
 
-@pytest.mark.xfail(strict=True, reason="Photos.sqlite ships without -shm and main's read-only open fails; fixed by PR #12")
 @pytest.mark.parametrize("snapshot", ["ios15", "ios26"])
 def test_photos_read_back(tmp_path, snapshot):
     backup_dir = generate("testpersona", snapshot, tmp_path)
@@ -226,6 +222,8 @@ def test_photos_read_back(tmp_path, snapshot):
     assert sorted((p["filename"], p["width"], p["height"], p["favorite"]) for p in photos) == sorted(
         (p["filename"], p["width"], p["height"], p["favorite"]) for p in expected["photos"] if not p["trashed"]
     )
+    unlocated = {p["filename"] for p in expected["photos"] if p["lat"] is None}
+    assert unlocated and all(p["latitude"] is None for p in photos if p["filename"] in unlocated)  # iOS's -180
 
 
 def test_photos_look_like_the_device_wrote_them(tmp_path):
