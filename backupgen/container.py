@@ -199,8 +199,18 @@ class BackupWriter:
                 "INSERT INTO Files (fileID, domain, relativePath, flags, file) VALUES (?, ?, ?, ?, ?)",
                 (fid, domain, relative_path, entry.flags, self._mbfile(entry, inode, stamp, wrapped, digest)),
             )
+        # Real Manifest.db files are WAL databases with user_version 2, shipped without -wal/-shm.
+        pragmas = self.shape.get("manifest_db_pragmas", {"journal_mode": "wal", "user_version": 2})
+        conn.execute(f"PRAGMA user_version = {int(pragmas['user_version'])}")
         conn.commit()
+        if pragmas["journal_mode"] == "wal":
+            conn.execute("PRAGMA journal_mode = WAL")
+            conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
         conn.close()
+        for suffix in ("-wal", "-shm"):
+            sidecar = manifest_db.with_name(manifest_db.name + suffix)
+            if sidecar.exists():
+                sidecar.unlink()
 
         manifest_key = None
         if self.encrypted:

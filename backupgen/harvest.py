@@ -128,6 +128,7 @@ def harvest_container(backup_dir: Path, manifest_db: Path) -> dict:
     conn = sqlite3.connect(f"{manifest_db.resolve().as_uri()}?mode=ro&immutable=1", uri=True)
     ddl = [r[0] for r in conn.execute("SELECT sql FROM sqlite_master WHERE sql IS NOT NULL ORDER BY rowid")]
     conn.close()
+    header = manifest_db.read_bytes()[:100]
     return {
         "manifest_plist_keys": sorted(manifest),
         "manifest_version": manifest.get("Version"),
@@ -139,6 +140,11 @@ def harvest_container(backup_dir: Path, manifest_db: Path) -> dict:
         "status_plist": {k: (v if k in ("BackupState", "IsFullBackup", "SnapshotState", "Version") else type(v).__name__)
                          for k, v in sorted(status.items())},
         "manifest_db_ddl": ddl,
+        "manifest_db_pragmas": {
+            "journal_mode": "wal" if header[18] == 2 else "delete",
+            "user_version": struct.unpack(">I", header[60:64])[0],
+            "page_size": struct.unpack(">H", header[16:18])[0],
+        },
     }
 
 

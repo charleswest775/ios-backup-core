@@ -169,5 +169,10 @@
   "CREATE INDEX FilesRelativePathIdx ON Files(relativePath)",
   "CREATE INDEX FilesFlagsIdx ON Files(flags)",
   "CREATE TABLE Properties (key TEXT PRIMARY KEY, value BLOB)"
- ]
+ ],
+ "manifest_db_pragmas": {
+  "journal_mode": "wal",
+  "user_version": 2,
+  "page_size": 4096
+ }
 }
