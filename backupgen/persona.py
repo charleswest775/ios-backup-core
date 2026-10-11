@@ -445,10 +445,12 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
     photos = _parse_photos(folder / "photos.json") if (folder / "photos.json").exists() else None
     start, end = (date.fromisoformat(d) for d in raw["real_period"])
     records = [m for chat in chats for m in chat.messages] + (calls or []) + (voicemails or []) + (notes or []) + (visits or []) + (photos or [])
-    photo_ids = {photo.id for photo in photos or []}
+    taken = {photo.id: photo.real_time for photo in photos or []}
     for message in (m for chat in chats for m in chat.messages if m.photo):
-        if message.photo not in photo_ids:
+        if message.photo not in taken:
             raise PersonaError(f"{message.where}: no photo {message.photo!r} in photos.json")
+        if message.real_time < taken[message.photo]:
+            raise PersonaError(f"{message.where}: {message.photo} is sent before it was taken ({taken[message.photo]})")
     for record in records:
         if not start <= record.real_time.date() <= end:
             raise PersonaError(f"{record.where}: {record.real_time.date()} is outside the persona's period {start}–{end}")

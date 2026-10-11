@@ -341,6 +341,17 @@ def _pack(tmp_path, chat_text):
     return folder.parent
 
 
+def test_photos_cannot_be_sent_before_they_are_taken(tmp_path):
+    import shutil
+
+    shutil.copytree(SCHEMAS_DIR.parent / "personas" / "testpersona", tmp_path / "testpersona")
+    chat = tmp_path / "testpersona" / "chats" / "riley.txt"
+    chat.write_text(chat.read_text(encoding="utf-8").replace("10:25 me [photo:london-2]", "09:00 me [photo:london-2]"),
+                    encoding="utf-8")
+    with pytest.raises(PersonaError, match="sent before it was taken"):
+        load_persona("testpersona", root=tmp_path)
+
+
 @pytest.mark.parametrize("chat_text, message", [
     ("chat: c\nwith: nobody\n\n== 2021-01-01\n10:00 me: hi\n", "unknown participant"),
     ("chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n09:00 riley: earlier\n", "time order"),
