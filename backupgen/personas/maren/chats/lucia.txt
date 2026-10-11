@@ -1,0 +1,51 @@
+chat: lucia
+with: lucia
+service: iMessage
+
+# Lucía Navarro, Theo's mom, in Bend. She writes mostly in Spanish; Maren answers in her best Spanish.
+
+== 2024-10-22
+08:00 lucia: ¡Feliz cumpleaños, Maren! Que tengas un día precioso... y que Theo te haga un buen pastel 🎂
+08:20 me: ¡Muchas gracias, Lucía! Theo hizo los panecillos de cardamomo. Muy ricos
+08:21 lucia: ¡Qué bien! Ese muchacho cocina mejor que yo
+08:21 me +laugh
+
+== 2024-11-25
+19:00 lucia: ¿Llegan el miércoles? Voy a hacer tamales de puerco y de rajas con queso
+19:10 me: Sí, llegamos el miércoles en la noche. ¡Tamales! Estoy muy emocionada
+19:11 lucia: Y Juniper también viene, ¿verdad? Ya compré un hueso para ella
+19:12 me: Claro que sí. Ella te quiere mucho
+19:12 lucia +love
+
+== 2024-12-01
+10:30 lucia: Gracias por venir, mija. La casa está muy callada sin ustedes
+10:45 me: Gracias a ti. Todo estuvo delicioso. Theo still talks about the flan
+10:46 lucia: Te mando la receta del flan
+10:47 lucia: https://www.example.org/recetas/flan-de-calabaza-de-lucia
+
+== 2025-04-13
+12:00 lucia: ¡Felicidades por la casa nueva! Theo me mandó fotos del jardín. Está precioso
+12:10 me: ¡Gracias! Hay un lilo (lilac?) y mucho espacio para Juniper
+12:12 lucia: "Lila" 😊 Una lila. Muy bonito
+12:12 me +like
+
+== 2025-10-22
+08:05 lucia: Feliz cumpleaños querida. Un abrazo grande desde Bend 🎉
+08:30 me: ¡Gracias Lucía! Un abrazo para ti también
+
+== 2025-11-20
+18:30 lucia: ¿Qué llevo el jueves? ¿Tamales otra vez?
+18:35 me: ¡Sí por favor! Erik y Jess vienen también. Ellos nunca han probado tus tamales
+18:36 lucia: Entonces llevo cinco docenas
+18:36 me +laugh
+
+== 2025-11-28
+09:00 lucia: Qué bonito día ayer. Tu familia es muy cariñosa. Jess me pidió la receta del flan
+09:15 me: Fue perfecto. Gracias por todo, por los tamales y por enseñarme a doblarlos
+09:16 lucia: Ya eres experta 💛
+
+== 2026-06-03
+08:00 lucia: Hoy cumple años mi hijo. Gracias por cuidarlo tanto, Maren
+08:10 me: Él me cuida a mí también. Hoy le di un horno de pan para el jardín
+08:11 lucia: ¡Un horno! Ahora sí que no va a salir de la casa 😂
+08:11 me +laugh

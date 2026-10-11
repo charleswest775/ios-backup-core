@@ -1,0 +1,21 @@
+folder: Trips
+created: 2024-07-14 20:30
+modified: 2026-06-21 20:30
+pinned: yes
+
+National parks
+[x] Mount Rainier (Aug 2024)
+[x] Olympic (May 2025)
+[x] Yellowstone (Aug 2025)
+[x] Crater Lake (Sep 2025)
+[x] Joshua Tree (Feb 2026)
+[x] North Cascades (May 2026)
+[x] Glacier (as a kid, counts)
+[ ] Grand Teton
+[ ] Zion
+[ ] Capitol Reef
+[ ] Redwood
+[ ] Lassen Volcanic
+[ ] Great Basin
+[ ] Arches + Canyonlands
+Dad wants to do Crater Lake with Mom in Aug 2026!

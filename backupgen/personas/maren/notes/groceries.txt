@@ -1,0 +1,16 @@
+created: 2024-07-03 09:00
+modified: 2026-06-27 17:45
+pinned: yes
+
+Groceries
+[ ] Peaches
+[ ] Yogurt (blue lid!!)
+[ ] Coffee (or ask Erik)
+[ ] Bread flour, the 25 lb bag
+[x] Oat milk
+[x] Lemons
+[x] Butter
+[ ] Dog treats (the salmon ones)
+[ ] Tortillas
+[ ] Sparkling water
+[x] Basil

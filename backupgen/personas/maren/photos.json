@@ -1,0 +1,3076 @@
+{
+ "description": "Maren's camera roll: public-domain and CC0 photographs from Wikimedia Commons, each with its licence, credit and file page. Times and places are assigned to her trips; coordinates are the photo's own where its EXIF had them, otherwise the named place, moved up to 200 m.",
+ "photos": [
+  {
+   "id": "olympic-01",
+   "taken": "2025-05-24T13:40",
+   "lat": 47.969066,
+   "lon": -123.500585,
+   "place": "Hurricane Ridge, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/2/27/Clouds_valley_hurricane_ridge_road_scenic_%2816680382344%29.jpg",
+   "sha1": "04a078921401c106fb60f7962b2d7b6c05f71112",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Clouds_valley_hurricane_ridge_road_scenic_%2816680382344%29.jpg/1920px-Clouds_valley_hurricane_ridge_road_scenic_%2816680382344%29.jpg",
+   "thumb_sha1": "a132e38eb1cfb2df96f49a58bbeb3dc655effc42",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Clouds_valley_hurricane_ridge_road_scenic_(16680382344).jpg"
+  },
+  {
+   "id": "olympic-02",
+   "taken": "2025-05-24T13:55",
+   "lat": 47.968751,
+   "lon": -123.498363,
+   "place": "Hurricane Ridge, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Elwha_valley_clouds.jpg",
+   "sha1": "dbdf80f237491094a18708a87bfc543e4bc044fd",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Elwha_valley_clouds.jpg/1920px-Elwha_valley_clouds.jpg",
+   "thumb_sha1": "0aeda47c9995f2583f25b1ba254474ef270c0b26",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "NPS photo by Bill Baccus",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Elwha_valley_clouds.jpg"
+  },
+  {
+   "id": "olympic-05",
+   "taken": "2025-05-24T14:50",
+   "lat": 47.970501,
+   "lon": -123.496617,
+   "place": "Hurricane Ridge, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Hurricane_Ridge_mountains_clouds_scenic_Jan_2011_NPS_photo_Dave_Turner_%286%29_%2817302127985%29.jpg",
+   "sha1": "17ee435e8a5bb592fa79e339677e4fe52e0c3e0d",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Hurricane_Ridge_mountains_clouds_scenic_Jan_2011_NPS_photo_Dave_Turner_%286%29_%2817302127985%29.jpg/1920px-Hurricane_Ridge_mountains_clouds_scenic_Jan_2011_NPS_photo_Dave_Turner_%286%29_%2817302127985%29.jpg",
+   "thumb_sha1": "7b24351418b91f72fb146612badd4efd0686389a",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hurricane_Ridge_mountains_clouds_scenic_Jan_2011_NPS_photo_Dave_Turner_(6)_(17302127985).jpg"
+  },
+  {
+   "id": "olympic-07",
+   "taken": "2025-05-24T17:10",
+   "lat": 48.058796,
+   "lon": -123.800184,
+   "place": "Lake Crescent, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Dock_Lake_Crescent_NPS_Photo_%2817117135938%29.jpg",
+   "sha1": "bb4966344cf6f642f947b086f5ba1ee80a034ebd",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Dock_Lake_Crescent_NPS_Photo_%2817117135938%29.jpg/1920px-Dock_Lake_Crescent_NPS_Photo_%2817117135938%29.jpg",
+   "thumb_sha1": "d936ae15ace69d7d7c780970ad4dd7d5e35010f2",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Dock_Lake_Crescent_NPS_Photo_(17117135938).jpg"
+  },
+  {
+   "id": "olympic-09",
+   "taken": "2025-05-24T20:50",
+   "lat": 48.05853,
+   "lon": -123.801342,
+   "place": "Lake Crescent, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Lake_Crescent_sunset_1-27-11_J_Burger_ONP_photo_%284%29_%2817114571770%29.jpg",
+   "sha1": "70f7c402941813e03abfa35330c6e5ea4da76340",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Lake_Crescent_sunset_1-27-11_J_Burger_ONP_photo_%284%29_%2817114571770%29.jpg/1920px-Lake_Crescent_sunset_1-27-11_J_Burger_ONP_photo_%284%29_%2817114571770%29.jpg",
+   "thumb_sha1": "e8acdb9898772b8ab628499bacb0a359078c5cfc",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Lake_Crescent_sunset_1-27-11_J_Burger_ONP_photo_(4)_(17114571770).jpg"
+  },
+  {
+   "id": "olympic-10",
+   "taken": "2025-05-24T20:55",
+   "lat": 48.056688,
+   "lon": -123.798759,
+   "place": "Lake Crescent, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/40/Lakes_Crescent_sunsets_Hoh_NPS_Photo_j_Preston_%2816682432984%29.jpg",
+   "sha1": "99559764c16c4b3fb0cc1186636af6ae096ff0a1",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Lakes_Crescent_sunsets_Hoh_NPS_Photo_j_Preston_%2816682432984%29.jpg/1920px-Lakes_Crescent_sunsets_Hoh_NPS_Photo_j_Preston_%2816682432984%29.jpg",
+   "thumb_sha1": "fef9f931d073e270d99fe4e766e510fbb0476f25",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Lakes_Crescent_sunsets_Hoh_NPS_Photo_j_Preston_(16682432984).jpg"
+  },
+  {
+   "id": "olympic-11",
+   "taken": "2025-05-25T07:20",
+   "lat": 48.056766,
+   "lon": -123.7981,
+   "place": "Lake Crescent, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Lake_Crescent_Reflection_clouds_BBaccus_Nps_photo_2006_%2824128172440%29.jpg",
+   "sha1": "965a05cc7eb244745c1ade21999ea53d0fde7841",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Lake_Crescent_Reflection_clouds_BBaccus_Nps_photo_2006_%2824128172440%29.jpg/1920px-Lake_Crescent_Reflection_clouds_BBaccus_Nps_photo_2006_%2824128172440%29.jpg",
+   "thumb_sha1": "3e80e5a3c66c0b4d14b965c65b8c8a71ef381c8d",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Lake_Crescent_Reflection_clouds_BBaccus_Nps_photo_2006_(24128172440).jpg"
+  },
+  {
+   "id": "olympic-12",
+   "taken": "2025-05-25T07:40",
+   "lat": 48.05637,
+   "lon": -123.800247,
+   "place": "Lake Crescent, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Sun_rays_clouds_lake_crescent_NPSphoto_%2817117340250%29.jpg",
+   "sha1": "57b4a4f6d25f670f1f2fcd2c7adb989e66f0ff09",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Sun_rays_clouds_lake_crescent_NPSphoto_%2817117340250%29.jpg/1920px-Sun_rays_clouds_lake_crescent_NPSphoto_%2817117340250%29.jpg",
+   "thumb_sha1": "5374fb1305ca2b5f65f361d9ad1c4fe508d06391",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Sun_rays_clouds_lake_crescent_NPSphoto_(17117340250).jpg"
+  },
+  {
+   "id": "olympic-13",
+   "taken": "2025-05-25T10:40",
+   "lat": 47.860861,
+   "lon": -123.92298,
+   "place": "Hoh Rain Forest, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Hoh_rainforest_colanade_0090_%2822453931843%29.jpg",
+   "sha1": "a97e9f4b89392719144ec31a138d5c2990c557c4",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Hoh_rainforest_colanade_0090_%2822453931843%29.jpg/1920px-Hoh_rainforest_colanade_0090_%2822453931843%29.jpg",
+   "thumb_sha1": "da59f08de6d3dd9721c46cffcbced3299eae13b0",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hoh_rainforest_colanade_0090_(22453931843).jpg"
+  },
+  {
+   "id": "olympic-14",
+   "taken": "2025-05-25T10:55",
+   "lat": 47.86258,
+   "lon": -123.924489,
+   "place": "Hoh Rain Forest, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Nurse_Log_Hoh_Trail_rain_forest_NPS_Photo_MP1_%2823074100775%29.jpg",
+   "sha1": "f820ed1ae356dccb086120a8ca52f8262d21b86f",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Nurse_Log_Hoh_Trail_rain_forest_NPS_Photo_MP1_%2823074100775%29.jpg/1920px-Nurse_Log_Hoh_Trail_rain_forest_NPS_Photo_MP1_%2823074100775%29.jpg",
+   "thumb_sha1": "b9f9ac2b47242fe16f1479da3b8b82fcc3201f78",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Nurse_Log_Hoh_Trail_rain_forest_NPS_Photo_MP1_(23074100775).jpg"
+  },
+  {
+   "id": "olympic-15",
+   "taken": "2025-05-25T11:10",
+   "lat": 47.86196,
+   "lon": -123.925592,
+   "place": "Hoh Rain Forest, Olympic National Park",
+   "favorite": true,
+   "albums": [
+    "Olympic 2025",
+    "Best of PNW"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52815659086.jpg",
+   "sha1": "9ec6409f28ceeb89ee155e48b628efbc31871ee7",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52815659086.jpg/1920px-Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52815659086.jpg",
+   "thumb_sha1": "680dd6c4823c14ef87daa5a87ecb727d78e9e0f5",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52815659086.jpg"
+  },
+  {
+   "id": "olympic-16",
+   "taken": "2025-05-25T11:20",
+   "lat": 47.861724,
+   "lon": -123.924128,
+   "place": "Hoh Rain Forest, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52816068045.jpg",
+   "sha1": "b4b15fac0846e38c3c225735e760b502242215ab",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52816068045.jpg/1920px-Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52816068045.jpg",
+   "thumb_sha1": "818da4c010716f8a559b7f5992dd39ecc58ff177",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52816068045.jpg"
+  },
+  {
+   "id": "olympic-17",
+   "taken": "2025-05-25T11:35",
+   "lat": 47.860362,
+   "lon": -123.92586,
+   "place": "Hoh Rain Forest, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52815855084.jpg",
+   "sha1": "59936fb9c07cc0cbf1ad9c38873f3312ee2c9620",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52815855084.jpg/1920px-Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52815855084.jpg",
+   "thumb_sha1": "b1defd7bec2462bdb0398e4c2dcb4ea3782df7d3",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52815855084.jpg"
+  },
+  {
+   "id": "olympic-18",
+   "taken": "2025-05-25T11:50",
+   "lat": 47.861233,
+   "lon": -123.923483,
+   "place": "Hoh Rain Forest, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52816068975.jpg",
+   "sha1": "09ee88c2a003aab297ecf9c50787359458246920",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52816068975.jpg/1920px-Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52816068975.jpg",
+   "thumb_sha1": "d982034be00e4552ba3463f3248cd4eee2a7ac7d",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52816068975.jpg"
+  },
+  {
+   "id": "olympic-19",
+   "taken": "2025-05-25T12:10",
+   "lat": 47.861775,
+   "lon": -123.922291,
+   "place": "Hoh Rain Forest, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52816114413.jpg",
+   "sha1": "34d2c5940ffe5a119ccebedaea1c07f337e057c9",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52816114413.jpg/1920px-Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52816114413.jpg",
+   "thumb_sha1": "2c2cf0825f7068b984180c3c93691c20978c9de7",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_at_Olympic_NP_in_WA_-_52816114413.jpg"
+  },
+  {
+   "id": "olympic-20",
+   "taken": "2025-05-25T19:50",
+   "lat": 47.710883,
+   "lon": -124.415107,
+   "place": "Ruby Beach, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Ruby_beach_0172_%2823166551171%29.jpg",
+   "sha1": "2a6d4583d303b941823581e0748c4d7345dcd150",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Ruby_beach_0172_%2823166551171%29.jpg/1920px-Ruby_beach_0172_%2823166551171%29.jpg",
+   "thumb_sha1": "241de88ae415cde6a504f29360e0b994b334622a",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Ruby_beach_0172_(23166551171).jpg"
+  },
+  {
+   "id": "olympic-21",
+   "taken": "2025-05-25T20:05",
+   "lat": 47.71101,
+   "lon": -124.413314,
+   "place": "Ruby Beach, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Ruby_beach_0224_%2823149119525%29.jpg",
+   "sha1": "8bef8a628d879f9da7da47df3415755fa85ec178",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Ruby_beach_0224_%2823149119525%29.jpg/1920px-Ruby_beach_0224_%2823149119525%29.jpg",
+   "thumb_sha1": "5974e06bf5cfccc01c5eb95f0418f6ad9d82df0b",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Ruby_beach_0224_(23149119525).jpg"
+  },
+  {
+   "id": "olympic-23",
+   "taken": "2025-05-26T08:30",
+   "lat": 47.711635,
+   "lon": -124.413916,
+   "place": "Ruby Beach, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/3/38/Ruby_beach_0627_%2822834814680%29.jpg",
+   "sha1": "0f8da9ac5859f08b7182c33ef58c5166c9fdb6bb",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Ruby_beach_0627_%2822834814680%29.jpg/1920px-Ruby_beach_0627_%2822834814680%29.jpg",
+   "thumb_sha1": "0288a8752f404f940194e814fcd4ceb0e4f186a0",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Ruby_beach_0627_(22834814680).jpg"
+  },
+  {
+   "id": "olympic-24",
+   "taken": "2025-05-26T08:50",
+   "lat": 47.712429,
+   "lon": -124.415985,
+   "place": "Ruby Beach, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Ruby_Beach_LNMay09_%2822736465977%29.jpg",
+   "sha1": "5b0a15d9414b23c92d8152796d92a15b9366cc63",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Ruby_Beach_LNMay09_%2822736465977%29.jpg",
+   "thumb_sha1": "5b0a15d9414b23c92d8152796d92a15b9366cc63",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Ruby_Beach_LNMay09_(22736465977).jpg"
+  },
+  {
+   "id": "olympic-25",
+   "taken": "2025-05-26T09:00",
+   "lat": 47.710503,
+   "lon": -124.413936,
+   "place": "Ruby Beach, Olympic National Park",
+   "favorite": false,
+   "albums": [
+    "Olympic 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Ruby_Beach_2_Jon_Preston_%2823104527056%29.jpg",
+   "sha1": "c80d150ff14263ef5c4af914fabaa405781943d8",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Ruby_Beach_2_Jon_Preston_%2823104527056%29.jpg/1920px-Ruby_Beach_2_Jon_Preston_%2823104527056%29.jpg",
+   "thumb_sha1": "24c0424fea063a1dfc99ddd4a90538500f96f846",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Olympic National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Ruby_Beach_2_Jon_Preston_(23104527056).jpg"
+  },
+  {
+   "id": "rainier-01",
+   "taken": "2024-08-16T15:10",
+   "lat": 46.786736,
+   "lon": -121.744094,
+   "place": "Nisqually Vista Trail, Paradise, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/ac/View_colorful_wildflower_meadows_along_the_Nisqually_Vista_Trail._Please_stay_on_the_trail_to_protect_these_delicate_plants._%28bc5864e5-f36e-4abf-a183-74dabcbf9c32%29.JPG",
+   "sha1": "7aa88b937f9e27820ecda0af0e099cdf61fc0aab",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/View_colorful_wildflower_meadows_along_the_Nisqually_Vista_Trail._Please_stay_on_the_trail_to_protect_these_delicate_plants._%28bc5864e5-f36e-4abf-a183-74dabcbf9c32%29.JPG/1920px-View_colorful_wildflower_meadows_along_the_Nisqually_Vista_Trail._Please_stay_on_the_trail_to_protect_these_delicate_plants._%28bc5864e5-f36e-4abf-a183-74dabcbf9c32%29.JPG",
+   "thumb_sha1": "2250b7a7717ab9d2d7f666669656421835f80099",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "NPS Photo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:View_colorful_wildflower_meadows_along_the_Nisqually_Vista_Trail._Please_stay_on_the_trail_to_protect_these_delicate_plants._(bc5864e5-f36e-4abf-a183-74dabcbf9c32).JPG"
+  },
+  {
+   "id": "rainier-02",
+   "taken": "2024-08-16T15:40",
+   "lat": 46.79245,
+   "lon": -121.739211,
+   "place": "Deadhorse Creek Trail, Paradise, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Subalpine_Daisies_with_Mount_Rainier_%286b5e4052-d871-4c05-9f02-bf0b440e4d92%29.JPG",
+   "sha1": "bb677bdaa6af67fba81b1bb0014ab426abbfefc0",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Subalpine_Daisies_with_Mount_Rainier_%286b5e4052-d871-4c05-9f02-bf0b440e4d92%29.JPG/1920px-Subalpine_Daisies_with_Mount_Rainier_%286b5e4052-d871-4c05-9f02-bf0b440e4d92%29.JPG",
+   "thumb_sha1": "8a1bbe0b5021de26d593ab64b868954b1e8805c5",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "NPS Photo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Subalpine_Daisies_with_Mount_Rainier_(6b5e4052-d871-4c05-9f02-bf0b440e4d92).JPG"
+  },
+  {
+   "id": "rainier-03",
+   "taken": "2024-08-16T15:42",
+   "lat": 46.79245,
+   "lon": -121.739211,
+   "place": "Deadhorse Creek Trail, Paradise, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Subalpine_Daisies_and_Mount_Rainier_%28b8f3beb2-2ecf-4e8d-b82c-91f22a774983%29.JPG",
+   "sha1": "079318bf891e1326d15b6ed152896a9a26b95154",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Subalpine_Daisies_and_Mount_Rainier_%28b8f3beb2-2ecf-4e8d-b82c-91f22a774983%29.JPG/1920px-Subalpine_Daisies_and_Mount_Rainier_%28b8f3beb2-2ecf-4e8d-b82c-91f22a774983%29.JPG",
+   "thumb_sha1": "d6cbb780cd134fc44ce7ba9b6cc14a331b4c0ee3",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "NPS Photo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Subalpine_Daisies_and_Mount_Rainier_(b8f3beb2-2ecf-4e8d-b82c-91f22a774983).JPG"
+  },
+  {
+   "id": "rainier-04",
+   "taken": "2024-08-16T16:05",
+   "lat": 46.786554,
+   "lon": -121.738629,
+   "place": "Paradise meadows, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/19/Magenta_paintbrush_and_Sitka_valerian_in_the_Paradise_Meadows._%28ad29ee7a-aa5c-42ab-a8f1-ccc0b14a0d73%29.JPG",
+   "sha1": "f762d89da7d2f69ba4886b79e6488a32c434cd73",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Magenta_paintbrush_and_Sitka_valerian_in_the_Paradise_Meadows._%28ad29ee7a-aa5c-42ab-a8f1-ccc0b14a0d73%29.JPG/1920px-Magenta_paintbrush_and_Sitka_valerian_in_the_Paradise_Meadows._%28ad29ee7a-aa5c-42ab-a8f1-ccc0b14a0d73%29.JPG",
+   "thumb_sha1": "7de0cca55158b6c24568b288d8a607f3b46a63ec",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "NPS Photo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Magenta_paintbrush_and_Sitka_valerian_in_the_Paradise_Meadows._(ad29ee7a-aa5c-42ab-a8f1-ccc0b14a0d73).JPG"
+  },
+  {
+   "id": "rainier-05",
+   "taken": "2024-08-17T15:25",
+   "lat": 46.785619,
+   "lon": -121.739715,
+   "place": "Paradise meadows, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/3/37/Mount_Rainier_sits_high_above_the_treeline_surrounded_by_subalpine_meadows_full_of_flowers._%2868e4c2fe-3717-46c8-84b4-9351ea7321d1%29.JPEG",
+   "sha1": "804b0c87cb30545c2722a0a4f2196f99826449e5",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Mount_Rainier_sits_high_above_the_treeline_surrounded_by_subalpine_meadows_full_of_flowers._%2868e4c2fe-3717-46c8-84b4-9351ea7321d1%29.JPEG/1920px-Mount_Rainier_sits_high_above_the_treeline_surrounded_by_subalpine_meadows_full_of_flowers._%2868e4c2fe-3717-46c8-84b4-9351ea7321d1%29.JPEG",
+   "thumb_sha1": "899a20f274d314b2899e1bf62a938e4e3b9a28b0",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "NPS Photo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Mount_Rainier_sits_high_above_the_treeline_surrounded_by_subalpine_meadows_full_of_flowers._(68e4c2fe-3717-46c8-84b4-9351ea7321d1).JPEG"
+  },
+  {
+   "id": "rainier-06",
+   "taken": "2024-08-17T08:40",
+   "lat": 46.791869,
+   "lon": -121.734972,
+   "place": "Alta Vista Trail, Paradise, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/12/Rosy_spirea_along_the_Alta_Vista_Trail_with_views_of_the_Tatoosh_Range._%2897054b4f-8461-46e0-8d98-ab8495701b93%29.JPG",
+   "sha1": "bd4e8cce60ec358c21a0d0cf987611b1925188e8",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Rosy_spirea_along_the_Alta_Vista_Trail_with_views_of_the_Tatoosh_Range._%2897054b4f-8461-46e0-8d98-ab8495701b93%29.JPG/1920px-Rosy_spirea_along_the_Alta_Vista_Trail_with_views_of_the_Tatoosh_Range._%2897054b4f-8461-46e0-8d98-ab8495701b93%29.JPG",
+   "thumb_sha1": "0f170e55d1528dd075f74eaeb9a8fd33d0b60cdd",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "NPS Photo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Rosy_spirea_along_the_Alta_Vista_Trail_with_views_of_the_Tatoosh_Range._(97054b4f-8461-46e0-8d98-ab8495701b93).JPG"
+  },
+  {
+   "id": "rainier-07",
+   "taken": "2024-08-17T09:20",
+   "lat": 46.798412,
+   "lon": -121.733722,
+   "place": "Skyline Trail, Paradise, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Paradise_at_Mt._Rainier_NP_in_WA.jpg",
+   "sha1": "15d8c2536d0eb8db03c921f508a79e06f7b98900",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Paradise_at_Mt._Rainier_NP_in_WA.jpg/1920px-Paradise_at_Mt._Rainier_NP_in_WA.jpg",
+   "thumb_sha1": "87f158f5314e18ee22facb84db6a98bd4abb6af3",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Paradise_at_Mt._Rainier_NP_in_WA.jpg"
+  },
+  {
+   "id": "rainier-08",
+   "taken": "2024-08-17T09:35",
+   "lat": 46.797504,
+   "lon": -121.73186,
+   "place": "Skyline Trail, Paradise, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/0/02/Paradise_at_Mt._Rainier_NP_in_WA_-_53135521650.jpg",
+   "sha1": "48aaa81cc79d3afc19b1c4c54a452f8442dee52a",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Paradise_at_Mt._Rainier_NP_in_WA_-_53135521650.jpg/1920px-Paradise_at_Mt._Rainier_NP_in_WA_-_53135521650.jpg",
+   "thumb_sha1": "497be6f2f43115f7ee983e46e946f62e174a13e3",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Paradise_at_Mt._Rainier_NP_in_WA_-_53135521650.jpg"
+  },
+  {
+   "id": "rainier-09",
+   "taken": "2024-08-17T10:20",
+   "lat": 46.799125,
+   "lon": -121.733387,
+   "place": "Skyline Trail, Paradise, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/ac/Paradise_at_Mt._Rainier_NP_in_WA_-_53134515607.jpg",
+   "sha1": "bea8c51c7906a67fdf1763e33353491e1ac17240",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Paradise_at_Mt._Rainier_NP_in_WA_-_53134515607.jpg/1920px-Paradise_at_Mt._Rainier_NP_in_WA_-_53134515607.jpg",
+   "thumb_sha1": "f959a44d74facdff8dccba1e27f11bc9195a8608",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Paradise_at_Mt._Rainier_NP_in_WA_-_53134515607.jpg"
+  },
+  {
+   "id": "rainier-10",
+   "taken": "2024-08-17T10:40",
+   "lat": 46.798746,
+   "lon": -121.734349,
+   "place": "Skyline Trail, Paradise, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Paradise_at_Mt._Rainier_NP_in_WA_-_53135113601.jpg",
+   "sha1": "dae70cdae7bd59c45bdac39d17b725fbbf7ee918",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Paradise_at_Mt._Rainier_NP_in_WA_-_53135113601.jpg/1920px-Paradise_at_Mt._Rainier_NP_in_WA_-_53135113601.jpg",
+   "thumb_sha1": "bcae6003b713d90b895978608db5459fd1a5a237",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Paradise_at_Mt._Rainier_NP_in_WA_-_53135113601.jpg"
+  },
+  {
+   "id": "rainier-11",
+   "taken": "2024-08-17T11:25",
+   "lat": 46.79872,
+   "lon": -121.733694,
+   "place": "Skyline Trail, Paradise, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Paradise_at_Mt._Rainier_NP_in_WA_-_53135319104.jpg",
+   "sha1": "dc48f657801fe5d95faefb97ce549ea13652ef44",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Paradise_at_Mt._Rainier_NP_in_WA_-_53135319104.jpg/1920px-Paradise_at_Mt._Rainier_NP_in_WA_-_53135319104.jpg",
+   "thumb_sha1": "75f0d14f118f7c80f583f257c597176481bc63e1",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Paradise_at_Mt._Rainier_NP_in_WA_-_53135319104.jpg"
+  },
+  {
+   "id": "rainier-12",
+   "taken": "2024-08-17T11:45",
+   "lat": 46.797369,
+   "lon": -121.732136,
+   "place": "Skyline Trail, Paradise, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/62/Paradise_at_Mt._Rainier_NP_in_WA_-_53135522055.jpg",
+   "sha1": "a322c5563622eae71f7b4429b6bd20cb136a903a",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Paradise_at_Mt._Rainier_NP_in_WA_-_53135522055.jpg/1920px-Paradise_at_Mt._Rainier_NP_in_WA_-_53135522055.jpg",
+   "thumb_sha1": "06066b8191ed1adc2fc7d1e50c7aa518ec9a8f51",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Paradise_at_Mt._Rainier_NP_in_WA_-_53135522055.jpg"
+  },
+  {
+   "id": "rainier-13",
+   "taken": "2024-08-17T12:15",
+   "lat": 46.803788,
+   "lon": -121.73447,
+   "place": "Panorama Point, Skyline Trail, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Paradise_at_Mt._Rainier_NP_in_WA_-_53134515457.jpg",
+   "sha1": "3bae9cb085a3d5d908df81c7a15039891231990e",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Paradise_at_Mt._Rainier_NP_in_WA_-_53134515457.jpg/1920px-Paradise_at_Mt._Rainier_NP_in_WA_-_53134515457.jpg",
+   "thumb_sha1": "fe1743751801d6952653ebbfc87c9cdf3fd4a04f",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Paradise_at_Mt._Rainier_NP_in_WA_-_53134515457.jpg"
+  },
+  {
+   "id": "rainier-14",
+   "taken": "2024-08-17T12:50",
+   "lat": 46.798265,
+   "lon": -121.732945,
+   "place": "Skyline Trail, Paradise, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Paradise_at_Mt._Rainier_NP_in_WA_-_53135522045.jpg",
+   "sha1": "e2ea88ed53d0834a83dd82db3da19f862bd83751",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Paradise_at_Mt._Rainier_NP_in_WA_-_53135522045.jpg/1920px-Paradise_at_Mt._Rainier_NP_in_WA_-_53135522045.jpg",
+   "thumb_sha1": "2a1d5d132a154d5fdf33baf638264ecac5baba13",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Paradise_at_Mt._Rainier_NP_in_WA_-_53135522045.jpg"
+  },
+  {
+   "id": "rainier-15",
+   "taken": "2024-08-17T14:40",
+   "lat": 46.78488,
+   "lon": -121.737539,
+   "place": "Paradise meadows, Mount Rainier National Park",
+   "favorite": true,
+   "albums": [
+    "Mount Rainier 2024",
+    "Best of PNW"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/3/30/Scarlet_paintbrush_and_other_wildflowers_at_Paradise_with_a_view_of_the_Tatoosh_Range._%28f1a73082-0a92-4efd-9f3b-aa50339efa85%29.jpeg",
+   "sha1": "1bbcbd29e729981b48232672e670ad8adfbb4330",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Scarlet_paintbrush_and_other_wildflowers_at_Paradise_with_a_view_of_the_Tatoosh_Range._%28f1a73082-0a92-4efd-9f3b-aa50339efa85%29.jpeg/1920px-Scarlet_paintbrush_and_other_wildflowers_at_Paradise_with_a_view_of_the_Tatoosh_Range._%28f1a73082-0a92-4efd-9f3b-aa50339efa85%29.jpeg",
+   "thumb_sha1": "47347a35d722979d461cb9ddc6989fdb2bf462bc",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "NPS Photo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Scarlet_paintbrush_and_other_wildflowers_at_Paradise_with_a_view_of_the_Tatoosh_Range._(f1a73082-0a92-4efd-9f3b-aa50339efa85).jpeg"
+  },
+  {
+   "id": "rainier-16",
+   "taken": "2024-08-17T15:10",
+   "lat": 46.786353,
+   "lon": -121.738756,
+   "place": "Paradise meadows, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Cascade_asters_%28Eucephallus_ledophyllus%29_in_full_bloom_at_Paradise._%2885649232-7411-41a4-82e9-085052ee3acb%29.JPG",
+   "sha1": "4f00fabfefa8b9dbd4fb21ff51ae0cbcf9c299d2",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Cascade_asters_%28Eucephallus_ledophyllus%29_in_full_bloom_at_Paradise._%2885649232-7411-41a4-82e9-085052ee3acb%29.JPG/1920px-Cascade_asters_%28Eucephallus_ledophyllus%29_in_full_bloom_at_Paradise._%2885649232-7411-41a4-82e9-085052ee3acb%29.JPG",
+   "thumb_sha1": "214e56e976b91d879ccc4fbc3d24fce0f4e2010b",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "NPS Photo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Cascade_asters_(Eucephallus_ledophyllus)_in_full_bloom_at_Paradise._(85649232-7411-41a4-82e9-085052ee3acb).JPG"
+  },
+  {
+   "id": "rainier-17",
+   "taken": "2024-08-18T05:50",
+   "lat": 46.766979,
+   "lon": -121.731751,
+   "place": "Reflection Lakes, Mount Rainier National Park",
+   "favorite": true,
+   "albums": [
+    "Mount Rainier 2024",
+    "Best of PNW"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Reflection_Lake_at_Mt._Rainier_NP_in_WA_-_Flickr_-_jhvanwa.jpg",
+   "sha1": "3871349e94513cf8c188873c144216df463fb27c",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Reflection_Lake_at_Mt._Rainier_NP_in_WA_-_Flickr_-_jhvanwa.jpg/1920px-Reflection_Lake_at_Mt._Rainier_NP_in_WA_-_Flickr_-_jhvanwa.jpg",
+   "thumb_sha1": "80a0f526b8341ae2000556fe6ddfe9aa4a976640",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Jeff Hollett from Vancouver, WA, USA",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Reflection_Lake_at_Mt._Rainier_NP_in_WA_-_Flickr_-_jhvanwa.jpg"
+  },
+  {
+   "id": "rainier-18",
+   "taken": "2024-08-18T08:25",
+   "lat": 46.768438,
+   "lon": -121.733901,
+   "place": "Reflection Lakes, Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Mount_Rainier_-_HCP_-_October_17%2C_2022_-_051_-_Reflection_Lake.jpg",
+   "sha1": "af05302b0d7cf545b557d08b1b98d69edcadd2b3",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Mount_Rainier_-_HCP_-_October_17%2C_2022_-_051_-_Reflection_Lake.jpg/1920px-Mount_Rainier_-_HCP_-_October_17%2C_2022_-_051_-_Reflection_Lake.jpg",
+   "thumb_sha1": "ebdb13419a6fd24a90e1a3e4252688c7e5a7bf7d",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Mount_Rainier_-_HCP_-_October_17,_2022_-_051_-_Reflection_Lake.jpg"
+  },
+  {
+   "id": "rainier-19",
+   "taken": "2024-08-18T10:00",
+   "lat": 46.785424,
+   "lon": -121.739975,
+   "place": "Mount Rainier National Park",
+   "favorite": false,
+   "albums": [
+    "Mount Rainier 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/ec/During_peak_bloom_a_colorful_combination_of_wildflowers_bloom_together%2C_including_Sitka_valerian%2C_lupine%2C_and_magenta_paintbrush._%2857071e16-bead-4548-b247-34de9d62c8c2%29.JPG",
+   "sha1": "798cd394cf3c583f8915df29484c860e2f5dc063",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/During_peak_bloom_a_colorful_combination_of_wildflowers_bloom_together%2C_including_Sitka_valerian%2C_lupine%2C_and_magenta_paintbrush._%2857071e16-bead-4548-b247-34de9d62c8c2%29.JPG/1920px-During_peak_bloom_a_colorful_combination_of_wildflowers_bloom_together%2C_including_Sitka_valerian%2C_lupine%2C_and_magenta_paintbrush._%2857071e16-bead-4548-b247-34de9d62c8c2%29.JPG",
+   "thumb_sha1": "6978d38dca25969fbd82e7c4bdbccedaf344b5e4",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "NPS Photo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:During_peak_bloom_a_colorful_combination_of_wildflowers_bloom_together,_including_Sitka_valerian,_lupine,_and_magenta_paintbrush._(57071e16-bead-4548-b247-34de9d62c8c2).JPG"
+  },
+  {
+   "id": "gorge-01",
+   "taken": "2024-10-05T09:10",
+   "lat": 45.539259,
+   "lon": -122.266062,
+   "place": "Crown Point view from Portland Women's Forum viewpoint, Historic Columbia River Highway",
+   "favorite": false,
+   "albums": [
+    "Columbia River Gorge 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/8/83/View_of_Crown_Point_Vista_House%2C_October_2016_%2839728617081%29.jpg",
+   "sha1": "8ce7c91ce81dd7fdb14e1f65a491fbee1d86ebde",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/View_of_Crown_Point_Vista_House%2C_October_2016_%2839728617081%29.jpg/1920px-View_of_Crown_Point_Vista_House%2C_October_2016_%2839728617081%29.jpg",
+   "thumb_sha1": "6aeb795a78c642893750d908985522976e2fa62f",
+   "licence": "Public domain (PD-USGov-USDA-FS)",
+   "credit": "U.S. Forest Service- Pacific Northwest Region",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:View_of_Crown_Point_Vista_House,_October_2016_(39728617081).jpg"
+  },
+  {
+   "id": "gorge-02",
+   "taken": "2024-10-05T09:45",
+   "lat": 45.537949,
+   "lon": -122.217616,
+   "place": "Latourell Falls, Historic Columbia River Highway",
+   "favorite": false,
+   "albums": [
+    "Columbia River Gorge 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Latourell_Falls%2C_Oregon.jpg",
+   "sha1": "ad46de84b1f2ba50015355c3708aaf021065a66f",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Latourell_Falls%2C_Oregon.jpg/1920px-Latourell_Falls%2C_Oregon.jpg",
+   "thumb_sha1": "1a8a8e18e78a6e4fa5e14429f36c88ee126a9f86",
+   "licence": "Public domain (PD-self, released by the photographer)",
+   "credit": "PJ Blalock",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Latourell_Falls,_Oregon.jpg"
+  },
+  {
+   "id": "gorge-03",
+   "taken": "2024-10-05T09:50",
+   "lat": 45.535818,
+   "lon": -122.218532,
+   "place": "Latourell Falls, Historic Columbia River Highway",
+   "favorite": false,
+   "albums": [
+    "Columbia River Gorge 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Columbia_River_Gorge_National_Scenic_Area_Latourell_Falls_-_3.jpg",
+   "sha1": "e283c21e75c6d8e44c901755b46054753ac39da3",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Columbia_River_Gorge_National_Scenic_Area_Latourell_Falls_-_3.jpg/1920px-Columbia_River_Gorge_National_Scenic_Area_Latourell_Falls_-_3.jpg",
+   "thumb_sha1": "5cffe9684bf7fd00811607aae56cd0f026ad08e6",
+   "licence": "Public domain (PD-USGov-USDA-FS)",
+   "credit": "Forest Service Pacific Northwest Region",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Columbia_River_Gorge_National_Scenic_Area_Latourell_Falls_-_3.jpg"
+  },
+  {
+   "id": "gorge-04",
+   "taken": "2024-10-05T10:35",
+   "lat": 45.555992,
+   "lon": -122.179803,
+   "place": "Bridal Veil overlook, Historic Columbia River Highway",
+   "favorite": false,
+   "albums": [
+    "Columbia River Gorge 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/eb/View_of_Sand_Island_from_the_Bridal_Veil_Overlook%2C_Oregon%2C_2011.jpg",
+   "sha1": "21d99aa071b54807bb1d0c3174a01a4ea6163076",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/View_of_Sand_Island_from_the_Bridal_Veil_Overlook%2C_Oregon%2C_2011.jpg/1920px-View_of_Sand_Island_from_the_Bridal_Veil_Overlook%2C_Oregon%2C_2011.jpg",
+   "thumb_sha1": "3862333570f36085b8344b686e482908967ca6ee",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "DimiTalen",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:View_of_Sand_Island_from_the_Bridal_Veil_Overlook,_Oregon,_2011.jpg"
+  },
+  {
+   "id": "gorge-05",
+   "taken": "2024-10-05T11:15",
+   "lat": 45.574852,
+   "lon": -122.126223,
+   "place": "Wahkeena Falls, Columbia River Gorge",
+   "favorite": false,
+   "albums": [
+    "Columbia River Gorge 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Wahkeena_Falls_and_Branches-_Columbia_River_Gorge.jpg",
+   "sha1": "4785b5a9761a346d55f88e888af538f68ce59c35",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Wahkeena_Falls_and_Branches-_Columbia_River_Gorge.jpg/1920px-Wahkeena_Falls_and_Branches-_Columbia_River_Gorge.jpg",
+   "thumb_sha1": "98c1a447678bbf8d98dd059250e51dce3b458a60",
+   "licence": "Public domain (PD-USGov-USDA-FS)",
+   "credit": "Forest Service Pacific Northwest Region",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Wahkeena_Falls_and_Branches-_Columbia_River_Gorge.jpg"
+  },
+  {
+   "id": "gorge-06",
+   "taken": "2024-10-05T11:50",
+   "lat": 45.574777,
+   "lon": -122.114522,
+   "place": "Multnomah Falls, Columbia River Gorge",
+   "favorite": true,
+   "albums": [
+    "Columbia River Gorge 2024",
+    "Best of PNW"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/d/db/Multnomah_Falls_%28168645275%29.jpeg",
+   "sha1": "c64b5de475d6e7b1f422730b1493dd1469a9afa3",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/d/db/Multnomah_Falls_%28168645275%29.jpeg",
+   "thumb_sha1": "c64b5de475d6e7b1f422730b1493dd1469a9afa3",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Sushant Sakhalkar",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Multnomah_Falls_(168645275).jpeg"
+  },
+  {
+   "id": "gorge-07",
+   "taken": "2024-10-05T12:05",
+   "lat": 45.575987,
+   "lon": -122.114232,
+   "place": "Multnomah Falls, Columbia River Gorge",
+   "favorite": false,
+   "albums": [
+    "Columbia River Gorge 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Multnomah_Falls_1.jpg",
+   "sha1": "bc3b71736e8e9d7fc4e7d62376b667d3b6a33fc5",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Multnomah_Falls_1.jpg",
+   "thumb_sha1": "bc3b71736e8e9d7fc4e7d62376b667d3b6a33fc5",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Slinkyo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Multnomah_Falls_1.jpg"
+  },
+  {
+   "id": "gorge-08",
+   "taken": "2024-10-05T12:40",
+   "lat": 45.575543,
+   "lon": -122.116795,
+   "place": "Larch Mountain Trail above Multnomah Falls",
+   "favorite": false,
+   "albums": [
+    "Columbia River Gorge 2024"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/be/View_of_Columbia_River_from_Larch_Mountain_Trail_441%2C_near_Multnomah_Falls%2C_Oregon.jpg",
+   "sha1": "d54e31b81790ed7bcb34c8047c103998fb26ef1f",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/View_of_Columbia_River_from_Larch_Mountain_Trail_441%2C_near_Multnomah_Falls%2C_Oregon.jpg/1920px-View_of_Columbia_River_from_Larch_Mountain_Trail_441%2C_near_Multnomah_Falls%2C_Oregon.jpg",
+   "thumb_sha1": "5ebfe4168dc57765c966debce29c75d347aaff02",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Slinkyo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:View_of_Columbia_River_from_Larch_Mountain_Trail_441,_near_Multnomah_Falls,_Oregon.jpg"
+  },
+  {
+   "id": "hood-01",
+   "taken": "2025-01-18T10:40",
+   "lat": 45.271356,
+   "lon": -121.74124,
+   "place": "Trillium Lake, Mt. Hood National Forest",
+   "favorite": true,
+   "albums": [
+    "Mt. Hood 2025",
+    "Best of PNW"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Trillium_Lake_at_Mt._Hood_in_OR.jpg",
+   "sha1": "46234d653bd4f4d635fb6b7a1183ae606a51624a",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Trillium_Lake_at_Mt._Hood_in_OR.jpg/1920px-Trillium_Lake_at_Mt._Hood_in_OR.jpg",
+   "thumb_sha1": "7ed528a47676371240e8f53e2b1bea0d0022dda2",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Trillium_Lake_at_Mt._Hood_in_OR.jpg"
+  },
+  {
+   "id": "hood-02",
+   "taken": "2025-01-18T10:55",
+   "lat": 45.269594,
+   "lon": -121.738521,
+   "place": "Trillium Lake, Mt. Hood National Forest",
+   "favorite": false,
+   "albums": [
+    "Mt. Hood 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Trillium_Lake_at_Mt._Hood_in_OR_-_51844647424.jpg",
+   "sha1": "419ba85aefe6c38d32773286d2a68ae5c697a969",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Trillium_Lake_at_Mt._Hood_in_OR_-_51844647424.jpg/1920px-Trillium_Lake_at_Mt._Hood_in_OR_-_51844647424.jpg",
+   "thumb_sha1": "709ed9c9964d70c38d453ff04614f56948bc4b3c",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Trillium_Lake_at_Mt._Hood_in_OR_-_51844647424.jpg"
+  },
+  {
+   "id": "hood-03",
+   "taken": "2025-01-19T08:20",
+   "lat": 45.273863,
+   "lon": -121.737728,
+   "place": "Snowy forest near Trillium Lake, Mt. Hood National Forest",
+   "favorite": false,
+   "albums": [
+    "Mt. Hood 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Mt._Hood_National_Forest_in_OR.jpg",
+   "sha1": "0c71f0450080e0feb7f0df3336b525f1eb35a578",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Mt._Hood_National_Forest_in_OR.jpg/1920px-Mt._Hood_National_Forest_in_OR.jpg",
+   "thumb_sha1": "f42f38c98264a67db239b1f6deb5003b1777a238",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Mt._Hood_National_Forest_in_OR.jpg"
+  },
+  {
+   "id": "hood-04",
+   "taken": "2025-01-18T11:40",
+   "lat": 45.272817,
+   "lon": -121.734993,
+   "place": "Snowy forest near Trillium Lake, Mt. Hood National Forest",
+   "favorite": false,
+   "albums": [
+    "Mt. Hood 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/60/Mt._Hood_National_Forest_in_OR_-_51844395963.jpg",
+   "sha1": "f1a0292315397eaa36509b5ce21dd46e4f2918a2",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Mt._Hood_National_Forest_in_OR_-_51844395963.jpg/1920px-Mt._Hood_National_Forest_in_OR_-_51844395963.jpg",
+   "thumb_sha1": "b517dd1521690f8fc4f371a419e16f3611d4b6da",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Mt._Hood_National_Forest_in_OR_-_51844395963.jpg"
+  },
+  {
+   "id": "hood-05",
+   "taken": "2025-01-18T11:50",
+   "lat": 45.273538,
+   "lon": -121.734798,
+   "place": "Snowy forest near Trillium Lake, Mt. Hood National Forest",
+   "favorite": false,
+   "albums": [
+    "Mt. Hood 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Mt._Hood_National_Forest_in_OR_-_51845022690.jpg",
+   "sha1": "3cc6059f4b89589d0ab9c7e0aaeae363a7f6f528",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Mt._Hood_National_Forest_in_OR_-_51845022690.jpg/1920px-Mt._Hood_National_Forest_in_OR_-_51845022690.jpg",
+   "thumb_sha1": "858ba58662ae07c699a09d404e6679cf06bbf55b",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "jhvanwa",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Mt._Hood_National_Forest_in_OR_-_51845022690.jpg"
+  },
+  {
+   "id": "hood-06",
+   "taken": "2025-01-18T14:30",
+   "lat": 45.179964,
+   "lon": -121.709377,
+   "place": "Clear Lake, Mt. Hood National Forest",
+   "favorite": false,
+   "albums": [
+    "Mt. Hood 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/68/Clear_Lake_and_Mt_Hood_in_Clouds%2C_Mt_Hood_National_Forest_%2823636382830%29.jpg",
+   "sha1": "5b754e7122dc02617d26652a8e7765fd71f2fe37",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Clear_Lake_and_Mt_Hood_in_Clouds%2C_Mt_Hood_National_Forest_%2823636382830%29.jpg/1920px-Clear_Lake_and_Mt_Hood_in_Clouds%2C_Mt_Hood_National_Forest_%2823636382830%29.jpg",
+   "thumb_sha1": "0ebce254e6d605be4ab87a9813824c2fa888c185",
+   "licence": "Public domain (PD-USGov-USDA-FS)",
+   "credit": "U.S. Forest Service- Pacific Northwest Region",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Clear_Lake_and_Mt_Hood_in_Clouds,_Mt_Hood_National_Forest_(23636382830).jpg"
+  },
+  {
+   "id": "hood-07",
+   "taken": "2025-01-19T09:45",
+   "lat": 45.331236,
+   "lon": -121.710504,
+   "place": "Timberline Lodge, Mount Hood",
+   "favorite": false,
+   "albums": [
+    "Mt. Hood 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/45/West_Wing_of_Timberline_Lodge%2C_Mid-March.jpg",
+   "sha1": "33929c2bb0b5fc031d9861e14d5d7bf34e310958",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/West_Wing_of_Timberline_Lodge%2C_Mid-March.jpg/1920px-West_Wing_of_Timberline_Lodge%2C_Mid-March.jpg",
+   "thumb_sha1": "74635999bf85498bd968efeb382e0199a3335f0b",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Tim-desser",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:West_Wing_of_Timberline_Lodge,_Mid-March.jpg"
+  },
+  {
+   "id": "hood-08",
+   "taken": "2025-01-19T10:15",
+   "lat": 45.330079,
+   "lon": -121.709834,
+   "place": "Mount Hood in winter, Mt. Hood National Forest",
+   "favorite": false,
+   "albums": [
+    "Mt. Hood 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/69/Winter_snow_Mt_Hood%2C_Oregon_%2832345466421%29.jpg",
+   "sha1": "f5dbf3a8673d43089dc19cc36836dcedfe88d730",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Winter_snow_Mt_Hood%2C_Oregon_%2832345466421%29.jpg/1920px-Winter_snow_Mt_Hood%2C_Oregon_%2832345466421%29.jpg",
+   "thumb_sha1": "41fec185e83b0f7ea3527e5dfe124e0f55ae51e7",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Bonnie Moreland from Oregon, United States",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Winter_snow_Mt_Hood,_Oregon_(32345466421).jpg"
+  },
+  {
+   "id": "yellowstone-01",
+   "taken": "2025-08-09T14:40",
+   "lat": 44.460048,
+   "lon": -110.82867,
+   "place": "Old Faithful, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Old_Faithful_Geyser_%2811936417546%29.jpg",
+   "sha1": "63e9b1842e67124949dfebb85559102d5996113b",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Old_Faithful_Geyser_%2811936417546%29.jpg/1920px-Old_Faithful_Geyser_%2811936417546%29.jpg",
+   "thumb_sha1": "2935fb25664d68e1b68366231d8a9711aed8a858",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jim Peaco)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Old_Faithful_Geyser_(11936417546).jpg"
+  },
+  {
+   "id": "yellowstone-02",
+   "taken": "2025-08-09T15:30",
+   "lat": 44.464448,
+   "lon": -110.823523,
+   "place": "Old Faithful from Observation Point, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/9/91/Spring_Old_Faithful_eruption_from_Observation_Point.jpg",
+   "sha1": "8f1d6903c28e8275d5d3eca2e9e4f2f7d68ea4fa",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Spring_Old_Faithful_eruption_from_Observation_Point.jpg/1920px-Spring_Old_Faithful_eruption_from_Observation_Point.jpg",
+   "thumb_sha1": "05495313a25e79ddd67292ecd6dbc68dbcf91855",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Spring_Old_Faithful_eruption_from_Observation_Point.jpg"
+  },
+  {
+   "id": "yellowstone-03",
+   "taken": "2025-08-09T17:10",
+   "lat": 44.460092,
+   "lon": -110.829504,
+   "place": "Old Faithful, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/d/df/Old_Faithful_Geyser_%2843111030842%29.jpg",
+   "sha1": "200e39ff86225c65e3973c6d881e00390a74b51b",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Old_Faithful_Geyser_%2843111030842%29.jpg/1920px-Old_Faithful_Geyser_%2843111030842%29.jpg",
+   "thumb_sha1": "e4287d3c2f1d6d765de447ef2c2a08a623c903b3",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Diane Renkin)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Old_Faithful_Geyser_(43111030842).jpg"
+  },
+  {
+   "id": "yellowstone-04",
+   "taken": "2025-08-09T20:05",
+   "lat": 44.461062,
+   "lon": -110.825815,
+   "place": "Old Faithful, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Sunset_eruption_of_Old_Faithful_%2833756993516%29.jpg",
+   "sha1": "7e875992bf991d79bbd1bdc9fa6a48eb9449b083",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Sunset_eruption_of_Old_Faithful_%2833756993516%29.jpg/1920px-Sunset_eruption_of_Old_Faithful_%2833756993516%29.jpg",
+   "thumb_sha1": "b59a07b96de315601bc4ca7dca9b3cdc1b3e2186",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Neal Herbert)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Sunset_eruption_of_Old_Faithful_(33756993516).jpg"
+  },
+  {
+   "id": "yellowstone-05",
+   "taken": "2025-08-10T06:25",
+   "lat": 44.462366,
+   "lon": -110.837472,
+   "place": "Castle Geyser, Upper Geyser Basin, Yellowstone National Park",
+   "favorite": true,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Sunrise_over_Castle_Geyser_cone_%2852214521571%29.jpg",
+   "sha1": "feab13eb0bfdc426d1e876839f37e4c6820a0939",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Sunrise_over_Castle_Geyser_cone_%2852214521571%29.jpg/1920px-Sunrise_over_Castle_Geyser_cone_%2852214521571%29.jpg",
+   "thumb_sha1": "3f350f0b1addd879df6084b1be3bc0eed2728c7b",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "YellowstoneNPS (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Sunrise_over_Castle_Geyser_cone_(52214521571).jpg"
+  },
+  {
+   "id": "yellowstone-06",
+   "taken": "2025-08-10T07:10",
+   "lat": 44.471274,
+   "lon": -110.841957,
+   "place": "Grotto Geyser, Upper Geyser Basin, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/c6/Steamy_morning_eruption_at_Grotto_Geyser_%2854618193133%29.jpg",
+   "sha1": "442327b101c9481a32b1265055551f4f47e8f3be",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Steamy_morning_eruption_at_Grotto_Geyser_%2854618193133%29.jpg/1920px-Steamy_morning_eruption_at_Grotto_Geyser_%2854618193133%29.jpg",
+   "thumb_sha1": "152edfaf9a67dd4bf16ee01750fb4f37d4c5321a",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "YellowstoneNPS (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Steamy_morning_eruption_at_Grotto_Geyser_(54618193133).jpg"
+  },
+  {
+   "id": "yellowstone-07",
+   "taken": "2025-08-10T07:45",
+   "lat": 44.475089,
+   "lon": -110.842974,
+   "place": "Morning Glory Pool, Upper Geyser Basin, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/11/Morning_Glory_Pool_reflections_%2854618193308%29.jpg",
+   "sha1": "c3ecd3015b9d7ba2d1b19b5fd3fdd6c8c4952f2b",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Morning_Glory_Pool_reflections_%2854618193308%29.jpg/1920px-Morning_Glory_Pool_reflections_%2854618193308%29.jpg",
+   "thumb_sha1": "4819d09760925438dc9e67260d5393a38ad20c32",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "YellowstoneNPS (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Morning_Glory_Pool_reflections_(54618193308).jpg"
+  },
+  {
+   "id": "yellowstone-08",
+   "taken": "2025-08-10T08:20",
+   "lat": 44.472692,
+   "lon": -110.841143,
+   "place": "Riverside Geyser, Upper Geyser Basin, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Riverside_Geyser_eruption_%28cefc913a-1259-48b7-a2ac-9a66b5956d55%29.jpg",
+   "sha1": "5744ee32a7b7b55e44afa5cfbeaf5ca3968bdec1",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Riverside_Geyser_eruption_%28cefc913a-1259-48b7-a2ac-9a66b5956d55%29.jpg/1920px-Riverside_Geyser_eruption_%28cefc913a-1259-48b7-a2ac-9a66b5956d55%29.jpg",
+   "thumb_sha1": "33dcb314b333d81b522165d8335fd4e4b20cce25",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Jacob W. Frank",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Riverside_Geyser_eruption_(cefc913a-1259-48b7-a2ac-9a66b5956d55).jpg"
+  },
+  {
+   "id": "yellowstone-09",
+   "taken": "2025-08-10T09:05",
+   "lat": 44.467774,
+   "lon": -110.838192,
+   "place": "Grand Geyser, Upper Geyser Basin, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/45/Grand_Geyser_summer_eruption_%2853069551718%29.jpg",
+   "sha1": "328e3f73bc15d34a83258a6d911bc71adf77bc9f",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Grand_Geyser_summer_eruption_%2853069551718%29.jpg/1920px-Grand_Geyser_summer_eruption_%2853069551718%29.jpg",
+   "thumb_sha1": "97a3013cb2c37e4c0ce408974f42907d2f6092c5",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "YellowstoneNPS (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Grand_Geyser_summer_eruption_(53069551718).jpg"
+  },
+  {
+   "id": "yellowstone-10",
+   "taken": "2025-08-10T10:40",
+   "lat": 44.52412,
+   "lon": -110.839415,
+   "place": "Grand Prismatic Spring, Midway Geyser Basin, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/3/33/Grand_Prismatic_Hot_Spring_%2843111033332%29.jpg",
+   "sha1": "949061af805cc29902a3bcf525ce51368fa87c0d",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Grand_Prismatic_Hot_Spring_%2843111033332%29.jpg/1920px-Grand_Prismatic_Hot_Spring_%2843111033332%29.jpg",
+   "thumb_sha1": "d27f74bba4149daf75531641c47ac3eb7d9816b8",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Diane Renkin)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Grand_Prismatic_Hot_Spring_(43111033332).jpg"
+  },
+  {
+   "id": "yellowstone-11",
+   "taken": "2025-08-10T10:42",
+   "lat": 44.524624,
+   "lon": -110.836643,
+   "place": "Grand Prismatic Spring, Midway Geyser Basin, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Grand_Prismatic_Hot_Spring_%2843111032632%29.jpg",
+   "sha1": "7c440ddef1bf0c3f4d3f837dac7666763014bb00",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Grand_Prismatic_Hot_Spring_%2843111032632%29.jpg/1920px-Grand_Prismatic_Hot_Spring_%2843111032632%29.jpg",
+   "thumb_sha1": "6a0bab150d39a026d09b81eef3b15820cf6b14e8",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Diane Renkin)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Grand_Prismatic_Hot_Spring_(43111032632).jpg"
+  },
+  {
+   "id": "yellowstone-12",
+   "taken": "2025-08-10T10:55",
+   "lat": 44.525688,
+   "lon": -110.83782,
+   "place": "Grand Prismatic Spring, Midway Geyser Basin, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Grand_Prismatic_Spring_from_the_boardwalk_%2852374867879%29.jpg",
+   "sha1": "2629adec2378edacd537f591f45a47ffe237199d",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Grand_Prismatic_Spring_from_the_boardwalk_%2852374867879%29.jpg/1920px-Grand_Prismatic_Spring_from_the_boardwalk_%2852374867879%29.jpg",
+   "thumb_sha1": "848dac7fd07dcddfeb9575e5b73008274226fd54",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "YellowstoneNPS (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Grand_Prismatic_Spring_from_the_boardwalk_(52374867879).jpg"
+  },
+  {
+   "id": "yellowstone-13",
+   "taken": "2025-08-10T12:20",
+   "lat": 44.519172,
+   "lon": -110.835591,
+   "place": "Grand Prismatic Overlook (Fairy Falls Trail), Yellowstone National Park",
+   "favorite": true,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/ba/Views_from_the_Grand_Prismatic_Overlook_Trail_%2841435293880%29.jpg",
+   "sha1": "d0129226d4d902da4f3f30fbb18f953aa26341d4",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Views_from_the_Grand_Prismatic_Overlook_Trail_%2841435293880%29.jpg/1920px-Views_from_the_Grand_Prismatic_Overlook_Trail_%2841435293880%29.jpg",
+   "thumb_sha1": "fc7d98f7055df8d1112fae019a014d5518724682",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Views_from_the_Grand_Prismatic_Overlook_Trail_(41435293880).jpg"
+  },
+  {
+   "id": "yellowstone-14",
+   "taken": "2025-08-10T12:35",
+   "lat": 44.517888,
+   "lon": -110.835975,
+   "place": "Grand Prismatic Overlook (Fairy Falls Trail), Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Grand_Prismatic_from_Grand_Prismatic_Overlook_%2853068468252%29.jpg",
+   "sha1": "c780e44675b52161e221ee0deff2183ed379ba8c",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Grand_Prismatic_from_Grand_Prismatic_Overlook_%2853068468252%29.jpg/1920px-Grand_Prismatic_from_Grand_Prismatic_Overlook_%2853068468252%29.jpg",
+   "thumb_sha1": "f05a5b3faaa34fd5cb6e48bdafe086e8ad868889",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "YellowstoneNPS (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Grand_Prismatic_from_Grand_Prismatic_Overlook_(53068468252).jpg"
+  },
+  {
+   "id": "yellowstone-15",
+   "taken": "2025-08-10T12:45",
+   "lat": 44.518276,
+   "lon": -110.835964,
+   "place": "Grand Prismatic Overlook (Fairy Falls Trail), Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/68/Grand_Prismatic_Spring_Overlook_on_a_clear_day_%2838365580332%29.jpg",
+   "sha1": "1ef98bb88cceb3110dd8d6a76b6e8a14a54700ee",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Grand_Prismatic_Spring_Overlook_on_a_clear_day_%2838365580332%29.jpg/1920px-Grand_Prismatic_Spring_Overlook_on_a_clear_day_%2838365580332%29.jpg",
+   "thumb_sha1": "959137e3ae6dd1df493e8ecb46d6ca855031b252",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Grand_Prismatic_Spring_Overlook_on_a_clear_day_(38365580332).jpg"
+  },
+  {
+   "id": "yellowstone-16",
+   "taken": "2025-08-10T12:55",
+   "lat": 44.520763,
+   "lon": -110.834435,
+   "place": "Grand Prismatic Overlook (Fairy Falls Trail), Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Grand_Prismatic_Spring_and_Excelsior_Geyser_Crater_steaming_on_a_spring_morning_%2842107875492%29.jpg",
+   "sha1": "80803d5c33c4dec21aaa2d4e5d0ac5b139d4d25b",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Grand_Prismatic_Spring_and_Excelsior_Geyser_Crater_steaming_on_a_spring_morning_%2842107875492%29.jpg/1920px-Grand_Prismatic_Spring_and_Excelsior_Geyser_Crater_steaming_on_a_spring_morning_%2842107875492%29.jpg",
+   "thumb_sha1": "71f9e8cea386cf1eadebe7ae3d877691149b2fc2",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Grand_Prismatic_Spring_and_Excelsior_Geyser_Crater_steaming_on_a_spring_morning_(42107875492).jpg"
+  },
+  {
+   "id": "yellowstone-17",
+   "taken": "2025-08-11T09:10",
+   "lat": 44.717773,
+   "lon": -110.497893,
+   "place": "Brink of the Lower Falls, Grand Canyon of the Yellowstone",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Brink_of_the_Lower_Falls_of_the_Yellowstone_River_%2815191851655%29.jpg",
+   "sha1": "c084d35cbf6a4b8e36972036a8ad84f3d24d976e",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Brink_of_the_Lower_Falls_of_the_Yellowstone_River_%2815191851655%29.jpg/1920px-Brink_of_the_Lower_Falls_of_the_Yellowstone_River_%2815191851655%29.jpg",
+   "thumb_sha1": "83c57432f5a3ee3d01bc05981f6f613fa0dbb16d",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jim Peaco)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Brink_of_the_Lower_Falls_of_the_Yellowstone_River_(15191851655).jpg"
+  },
+  {
+   "id": "yellowstone-18",
+   "taken": "2025-08-11T09:15",
+   "lat": 44.718387,
+   "lon": -110.497424,
+   "place": "Brink of the Lower Falls, Grand Canyon of the Yellowstone",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/9/98/Looking_down_from_the_Brink_of_Lower_Falls_%2820700873914%29.jpg",
+   "sha1": "a27d449a9b1d3ec4f096a36ca4965620e0da5882",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Looking_down_from_the_Brink_of_Lower_Falls_%2820700873914%29.jpg/1920px-Looking_down_from_the_Brink_of_Lower_Falls_%2820700873914%29.jpg",
+   "thumb_sha1": "66b3adbe2f4604b83f5cb0fc57da126c313baa5c",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Neal Herbert)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Looking_down_from_the_Brink_of_Lower_Falls_(20700873914).jpg"
+  },
+  {
+   "id": "yellowstone-19",
+   "taken": "2025-08-11T09:30",
+   "lat": 44.718753,
+   "lon": -110.498364,
+   "place": "Brink of the Lower Falls, Grand Canyon of the Yellowstone",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Yellowstone_River_and_Grand_Canyon_from_Brink_of_the_Lower_Falls_viewing_area_%2853041187067%29.jpg",
+   "sha1": "58d0be67783b86c0c570bc69a66209cf00359ab7",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Yellowstone_River_and_Grand_Canyon_from_Brink_of_the_Lower_Falls_viewing_area_%2853041187067%29.jpg/1920px-Yellowstone_River_and_Grand_Canyon_from_Brink_of_the_Lower_Falls_viewing_area_%2853041187067%29.jpg",
+   "thumb_sha1": "b2862525fc62f9175bc423366e775ef19a2033f4",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "YellowstoneNPS (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Yellowstone_River_and_Grand_Canyon_from_Brink_of_the_Lower_Falls_viewing_area_(53041187067).jpg"
+  },
+  {
+   "id": "yellowstone-20",
+   "taken": "2025-08-11T10:30",
+   "lat": 44.717519,
+   "lon": -110.496857,
+   "place": "Lower Falls, Grand Canyon of the Yellowstone",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Lower_Falls_of_the_Yellowstone_River_%2851440684501%29.jpg",
+   "sha1": "d2c8374ba686defa9ebffdd89a6e7a01c67d70aa",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Lower_Falls_of_the_Yellowstone_River_%2851440684501%29.jpg/1920px-Lower_Falls_of_the_Yellowstone_River_%2851440684501%29.jpg",
+   "thumb_sha1": "c08c2f25de49e78870a4dd0a691d7f53b34ff9f8",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "YellowstoneNPS (NPS / Diane Renkin)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Lower_Falls_of_the_Yellowstone_River_(51440684501).jpg"
+  },
+  {
+   "id": "yellowstone-21",
+   "taken": "2025-08-11T10:40",
+   "lat": 44.722321,
+   "lon": -110.489127,
+   "place": "Lookout Point, Grand Canyon of the Yellowstone",
+   "favorite": true,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/7/72/Lower_Falls_from_Lookout_Point_%2850135281317%29.jpg",
+   "sha1": "8e764656264d8fe0edd770ceaab1e0e91061ccb1",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Lower_Falls_from_Lookout_Point_%2850135281317%29.jpg/1920px-Lower_Falls_from_Lookout_Point_%2850135281317%29.jpg",
+   "thumb_sha1": "05c811f4bcf8833cc5161eb4b8abdeefd49b16de",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "YellowstoneNPS (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Lower_Falls_from_Lookout_Point_(50135281317).jpg"
+  },
+  {
+   "id": "yellowstone-22",
+   "taken": "2025-08-11T10:50",
+   "lat": 44.720126,
+   "lon": -110.48774,
+   "place": "Lookout Point, Grand Canyon of the Yellowstone",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Lower_Falls_and_the_trail_to_Red_Rock_Point_as_seen_from_Lookout_Point_%2821136673039%29.jpg",
+   "sha1": "3f6b1a252752d589c1d780ab92e4927567e10c81",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Lower_Falls_and_the_trail_to_Red_Rock_Point_as_seen_from_Lookout_Point_%2821136673039%29.jpg/1920px-Lower_Falls_and_the_trail_to_Red_Rock_Point_as_seen_from_Lookout_Point_%2821136673039%29.jpg",
+   "thumb_sha1": "6128076b65c56d793dc4d8b8cf52e2f83f8337d9",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Neal Herbert)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Lower_Falls_and_the_trail_to_Red_Rock_Point_as_seen_from_Lookout_Point_(21136673039).jpg"
+  },
+  {
+   "id": "yellowstone-23",
+   "taken": "2025-08-11T15:20",
+   "lat": 44.721046,
+   "lon": -110.479126,
+   "place": "Artist Point, Grand Canyon of the Yellowstone",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/46/Lower_Falls_from_Artist_Point_%2819087799399%29.jpg",
+   "sha1": "1cd4fcd1fb51395bdf43a8776a3bad775311d11b",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Lower_Falls_from_Artist_Point_%2819087799399%29.jpg/1920px-Lower_Falls_from_Artist_Point_%2819087799399%29.jpg",
+   "thumb_sha1": "2dbf96eb6c9651fc5b6cb3abe1eec8ae1a6793e2",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Diane Renkin)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Lower_Falls_from_Artist_Point_(19087799399).jpg"
+  },
+  {
+   "id": "yellowstone-24",
+   "taken": "2025-08-11T15:35",
+   "lat": 44.721113,
+   "lon": -110.480857,
+   "place": "Artist Point, Grand Canyon of the Yellowstone",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/d/d1/Lower_Falls_through_the_trees_at_Artist_Point_%2828956666027%29.jpg",
+   "sha1": "a10cf81bd48ae539daee4d883d6206f523a2d250",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Lower_Falls_through_the_trees_at_Artist_Point_%2828956666027%29.jpg/1920px-Lower_Falls_through_the_trees_at_Artist_Point_%2828956666027%29.jpg",
+   "thumb_sha1": "816f8dbb7ac9d3d929eb85fc937f35e6035912f6",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Lower_Falls_through_the_trees_at_Artist_Point_(28956666027).jpg"
+  },
+  {
+   "id": "yellowstone-25",
+   "taken": "2025-08-12T08:40",
+   "lat": 44.71886,
+   "lon": -110.495,
+   "place": "Lower Falls, Grand Canyon of the Yellowstone",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/10/Lower_Falls_in_morning_sun_%2835169598940%29.jpg",
+   "sha1": "17ce871e9561943e1736c17154e73a1838645b14",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Lower_Falls_in_morning_sun_%2835169598940%29.jpg/1920px-Lower_Falls_in_morning_sun_%2835169598940%29.jpg",
+   "thumb_sha1": "d4f3b127fa3cf9494ec83b391479751351840fe6",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Diane Renkin)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Lower_Falls_in_morning_sun_(35169598940).jpg"
+  },
+  {
+   "id": "yellowstone-26",
+   "taken": "2025-08-12T09:30",
+   "lat": 44.717293,
+   "lon": -110.490809,
+   "place": "Uncle Tom's Trail, Grand Canyon of the Yellowstone",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Double_rainbow_at_the_Lower_Falls_of_the_Yellowstone_River_%2814995661458%29.jpg",
+   "sha1": "c6077d576f48dde196a58fdfa84b94d231d75957",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Double_rainbow_at_the_Lower_Falls_of_the_Yellowstone_River_%2814995661458%29.jpg/1920px-Double_rainbow_at_the_Lower_Falls_of_the_Yellowstone_River_%2814995661458%29.jpg",
+   "thumb_sha1": "47531c636cba6b8623e905b8dd372a24d5c36070",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Neal Herbert)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Double_rainbow_at_the_Lower_Falls_of_the_Yellowstone_River_(14995661458).jpg"
+  },
+  {
+   "id": "yellowstone-27",
+   "taken": "2025-08-12T19:50",
+   "lat": 44.896002,
+   "lon": -110.23613,
+   "place": "Lamar Valley, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Bison_grazing_at_sunset_in_Lamar_Valley_during_InstaMeet_%2834956051553%29.jpg",
+   "sha1": "66f1b21df305b15a58637d64c0ac97e50fa08298",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Bison_grazing_at_sunset_in_Lamar_Valley_during_InstaMeet_%2834956051553%29.jpg/1920px-Bison_grazing_at_sunset_in_Lamar_Valley_during_InstaMeet_%2834956051553%29.jpg",
+   "thumb_sha1": "4543a35c1bc3d8dc803e92516ce16f5d3ebadc3f",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Bison_grazing_at_sunset_in_Lamar_Valley_during_InstaMeet_(34956051553).jpg"
+  },
+  {
+   "id": "yellowstone-28",
+   "taken": "2025-08-12T20:05",
+   "lat": 44.894728,
+   "lon": -110.236746,
+   "place": "Lamar Valley, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Bison_grazing_in_Lamar_Valley_at_sunset_%2842875875962%29.jpg",
+   "sha1": "a65996220f8a0d3db1c9e000674e3fe4f47bc4c5",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Bison_grazing_in_Lamar_Valley_at_sunset_%2842875875962%29.jpg/1920px-Bison_grazing_in_Lamar_Valley_at_sunset_%2842875875962%29.jpg",
+   "thumb_sha1": "9e8560ae63c522c0a5bd79f7ea89a0541c4f081f",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Bison_grazing_in_Lamar_Valley_at_sunset_(42875875962).jpg"
+  },
+  {
+   "id": "yellowstone-29",
+   "taken": "2025-08-13T06:05",
+   "lat": 44.894901,
+   "lon": -110.237625,
+   "place": "Lamar Valley, Yellowstone National Park",
+   "favorite": true,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Bison_grazing_in_Lamar_Valley_at_sunrise_%2842023761225%29.jpg",
+   "sha1": "5a50a6d0b006499399ff77271dd18a205a01e1b2",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Bison_grazing_in_Lamar_Valley_at_sunrise_%2842023761225%29.jpg/1920px-Bison_grazing_in_Lamar_Valley_at_sunrise_%2842023761225%29.jpg",
+   "thumb_sha1": "a95d20ee436e6f74ed5f6427cf4bd5a6dd58bbca",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Jacob W. Frank for Yellowstone National Park",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Bison_grazing_in_Lamar_Valley_at_sunrise_(42023761225).jpg"
+  },
+  {
+   "id": "yellowstone-30",
+   "taken": "2025-08-13T06:25",
+   "lat": 44.895868,
+   "lon": -110.236985,
+   "place": "Lamar Valley, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Bison_group_on_the_move_at_sunrise_in_Lamar_Valley_%2835828513793%29.jpg",
+   "sha1": "d17919b8aa2d35c5c6592ae93db7da0c5d0da8a1",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Bison_group_on_the_move_at_sunrise_in_Lamar_Valley_%2835828513793%29.jpg/1920px-Bison_group_on_the_move_at_sunrise_in_Lamar_Valley_%2835828513793%29.jpg",
+   "thumb_sha1": "ac6bbdbe872fbf59f13f5cad11f3d417b939e38e",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Bison_group_on_the_move_at_sunrise_in_Lamar_Valley_(35828513793).jpg"
+  },
+  {
+   "id": "yellowstone-31",
+   "taken": "2025-08-13T06:50",
+   "lat": 44.894413,
+   "lon": -110.23702,
+   "place": "Lamar Valley, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/9/96/Bison_herd%2C_Lamar_Valley_%282c6600eb-b9e5-46fb-994b-3ba33cee9b59%29.jpg",
+   "sha1": "32e53381e7456c0f5522e28bc72d4b87fe17dc83",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Bison_herd%2C_Lamar_Valley_%282c6600eb-b9e5-46fb-994b-3ba33cee9b59%29.jpg/1920px-Bison_herd%2C_Lamar_Valley_%282c6600eb-b9e5-46fb-994b-3ba33cee9b59%29.jpg",
+   "thumb_sha1": "df5101df2ef863896c3d88468c09fda8a7d1398f",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Neal Herbert",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Bison_herd,_Lamar_Valley_(2c6600eb-b9e5-46fb-994b-3ba33cee9b59).jpg"
+  },
+  {
+   "id": "yellowstone-32",
+   "taken": "2025-08-13T07:30",
+   "lat": 44.895371,
+   "lon": -110.234388,
+   "place": "Lamar Valley, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Bison%2C_Lamar_Valley_%2892ddfbd2-3b56-4fa5-a714-3057ba96ec2f%29.jpg",
+   "sha1": "d556ddd43a04d5287d974c729ad07bbcd82656b5",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Bison%2C_Lamar_Valley_%2892ddfbd2-3b56-4fa5-a714-3057ba96ec2f%29.jpg/1920px-Bison%2C_Lamar_Valley_%2892ddfbd2-3b56-4fa5-a714-3057ba96ec2f%29.jpg",
+   "thumb_sha1": "778cf666234680b194e915992faaff5ecb60560c",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Neal Herbert",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Bison,_Lamar_Valley_(92ddfbd2-3b56-4fa5-a714-3057ba96ec2f).jpg"
+  },
+  {
+   "id": "yellowstone-33",
+   "taken": "2025-08-13T09:00",
+   "lat": 44.895741,
+   "lon": -110.238879,
+   "place": "Rose Creek, Lamar Valley, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Bison_on_Rose_Creek%2C_Lamar_Valley_%289a4b867a-1dd8-b71b-0b64-fe0f0297e64a%29.jpg",
+   "sha1": "fd2724c902f7e108ed89ed680545806500a0feab",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Bison_on_Rose_Creek%2C_Lamar_Valley_%289a4b867a-1dd8-b71b-0b64-fe0f0297e64a%29.jpg/1920px-Bison_on_Rose_Creek%2C_Lamar_Valley_%289a4b867a-1dd8-b71b-0b64-fe0f0297e64a%29.jpg",
+   "thumb_sha1": "1beab6b03d3e6bf5202abd790549bf9a4fca00e4",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Neal Herbert",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Bison_on_Rose_Creek,_Lamar_Valley_(9a4b867a-1dd8-b71b-0b64-fe0f0297e64a).jpg"
+  },
+  {
+   "id": "yellowstone-34",
+   "taken": "2025-08-13T09:40",
+   "lat": 44.897131,
+   "lon": -110.235283,
+   "place": "Lamar Valley, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/19/Bison_cows_%26_calves%2C_Lamar_Valley_%2833899304424%29.jpg",
+   "sha1": "ec5b5208c28d13badfd7514075f78709b6df29ea",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Bison_cows_%26_calves%2C_Lamar_Valley_%2833899304424%29.jpg/1920px-Bison_cows_%26_calves%2C_Lamar_Valley_%2833899304424%29.jpg",
+   "thumb_sha1": "93e94115f52f724173c7949446059f63cdd90459",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Neal Herbert)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Bison_cows_&_calves,_Lamar_Valley_(33899304424).jpg"
+  },
+  {
+   "id": "yellowstone-35",
+   "taken": "2025-08-13T12:30",
+   "lat": 44.869262,
+   "lon": -110.297086,
+   "place": "Lamar Valley from Specimen Ridge, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/0/03/Lamar_Valley_from_Specimen_Ridge_%2836396405503%29.jpg",
+   "sha1": "403edde9cad89cd8e2db65eaf7dbb1d12319f44a",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Lamar_Valley_from_Specimen_Ridge_%2836396405503%29.jpg/1920px-Lamar_Valley_from_Specimen_Ridge_%2836396405503%29.jpg",
+   "thumb_sha1": "025e5325919f448d01c7c61e62fe638f9921eec4",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Lamar_Valley_from_Specimen_Ridge_(36396405503).jpg"
+  },
+  {
+   "id": "yellowstone-36",
+   "taken": "2025-08-13T16:20",
+   "lat": 44.900281,
+   "lon": -110.215614,
+   "place": "Confluence of Soda Butte Creek and Lamar River, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Confluence_of_Soda_Butte_Creek_and_Lamar_River_%2848350367577%29.jpg",
+   "sha1": "6d7a0b170ad9dcaf100aceefebb675d01885e756",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Confluence_of_Soda_Butte_Creek_and_Lamar_River_%2848350367577%29.jpg/1920px-Confluence_of_Soda_Butte_Creek_and_Lamar_River_%2848350367577%29.jpg",
+   "thumb_sha1": "b60520507c610c07aa9670a6c87a19b79f4825a7",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Diane Renkin)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Confluence_of_Soda_Butte_Creek_and_Lamar_River_(48350367577).jpg"
+  },
+  {
+   "id": "yellowstone-37",
+   "taken": "2025-08-14T15:00",
+   "lat": 44.967016,
+   "lon": -110.706065,
+   "place": "Palette Spring, Mammoth Hot Springs, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Palette_Spring_summer_morning_%2853829843982%29.jpg",
+   "sha1": "d2c0e166f4f707ff09672e721df1c0e2106b8a7f",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Palette_Spring_summer_morning_%2853829843982%29.jpg/1920px-Palette_Spring_summer_morning_%2853829843982%29.jpg",
+   "thumb_sha1": "50f1607b6eaef812e51520bb7c04dad7d4a553e6",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "YellowstoneNPS (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Palette_Spring_summer_morning_(53829843982).jpg"
+  },
+  {
+   "id": "yellowstone-38",
+   "taken": "2025-08-14T15:15",
+   "lat": 44.969134,
+   "lon": -110.708604,
+   "place": "Palette Spring, Mammoth Hot Springs, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Palette_Spring_terraces_%28tight%29_%2848021363391%29.jpg",
+   "sha1": "a27f1afd7b86893096bdcbf249bb49c0728dfb63",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Palette_Spring_terraces_%28tight%29_%2848021363391%29.jpg/1920px-Palette_Spring_terraces_%28tight%29_%2848021363391%29.jpg",
+   "thumb_sha1": "b35bb613635796476d3478933be072f9986b324f",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Palette_Spring_terraces_(tight)_(48021363391).jpg"
+  },
+  {
+   "id": "yellowstone-39",
+   "taken": "2025-08-14T15:20",
+   "lat": 44.969747,
+   "lon": -110.705844,
+   "place": "Palette Spring, Mammoth Hot Springs, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Palette_Spring_terraces_%2848021367501%29.jpg",
+   "sha1": "7017881548f98be2158b1f2b19caf76dd1843aba",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Palette_Spring_terraces_%2848021367501%29.jpg/1920px-Palette_Spring_terraces_%2848021367501%29.jpg",
+   "thumb_sha1": "bf7cecb0946bc58c4f8df163879d320e1a29438c",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Palette_Spring_terraces_(48021367501).jpg"
+  },
+  {
+   "id": "yellowstone-40",
+   "taken": "2025-08-14T16:10",
+   "lat": 44.968083,
+   "lon": -110.710218,
+   "place": "Canary Spring, Mammoth Hot Springs, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Canary_Spring_travertine_formations_%2838263641832%29.jpg",
+   "sha1": "c2319bdc8cdb3d8b661050306247efacf42ab0e0",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Canary_Spring_travertine_formations_%2838263641832%29.jpg/1920px-Canary_Spring_travertine_formations_%2838263641832%29.jpg",
+   "thumb_sha1": "4148bb04efa1eb2e5bb10478f008d90a7a352799",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Canary_Spring_travertine_formations_(38263641832).jpg"
+  },
+  {
+   "id": "yellowstone-41",
+   "taken": "2025-08-15T07:40",
+   "lat": 44.967411,
+   "lon": -110.708109,
+   "place": "Canary Spring, Mammoth Hot Springs, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/af/Travertine_terraces_of_Canary_Spring_%2847953929088%29.jpg",
+   "sha1": "c60aa9a1ce8b0b8d8add3cf50ea04365dd58b31a",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Travertine_terraces_of_Canary_Spring_%2847953929088%29.jpg/1920px-Travertine_terraces_of_Canary_Spring_%2847953929088%29.jpg",
+   "thumb_sha1": "807a00f00cbd69d96e03b3efb9f23381f108a968",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Travertine_terraces_of_Canary_Spring_(47953929088).jpg"
+  },
+  {
+   "id": "yellowstone-42",
+   "taken": "2025-08-15T07:55",
+   "lat": 44.970284,
+   "lon": -110.709975,
+   "place": "Canary Spring, Mammoth Hot Springs, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/64/Terraces_of_Canary_Spring_%2843781836552%29.jpg",
+   "sha1": "c143fa90cd7f086a9d400e7b5dbd056453d7a0af",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Terraces_of_Canary_Spring_%2843781836552%29.jpg/1920px-Terraces_of_Canary_Spring_%2843781836552%29.jpg",
+   "thumb_sha1": "733fb167b5a82d92a58081018f1cf994ac647c92",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Terraces_of_Canary_Spring_(43781836552).jpg"
+  },
+  {
+   "id": "yellowstone-43",
+   "taken": "2025-08-15T08:10",
+   "lat": 44.970027,
+   "lon": -110.710767,
+   "place": "Canary Spring, Mammoth Hot Springs, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/45/Canary_Spring_terraces_%2834849629536%29.jpg",
+   "sha1": "8d0c0a4344a3b2aa9033781f587863a335649f31",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Canary_Spring_terraces_%2834849629536%29.jpg/1920px-Canary_Spring_terraces_%2834849629536%29.jpg",
+   "thumb_sha1": "b21a9db14e0364b3390168ae908dc3cfb76f06a4",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Canary_Spring_terraces_(34849629536).jpg"
+  },
+  {
+   "id": "yellowstone-44",
+   "taken": "2025-08-15T11:40",
+   "lat": 44.975952,
+   "lon": -110.660137,
+   "place": "Mammoth Hot Springs from Mount Everts, Yellowstone National Park",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/e3/Mammoth_Hot_Springs_from_Mount_Everts_%2835575690242%29.jpg",
+   "sha1": "5a0ce181750f36f5baa31600a7459c49661b5044",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Mammoth_Hot_Springs_from_Mount_Everts_%2835575690242%29.jpg/1920px-Mammoth_Hot_Springs_from_Mount_Everts_%2835575690242%29.jpg",
+   "thumb_sha1": "219be4dd74423de78d71998451be3f113d2da140",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Yellowstone National Park (NPS / Jacob W. Frank)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Mammoth_Hot_Springs_from_Mount_Everts_(35575690242).jpg"
+  },
+  {
+   "id": "yellowstone-45",
+   "taken": "2025-08-16T07:50",
+   "lat": 44.961899,
+   "lon": -110.711244,
+   "place": "Orange Spring Mound, Upper Terrace Drive, Mammoth Hot Springs",
+   "favorite": false,
+   "albums": [
+    "Yellowstone 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Orange_Spring_Mound_on_Upper_Terrace_Drive_%284d8bee07-5309-4cf9-be7a-b6ac43d8d066%29.jpg",
+   "sha1": "3df2938f24d97946b28b2286c80d631539b01370",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Orange_Spring_Mound_on_Upper_Terrace_Drive_%284d8bee07-5309-4cf9-be7a-b6ac43d8d066%29.jpg/1920px-Orange_Spring_Mound_on_Upper_Terrace_Drive_%284d8bee07-5309-4cf9-be7a-b6ac43d8d066%29.jpg",
+   "thumb_sha1": "5fdea2c3098c1d2053b9d31fec6a6a211a717241",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Jacob W. Frank",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Orange_Spring_Mound_on_Upper_Terrace_Drive_(4d8bee07-5309-4cf9-be7a-b6ac43d8d066).jpg"
+  },
+  {
+   "id": "craterlake-01",
+   "taken": "2025-09-20T13:30",
+   "lat": 42.927157,
+   "lon": -122.167771,
+   "place": "West Rim near Lightning Springs, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Crater_Lake_in_Summer_1%2C_Crater_Lake_National_Park.jpg",
+   "sha1": "d9cb243aa9841f90d239475d3353c566e3263d90",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Crater_Lake_in_Summer_1%2C_Crater_Lake_National_Park.jpg/1920px-Crater_Lake_in_Summer_1%2C_Crater_Lake_National_Park.jpg",
+   "thumb_sha1": "b10720676e69005d52c749e767c9077404f4fe1b",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "National Park Service",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_in_Summer_1,_Crater_Lake_National_Park.jpg"
+  },
+  {
+   "id": "craterlake-02",
+   "taken": "2025-09-20T11:30",
+   "lat": 42.942112,
+   "lon": -122.163507,
+   "place": "Wizard Island from Rim Drive, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/9/91/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_012.jpg",
+   "sha1": "15682353c5cd3a9c07be3a9af7d8ab71d14fe9b7",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_012.jpg/1920px-Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_012.jpg",
+   "thumb_sha1": "3a073a325a2adcaad4a10e06bd8f50f9d5cb2833",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_National_Park_-_HCP_-_October_13,_2022_-_012.jpg"
+  },
+  {
+   "id": "craterlake-03",
+   "taken": "2025-09-20T14:25",
+   "lat": 42.940346,
+   "lon": -122.161762,
+   "place": "Wizard Island from Rim Drive, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/41/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_006.jpg",
+   "sha1": "0d059de0c618e3dbde3320e96e0f58538d31fbb1",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_006.jpg/1920px-Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_006.jpg",
+   "thumb_sha1": "48c014b347b51a60e7fb7fb068291632b18f02c6",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_National_Park_-_HCP_-_October_13,_2022_-_006.jpg"
+  },
+  {
+   "id": "craterlake-04",
+   "taken": "2025-09-20T14:45",
+   "lat": 42.942881,
+   "lon": -122.160548,
+   "place": "Wizard Island from Rim Drive, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/8/87/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_019.jpg",
+   "sha1": "790e2a6d74e69f32090c0e83b6e3d66e8025ec9c",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_019.jpg/1920px-Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_019.jpg",
+   "thumb_sha1": "59a6964fa60d8fb4cb0a9479a7cf77d8a0c8e16b",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_National_Park_-_HCP_-_October_13,_2022_-_019.jpg"
+  },
+  {
+   "id": "craterlake-05",
+   "taken": "2025-09-20T15:05",
+   "lat": 42.941178,
+   "lon": -122.162154,
+   "place": "Wizard Island from Rim Drive, Crater Lake National Park",
+   "favorite": true,
+   "albums": [
+    "Crater Lake 2025",
+    "Best of PNW"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_027.jpg",
+   "sha1": "f5461dd886f5eeea1c21b277c579bb9935bafa64",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_027.jpg/1920px-Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_027.jpg",
+   "thumb_sha1": "2fa5e2f94007baa6dc4dc9d16769d1041dd51d57",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_National_Park_-_HCP_-_October_13,_2022_-_027.jpg"
+  },
+  {
+   "id": "craterlake-06",
+   "taken": "2025-09-20T15:40",
+   "lat": 42.933648,
+   "lon": -122.154536,
+   "place": "Rim Drive, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_029.jpg",
+   "sha1": "61fd014f8827a7c5f64cff1d4c3cbb81d87271b7",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_029.jpg/1920px-Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_029.jpg",
+   "thumb_sha1": "482e6082b3f95e543e9f02d8a5a5373a69004724",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_National_Park_-_HCP_-_October_13,_2022_-_029.jpg"
+  },
+  {
+   "id": "craterlake-07",
+   "taken": "2025-09-20T16:00",
+   "lat": 42.934101,
+   "lon": -122.155972,
+   "place": "Rim Drive, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/3/39/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_037.jpg",
+   "sha1": "d8b82a1dba2ad660bc6b5d4bb290ff77a2f05c9d",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_037.jpg/1920px-Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_037.jpg",
+   "thumb_sha1": "4893b1361108636ee8dbfe217257e73b4d2a607b",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_National_Park_-_HCP_-_October_13,_2022_-_037.jpg"
+  },
+  {
+   "id": "craterlake-08",
+   "taken": "2025-09-20T18:50",
+   "lat": 42.933961,
+   "lon": -122.156692,
+   "place": "Rim Drive, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_153.jpg",
+   "sha1": "f6b20a78d3021a9a8c21ce48000612056cec2183",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_153.jpg/1920px-Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_153.jpg",
+   "thumb_sha1": "9d05d32c9b3dddf6076866dc9608d58777776d41",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_National_Park_-_HCP_-_October_13,_2022_-_153.jpg"
+  },
+  {
+   "id": "craterlake-09",
+   "taken": "2025-09-20T19:00",
+   "lat": 42.932939,
+   "lon": -122.155301,
+   "place": "Rim Drive, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_154.jpg",
+   "sha1": "96d5e2e2a9c087964733e0d340df408fc11cb237",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_154.jpg/1920px-Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_154.jpg",
+   "thumb_sha1": "ab75bca3815e564ecf57f58d9c3db735f86f5eac",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_National_Park_-_HCP_-_October_13,_2022_-_154.jpg"
+  },
+  {
+   "id": "craterlake-10",
+   "taken": "2025-09-21T06:45",
+   "lat": 42.945648,
+   "lon": -122.167326,
+   "place": "Watchman Peak, Crater Lake National Park",
+   "favorite": true,
+   "albums": [
+    "Crater Lake 2025",
+    "Best of PNW"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/aa/Sunrise_Over_Crater_Lake%2C_Crater_Lake_National_Park.jpg",
+   "sha1": "b836180e3c1f0d033599b8867c4b52b88c911573",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Sunrise_Over_Crater_Lake%2C_Crater_Lake_National_Park.jpg/1920px-Sunrise_Over_Crater_Lake%2C_Crater_Lake_National_Park.jpg",
+   "thumb_sha1": "89131ebc608f98a7d92fa12053493c4f5950e8a0",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "National Park Service",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Sunrise_Over_Crater_Lake,_Crater_Lake_National_Park.jpg"
+  },
+  {
+   "id": "craterlake-11",
+   "taken": "2025-09-21T09:30",
+   "lat": 42.980682,
+   "lon": -122.084596,
+   "place": "Cleetwood Cove Trail, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_060_-_Cleetwood_Cove_Trail.jpg",
+   "sha1": "705de6c749c02ada7185f3b809c37d4c86d5f035",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_060_-_Cleetwood_Cove_Trail.jpg/1920px-Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_060_-_Cleetwood_Cove_Trail.jpg",
+   "thumb_sha1": "e32d6371d039f12bcfb3f44da55f46b11d976caf",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_National_Park_-_HCP_-_October_13,_2022_-_060_-_Cleetwood_Cove_Trail.jpg"
+  },
+  {
+   "id": "craterlake-12",
+   "taken": "2025-09-20T18:40",
+   "lat": 42.980805,
+   "lon": -122.08588,
+   "place": "Cleetwood Cove Trail, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_086_-_Cleetwood_Cove_Trail.jpg",
+   "sha1": "9e0dbb3614a1d7d3d5227c9e20358bda983ebba7",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_086_-_Cleetwood_Cove_Trail.jpg/1920px-Crater_Lake_National_Park_-_HCP_-_October_13%2C_2022_-_086_-_Cleetwood_Cove_Trail.jpg",
+   "thumb_sha1": "0fb396ab3051ba4c61a457d3f01622b1572b924a",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_National_Park_-_HCP_-_October_13,_2022_-_086_-_Cleetwood_Cove_Trail.jpg"
+  },
+  {
+   "id": "craterlake-13",
+   "taken": "2025-09-21T10:05",
+   "lat": 42.978931,
+   "lon": -122.082295,
+   "place": "Cleetwood Cove Trail, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Crater_Lake_in_Summer.jpg",
+   "sha1": "a44705eada21dca9a12e2d93e5a0e54f074c6e5c",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Crater_Lake_in_Summer.jpg/1920px-Crater_Lake_in_Summer.jpg",
+   "thumb_sha1": "6d43897fb4ef3c78f0e9df9580d1d2e825542e2d",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "National Park Service",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_in_Summer.jpg"
+  },
+  {
+   "id": "craterlake-14",
+   "taken": "2025-09-21T13:00",
+   "lat": 42.905144,
+   "lon": -122.122409,
+   "place": "Phantom Ship from Garfield Peak, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Crater_Lake_in_Summer_2%2C_Crater_Lake_National_Park.jpg",
+   "sha1": "911cbed9d265da70db37d8e989fd209acf1d7a90",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Crater_Lake_in_Summer_2%2C_Crater_Lake_National_Park.jpg/1920px-Crater_Lake_in_Summer_2%2C_Crater_Lake_National_Park.jpg",
+   "thumb_sha1": "c52daeb02f7295f064244199cb4067e05ff23994",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "National Park Service",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Crater_Lake_in_Summer_2,_Crater_Lake_National_Park.jpg"
+  },
+  {
+   "id": "craterlake-15",
+   "taken": "2025-09-21T11:35",
+   "lat": 42.913157,
+   "lon": -122.080896,
+   "place": "Phantom Ship from Sun Notch, Crater Lake National Park",
+   "favorite": false,
+   "albums": [
+    "Crater Lake 2025"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/15/The_Phantom_Ship%2C_Crater_Lake_National_Park.jpg",
+   "sha1": "e11c36344ee3286faf37d30d96283c396fb2acb5",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/The_Phantom_Ship%2C_Crater_Lake_National_Park.jpg/1920px-The_Phantom_Ship%2C_Crater_Lake_National_Park.jpg",
+   "thumb_sha1": "d3559699cd1a9bd2d551f531867941a61aacf6be",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "National Park Service",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:The_Phantom_Ship,_Crater_Lake_National_Park.jpg"
+  },
+  {
+   "id": "joshuatree-01",
+   "taken": "2026-02-13T15:10",
+   "lat": 34.029569,
+   "lon": -116.190948,
+   "place": "Park Boulevard, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Joshua_trees_%28Yucca_brevifolia%29_along_Park_Boulevard_%2814045971060%29.jpg",
+   "sha1": "534e96035ec83a33a168f0016c6fe331d8ab80fd",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Joshua_trees_%28Yucca_brevifolia%29_along_Park_Boulevard_%2814045971060%29.jpg/1920px-Joshua_trees_%28Yucca_brevifolia%29_along_Park_Boulevard_%2814045971060%29.jpg",
+   "thumb_sha1": "25555a8c9150c5c8a0f44c0042d64a7cb1e55526",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Brad Sutton)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Joshua_trees_(Yucca_brevifolia)_along_Park_Boulevard_(14045971060).jpg"
+  },
+  {
+   "id": "joshuatree-02",
+   "taken": "2026-02-13T15:40",
+   "lat": 34.012362,
+   "lon": -116.1699,
+   "place": "Hidden Valley, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Joshua_trees_after_a_storm_in_Hidden_Valley_Area_%2850578338762%29.jpg",
+   "sha1": "b6addf77f045879af339a6936b554c10826fa287",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Joshua_trees_after_a_storm_in_Hidden_Valley_Area_%2850578338762%29.jpg/1920px-Joshua_trees_after_a_storm_in_Hidden_Valley_Area_%2850578338762%29.jpg",
+   "thumb_sha1": "1e5d0fc7c98a69e8fee1b46faf73a078dc6019ea",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Emily Hassell)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Joshua_trees_after_a_storm_in_Hidden_Valley_Area_(50578338762).jpg"
+  },
+  {
+   "id": "joshuatree-03",
+   "taken": "2026-02-14T09:30",
+   "lat": 34.014897,
+   "lon": -116.170291,
+   "place": "Hidden Valley, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Joshua_Trees_in_Hidden_Valley_%2849868211537%29.jpg",
+   "sha1": "323e8eee8fe2452f50ed3de51deeb1a51c7e1b73",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Joshua_Trees_in_Hidden_Valley_%2849868211537%29.jpg/1920px-Joshua_Trees_in_Hidden_Valley_%2849868211537%29.jpg",
+   "thumb_sha1": "c19c6b652d715271cea25847a86db87b79c63f04",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Alessandra Puig-Santana)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Joshua_Trees_in_Hidden_Valley_(49868211537).jpg"
+  },
+  {
+   "id": "joshuatree-04",
+   "taken": "2026-02-13T17:25",
+   "lat": 34.013917,
+   "lon": -116.170614,
+   "place": "Hidden Valley, Joshua Tree National Park",
+   "favorite": true,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/61/Hidden_Valley_area_at_sunset_%2850331102582%29.jpg",
+   "sha1": "1aada71f7bb7254429e0fea37bb373980aa025c9",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Hidden_Valley_area_at_sunset_%2850331102582%29.jpg/1920px-Hidden_Valley_area_at_sunset_%2850331102582%29.jpg",
+   "thumb_sha1": "a25211e6936e5a46e90744920e5c71fc9cf841a5",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Emily Hassell)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hidden_Valley_area_at_sunset_(50331102582).jpg"
+  },
+  {
+   "id": "joshuatree-05",
+   "taken": "2026-02-13T17:35",
+   "lat": 34.005826,
+   "lon": -116.110804,
+   "place": "Queen Valley, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Joshua_Trees_at_Sunset_%2837927983161%29.jpg",
+   "sha1": "87f3fc4fa6ba6083be4d078124cb3e8a080958e1",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Joshua_Trees_at_Sunset_%2837927983161%29.jpg/1920px-Joshua_Trees_at_Sunset_%2837927983161%29.jpg",
+   "thumb_sha1": "6a4e3d05a3f47d217afd8cafcba7ea1e768b3b09",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Robb Hannawacker)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Joshua_Trees_at_Sunset_(37927983161).jpg"
+  },
+  {
+   "id": "joshuatree-06",
+   "taken": "2026-02-14T09:00",
+   "lat": 34.0318,
+   "lon": -116.147353,
+   "place": "Barker Dam, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Clouds_near_Barker_Dam_%2817282850971%29.jpg",
+   "sha1": "655c3ed02c429f203d6e38ce8ce05263d8eeaa10",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Clouds_near_Barker_Dam_%2817282850971%29.jpg/1920px-Clouds_near_Barker_Dam_%2817282850971%29.jpg",
+   "thumb_sha1": "3283299e80b59beaa9b2a7d070ee92704d509c3c",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Lian Law)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Clouds_near_Barker_Dam_(17282850971).jpg"
+  },
+  {
+   "id": "joshuatree-07",
+   "taken": "2026-02-14T11:00",
+   "lat": 34.004757,
+   "lon": -116.111685,
+   "place": "Queen Valley, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/2/25/Joshua_tree_with_rainstorm_in_the_background_%2815002348732%29.jpg",
+   "sha1": "72cf2086fcfea6f2702e0fb8f281b572281b3a41",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Joshua_tree_with_rainstorm_in_the_background_%2815002348732%29.jpg/1920px-Joshua_tree_with_rainstorm_in_the_background_%2815002348732%29.jpg",
+   "thumb_sha1": "5b72cad69b5f921fb14d1a689be2f4e938c506cc",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Brad Sutton)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Joshua_tree_with_rainstorm_in_the_background_(15002348732).jpg"
+  },
+  {
+   "id": "joshuatree-08",
+   "taken": "2026-02-14T12:30",
+   "lat": 33.928362,
+   "lon": -116.188688,
+   "place": "Keys View, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Keys_View_%2816620101976%29.jpg",
+   "sha1": "71412a6196a9f3182b2615ce7337e86a96827419",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Keys_View_%2816620101976%29.jpg/1920px-Keys_View_%2816620101976%29.jpg",
+   "thumb_sha1": "5c54ecef250b0b88409f1dc30dca36647c0072e7",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Lian Law)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Keys_View_(16620101976).jpg"
+  },
+  {
+   "id": "joshuatree-09",
+   "taken": "2026-02-14T12:40",
+   "lat": 33.926138,
+   "lon": -116.188208,
+   "place": "Keys View, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Keys_View_%2853831293623%29.jpg",
+   "sha1": "d5c61d1aad1bbb8b231a7f9da0710bbd4e699544",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Keys_View_%2853831293623%29.jpg/1920px-Keys_View_%2853831293623%29.jpg",
+   "thumb_sha1": "b6190f833ddf74f815df2ea4bd0cca84fb4b43ce",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Paul Martinez)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Keys_View_(53831293623).jpg"
+  },
+  {
+   "id": "joshuatree-10",
+   "taken": "2026-02-14T12:50",
+   "lat": 33.928981,
+   "lon": -116.187534,
+   "place": "Keys View, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/5/56/View_from_Keys_View_%2824543881555%29.jpg",
+   "sha1": "172d49bd5a4569e210015158650681b5446ef464",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/View_from_Keys_View_%2824543881555%29.jpg/1920px-View_from_Keys_View_%2824543881555%29.jpg",
+   "thumb_sha1": "e8950d7735d20a278638ea1223586d23667c552d",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Jesmira Bonoan)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:View_from_Keys_View_(24543881555).jpg"
+  },
+  {
+   "id": "joshuatree-11",
+   "taken": "2026-02-14T17:25",
+   "lat": 34.02214,
+   "lon": -116.160108,
+   "place": "Cap Rock, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Sunset_near_Cap_Rock_%2821123079471%29.jpg",
+   "sha1": "0f7d737eb525464e86deb590f460adb0a7a1711b",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Sunset_near_Cap_Rock_%2821123079471%29.jpg/1920px-Sunset_near_Cap_Rock_%2821123079471%29.jpg",
+   "thumb_sha1": "fe3b8552d439ca280c6d51438d0811b52e1da084",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Brad Sutton)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Sunset_near_Cap_Rock_(21123079471).jpg"
+  },
+  {
+   "id": "joshuatree-12",
+   "taken": "2026-02-15T08:30",
+   "lat": 33.997828,
+   "lon": -116.060542,
+   "place": "Skull Rock, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/0/09/Skull_Rock_%2814397717974%29.jpg",
+   "sha1": "0c708f02d82cb915ac8e8ba9885ff205718b7061",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Skull_Rock_%2814397717974%29.jpg/1920px-Skull_Rock_%2814397717974%29.jpg",
+   "thumb_sha1": "bec180f1a403800f8a7ae26b40866402356450ba",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Stacy Manson)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Skull_Rock_(14397717974).jpg"
+  },
+  {
+   "id": "joshuatree-13",
+   "taken": "2026-02-15T08:40",
+   "lat": 33.996528,
+   "lon": -116.061269,
+   "place": "Skull Rock, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/2/27/Skull_Rock_%2812489691874%29.jpg",
+   "sha1": "788dccca10d642de30d4b2c0eda1edf763d861ab",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Skull_Rock_%2812489691874%29.jpg/1920px-Skull_Rock_%2812489691874%29.jpg",
+   "thumb_sha1": "f3a6194c78694eca64b00f45083d4bdd21059635",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Robb Hannawacker)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Skull_Rock_(12489691874).jpg"
+  },
+  {
+   "id": "joshuatree-14",
+   "taken": "2026-02-15T08:50",
+   "lat": 33.997844,
+   "lon": -116.059517,
+   "place": "Skull Rock, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/12/Skull_Rock%2C_Joshua_Tree_National_Park.jpg",
+   "sha1": "aa96181d4b05237735eeb23f01830de524e091b8",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Skull_Rock%2C_Joshua_Tree_National_Park.jpg/1920px-Skull_Rock%2C_Joshua_Tree_National_Park.jpg",
+   "thumb_sha1": "5904b41261a79ddef3a397181fcb94a038ce48d9",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "డా. గన్నవరపు నరసింహమూర్తి",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Skull_Rock,_Joshua_Tree_National_Park.jpg"
+  },
+  {
+   "id": "joshuatree-15",
+   "taken": "2026-02-15T09:30",
+   "lat": 33.992046,
+   "lon": -116.065028,
+   "place": "Jumbo Rocks, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Jumbo_Rocks_%2853458119364%29.jpg",
+   "sha1": "3bde0a82c7110a04e16e24092eacb55c7c233b5a",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Jumbo_Rocks_%2853458119364%29.jpg/1920px-Jumbo_Rocks_%2853458119364%29.jpg",
+   "thumb_sha1": "c3a92069d34bc84deebefc33cfd0f11296779e5f",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Paul Martinez)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Jumbo_Rocks_(53458119364).jpg"
+  },
+  {
+   "id": "joshuatree-16",
+   "taken": "2026-02-15T15:05",
+   "lat": 33.926384,
+   "lon": -115.93069,
+   "place": "Cholla Cactus Garden, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Cholla_Cactus_Garden_%2816644772921%29.jpg",
+   "sha1": "646d8cdc1fd717956886cbaaa12fa09b1eaf5e63",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Cholla_Cactus_Garden_%2816644772921%29.jpg/1920px-Cholla_Cactus_Garden_%2816644772921%29.jpg",
+   "thumb_sha1": "ebd51844f042cd365e681b40e37fdbf224f177de",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Lian Law)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Cholla_Cactus_Garden_(16644772921).jpg"
+  },
+  {
+   "id": "joshuatree-17",
+   "taken": "2026-02-15T15:45",
+   "lat": 33.924942,
+   "lon": -115.927099,
+   "place": "Cholla Cactus Garden, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Teddybear_cholla_%28Cylindropuntia_bigelovii%29_and_Pinto_Basin%3B_Cholla_Cactus_Garden_%2816674921912%29.jpg",
+   "sha1": "174b4f99bfd97a16e1340a0149457ad81e3b3d76",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Teddybear_cholla_%28Cylindropuntia_bigelovii%29_and_Pinto_Basin%3B_Cholla_Cactus_Garden_%2816674921912%29.jpg/1920px-Teddybear_cholla_%28Cylindropuntia_bigelovii%29_and_Pinto_Basin%3B_Cholla_Cactus_Garden_%2816674921912%29.jpg",
+   "thumb_sha1": "63705984500aa23617d6b90edd3a7a99341f8638",
+   "licence": "Public domain (PD-USGov-Interior-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Brad Sutton)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Teddybear_cholla_(Cylindropuntia_bigelovii)_and_Pinto_Basin;_Cholla_Cactus_Garden_(16674921912).jpg"
+  },
+  {
+   "id": "joshuatree-18",
+   "taken": "2026-02-15T16:00",
+   "lat": 33.92699,
+   "lon": -115.929692,
+   "place": "Cholla Cactus Garden, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Teddybear_cholla_%28Cylindropuntia_bigelovii%29%3B_Cholla_Cactus_Garden_%2816674903362%29.jpg",
+   "sha1": "65cdf0adcd8f24f7c4a7e4a7be6f12b586613796",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Teddybear_cholla_%28Cylindropuntia_bigelovii%29%3B_Cholla_Cactus_Garden_%2816674903362%29.jpg/1920px-Teddybear_cholla_%28Cylindropuntia_bigelovii%29%3B_Cholla_Cactus_Garden_%2816674903362%29.jpg",
+   "thumb_sha1": "f2f1617d6ed7dc280765af5b7fcffe3ddba95fa0",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Brad Sutton)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Teddybear_cholla_(Cylindropuntia_bigelovii);_Cholla_Cactus_Garden_(16674903362).jpg"
+  },
+  {
+   "id": "joshuatree-19",
+   "taken": "2026-02-15T17:30",
+   "lat": 33.925269,
+   "lon": -115.928161,
+   "place": "Cholla Cactus Garden, Joshua Tree National Park",
+   "favorite": false,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Sunset_at_Cholla_Cactus_Garden_%2830601005277%29.jpg",
+   "sha1": "1d2289941b934374b36fb5f86f49090281781515",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Sunset_at_Cholla_Cactus_Garden_%2830601005277%29.jpg/1920px-Sunset_at_Cholla_Cactus_Garden_%2830601005277%29.jpg",
+   "thumb_sha1": "834768c64d6f0a53142a041560b566c5bcbb63b4",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Hannah Schwalbe)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Sunset_at_Cholla_Cactus_Garden_(30601005277).jpg"
+  },
+  {
+   "id": "joshuatree-20",
+   "taken": "2026-02-16T06:35",
+   "lat": 33.926051,
+   "lon": -115.929632,
+   "place": "Cholla Cactus Garden, Joshua Tree National Park",
+   "favorite": true,
+   "albums": [
+    "Joshua Tree 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/68/Sunrise_over_Cholla_Cactus_Garden_%2850065392033%29.jpg",
+   "sha1": "b451ebc6e79324be903e14447e11bf43bae2e44c",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Sunrise_over_Cholla_Cactus_Garden_%2850065392033%29.jpg/1920px-Sunrise_over_Cholla_Cactus_Garden_%2850065392033%29.jpg",
+   "thumb_sha1": "31ffa440e2afc1bba706321406b6e71b144dfa91",
+   "licence": "Public domain (PD-USGov-NPS)",
+   "credit": "Joshua Tree National Park (NPS / Alessandra Puig-Santana)",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Sunrise_over_Cholla_Cactus_Garden_(50065392033).jpg"
+  },
+  {
+   "id": "northcascades-01",
+   "taken": "2026-05-23T10:45",
+   "lat": 48.689212,
+   "lon": -121.096048,
+   "place": "Ruby Mountain over Diablo Lake (Thunder Arm), North Cascades",
+   "favorite": true,
+   "albums": [
+    "North Cascades 2026",
+    "Best of PNW"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/9/98/Ruby_Mountain_refected_in_Diablo_Lake.jpg",
+   "sha1": "2ba91de89e749dd49961e4d5bcace9b419494374",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Ruby_Mountain_refected_in_Diablo_Lake.jpg/1920px-Ruby_Mountain_refected_in_Diablo_Lake.jpg",
+   "thumb_sha1": "b24e3fada47694c6f47a05007fa58f339c854a23",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Ron Clausen",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Ruby_Mountain_refected_in_Diablo_Lake.jpg"
+  },
+  {
+   "id": "northcascades-02",
+   "taken": "2026-05-24T19:55",
+   "lat": 48.709629,
+   "lon": -121.097989,
+   "place": "Diablo Lake Overlook, North Cascades Highway",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/0/02/Colonial_Peak_and_Thunder_Arm.jpg",
+   "sha1": "cf5db659b8ca019bfb999972926cfd94593c0a89",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Colonial_Peak_and_Thunder_Arm.jpg/1920px-Colonial_Peak_and_Thunder_Arm.jpg",
+   "thumb_sha1": "42aa67ad178bcf513c8c129f33006af840e2e7ac",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Ron Clausen",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Colonial_Peak_and_Thunder_Arm.jpg"
+  },
+  {
+   "id": "northcascades-03",
+   "taken": "2026-05-23T11:20",
+   "lat": 48.710141,
+   "lon": -121.097471,
+   "place": "Diablo Lake Overlook, North Cascades Highway",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Colonial_Peak_Cousins_Peak.jpg",
+   "sha1": "383dffcc7248556c3fe39ac79faca47391983dbe",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Colonial_Peak_Cousins_Peak.jpg/1920px-Colonial_Peak_Cousins_Peak.jpg",
+   "thumb_sha1": "29e857c140ab335ecdf3fe6f21b3d3cc32f8249c",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Ron Clausen",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Colonial_Peak_Cousins_Peak.jpg"
+  },
+  {
+   "id": "northcascades-04",
+   "taken": "2026-05-23T19:20",
+   "lat": 48.710206,
+   "lon": -121.100076,
+   "place": "Diablo Lake Overlook, North Cascades Highway",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/d/df/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_011.jpg",
+   "sha1": "841c332bd25d36aacb661233dcaa3926a4123b0e",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_011.jpg/1920px-North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_011.jpg",
+   "thumb_sha1": "55f395666b987927e52670e36c0c474341d840f5",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:North_Cascades_National_Park_-_HCP_-_October_20,_2022_-_011.jpg"
+  },
+  {
+   "id": "northcascades-05",
+   "taken": "2026-05-23T19:25",
+   "lat": 48.71011,
+   "lon": -121.09719,
+   "place": "Diablo Lake Overlook, North Cascades Highway",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/7/71/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_016.jpg",
+   "sha1": "71fe53b04a928355a94301722a759d62374b43b6",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_016.jpg/1920px-North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_016.jpg",
+   "thumb_sha1": "fb0e625ff525266292a161e41b2073f0f1c0480a",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:North_Cascades_National_Park_-_HCP_-_October_20,_2022_-_016.jpg"
+  },
+  {
+   "id": "northcascades-06",
+   "taken": "2026-05-23T19:35",
+   "lat": 48.711149,
+   "lon": -121.096836,
+   "place": "Diablo Lake Overlook, North Cascades Highway",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/d/da/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_026.jpg",
+   "sha1": "6e2e3531fa093caa9ca9ab11a17019f839b79dab",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_026.jpg/1920px-North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_026.jpg",
+   "thumb_sha1": "544f62e19938cebd46721a37ad6e92a75ac3a90c",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:North_Cascades_National_Park_-_HCP_-_October_20,_2022_-_026.jpg"
+  },
+  {
+   "id": "northcascades-07",
+   "taken": "2026-05-24T11:20",
+   "lat": 48.530006,
+   "lon": -120.733999,
+   "place": "Porcupine Peak from the North Cascades Highway near Rainy Pass",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Porcupine_Peak_7762_North_Cascades.jpg",
+   "sha1": "2c6c1a33250097ee8bd227e1a057116bcbd44d05",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Porcupine_Peak_7762_North_Cascades.jpg/1920px-Porcupine_Peak_7762_North_Cascades.jpg",
+   "thumb_sha1": "703614cd38b4a06406b159d1749e5551f39106c3",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Ron Clausen",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Porcupine_Peak_7762_North_Cascades.jpg"
+  },
+  {
+   "id": "northcascades-08",
+   "taken": "2026-05-24T11:50",
+   "lat": 48.554335,
+   "lon": -120.730079,
+   "place": "Mount Hardy from Swamp Creek pullout, North Cascades Highway",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Mount_Hardy_in_the_North_Cascades_seen_from_Swamp_Creek_pullout_on_Highway_20.jpg",
+   "sha1": "9dfebdbcb2941d3b7ef5b143e00507379e3851d7",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Mount_Hardy_in_the_North_Cascades_seen_from_Swamp_Creek_pullout_on_Highway_20.jpg/1920px-Mount_Hardy_in_the_North_Cascades_seen_from_Swamp_Creek_pullout_on_Highway_20.jpg",
+   "thumb_sha1": "5b64c9fe86999f20c409c7a386212e7017156b0a",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Ron Clausen",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Mount_Hardy_in_the_North_Cascades_seen_from_Swamp_Creek_pullout_on_Highway_20.jpg"
+  },
+  {
+   "id": "northcascades-09",
+   "taken": "2026-05-24T10:30",
+   "lat": 48.519547,
+   "lon": -120.658753,
+   "place": "Liberty Bell Mountain, Washington Pass",
+   "favorite": true,
+   "albums": [
+    "North Cascades 2026",
+    "Best of PNW"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/0/00/Liberty_Bell_Mountain_through_trees.jpg",
+   "sha1": "482c93c3b7ef7518db59fac25e795d4c4b1d59f5",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/0/00/Liberty_Bell_Mountain_through_trees.jpg",
+   "thumb_sha1": "482c93c3b7ef7518db59fac25e795d4c4b1d59f5",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Ron Clausen",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Liberty_Bell_Mountain_through_trees.jpg"
+  },
+  {
+   "id": "northcascades-10",
+   "taken": "2026-05-24T18:05",
+   "lat": 48.523165,
+   "lon": -120.65481,
+   "place": "Washington Pass Overlook, North Cascades Highway",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/ef/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_049.jpg",
+   "sha1": "6ad4733eec1ae81d2996e02bd145e54a93cef0a1",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_049.jpg/1920px-North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_049.jpg",
+   "thumb_sha1": "288660d8cc7ee71b1de397871ec53d9f353254d8",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:North_Cascades_National_Park_-_HCP_-_October_20,_2022_-_049.jpg"
+  },
+  {
+   "id": "northcascades-11",
+   "taken": "2026-05-24T18:10",
+   "lat": 48.524699,
+   "lon": -120.653802,
+   "place": "Washington Pass Overlook, North Cascades Highway",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/48/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_048.jpg",
+   "sha1": "abd34c185fadbd7a376193fec2a529a3242088c3",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_048.jpg/1920px-North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_048.jpg",
+   "thumb_sha1": "a4cf7f1cea606e1b6e0ea2aa6669166ba26e3dc5",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:North_Cascades_National_Park_-_HCP_-_October_20,_2022_-_048.jpg"
+  },
+  {
+   "id": "northcascades-12",
+   "taken": "2026-05-24T18:15",
+   "lat": 48.524655,
+   "lon": -120.654257,
+   "place": "Washington Pass Overlook, North Cascades Highway",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/4e/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_051.jpg",
+   "sha1": "f27df22b005641660fd18a6528e210cde0e91d00",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_051.jpg/1920px-North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_051.jpg",
+   "thumb_sha1": "3fb9d72bbd57dccf699149a374ee6126b25a9309",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:North_Cascades_National_Park_-_HCP_-_October_20,_2022_-_051.jpg"
+  },
+  {
+   "id": "northcascades-13",
+   "taken": "2026-05-24T18:20",
+   "lat": 48.524926,
+   "lon": -120.654618,
+   "place": "Washington Pass Overlook, North Cascades Highway",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/68/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_055.jpg",
+   "sha1": "3f1befb62cd7c35f4448fef57c81a2cff046d1a2",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_055.jpg/1920px-North_Cascades_National_Park_-_HCP_-_October_20%2C_2022_-_055.jpg",
+   "thumb_sha1": "ba035a07689e28e36b51bd8fca16862197cb5017",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:North_Cascades_National_Park_-_HCP_-_October_20,_2022_-_055.jpg"
+  },
+  {
+   "id": "northcascades-14",
+   "taken": "2026-05-25T09:40",
+   "lat": 48.710917,
+   "lon": -121.100153,
+   "place": "Diablo Lake Overlook, North Cascades Highway",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Diablo_%28186502661%29.jpeg",
+   "sha1": "761d2e1e438fff7f2d6502538d50e1f54d11d5d1",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Diablo_%28186502661%29.jpeg/1920px-Diablo_%28186502661%29.jpeg",
+   "thumb_sha1": "1980fd8e89b4fd689dd5db47fcea4b8bbe5e5746",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Ethan Conley",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Diablo_(186502661).jpeg"
+  },
+  {
+   "id": "northcascades-15",
+   "taken": "2026-05-25T09:55",
+   "lat": 48.710629,
+   "lon": -121.099822,
+   "place": "Diablo Lake Overlook, North Cascades Highway",
+   "favorite": false,
+   "albums": [
+    "North Cascades 2026"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/0/0d/RossLake.jpg",
+   "sha1": "f982084289c67dcc11823d9d31ea3a2d1f941be4",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/RossLake.jpg/1920px-RossLake.jpg",
+   "thumb_sha1": "60a37d075f63ab96f3078adaa56955e915203a39",
+   "licence": "Public domain (PD-self, released by the photographer)",
+   "credit": "Geaugagrrl",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:RossLake.jpg"
+  },
+  {
+   "id": "portland-01",
+   "taken": "2024-07-13T16:10",
+   "lat": 45.51114,
+   "lon": -122.687552,
+   "place": "South Park Blocks, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Park_Blocks_July_2016_-_Portland%2C_Oregon.jpg",
+   "sha1": "87ba2d246594e2f9ff7fc4b28841788141334573",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Park_Blocks_July_2016_-_Portland%2C_Oregon.jpg/1920px-Park_Blocks_July_2016_-_Portland%2C_Oregon.jpg",
+   "thumb_sha1": "caec75c359d86c654d6906fa082eaeae89c38ca0",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Alfred Twu",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Park_Blocks_July_2016_-_Portland,_Oregon.jpg"
+  },
+  {
+   "id": "portland-02",
+   "taken": "2024-07-27T18:25",
+   "lat": 45.520338,
+   "lon": -122.70405,
+   "place": "International Rose Test Garden, Washington Park, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/3/39/Portland_International_Rose_Test_Garden_-_HCP_-_October_15%2C_2022_-_018.jpg",
+   "sha1": "c8707915299a5045c29beca007d3dc015999a529",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Portland_International_Rose_Test_Garden_-_HCP_-_October_15%2C_2022_-_018.jpg/1920px-Portland_International_Rose_Test_Garden_-_HCP_-_October_15%2C_2022_-_018.jpg",
+   "thumb_sha1": "95402107f7a8f5132b6d10edc5bfd715cfd1fd96",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Vulturesong",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Portland_International_Rose_Test_Garden_-_HCP_-_October_15,_2022_-_018.jpg"
+  },
+  {
+   "id": "portland-03",
+   "taken": "2024-08-24T11:00",
+   "lat": 45.516056,
+   "lon": -122.67482,
+   "place": "Tom McCall Waterfront Park, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/c2/Tom_McCall_Waterfront_Park.JPG",
+   "sha1": "0d87c22ed02f745c08821443eb4d727cc6303e19",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Tom_McCall_Waterfront_Park.JPG/1920px-Tom_McCall_Waterfront_Park.JPG",
+   "thumb_sha1": "edc38a68f27afbdc877e6b019622872dca869585",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Kingofthedead",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Tom_McCall_Waterfront_Park.JPG"
+  },
+  {
+   "id": "portland-04",
+   "taken": "2024-09-14T11:50",
+   "lat": 45.50849,
+   "lon": -122.66697,
+   "place": "Hawthorne Bridge and downtown from the Marquam Bridge, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/46/Downtown_Portland_and_Hawthorne_Bridge_from_Marquam_Bridge_%282016%29.jpg",
+   "sha1": "4f7eb5dd121125f25720b847f10297b5979ea961",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Downtown_Portland_and_Hawthorne_Bridge_from_Marquam_Bridge_%282016%29.jpg/1920px-Downtown_Portland_and_Hawthorne_Bridge_from_Marquam_Bridge_%282016%29.jpg",
+   "thumb_sha1": "701135c8f7850b8c9a51276326de338bbcdf0319",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Lessa Clayton",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Downtown_Portland_and_Hawthorne_Bridge_from_Marquam_Bridge_(2016).jpg"
+  },
+  {
+   "id": "portland-05",
+   "taken": "2024-10-26T13:30",
+   "lat": 45.525549,
+   "lon": -122.677381,
+   "place": "North Park Blocks, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/9/90/North_Park_Blocks_-_Portland%2C_Oregon_-_DSC01134.jpg",
+   "sha1": "bbedeaa6abc0b54c25ebffb99535dbd13d43fb71",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/North_Park_Blocks_-_Portland%2C_Oregon_-_DSC01134.jpg/1920px-North_Park_Blocks_-_Portland%2C_Oregon_-_DSC01134.jpg",
+   "thumb_sha1": "0dbbe9a34eb62a47b7b713eefe5e9dd1c5e426b4",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Daderot",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:North_Park_Blocks_-_Portland,_Oregon_-_DSC01134.jpg"
+  },
+  {
+   "id": "portland-06",
+   "taken": "2024-11-02T16:45",
+   "lat": 45.518367,
+   "lon": -122.710323,
+   "place": "Portland Japanese Garden, Washington Park",
+   "favorite": true,
+   "albums": [
+    "Portland",
+    "Best of PNW"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Fall_foliage_-_Portland_Japanese_Garden_-_Portland%2C_Oregon_-_DSC08230.jpg",
+   "sha1": "ff796e857dca4e358a323f6c9be1bd802dc4c389",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Fall_foliage_-_Portland_Japanese_Garden_-_Portland%2C_Oregon_-_DSC08230.jpg/1920px-Fall_foliage_-_Portland_Japanese_Garden_-_Portland%2C_Oregon_-_DSC08230.jpg",
+   "thumb_sha1": "eb8afe652f3cd3016af16b4fa3076cd5ff510777",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Daderot",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Fall_foliage_-_Portland_Japanese_Garden_-_Portland,_Oregon_-_DSC08230.jpg"
+  },
+  {
+   "id": "portland-07",
+   "taken": "2024-11-02T16:55",
+   "lat": 45.518751,
+   "lon": -122.706296,
+   "place": "Portland Japanese Garden, Washington Park",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Fall_foliage_-_Portland_Japanese_Garden_-_Portland%2C_Oregon_-_DSC08260.jpg",
+   "sha1": "206fec85a90f95f4dfbd4aeea8552ce898f667b7",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Fall_foliage_-_Portland_Japanese_Garden_-_Portland%2C_Oregon_-_DSC08260.jpg/1920px-Fall_foliage_-_Portland_Japanese_Garden_-_Portland%2C_Oregon_-_DSC08260.jpg",
+   "thumb_sha1": "d10aa86660a568431665ac8957fb56169034f9b3",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Daderot",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Fall_foliage_-_Portland_Japanese_Garden_-_Portland,_Oregon_-_DSC08260.jpg"
+  },
+  {
+   "id": "portland-08",
+   "taken": "2024-11-09T15:00",
+   "lat": 45.511458,
+   "lon": -122.59705,
+   "place": "Mount Tabor Park, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Mt._Tabor_In_Fall.jpg",
+   "sha1": "9bcebf9da1f312640ebfe6b5046e5d5cb4113b37",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Mt._Tabor_In_Fall.jpg",
+   "thumb_sha1": "9bcebf9da1f312640ebfe6b5046e5d5cb4113b37",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Falling-cosmosis",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Mt._Tabor_In_Fall.jpg"
+  },
+  {
+   "id": "portland-09",
+   "taken": "2025-03-15T14:55",
+   "lat": 45.517768,
+   "lon": -122.717228,
+   "place": "Hoyt Arboretum, Washington Park, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Bamboo_Garden_in_Washington_Park%2C_Portland%2C_Oregon.jpg",
+   "sha1": "29e40459123ef51adb779cdd63d200459450d6e5",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Bamboo_Garden_in_Washington_Park%2C_Portland%2C_Oregon.jpg/1920px-Bamboo_Garden_in_Washington_Park%2C_Portland%2C_Oregon.jpg",
+   "thumb_sha1": "3ed5a0ce96aa8004fd528b4ea5de91adf73671b3",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Slinkyo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Bamboo_Garden_in_Washington_Park,_Portland,_Oregon.jpg"
+  },
+  {
+   "id": "portland-10",
+   "taken": "2025-03-15T15:15",
+   "lat": 45.515533,
+   "lon": -122.716289,
+   "place": "Hoyt Arboretum, Washington Park, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Redwoods_in_Washington_Park%2C_Portland%2C_Oregon.jpg",
+   "sha1": "4e32371e57f6667092d99b68c69a8ec4ebad324c",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Redwoods_in_Washington_Park%2C_Portland%2C_Oregon.jpg",
+   "thumb_sha1": "4e32371e57f6667092d99b68c69a8ec4ebad324c",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Slinkyo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Redwoods_in_Washington_Park,_Portland,_Oregon.jpg"
+  },
+  {
+   "id": "portland-11",
+   "taken": "2025-03-15T16:45",
+   "lat": 45.529854,
+   "lon": -122.722785,
+   "place": "Balch Creek, Wildwood Trail, Forest Park, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Balch_Creek_from_Wildwood_Trail%2C_Portland%2C_Oregon.jpg",
+   "sha1": "b905e73bf8fe4507ee7850d8dfaf59e7a720905d",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Balch_Creek_from_Wildwood_Trail%2C_Portland%2C_Oregon.jpg",
+   "thumb_sha1": "b905e73bf8fe4507ee7850d8dfaf59e7a720905d",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Slinkyo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Balch_Creek_from_Wildwood_Trail,_Portland,_Oregon.jpg"
+  },
+  {
+   "id": "portland-12",
+   "taken": "2025-03-15T16:55",
+   "lat": 45.527848,
+   "lon": -122.723279,
+   "place": "Witch's Castle (Stone House), Forest Park, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Witch%27s_Castle_in_Forest_Park.jpg",
+   "sha1": "1c0bf80f13373fd9621b115444e732ce55c14c17",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Witch%27s_Castle_in_Forest_Park.jpg/1920px-Witch%27s_Castle_in_Forest_Park.jpg",
+   "thumb_sha1": "6269aca872f6b5b1a8233f690e0f206de2e85061",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Slinkyo",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Witch's_Castle_in_Forest_Park.jpg"
+  },
+  {
+   "id": "portland-13",
+   "taken": "2025-10-11T08:20",
+   "lat": 45.498934,
+   "lon": -122.665816,
+   "place": "Willamette River docks, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Dock_in_portland%2C_oregon.jpg",
+   "sha1": "a52a497500d945253ebbef5d2da1e3b2235ac134",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Dock_in_portland%2C_oregon.jpg",
+   "thumb_sha1": "a52a497500d945253ebbef5d2da1e3b2235ac134",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "JoyD Smiths PTMr8",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Dock_in_portland,_oregon.jpg"
+  },
+  {
+   "id": "portland-14",
+   "taken": "2025-10-11T14:20",
+   "lat": 45.519602,
+   "lon": -122.679316,
+   "place": "Downtown street trees, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Street_in_portland_oregon.jpg",
+   "sha1": "bbeb4ae9731c377cc9d322e19a526f66a75b723a",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Street_in_portland_oregon.jpg",
+   "thumb_sha1": "bbeb4ae9731c377cc9d322e19a526f66a75b723a",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "JoyD Smiths PTMr8",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Street_in_portland_oregon.jpg"
+  },
+  {
+   "id": "portland-15",
+   "taken": "2025-11-01T15:00",
+   "lat": 45.528816,
+   "lon": -122.670785,
+   "place": "Willamette River from the Steel Bridge, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/f/f1/View_From_Portland_Steel_Bridge_%28180392361%29.jpeg",
+   "sha1": "26ad2daec05cecf677d2145990adfdcf1453cd4c",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f1/View_From_Portland_Steel_Bridge_%28180392361%29.jpeg/1920px-View_From_Portland_Steel_Bridge_%28180392361%29.jpeg",
+   "thumb_sha1": "c947f363e466fc12970f02aec15eda5a9ef0c494",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Derald Grimwood",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:View_From_Portland_Steel_Bridge_(180392361).jpeg"
+  },
+  {
+   "id": "portland-16",
+   "taken": "2025-12-06T11:20",
+   "lat": 45.526154,
+   "lon": -122.66825,
+   "place": "Willamette River from the Steel Bridge, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Pedestrian_bridge_Portland.jpeg",
+   "sha1": "1eab4a38bb91d945a2274350e89ac5f0d749b171",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Pedestrian_bridge_Portland.jpeg/1920px-Pedestrian_bridge_Portland.jpeg",
+   "thumb_sha1": "d9b5a255c509ae430323fff5e078590ce3bc9e11",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "Wizz4prep",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Pedestrian_bridge_Portland.jpeg"
+  },
+  {
+   "id": "portland-17",
+   "taken": "2026-01-03T13:00",
+   "lat": 45.498875,
+   "lon": -122.678917,
+   "place": "South Waterfront and East Portland from OHSU, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/South_Waterfront_and_East_Portland_from_OHSU.jpg",
+   "sha1": "3e7a1e6c2f37cd45a6ff0abccb310e770cd4605e",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/South_Waterfront_and_East_Portland_from_OHSU.jpg/1920px-South_Waterfront_and_East_Portland_from_OHSU.jpg",
+   "thumb_sha1": "58e4d6bce2787b5a563a1cd14fd4cc0925bf1b7a",
+   "licence": "Public domain (PD-self, released by the photographer)",
+   "credit": "Kingofthedead",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:South_Waterfront_and_East_Portland_from_OHSU.jpg"
+  },
+  {
+   "id": "portland-18",
+   "taken": "2026-03-14T12:30",
+   "lat": 45.511415,
+   "lon": -122.684683,
+   "place": "South Park Blocks at Portland State University",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/d/d7/South_Park_Blocks_PSU.JPG",
+   "sha1": "5d4cd6fdde96c998826dac8c5fb4e09588c4e88c",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/South_Park_Blocks_PSU.JPG/1920px-South_Park_Blocks_PSU.JPG",
+   "thumb_sha1": "0778e9b82819893865ee96c328d1cbd059743566",
+   "licence": "Public domain (PD-self, released by the photographer)",
+   "credit": "M.O. Stevens",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:South_Park_Blocks_PSU.JPG"
+  },
+  {
+   "id": "portland-19",
+   "taken": "2026-06-06T10:20",
+   "lat": 45.520525,
+   "lon": -122.706643,
+   "place": "International Rose Test Garden, Washington Park, Portland",
+   "favorite": true,
+   "albums": [
+    "Portland",
+    "Best of PNW"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Rose_Arbor_Portland.jpg",
+   "sha1": "3144259e0b77aa561a4eb2596ca1ed65236eb0af",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Rose_Arbor_Portland.jpg/1920px-Rose_Arbor_Portland.jpg",
+   "thumb_sha1": "72244fbe6c19d35b48fd5ba7582491590f064ffa",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "MauraWen",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Rose_Arbor_Portland.jpg"
+  },
+  {
+   "id": "portland-20",
+   "taken": "2026-06-06T10:30",
+   "lat": 45.520178,
+   "lon": -122.704386,
+   "place": "International Rose Test Garden, Washington Park, Portland",
+   "favorite": false,
+   "albums": [
+    "Portland"
+   ],
+   "url": "https://upload.wikimedia.org/wikipedia/commons/6/64/Intl_Rose_Test_Garden_062725.jpg",
+   "sha1": "98d2d9d5ad5d11a439f6adc5587296f0a1b31b8a",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/6/64/Intl_Rose_Test_Garden_062725.jpg",
+   "thumb_sha1": "98d2d9d5ad5d11a439f6adc5587296f0a1b31b8a",
+   "licence": "CC0 1.0 Universal (public domain dedication)",
+   "credit": "MauraWen",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Intl_Rose_Test_Garden_062725.jpg"
+  }
+ ]
+}

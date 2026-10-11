@@ -1,0 +1,20 @@
+# Each voicemail matches a missed call in calls.txt at the same minute.
+
+== 2024-08-30
+11:15 +15035550190 24s: This is an important message regarding your vehicle's extended warranty. Press one now to speak with a specialist before your coverage expires.
+== 2024-10-22
+08:15 ingrid 41s: Happy birthday, Maren! It's Grandma. Thirty-two! I remember when you were small enough to sit in the wheelbarrow. I hope Theo spoils you today. Call me when you have a minute, I'm home all day. Love you.
+== 2025-01-15
+14:30 doug 33s: Hi Maren, Doug Harlan, from the cabin up in Govy. Just letting you know the road's plowed and the wood box is full, so you're all set for Saturday. Key's in the lockbox like we said. Give me a ring if you need anything.
+== 2025-02-24
+09:52 gloria 27s: Hi Maren, it's Gloria Pham. Good news, I'd love to have you and Theo in the duplex. Give me a call back when you can and we'll set up a time to sign. Bye now.
+== 2025-03-10
+12:40 tidewater 29s: Hi, this is Marcus with Tidewater Moving, returning your call about April twelfth. We do have a crew open that morning. Give us a call back at your convenience. Thanks.
+== 2025-08-05
+15:40 ridgeline 22s: Hi Maren, it's Dana at Ridgeline Auto Repair. Your Forester is all set, oil change is done and the cooling system checked out fine. We're open until six. Thanks!
+== 2025-09-12
+15:10 willowash 19s: Hello, this is Willow and Ash Frame Shop calling for Maren. Your Yellowstone print is framed and ready for pickup whenever you like. We're open until five-thirty. Thanks so much.
+== 2026-03-28
+07:55 erik 18s: Hey, it's me. Call me back when you're up. Everything's good. Like, really good. Call me!
+== 2026-06-22
+18:40 dad 21s: Maren, it's Dad. Question about the Crater Lake trail for your mother and me. Nothing urgent. I'll text you. Bye.

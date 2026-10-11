@@ -1,0 +1,20 @@
+chat: mossgrove
+with: mossgrove
+service: SMS
+
+# Mossgrove Family Dental. Cleaning reminders.
+
+== 2024-11-12
+09:00 mossgrove: Hi Maren! This is Mossgrove Family Dental reminding you of your cleaning on Thu 11/14 at 8:00 AM. Reply Y to confirm.
+09:10 me: Y
+09:10 mossgrove: Confirmed. See you soon! 😁
+
+== 2025-05-18
+09:00 mossgrove: Hi Maren! This is Mossgrove Family Dental reminding you of your cleaning on Tue 5/20 at 8:00 AM. Reply Y to confirm.
+09:04 me: Y
+09:04 mossgrove: Confirmed. See you soon! 😁
+
+== 2025-12-02
+09:00 mossgrove: Hi Maren! This is Mossgrove Family Dental reminding you of your cleaning on Thu 12/4 at 7:30 AM. Reply Y to confirm.
+09:20 me: Y
+09:20 mossgrove: Confirmed. See you soon! 😁

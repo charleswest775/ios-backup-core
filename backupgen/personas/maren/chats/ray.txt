@@ -1,0 +1,33 @@
+chat: ray
+with: ray
+service: SMS
+
+# Ray Duarte, site superintendent for Hollis Grade & Build on the Linden schoolyard. Texts by SMS.
+
+== 2025-06-12
+15:30 ray: Maren this is Ray Duarte, Hollis. We mobilize Monday 6/16 7am. Fence goes up first thing
+15:35 me: Great, thanks Ray. I'll be there at 7
+
+== 2025-06-24
+09:20 ray: Hit an old slab under the asphalt by the north fence. Looks like a portable building foundation. Can you come look
+09:22 me: On my way, 20 min
+
+== 2025-07-09
+13:00 ray: Boulders for the play hill delivered. Want to tag the ones you want before we place them?
+13:02 me: Yes!! Tomorrow 7am? I'll bring the paint
+13:03 ray: Sounds good
+
+== 2025-07-22
+10:10 ray: Slide is in. Kids from summer camp asked when they can try it
+10:12 me: Tell them September 6! Not one day sooner
+10:12 ray: That's what I told them. They were not happy
+
+== 2025-08-12
+08:30 ray: Seeding the hill today, irrigation is on
+08:31 me: Thanks Ray. I'm on vacation till the 18th but Owen can answer anything
+08:32 ray: Enjoy
+
+== 2025-08-29
+16:50 ray: Punch list done. Keys to the tool shed are with Grace. Pleasure working with you
+16:55 me: Thank you Ray. Your crew did beautiful work. The boulders look like they've always been there
+16:56 ray: That's the idea

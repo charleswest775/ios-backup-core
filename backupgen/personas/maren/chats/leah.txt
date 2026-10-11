@@ -1,0 +1,291 @@
+chat: leah
+with: leah
+service: iMessage
+
+# Leah Brandt, best friend since grad school. Messages from her iCloud email address.
+
+== 2024-07-02
+12:20 leah: Lunch walk? I'm 4 blocks from your studio for a site visit
+12:21 me: YES. Meet at the bridge in 10
+12:21 leah +like
+
+== 2024-07-04
+19:30 leah: You still coming to the rooftop thing?
+19:32 me: Theo's staying home with June, she's already shaking. I'll come for a bit
+19:33 leah: Bring the lime chips
+19:33 me +like
+
+== 2024-07-10
+22:05 leah: Pickles knocked a full glass of water onto my laptop at 9pm
+22:05 leah: It's in rice. I'm in despair
+22:06 me: NOOO
+22:06 me: Did you save the report?
+22:08 leah: Cloud. Thank god. But the laptop smells like cat now somehow
+22:08 me +laugh
+
+== 2024-07-17
+15:20 me: Leah. The kids at the Linden workshop. One of them said she wants a "quiet tree for when you're sad or reading"
+15:22 leah: I'm crying at my desk
+15:22 leah: You have to build the quiet tree
+15:23 me: I'm going to build the quiet tree
+
+== 2024-07-23
+20:10 me: Do you have a bear canister I can borrow for Rainier? Ours cracked
+20:15 leah: You don't need one at Cougar Rock, there are food lockers. But yes, you can have mine
+20:16 me: Oh right. Never mind then, thank you!
+20:16 leah: Packing list brain. It happens to the best of us
+
+== 2024-08-01
+18:40 leah: Ok I just read an article that says marmots "whistle when alarmed" and now I need to hear it
+18:42 me: They do!! It's like a little referee
+18:42 leah +laugh
+
+== 2024-08-19
+08:15 leah: I can still smell campfire in my hair after 2 showers
+08:16 me: Same. Theo says I smell like a s'more
+08:17 leah: Better than smelling like a marmot
+08:18 me: Did you see Tom's album yet? The one of you on the bridge at Myrtle Falls 😍
+08:22 leah: I look like a person who goes outside!!
+08:24 leah [photo:rainier-10]
+08:24 leah: Saved it. Also my favorite from Saturday, Skyline Trail
+
+== 2024-09-05
+19:05 me: How was the field week?
+19:20 leah: Wet. 4 days of measuring stream flow in the Coast Range. I saw 3 newts and 0 sun
+19:21 me: Rough skin newts?
+19:21 leah: Of course you know the species
+19:21 me +love
+
+== 2024-09-28
+11:30 me: Gorge next Saturday. Wahkeena up, down past Multnomah, back to the car on the old highway. Leave at 6:30
+11:35 leah: 6:30 in the MORNING?
+11:35 me: Parking fills by 8 on nice days
+11:36 leah: Fine. But I'm sleeping in the car on the way
+11:36 me +laugh
+
+== 2024-10-05
+19:20 leah: My calves are screaming. Worth it
+19:21 me [photo:gorge-08]
+19:21 me: The view from the top of Multnomah. The river was silver
+19:22 leah: Sending this to my mom
+19:22 leah +love
+19:25 leah [photo:gorge-03]
+19:25 leah: Latourell Falls first thing, before the crowds. One for your wall
+
+== 2024-10-22
+07:30 leah: HAPPY BIRTHDAY 🎉🎂🎈 My favorite plant nerd is 32
+07:31 me: Thank you!! Theo's making the cardamom buns
+07:31 leah: Save me one. I'm serious. I'll come get it
+07:32 me +love
+
+== 2024-10-30
+23:10 leah: You still at the studio?
+23:12 me: Yes. The plotter hates me
+23:12 leah: Sending you strength. And a picture of Pickles in a box
+23:13 me: That's exactly what I needed
+
+== 2024-11-09
+09:00 me: HAPPY BIRTHDAY LEAH 🎂🌿 I love you. Dinner at 7, Thai place, don't be late, it's YOUR birthday
+09:15 leah: I love you too!! I'll be exactly 2 minutes late, as a treat
+09:15 me +laugh
+23:40 leah: Thank you for tonight. The fern is on my windowsill. Pickles hasn't eaten it. Yet
+
+== 2024-11-20
+12:05 leah: Thanksgiving in Bend still?
+12:07 me: Yes, Theo's mom is making tamales. I'm practicing "gracias, está delicioso"
+12:08 leah: Está muy delicioso
+12:08 me +like
+
+== 2024-12-15
+17:40 me: Can June stay with you Dec 21 to 27? We're flying to Missoula
+17:45 leah: Obviously. Pickles will hate it. I'll love it
+17:46 me: You're the best. I'll bring her food and the bed and the squeaky lamb
+17:46 leah: Not the lamb. The lamb keeps me up
+17:47 me: The lamb is non-negotiable
+
+== 2024-12-21
+10:20 me: Dropped off! She already found your bed
+10:22 leah: She's in it. Pickles is on the dresser looking betrayed
+10:22 me +laugh
+
+== 2024-12-24
+19:30 leah: Merry Christmas from June and Pickles, who are now sharing the couch
+19:30 leah: (Pickles is on the arm, June is on the cushions, there is a 6 inch DMZ between them)
+19:35 me: This is the greatest gift
+19:35 me +love
+
+== 2025-01-17
+21:00 leah: Thermos is filled with my "lodge cocoa". Secret ingredient is cinnamon. And a tiny bit of cayenne
+21:01 me: Spicy cocoa?
+21:01 leah: Cozy-spicy. Trust the process. There are also little marshmallows
+21:02 me +laugh
+
+== 2025-01-20
+08:30 leah: Is it normal for hip flexors to hurt after snowshoeing
+08:31 me: Very normal. Sam texted me the same thing at 6am
+08:31 leah +laugh
+08:33 leah [photo:hood-04]
+08:33 leah: For the archive: the woods where Sam led us in a full circle
+
+== 2025-02-10
+19:40 me: I met a new climbing friend yesterday! Rosa. She just moved here from Albuquerque
+19:42 leah: Am I being replaced
+19:42 me: Never. But you'd like her. She has opinions about green chile
+19:43 leah: I respect anyone with opinions about green chile
+
+== 2025-02-20
+21:15 me: We looked at a duplex today. Leah. It has a yard. With a fence. And a lilac
+21:17 leah: Take it
+21:17 leah: Don't even think. Take it
+21:18 me: The owner said she'll let us know by Monday
+21:18 leah: Then I'm manifesting until Monday
+
+== 2025-02-24
+10:15 me: WE GOT IT
+10:16 leah: AAAAAAA
+10:16 leah: I'm coming over with a bottle of something bubbly tonight
+10:16 me +love
+
+== 2025-03-08
+14:30 leah: Need boxes? Clearwater just got a delivery of like 40 sample bottles, all in good boxes
+14:31 me: YES. All the boxes
+14:32 leah: I'll drop them off Monday
+
+== 2025-04-13
+10:40 leah: How was night 1 in the new place?
+10:45 me: June slept on the porch for an hour and then came in and slept on Theo's head. A train went by at 3am that we'd never heard on the tour
+10:46 leah: Charming
+10:46 me: It's very far away. It's kind of lovely actually. Like a lullaby for big machines
+10:47 leah +love
+
+== 2025-05-20
+19:20 me: Olympic! Leaving 7am Saturday. You're in the back with the snacks
+19:21 leah: I've been training my whole life for this role
+19:21 me +laugh
+19:22 leah: Do I need a rain jacket in the rain forest in May
+19:22 me: Leah
+19:22 leah: Ok ok I'm packing it
+
+== 2025-05-26
+21:30 leah: Thank you for letting me third-wheel the best weekend ever
+21:31 me: You're not a third wheel. You're the snack wheel
+21:31 me [photo:olympic-21]
+21:32 me: Ruby Beach sunset, the sea stacks were glowing
+21:33 leah: Setting this as my lock screen
+21:33 leah +love
+
+== 2025-06-08
+22:40 leah: Ok I have to tell you something and you have to be normal about it
+22:40 me: I'm always normal
+22:41 leah: I've been on three dates with someone. His name is Callum. He's a teacher like Theo, he teaches high school chemistry, he has a dog named Nugget (I know), he makes really good bread, and on the third date we went to the Japanese garden and he knew the names of all the maples. I didn't know that was a thing I wanted until right then. Anyway I like him a lot and I'm being very calm about it
+22:41 me: LEAH
+22:41 me: I'm being so normal
+22:42 me: He makes BREAD? He has to meet Theo
+22:43 leah: July 4th? Your barbecue? Is that too soon
+22:43 me: It's perfect. Low stakes. Lots of burgers
+22:43 leah +love
+
+== 2025-07-05
+09:30 me: Callum is great. Theo and Callum talked about bread hydration for 40 minutes
+09:31 leah: I know. I saw. It was beautiful
+09:32 me: Also Bev already likes him more than me. He weeded her driveway
+09:32 leah +laugh
+
+== 2025-07-24
+18:30 leah: Can I borrow your big cooler for this weekend? Callum and I are doing the coast
+18:31 me: Yes! It's on the porch, take it whenever. Bring it back before Aug 8 for Yellowstone
+18:31 leah +like
+
+== 2025-08-10
+20:30 me [photo:yellowstone-14]
+20:31 me: Grand Prismatic from the hill trail. The colors don't look real. Like someone spilled paint on the earth
+20:33 leah: That's insane. The orange!!
+20:34 leah: Is that steam?
+20:34 me: Steam. It smells like eggs. Theo has been narrating the "thermophilic bacteria" to strangers
+20:35 leah +laugh
+
+== 2025-08-29
+17:30 me: Linden is done!!! Ray handed over the keys
+17:32 leah: The quiet tree??
+17:33 me: It's planted. It's a little bur oak. It's 8 feet tall and it's going to live 300 years
+17:33 leah +love
+17:34 leah: Ok I'm crying at the dentist
+
+== 2025-09-06
+13:00 leah: I saw the kids roll down your hill. Every single one. Maren, it's perfect
+13:05 me: I'm so happy I can't think
+13:05 leah: You don't need to think. You need a sandwich and a nap
+
+== 2025-09-22
+08:00 leah: Callum is still talking about jumping into Crater Lake
+08:01 me: Theo too. He described the cold as "spiritual"
+08:01 leah +laugh
+08:03 leah [photo:craterlake-04]
+08:03 leah: Callum's favorite from the rim. Wizard Island
+
+== 2025-10-22
+07:15 leah: Happy birthday!! 33!! 🎂🌿🐕
+07:16 me: Thank you love!!
+07:17 leah: Callum and I got you something for the garden. It's heavy. We'll bring it Saturday
+07:18 me: Is it a rock
+07:18 leah: It's a VERY nice rock. It's a birdbath
+
+== 2025-11-09
+08:30 me: HAPPY BIRTHDAY 🎂 34 looks good on you
+08:31 leah: Thank you!! I'm making Callum take me to the place with the cardamom ice cream
+08:32 me: The correct choice
+08:32 leah +like
+20:50 leah: Callum made me a cake. It's lopsided. I love it
+
+== 2025-11-18
+16:00 leah: How did the presentation go??
+16:05 me: Really well I think! The board loved the floodable terraces. One of them asked if they could swim in the river and Owen said "please don't"
+16:06 leah +laugh
+16:06 leah: Proud of you. The river deserves you
+
+== 2025-12-13
+21:30 leah: Your gingerbread at the cookie swap was the best one, don't tell Nadia I said that
+21:31 me: That was Theo's. I did the icing
+21:31 leah: The icing was the best part
+
+== 2026-01-12
+10:50 me: I'm an Associate!!!
+10:51 leah: OF COURSE YOU ARE
+10:51 leah: Drinks Friday. I'm buying. No arguments
+10:52 me +love
+
+== 2026-02-08
+19:15 leah: Can I borrow your snow boots for Callum's family thing in Bend? It's going to be snowy
+19:16 me: Take them, I'm in the desert next weekend anyway
+19:16 leah: Desert! Sun! Bring me back a cactus (not a real one)
+
+== 2026-02-17
+09:30 me: Brought you a postcard of a jackrabbit. It's on your desk at work, I asked the receptionist
+09:45 leah: I SAW. It's perfect
+
+== 2026-03-28
+20:00 me: Erik and Jess are engaged!!
+20:02 leah: Ahhh!! Tell them congrats!!
+20:02 me: He did it at sunrise on the river. Mom has already started a wedding mood board
+20:03 leah +laugh
+
+== 2026-04-11
+11:00 leah: Hey are you around? I have news
+11:02 me: Yes! What
+11:05 leah: Callum asked if I want to move in together. In the fall. I said yes. I'm being very calm about it
+11:05 me: LEAH
+11:06 me: I'm being very calm about it too
+11:06 leah +laugh
+11:07 leah: Pickles and Nugget are going to have to figure it out
+11:08 me: They'll make a 6 inch DMZ like June and Pickles
+
+== 2026-05-26
+08:40 leah: Still thinking about Blue Lake frozen solid in May
+08:41 me: And Callum trying to skip a rock on it
+08:41 leah: He's going to try again in August when it's not frozen
+
+== 2026-06-21
+16:20 leah: Callum and I found a place! Two blocks from the river in Sellwood, a garden for both of us to argue about
+16:21 me: I'll bring the natives. You bring the tomatoes
+16:22 leah: Deal 🌱
+16:22 me +love
