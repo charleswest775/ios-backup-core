@@ -22,8 +22,10 @@ from backupgen.sqlitegen import build, load_schema, schema_objects  # noqa: E402
 from backupgen.typedstream import attributed_body  # noqa: E402
 from ios_backup_core.backup import open_local_backup  # noqa: E402
 from ios_backup_core.contacts import ContactResolver  # noqa: E402
+from ios_backup_core.extractors.browser_history import BrowserHistoryExtractor  # noqa: E402
 from ios_backup_core.extractors.calls import CallExtractor  # noqa: E402
 from ios_backup_core.extractors.messages import MessageExtractor  # noqa: E402
+from ios_backup_core.extractors.notes import NoteExtractor  # noqa: E402
 from ios_backup_core.extractors.voicemail import VoicemailExtractor  # noqa: E402
 from ios_backup_core.text import parse_attributed_body  # noqa: E402
 
@@ -189,21 +191,47 @@ def test_calls_and_voicemails_read_back(tmp_path, snapshot):
         assert audio.startswith(b"#!AMR\n") and len(audio) == 6 + 32 * 50 * v["duration"]
 
 
+@pytest.mark.parametrize("snapshot", ["ios15", "ios17", "ios26"])
+def test_notes_and_safari_read_back(tmp_path, snapshot):
+    backup_dir = generate("testpersona", snapshot, tmp_path, password="pw")
+    expected = json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))
+    accessor = open_local_backup(str(backup_dir), password="pw")
+    notes = NoteExtractor().list_notes(accessor)["notes"]
+    assert sorted((n["title"], n["body"], n["modified"]) for n in notes) == sorted(
+        (n["title"], n["text"], n["modified"]) for n in expected["notes"]
+    )
+    visits = BrowserHistoryExtractor().list_browser_history(accessor)["visits"]
+    assert sorted((v["url"], v["title"], v["visit_date"]) for v in visits) == sorted(
+        (v["url"], v["title"], v["date"]) for v in expected["browser_history"]
+    )
+    assert {v["domain"] for v in visits} <= {"en.wikipedia", "example", "timeanddate"}
+
+
+def test_note_text_keeps_list_items_without_their_markers(tmp_path):
+    generate("testpersona", "ios26", tmp_path)
+    notes = {n["title"]: n for n in json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))["notes"]}
+    assert notes["Release checklist"]["text"].split("\n")[1:4] == ["Tag the build", "Write the notes", "Tell support"]
+    assert notes["Release checklist"]["folder"] == "Work" and notes["Release checklist"]["pinned"]
+    assert notes["Groceries"]["folder"] == "Notes"
+
+
 def test_unencrypted_backups_leave_out_call_history(tmp_path):
     backup_dir = generate("testpersona", "ios26", tmp_path)
     expected = json.loads((tmp_path / EXPECTED).read_text())
     assert expected["calls"] == [] and expected["absent"]["calls"] == "encrypted_only"
+    assert expected["browser_history"] == [] and expected["absent"]["browser_history"] == "encrypted_only"
     assert len(expected["voicemails"]) == 3
     manifest = sqlite3.connect(backup_dir / "Manifest.db")
     paths = {r[0] for r in manifest.execute("SELECT relativePath FROM Files")}
-    assert "Library/Voicemail/voicemail.db" in paths and not any("CallHistory" in p for p in paths)
+    assert "Library/Voicemail/voicemail.db" in paths and "NoteStore.sqlite" in paths
+    assert not any("CallHistory" in p or "Safari" in p for p in paths)
 
 
 def test_encrypting_changes_only_what_apple_leaves_out(tmp_path):
     generate("testpersona", "ios26", tmp_path / "plain", seed=7)
     generate("testpersona", "ios26", tmp_path / "enc", password="pw", seed=7)
     plain, enc = (json.loads((tmp_path / d / EXPECTED).read_text()) for d in ("plain", "enc"))
-    for key in ("contacts", "conversations", "voicemails"):
+    for key in ("contacts", "conversations", "voicemails", "notes"):
         assert plain[key] == enc[key], key
 
 

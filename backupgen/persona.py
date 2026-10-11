@@ -31,6 +31,21 @@ A pack is a folder under ``personas/``:
   ``facetime-video`` (the default is ``phone``).
 - ``voicemails.txt`` (optional): ``09:40 besso 38s: what they said``. Each voicemail
   also leaves a missed call, as on a real phone.
+- ``notes/*.txt`` (optional): one note per file. Headers, a blank line, then the text,
+  whose first line is the title. ``- item`` lines become a dashed list and
+  ``[ ] item`` / ``[x] item`` a checklist:
+
+      folder: Trips
+      created: 1905-03-02 09:12
+      modified: 1905-03-10 18:40
+      pinned: yes
+
+      Packing list
+      [x] Violin
+      [ ] Patent drafts
+
+- ``safari.txt`` (optional): ``09:15 https://example.org/page | Page title`` under
+  ``== date`` headings, one line per visit.
 
 Real dates are written as they happened. ``shift_years`` moves them onto the
 device-era calendar (Einstein's 1905 plays out in 2021), so that backup formats
@@ -58,6 +73,8 @@ _LINE = re.compile(r"^(\d{1,2}):(\d{2})\s+([A-Za-z0-9_-]+)(?::\s(.*)|\s+\+(\w+))
 _CALL = re.compile(r"^(\d{1,2}):(\d{2})\s+(in|out)\s+(\+\d+|[A-Za-z0-9_-]+)\s+(missed|[\dhms]+)(?:\s+(\S+))?\s*$")
 _VOICEMAIL = re.compile(r"^(\d{1,2}):(\d{2})\s+(\+\d+|[A-Za-z0-9_-]+)\s+([\dhms]+):\s(.+)$")
 _DURATION = re.compile(r"^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$")
+_VISIT = re.compile(r"^(\d{1,2}):(\d{2})\s+(\S+)\s+\|\s+(.+)$")
+_NOTE_HEADERS = ("folder", "created", "modified", "pinned")
 
 
 class PersonaError(ValueError):
@@ -126,6 +143,29 @@ class Voicemail:
 
 
 @dataclass
+class Note:
+    id: str
+    folder: str
+    created: datetime  # real wall-clock times, like messages
+    modified: datetime
+    pinned: bool
+    text: str  # as typed: the first line is the title, "- " and "[ ] " mark list items
+    where: str
+
+    @property
+    def real_time(self) -> datetime:
+        return self.created
+
+
+@dataclass
+class Visit:
+    real_time: datetime
+    url: str
+    title: str
+    where: str
+
+
+@dataclass
 class Snapshot:
     id: str
     backup_date: datetime  # aware
@@ -158,6 +198,8 @@ class Persona:
     avoid: list[dict] = field(default_factory=list)  # sensitive topics kept out of the conversations
     calls: Optional[list[Call]] = None  # None: the pack has no calls.txt, so the phone has no call history
     voicemails: Optional[list[Voicemail]] = None
+    notes: Optional[list[Note]] = None
+    visits: Optional[list[Visit]] = None
 
     def device_time(self, real: datetime) -> datetime:
         """Move a real wall-clock time onto the device calendar and return it as an aware UTC time."""
@@ -289,6 +331,38 @@ def _parse_voicemails(path: Path, contacts: dict[str, Contact]) -> list[Voicemai
     return voicemails
 
 
+def _parse_note(path: Path) -> Note:
+    head, _, body = path.read_text(encoding="utf-8").partition("\n\n")
+    headers = {}
+    for number, line in enumerate(head.splitlines(), 1):
+        key, _, value = line.partition(":")
+        if key.strip() not in _NOTE_HEADERS or not value.strip():
+            raise PersonaError(f"{path.name}:{number}: expected one of {', '.join(_NOTE_HEADERS)}, got {line!r}")
+        headers[key.strip()] = value.strip()
+    if "created" not in headers:
+        raise PersonaError(f"{path.name}: needs a created: header")
+    text = body.strip("\n")
+    if not text:
+        raise PersonaError(f"{path.name}: the note is empty")
+    created = datetime.fromisoformat(headers["created"])
+    modified = datetime.fromisoformat(headers.get("modified", headers["created"]))
+    if modified < created:
+        raise PersonaError(f"{path.name}: modified before it was created")
+    return Note(path.stem, headers.get("folder", "Notes"), created, modified,
+                headers.get("pinned", "no").lower() in ("yes", "true"), text, path.name)
+
+
+def _parse_visits(path: Path) -> list[Visit]:
+    visits = []
+    for day, line, where in _dated_lines(path):
+        match = _VISIT.match(line)
+        if not match or not match.group(3).startswith(("http://", "https://")):
+            raise PersonaError(f"{where}: can't parse {line!r} (write HH:MM <url> | <title>)")
+        hour, minute, url, title = match.groups()
+        visits.append(Visit(datetime(day.year, day.month, day.day, int(hour), int(minute)), url, title.strip(), where))
+    return visits
+
+
 def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
     folder = root / persona_id
     raw = json.loads((folder / "persona.json").read_text(encoding="utf-8"))
@@ -314,8 +388,11 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
         raise PersonaError(f"{persona_id}: duplicate chat ids")
     calls = _parse_calls(folder / "calls.txt", contacts) if (folder / "calls.txt").exists() else None
     voicemails = _parse_voicemails(folder / "voicemails.txt", contacts) if (folder / "voicemails.txt").exists() else None
+    notes = [_parse_note(p) for p in sorted((folder / "notes").glob("*.txt"))] if (folder / "notes").is_dir() else None
+    visits = _parse_visits(folder / "safari.txt") if (folder / "safari.txt").exists() else None
     start, end = (date.fromisoformat(d) for d in raw["real_period"])
-    for record in [m for chat in chats for m in chat.messages] + (calls or []) + (voicemails or []):
+    records = [m for chat in chats for m in chat.messages] + (calls or []) + (voicemails or []) + (notes or []) + (visits or [])
+    for record in records:
         if not start <= record.real_time.date() <= end:
             raise PersonaError(f"{record.where}: {record.real_time.date()} is outside the persona's period {start}–{end}")
     timeline_path = folder / "timeline.json"
@@ -339,6 +416,8 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
         avoid=research.get("avoid", []),
         calls=calls,
         voicemails=voicemails,
+        notes=notes,
+        visits=visits,
     )
 
 

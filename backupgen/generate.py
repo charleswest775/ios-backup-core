@@ -24,6 +24,8 @@ from backupgen.sqlitegen import build
 from backupgen.writers import calls as calls_writer
 from backupgen.writers import contacts as contacts_writer
 from backupgen.writers import messages as messages_writer
+from backupgen.writers import notes as notes_writer
+from backupgen.writers import safari as safari_writer
 from backupgen.writers import voicemail as voicemail_writer
 
 EXPECTED = "expected.json"
@@ -108,6 +110,19 @@ def generate(
             for v in voicemails:
                 writer.add_file("HomeDomain", f"Library/Voicemail/{v.rowid}.amr", voicemail_writer.silent_amr(v.duration))
             written["voicemail"] = voicemails
+        if persona.notes is not None:
+            notes: list = []
+            store = build(tmp / "NoteStore.sqlite", snapshot.schema, "NoteStore.sqlite",
+                          lambda db: notes.extend(notes_writer.populate(db, persona, snapshot, rng)))
+            writer.add_file("AppDomainGroup-group.com.apple.notes", "NoteStore.sqlite", store)
+            written["notes"] = notes
+        if persona.visits is not None:
+            visits: list = []
+            history = build(tmp / "History.db", snapshot.schema, "History.db",
+                            lambda db: visits.extend(safari_writer.populate(db, persona, snapshot, rng)))
+            if password is not None:
+                writer.add_file("HomeDomain", "Library/Safari/History.db", history)
+                written["browser_history"] = visits
 
     backup_dir = writer.finalize()
 
@@ -138,7 +153,7 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
     present = {kind for kind, records in written.items() if records}
     if cards:
         present.add("contacts")
-    on_phone = {"calls": bool(persona.calls or persona.voicemails)}
+    on_phone = {"calls": bool(persona.calls or persona.voicemails), "browser_history": bool(persona.visits)}
     left_out = {t for t in ENCRYPTED_ONLY if password is None and on_phone.get(t)}
     return {
         "persona": persona.id,
@@ -179,6 +194,16 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
                 "contact": calls_writer.contact_name(cards, v.sender), "duration": v.duration, "transcript": v.transcript,
             }
             for v in written.get("voicemail", [])
+        ],
+        "notes": [
+            {
+                "title": n.title, "text": n.text, "folder": n.folder, "created": n.created.isoformat(),
+                "modified": n.modified.isoformat(), "pinned": n.pinned,
+            }
+            for n in written.get("notes", [])
+        ],
+        "browser_history": [
+            {"date": v.date.isoformat(), "url": v.url, "title": v.title} for v in written.get("browser_history", [])
         ],
         "absent": {t: "encrypted_only" if t in left_out else "none" for t in DATA_TYPES if t not in present},
     }
