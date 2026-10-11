@@ -1,0 +1,21 @@
+chat: stark
+with: stark
+service: iMessage
+
+# Johannes Stark, editor of the Jahrbuch der Radioaktivität und Elektronik.
+
+== 1907-09-24
+10:00 stark: Herr Einstein, would you write a review article on the relativity principle for the Jahrbuch?
+
+== 1907-09-25
+20:00 me: Gladly, though I should warn you that the library is closed whenever I'm free.
+
+== 1907-10-04
+11:00 stark: Thank you for agreeing. Take the time you need.
+
+== 1907-11-01
+21:00 me: The first part of the review is finished.
+
+== 1907-12-04
+10:00 stark: Received: "On the Relativity Principle and the Conclusions Drawn from It". Thank you.
+10:30 me: The last section is about gravitation. I think it will be the most important part.

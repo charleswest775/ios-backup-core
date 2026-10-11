@@ -118,10 +118,11 @@ def _read(backup_dir, password):
     return resolver.list_contacts(accessor)["contacts"], conversations, messages
 
 
+@pytest.mark.parametrize("persona", ["testpersona", "einstein"])
 @pytest.mark.parametrize("snapshot", ["ios15", "ios17", "ios26"])
 @pytest.mark.parametrize("password", [None, "test-password"])
-def test_snapshot_reads_back_as_expected(tmp_path, snapshot, password):
-    backup_dir = generate("testpersona", snapshot, tmp_path, password=password)
+def test_snapshot_reads_back_as_expected(tmp_path, persona, snapshot, password):
+    backup_dir = generate(persona, snapshot, tmp_path, password=password)
     expected = json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))
     contacts, conversations, messages = _read(backup_dir, password)
     assert len(contacts) == len(expected["contacts"])
@@ -201,3 +202,19 @@ def test_sms_databases_have_no_wal_files(tmp_path):
     manifest = sqlite3.connect(backup_dir / "Manifest.db")
     paths = [r[0] for r in manifest.execute("SELECT relativePath FROM Files")]
     assert "Library/SMS/sms.db" in paths and not any(p.endswith(("-wal", "-shm")) for p in paths)
+
+
+@pytest.mark.parametrize("password", [None, "pw"])
+def test_manifest_db_matches_real_backups(tmp_path, password):
+    """Real Manifest.db files are WAL databases with user_version 2 (no -wal/-shm in the backup)."""
+    from iphone_backup_decrypt import EncryptedBackup
+
+    backup_dir = generate("testpersona", "ios17", tmp_path, password=password)
+    path = backup_dir / "Manifest.db"
+    if password:
+        path = tmp_path / "decrypted.db"
+        EncryptedBackup(backup_directory=str(backup_dir), passphrase=password).save_manifest_file(str(path))
+    header = path.read_bytes()[:100]
+    assert header[18] == 2, "WAL mode"
+    assert int.from_bytes(header[60:64], "big") == 2, "user_version"
+    assert not any((backup_dir / f"Manifest.db{s}").exists() for s in ("-wal", "-shm"))

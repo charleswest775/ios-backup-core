@@ -1,6 +1,6 @@
 """Render a persona pack as a Markdown review document (``python -m backupgen report <persona>``).
 
-Shows the conceit and time shift, the sourced timeline, the contacts and every
+Shows the conceit and time shift, the sourced timeline, the topics kept out, the contacts and every
 conversation with both its real and on-device dates, so a reviewer can check
 facts and tone without reading JSON.
 """
@@ -50,6 +50,13 @@ def render(persona: Persona) -> str:
             sources = " ".join(f"[{i + 1}]({url})" for i, url in enumerate(event.get("sources", [])))
             note = f" *({event['date_note']})*" if event.get("date_note") else ""
             w(f"| {day} | {shown} | **{event['title']}**: {event.get('detail', '')}{note} | {sources} |")
+        w("")
+
+    if persona.avoid:
+        w("## Handled with care\n")
+        w("Real events that are private, painful or disputed. The conversations leave them out or touch them only as stated here.\n")
+        for topic in persona.avoid:
+            w(f"- **{topic['topic']}** ({topic.get('date', '')}). {topic.get('guidance', '')} *Why: {topic.get('why_sensitive', '')}*")
         w("")
 
     w("## Contacts\n")

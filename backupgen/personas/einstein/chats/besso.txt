@@ -1,0 +1,158 @@
+chat: besso
+with: besso
+service: iMessage
+
+# Michele Besso: friend since Zurich (1896), in Milan and then Trieste until he joined the Patent Office in early 1904.
+# The only acknowledgment in the 1905 relativity paper thanks him.
+
+== 1900-12-17
+20:00 me: My first paper is with the Annalen. Capillarity. Be gentle when you read it.
+20:20 besso: I will be honest, which is worse. Congratulations, Albert.
+
+== 1901-12-12
+21:00 besso: Marconi says he sent a signal across the Atlantic. Three dots, Cornwall to Newfoundland.
+21:06 me: Electromagnetic waves don't care about oceans. Maxwell would be delighted.
+
+== 1902-05-31
+19:30 besso: The war in South Africa is over. Peace signed at Vereeniging.
+19:35 me: Good. Let them put the money into something useful, like laboratories.
+
+== 1902-06-16
+18:30 me: I have the Patent Office job! Technical Expert, third class.
+18:40 besso: Wonderful! Bern suits you. Third class is only the beginning.
+
+== 1902-06-23
+20:10 me: First day at the Office. Eight hours of patents, eight hours of fun and science, eight hours of sleep. That's the plan.
+20:15 besso: And when do you eat?
+20:15 me +laugh
+
+== 1903-12-28
+19:00 me: There's a vacancy at the Office: technical expert, second class. You should apply. You'd be excellent at it.
+19:12 besso: Do you think Haller would take an engineer from Trieste?
+19:13 me: He took a physicist from nowhere.
+
+# Besso joined in early 1904; sources give January, 4 March or 15 March.
+
+== 1904-03-04
+18:15 me: Welcome to the Office, colleague!
+18:20 besso: Same walk home every evening, I hope.
+18:20 me +love
+
+== 1905-01-23
+08:10 besso: Terrible news from St Petersburg. Troops fired on the workers' procession.
+08:20 me: A government that shoots petitioners won't last.
+
+== 1905-02-24
+20:30 besso: The Simplon tunnel is through! The two headings met under the Alps, nearly 20 kilometres.
+20:35 me: Two crews digging toward each other under a mountain, and they actually meet. That's good surveying.
+
+== 1905-03-17
+18:00 me: The light paper is posted. You'll notice I call light quanta "a heuristic point of view". I'm being polite.
+18:05 besso +laugh
+
+== 1905-05-11
+19:00 besso: Read your Brownian motion draft at lunch. If Perrin or someone measures it, the atomists win.
+19:05 me: That's the idea.
+
+== 1905-05-16
+18:40 me: Can we walk home together tonight? I've been stuck on this electrodynamics problem for a year and I want to try it on you.
+18:42 besso: Of course. Meet at the door at six.
+
+== 1905-05-17
+09:05 me: Thank you. I've solved the problem, I think completely. It's all in the analysis of time.
+09:07 besso: From one walk?
+09:09 me: From one walk and a year of being wrong.
+09:10 besso +love
+
+== 1905-06-07
+19:00 besso: Norway has dissolved the union with Sweden.
+19:05 me: A peaceful separation. Better than most marriages of states.
+
+== 1905-06-12
+18:30 me: Can you read the electrodynamics draft over lunch tomorrow? I need your questions.
+18:35 besso: Bring it. I'll bring questions.
+
+== 1905-06-13
+13:30 besso: Read it. Three questions, and a feeling that nothing will be the same.
+13:35 me: Ask the three questions. The feeling we can discuss on the walk home.
+
+== 1905-06-30
+12:45 me: The electrodynamics paper is with the Annalen. You're thanked at the end for your steadfast support and valuable suggestions.
+12:50 besso: I only asked questions.
+12:52 me: The right ones.
+
+== 1905-09-05
+20:40 besso: Russia and Japan have signed a peace at Portsmouth, in America.
+
+== 1905-09-27
+18:15 me: Posted a short sequel to the electrodynamics paper. Energy has inertia.
+18:20 besso: Short?
+18:21 me: Three pages. I'm learning.
+
+== 1906-03-23
+21:00 me: Planck lectured on my relativity paper to the Physical Society in Berlin today.
+21:05 besso: Planck! Then they'll all read it now.
+
+== 1906-05-19
+18:00 besso: The Simplon is officially open. Trains to Italy straight through the mountain.
+
+== 1906-07-12
+19:15 besso: Dreyfus has been fully exonerated.
+19:20 me: Twelve years. Justice is slow, but it does arrive sometimes.
+
+== 1906-11-09
+17:30 me: Sent off a paper applying Planck's quanta to the specific heat of solids. The atoms in a crystal vibrate in quanta too.
+
+== 1907-11-12
+19:00 me: I need another walk. I think gravity and acceleration are the same thing.
+19:04 besso: You've just finished one revolution and you want another?
+19:05 me: This one is bigger.
+
+== 1907-12-17
+20:00 besso: Lord Kelvin has died.
+20:05 me: He gave us absolute zero. Not a bad legacy.
+
+== 1908-04-21
+07:20 me: Lecture at 7. Don't be late, you're a third of my audience.
+07:21 besso: I'll bring Chavan. That's two thirds.
+07:21 me +laugh
+
+== 1908-07-01
+23:30 besso: Look out of the window. The sky is bright at midnight.
+23:36 me: Reading by it. Something has happened in the upper atmosphere.
+
+== 1908-07-11
+08:15 besso: Kamerlingh Onnes has liquefied helium in Leiden. Four degrees above absolute zero.
+08:20 me: Remember that postcard I sent him? He was busy.
+08:20 besso +laugh
+
+== 1908-10-02
+18:10 besso: An American, Ford, is selling a motor car built for ordinary people. The Model T.
+
+== 1908-12-29
+09:00 besso: A catastrophic earthquake at Messina. They say most of the city is gone.
+09:10 me: Dreadful. I'll give at the Office collection.
+
+# Perrin's confirming measurements date from 1908; the month isn't pinned down.
+
+== 1908-12-30
+19:00 me: Perrin's measurements of Brownian motion fit the formula. The atoms are real, Michele.
+19:05 besso: Was there any doubt?
+19:06 me: Ostwald's.
+
+== 1909-01-13
+18:00 me: Minkowski has died. Appendicitis, at 44. He taught me mathematics at the Poly, and I didn't listen.
+
+== 1909-07-06
+17:30 me: I've handed Haller my resignation. Zurich from October.
+17:45 besso: The Office will be very quiet without you.
+17:46 me: You'll finally get some patents read.
+17:46 besso +laugh
+
+== 1909-07-25
+21:00 besso: Blériot has flown across the English Channel!
+21:05 me: Thirty-seven minutes. My trains are slower.
+
+== 1909-10-15
+18:30 besso: Same walk home without you tonight. It won't be the same.
+18:35 me: I'll come back and walk it with you. Promise.

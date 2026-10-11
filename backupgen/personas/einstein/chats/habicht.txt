@@ -1,0 +1,42 @@
+chat: habicht
+with: habicht
+service: iMessage
+
+# Conrad Habicht: mathematician friend from Schaffhausen, Olympia Academy co-founder, wedding witness.
+# The two 1905 letters are paraphrased, not quoted.
+
+== 1901-12-11
+17:30 habicht: Subscription concert tonight. Bring your violin, we'll play after.
+17:35 me: Only if it's Mozart.
+17:36 habicht: It's always Mozart with you.
+
+== 1902-02-12
+20:00 me: I'm in Bern now. Gerechtigkeitsgasse 32. Come and visit and bring your thesis.
+
+== 1903-01-05
+21:30 me: Tomorrow at the registry office. Wear a tie.
+21:32 habicht: I own one. I'll find it.
+
+# The four-papers letter is undated; editors date it 18 or 25 May 1905.
+== 1905-05-25
+21:00 me: Where's your thesis? I've been waiting for months.
+21:02 habicht: You'll get it when you send me something.
+21:10 me: Fine. I can promise you four papers. The first is about radiation and the energy of light, and it is very revolutionary.
+21:12 me: The second works out the real size of atoms from diffusion and viscosity.
+21:14 me: The third shows that tiny particles in a liquid must jiggle because of the molecules around them. You can see it under a microscope.
+21:16 me: The fourth is still a rough draft: the electrodynamics of moving bodies, which changes the theory of space and time.
+21:20 habicht: Albert. That isn't four papers, it's a revolution.
+21:21 habicht +emphasize
+
+# Undated; editors date the second letter between 30 June and 22 September 1905.
+== 1905-09-01
+20:30 me: One more consequence of the electrodynamics paper. Mass is a direct measure of the energy in a body. Light carries mass with it.
+20:32 habicht: Can it be tested?
+20:35 me: Perhaps with radium salts. It's a funny, infectious idea. For all I know, the Lord is laughing at me over it.
+20:36 habicht +laugh
+20:40 me: And seriously: let me help you get a post at the Patent Office. Then we can do physics together again.
+
+== 1907-08-14
+19:00 me: You and Paul have built the Maschinchen already! I can hardly believe how quickly.
+19:05 habicht: Paul did the hard part. It measures, but it's temperamental.
+19:06 me: Like all the best instruments.

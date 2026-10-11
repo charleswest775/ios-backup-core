@@ -119,6 +119,7 @@ class Persona:
     snapshots: dict[str, Snapshot]
     timeline: list[dict]
     folder: Path
+    avoid: list[dict] = field(default_factory=list)  # sensitive topics kept out of the conversations
 
     def device_time(self, real: datetime) -> datetime:
         """Move a real wall-clock time onto the device calendar and return it as an aware UTC time."""
@@ -222,7 +223,7 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
             if not start <= m.real_time.date() <= end:
                 raise PersonaError(f"{m.where}: {m.real_time.date()} is outside the persona's period {start}–{end}")
     timeline_path = folder / "timeline.json"
-    timeline = json.loads(timeline_path.read_text(encoding="utf-8")).get("events", []) if timeline_path.exists() else []
+    research = json.loads(timeline_path.read_text(encoding="utf-8")) if timeline_path.exists() else {}
     return Persona(
         id=raw["id"],
         name=raw["name"],
@@ -237,8 +238,9 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
         contacts=contacts,
         chats=chats,
         snapshots=snapshots,
-        timeline=timeline,
+        timeline=research.get("events", []),
         folder=folder,
+        avoid=research.get("avoid", []),
     )
 
 

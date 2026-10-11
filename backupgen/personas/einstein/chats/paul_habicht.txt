@@ -1,0 +1,15 @@
+chat: paul_habicht
+with: paul_habicht
+service: iMessage
+
+# Paul Habicht, instrument maker, built Einstein's "Maschinchen" (electrostatic voltage multiplier) with his brother Conrad.
+
+== 1907-08-12
+18:00 paul_habicht: The Maschinchen is assembled. It works, more or less.
+18:10 me: More or less is a beginning! I'm amazed you were so fast.
+
+== 1908-05-16
+20:00 me: Spent the day in Gockel's laboratory in Fribourg testing the Maschinchen.
+20:15 paul_habicht: Did it behave?
+20:20 me: It measured something. Whether it was the charge or our patience, I'm not sure.
+20:21 paul_habicht +laugh

@@ -1,0 +1,15 @@
+chat: laue
+with: laue
+service: iMessage
+
+# Max Laue (von Laue only from 1913), Planck's assistant. Sources place the Bern visit in 1907 (or summer 1906).
+
+== 1907-09-09
+17:00 laue: I'll be in Bern tomorrow. May I call on you at the Patent Office?
+17:10 me: Please do. Ask for me in the waiting room.
+
+== 1907-09-10
+19:00 laue: Forgive me for walking straight past you this morning. I expected someone much older.
+19:05 me: Everyone does. Did you enjoy the walk along the Aare?
+19:20 laue: Very much. Your cigar, I confess, is now somewhere in the Aare.
+19:21 me +laugh
