@@ -18,10 +18,28 @@ class VoicemailExtractor:
     VOICEMAIL_DB_PATH = "Library/Voicemail/voicemail.db"
 
     def list_voicemails(self, backup, contacts: dict) -> dict:
-        """List all voicemails with metadata."""
+        """List all voicemails with metadata.
+
+        When there are none, ``voicemails`` is empty and ``empty_reason`` says why:
+
+        - ``"not_in_backup"``: no voicemail.db. Many phones never have one,
+          because visual voicemail depends on the carrier.
+        - ``"no_records"``: voicemail.db exists but holds no voicemails.
+
+        A voicemail.db that is listed in the backup but can't be read is an
+        ``error``, with no ``empty_reason``.
+        """
         db_path = backup.get_file(self.VOICEMAIL_DB_PATH, domain="HomeDomain")
         if not db_path:
-            return {"voicemails": [], "error": "voicemail.db not found"}
+            if backup.list_files(domain="HomeDomain", path_like=self.VOICEMAIL_DB_PATH):
+                return {
+                    "voicemails": [],
+                    "error": (
+                        "Voicemail is in this backup but could not be read. "
+                        "The backup may be incomplete or damaged."
+                    ),
+                }
+            return {"voicemails": [], "empty_reason": "not_in_backup"}
 
         voicemails = []
         try:
@@ -74,6 +92,8 @@ class VoicemailExtractor:
             traceback.print_exc()
             return {"voicemails": [], "error": str(e)}
 
+        if not voicemails:
+            return {"voicemails": [], "empty_reason": "no_records"}
         return {"voicemails": voicemails}
 
     def get_audio_path(self, backup, voicemail_id: int) -> str | None:
