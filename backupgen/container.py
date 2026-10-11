@@ -42,7 +42,11 @@ _LOCKDOWN_EXTRAS = {
     "com.apple.mobile.wireless_lockdown": {"EnableWifiConnections": False},
 }
 # Chip identifiers that prefix modern UDIDs, by ProductType.
-_CHIP_IDS = {"iPhone12,1": "00008030", "iPhone15,4": "00008120", "iPhone16,2": "00008130"}
+# Phones from the iPhone XS on have a UDID made of the chip ID and the ECID; older ones a 40-hex one.
+_CHIP_IDS = {
+    "iPhone12,1": "00008030", "iPhone15,4": "00008120", "iPhone16,2": "00008130",
+    "iPhone17,1": "00008140", "iPhone17,2": "00008140", "iPhone17,3": "00008140", "iPhone17,4": "00008140",
+}
 
 
 def file_id(domain: str, relative_path: str) -> str:
