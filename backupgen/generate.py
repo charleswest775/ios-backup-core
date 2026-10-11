@@ -21,15 +21,19 @@ from typing import Optional
 from backupgen.container import BackupWriter, Device
 from backupgen.persona import Persona, load_persona
 from backupgen.sqlitegen import build
+from backupgen.writers import calls as calls_writer
 from backupgen.writers import contacts as contacts_writer
 from backupgen.writers import messages as messages_writer
+from backupgen.writers import voicemail as voicemail_writer
 
 EXPECTED = "expected.json"
 
 # Every data type OpenExtract reads or is adding. The answer key lists the ones a backup doesn't hold
-# under "absent", so readers can be checked for clean empty results as well as for content.
+# under "absent", with why, so readers can be checked for clean empty results as well as for content:
+# "none" means the phone has none; "encrypted_only" means Apple leaves it out of unencrypted backups.
 DATA_TYPES = ("messages", "contacts", "calls", "voicemail", "notes", "photos", "browser_history",
               "calendar", "voice_memos", "health")
+ENCRYPTED_ONLY = {"calls", "browser_history", "health"}
 
 
 def default_seed(persona_id: str, snapshot_id: str, encrypted: bool) -> int:
@@ -83,23 +87,42 @@ def generate(
         sms = build(tmp / "sms.db", snapshot.schema, "sms.db", fill_messages)
         address_book = build(tmp / "AddressBook.sqlitedb", snapshot.schema, "AddressBook.sqlitedb", fill_contacts)
         images = build(tmp / "AddressBookImages.sqlitedb", snapshot.schema, "AddressBookImages.sqlitedb", lambda db: None)
+        writer.add_file("HomeDomain", "Library/SMS/sms.db", sms)
+        writer.add_file("HomeDomain", "Library/AddressBook/AddressBook.sqlitedb", address_book)
+        writer.add_file("HomeDomain", "Library/AddressBook/AddressBookImages.sqlitedb", images)
 
-    writer.add_file("HomeDomain", "Library/SMS/sms.db", sms)
-    writer.add_file("HomeDomain", "Library/AddressBook/AddressBook.sqlitedb", address_book)
-    writer.add_file("HomeDomain", "Library/AddressBook/AddressBookImages.sqlitedb", images)
+        written = {"messages": written_messages}
+        if persona.calls is not None or persona.voicemails is not None:
+            # The rng draws happen either way, so encrypting a backup doesn't change its other contents.
+            calls: list = []
+            history = build(tmp / "CallHistory.storedata", snapshot.schema, "CallHistory.storedata",
+                            lambda db: calls.extend(calls_writer.populate(db, persona, snapshot, rng)))
+            if password is not None:
+                writer.add_file("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata", history)
+                written["calls"] = calls
+        if persona.voicemails is not None:
+            voicemails: list = []
+            database = build(tmp / "voicemail.db", snapshot.schema, "voicemail.db",
+                             lambda db: voicemails.extend(voicemail_writer.populate(db, persona, snapshot, rng)))
+            writer.add_file("HomeDomain", "Library/Voicemail/voicemail.db", database)
+            for v in voicemails:
+                writer.add_file("HomeDomain", f"Library/Voicemail/{v.rowid}.amr", voicemail_writer.silent_amr(v.duration))
+            written["voicemail"] = voicemails
+
     backup_dir = writer.finalize()
 
-    expected = answer_key(persona, snapshot_id, device, password, written_messages)
+    expected = answer_key(persona, snapshot_id, device, password, written)
     (out_dir / EXPECTED).write_text(json.dumps(expected, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return backup_dir
 
 
-def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Optional[str], written: list) -> dict:
+def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Optional[str], written: dict) -> dict:
     snapshot = persona.snapshots[snapshot_id]
     cards = contacts_writer.visible_contacts(persona, snapshot)
     chats = {chat.id: chat for chat in persona.chats}
     conversations: dict[str, dict] = {}
-    for w in written:
+    messages = written["messages"]
+    for w in messages:
         chat = chats[w.chat_id]
         conv = conversations.setdefault(w.chat_id, {
             "chat": chat.id,
@@ -112,9 +135,11 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
         })
         conv["message_count"] += 1
         conv["last_message_date"] = w.date.isoformat()
-    present = {"messages"} if written else set()
+    present = {kind for kind, records in written.items() if records}
     if cards:
         present.add("contacts")
+    on_phone = {"calls": bool(persona.calls or persona.voicemails)}
+    left_out = {t for t in ENCRYPTED_ONLY if password is None and on_phone.get(t)}
     return {
         "persona": persona.id,
         "snapshot": snapshot_id,
@@ -139,7 +164,21 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
                 "guid": w.guid, "chat_identifier": w.chat_identifier, "date": w.date.isoformat(),
                 "is_from_me": w.is_from_me, "sender_handle": w.sender_handle, "text": w.text, "is_reaction": w.is_reaction,
             }
-            for w in written
+            for w in messages
         ],
-        "absent": [t for t in DATA_TYPES if t not in present],
+        "calls": [
+            {
+                "date": c.date.isoformat(), "address": c.address, "contact": calls_writer.contact_name(cards, c.address),
+                "outgoing": c.outgoing, "answered": c.duration > 0, "duration": c.duration, "service": c.service,
+            }
+            for c in written.get("calls", [])
+        ],
+        "voicemails": [
+            {
+                "rowid": v.rowid, "date": v.date.isoformat(), "sender": v.sender,
+                "contact": calls_writer.contact_name(cards, v.sender), "duration": v.duration, "transcript": v.transcript,
+            }
+            for v in written.get("voicemail", [])
+        ],
+        "absent": {t: "encrypted_only" if t in left_out else "none" for t in DATA_TYPES if t not in present},
     }

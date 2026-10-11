@@ -99,6 +99,9 @@ class SchemaDatabase:
                     self.conn.execute(placeholder)
                     self._swaps.append((placeholder.encode("utf-8"), obj["sql"].encode("utf-8")))
 
+    def column_type(self, table: str, column: str) -> Optional[str]:
+        return next((c["type"] for c in self.schema["columns"].get(table, []) if c["name"] == column), None)
+
     def table(self, name: str) -> Optional[Table]:
         columns = self.schema["columns"].get(name)
         return Table(self.conn, name, columns) if columns is not None else None

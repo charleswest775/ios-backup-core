@@ -18,6 +18,19 @@ A pack is a folder under ``personas/``:
   ``+love`` is a tapback on the latest message from someone else. The reactions are
   love, like, dislike, laugh, emphasize and question. Lines starting with ``#`` are
   notes for reviewers.
+- ``calls.txt`` (optional): the phone's call history, one call per line under a date:
+
+      == 1905-03-17
+      09:15 out mileva 4m12s
+      09:40 in besso missed
+      10:02 in +447700900555 missed
+      18:20 out mileva 22m facetime-video
+
+  Direction (``in``/``out``), a contact id or an E.164 number, then how long the call
+  lasted or ``missed`` (nobody answered), then optionally ``facetime-audio`` or
+  ``facetime-video`` (the default is ``phone``).
+- ``voicemails.txt`` (optional): ``09:40 besso 38s: what they said``. Each voicemail
+  also leaves a missed call, as on a real phone.
 
 Real dates are written as they happened. ``shift_years`` moves them onto the
 device-era calendar (Einstein's 1905 plays out in 2021), so that backup formats
@@ -40,7 +53,11 @@ from backupgen import PERSONAS_DIR
 from backupgen.container import Host
 
 REACTIONS = {"love": 2000, "like": 2001, "dislike": 2002, "laugh": 2003, "emphasize": 2004, "question": 2005}
+CALL_SERVICES = ("phone", "facetime-audio", "facetime-video")
 _LINE = re.compile(r"^(\d{1,2}):(\d{2})\s+([A-Za-z0-9_-]+)(?::\s(.*)|\s+\+(\w+))\s*$")
+_CALL = re.compile(r"^(\d{1,2}):(\d{2})\s+(in|out)\s+(\+\d+|[A-Za-z0-9_-]+)\s+(missed|[\dhms]+)(?:\s+(\S+))?\s*$")
+_VOICEMAIL = re.compile(r"^(\d{1,2}):(\d{2})\s+(\+\d+|[A-Za-z0-9_-]+)\s+([\dhms]+):\s(.+)$")
+_DURATION = re.compile(r"^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$")
 
 
 class PersonaError(ValueError):
@@ -90,6 +107,25 @@ class Chat:
 
 
 @dataclass
+class Call:
+    real_time: datetime
+    outgoing: bool
+    who: str  # contact id, or an E.164 number for callers who aren't contacts
+    duration: int  # seconds; 0 when nobody answered
+    service: str  # one of CALL_SERVICES
+    where: str
+
+
+@dataclass
+class Voicemail:
+    real_time: datetime
+    who: str
+    duration: int
+    transcript: str
+    where: str
+
+
+@dataclass
 class Snapshot:
     id: str
     backup_date: datetime  # aware
@@ -120,6 +156,8 @@ class Persona:
     timeline: list[dict]
     folder: Path
     avoid: list[dict] = field(default_factory=list)  # sensitive topics kept out of the conversations
+    calls: Optional[list[Call]] = None  # None: the pack has no calls.txt, so the phone has no call history
+    voicemails: Optional[list[Voicemail]] = None
 
     def device_time(self, real: datetime) -> datetime:
         """Move a real wall-clock time onto the device calendar and return it as an aware UTC time."""
@@ -194,6 +232,63 @@ def _parse_chat(path: Path, contacts: dict[str, Contact]) -> Chat:
     return chat
 
 
+def _seconds(text: str, where: str) -> int:
+    match = _DURATION.match(text)
+    if not text or not match:
+        raise PersonaError(f"{where}: can't read duration {text!r} (write it like 4m12s, 38s or 1h02m)")
+    hours, minutes, seconds = (int(g or 0) for g in match.groups())
+    return hours * 3600 + minutes * 60 + seconds
+
+
+def _dated_lines(path: Path):
+    """(day, line, where) for every line under a ``== date`` heading, skipping blanks and # notes."""
+    day: Optional[date] = None
+    for number, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        line, where = raw.rstrip(), f"{path.name}:{number}"
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("=="):
+            day = date.fromisoformat(line[2:].strip())
+        elif day is None:
+            raise PersonaError(f"{where}: needs a == date heading first")
+        else:
+            yield day, line, where
+
+
+def _check_who(who: str, contacts: dict[str, Contact], where: str) -> None:
+    if not who.startswith("+") and who not in contacts:
+        raise PersonaError(f"{where}: unknown contact {who!r}")
+
+
+def _parse_calls(path: Path, contacts: dict[str, Contact]) -> list[Call]:
+    calls = []
+    for day, line, where in _dated_lines(path):
+        match = _CALL.match(line)
+        if not match:
+            raise PersonaError(f"{where}: can't parse {line!r}")
+        hour, minute, direction, who, outcome, service = match.groups()
+        service = service or "phone"
+        if service not in CALL_SERVICES:
+            raise PersonaError(f"{where}: unknown service {service!r}")
+        _check_who(who, contacts, where)
+        calls.append(Call(datetime(day.year, day.month, day.day, int(hour), int(minute)), direction == "out", who,
+                          0 if outcome == "missed" else _seconds(outcome, where), service, where))
+    return calls
+
+
+def _parse_voicemails(path: Path, contacts: dict[str, Contact]) -> list[Voicemail]:
+    voicemails = []
+    for day, line, where in _dated_lines(path):
+        match = _VOICEMAIL.match(line)
+        if not match:
+            raise PersonaError(f"{where}: can't parse {line!r}")
+        hour, minute, who, duration, transcript = match.groups()
+        _check_who(who, contacts, where)
+        voicemails.append(Voicemail(datetime(day.year, day.month, day.day, int(hour), int(minute)), who,
+                                    _seconds(duration, where), transcript, where))
+    return voicemails
+
+
 def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
     folder = root / persona_id
     raw = json.loads((folder / "persona.json").read_text(encoding="utf-8"))
@@ -217,11 +312,12 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
     ids = [c.id for c in chats]
     if len(ids) != len(set(ids)):
         raise PersonaError(f"{persona_id}: duplicate chat ids")
+    calls = _parse_calls(folder / "calls.txt", contacts) if (folder / "calls.txt").exists() else None
+    voicemails = _parse_voicemails(folder / "voicemails.txt", contacts) if (folder / "voicemails.txt").exists() else None
     start, end = (date.fromisoformat(d) for d in raw["real_period"])
-    for chat in chats:
-        for m in chat.messages:
-            if not start <= m.real_time.date() <= end:
-                raise PersonaError(f"{m.where}: {m.real_time.date()} is outside the persona's period {start}–{end}")
+    for record in [m for chat in chats for m in chat.messages] + (calls or []) + (voicemails or []):
+        if not start <= record.real_time.date() <= end:
+            raise PersonaError(f"{record.where}: {record.real_time.date()} is outside the persona's period {start}–{end}")
     timeline_path = folder / "timeline.json"
     research = json.loads(timeline_path.read_text(encoding="utf-8")) if timeline_path.exists() else {}
     return Persona(
@@ -241,6 +337,8 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
         timeline=research.get("events", []),
         folder=folder,
         avoid=research.get("avoid", []),
+        calls=calls,
+        voicemails=voicemails,
     )
 
 

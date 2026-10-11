@@ -2904,5 +2904,102 @@
     ]
    }
   }
- }
+ },
+ "entities": [
+  {
+   "Z_ENT": 1,
+   "Z_NAME": "ICCloudState",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 2,
+   "Z_NAME": "ICCloudSyncingObject",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 3,
+   "Z_NAME": "ICAccountData",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 4,
+   "Z_NAME": "ICAttachment",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 5,
+   "Z_NAME": "ICAttachmentPreviewImage",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 6,
+   "Z_NAME": "ICDeviceMigrationState",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 7,
+   "Z_NAME": "ICLegacyTombstone",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 8,
+   "Z_NAME": "ICMedia",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 9,
+   "Z_NAME": "ICNote",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 10,
+   "Z_NAME": "ICNoteContainer",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 11,
+   "Z_NAME": "ICAccount",
+   "Z_SUPER": 10
+  },
+  {
+   "Z_ENT": 12,
+   "Z_NAME": "ICFolder",
+   "Z_SUPER": 10
+  },
+  {
+   "Z_ENT": 13,
+   "Z_NAME": "ICLocation",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 14,
+   "Z_NAME": "ICAttachmentLocation",
+   "Z_SUPER": 13
+  },
+  {
+   "Z_ENT": 15,
+   "Z_NAME": "ICNoteData",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 16,
+   "Z_NAME": "ICServerChangeToken",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 16001,
+   "Z_NAME": "CHANGE",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 16002,
+   "Z_NAME": "TRANSACTION",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 16003,
+   "Z_NAME": "TRANSACTIONSTRING",
+   "Z_SUPER": 0
+  }
+ ]
 }

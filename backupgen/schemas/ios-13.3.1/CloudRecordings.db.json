@@ -750,5 +750,27 @@
     ]
    }
   }
- }
+ },
+ "entities": [
+  {
+   "Z_ENT": 1,
+   "Z_NAME": "CloudRecording",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 2,
+   "Z_NAME": "DatabaseProperty",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 3,
+   "Z_NAME": "EntityRevision",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 4,
+   "Z_NAME": "Recording",
+   "Z_SUPER": 0
+  }
+ ]
 }

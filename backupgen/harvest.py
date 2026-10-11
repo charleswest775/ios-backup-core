@@ -106,8 +106,15 @@ def harvest_sqlite(path: Path) -> dict:
         "auto_vacuum": conn.execute("PRAGMA auto_vacuum").fetchone()[0],
         "encoding": conn.execute("PRAGMA encoding").fetchone()[0],
     }
+    harvested = {"pragmas": meta, "objects": objects, "columns": columns, "shape": shape}
+    if "Z_PRIMARYKEY" in columns:
+        # Core Data's entity map (which Z_ENT number is which entity) is model structure, not user data.
+        harvested["entities"] = [
+            {"Z_ENT": r[0], "Z_NAME": r[1], "Z_SUPER": r[2]}
+            for r in conn.execute("SELECT Z_ENT, Z_NAME, Z_SUPER FROM Z_PRIMARYKEY ORDER BY Z_ENT")
+        ]
     conn.close()
-    return {"pragmas": meta, "objects": objects, "columns": columns, "shape": shape}
+    return harvested
 
 
 def _keybag_layout(blob: bytes) -> dict:

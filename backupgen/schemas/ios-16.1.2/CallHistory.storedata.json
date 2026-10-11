@@ -801,5 +801,22 @@
     ]
    }
   }
- }
+ },
+ "entities": [
+  {
+   "Z_ENT": 1,
+   "Z_NAME": "CallDBProperties",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 2,
+   "Z_NAME": "CallRecord",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 3,
+   "Z_NAME": "Handle",
+   "Z_SUPER": 0
+  }
+ ]
 }

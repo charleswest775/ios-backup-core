@@ -22,7 +22,9 @@ from backupgen.sqlitegen import build, load_schema, schema_objects  # noqa: E402
 from backupgen.typedstream import attributed_body  # noqa: E402
 from ios_backup_core.backup import open_local_backup  # noqa: E402
 from ios_backup_core.contacts import ContactResolver  # noqa: E402
+from ios_backup_core.extractors.calls import CallExtractor  # noqa: E402
 from ios_backup_core.extractors.messages import MessageExtractor  # noqa: E402
+from ios_backup_core.extractors.voicemail import VoicemailExtractor  # noqa: E402
 from ios_backup_core.text import parse_attributed_body  # noqa: E402
 
 SCHEMAS = sorted(
@@ -159,8 +161,50 @@ def test_snapshots_only_hold_what_existed_by_their_date(tmp_path):
 def test_answer_key_lists_absent_data_types(tmp_path):
     generate("einstein", "ios15", tmp_path)
     expected = json.loads((tmp_path / EXPECTED).read_text())
-    assert expected["absent"] == ["calls", "voicemail", "notes", "photos", "browser_history",
-                                  "calendar", "voice_memos", "health"]
+    assert expected["absent"] == {t: "none" for t in ("calls", "voicemail", "notes", "photos", "browser_history",
+                                                      "calendar", "voice_memos", "health")}
+
+
+@pytest.mark.parametrize("snapshot", [
+    pytest.param("ios15", marks=pytest.mark.xfail(
+        strict=True, reason="iOS 15 stores ZADDRESS as a BLOB, which crashes list_calls; fixed by PR #12")),
+    "ios17", "ios26",
+])
+def test_calls_and_voicemails_read_back(tmp_path, snapshot):
+    backup_dir = generate("testpersona", snapshot, tmp_path, password="pw")
+    expected = json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))
+    accessor = open_local_backup(str(backup_dir), password="pw")
+    contacts = ContactResolver().load_contacts(accessor)
+    calls = CallExtractor().list_calls(accessor, contacts, 0, 1000)["calls"]
+    # Voicemails also show as missed calls; each one here has its missed call, so none are added.
+    assert sorted((c["address"], c["date"], c["duration"], c["direction"]) for c in calls) == sorted(
+        (c["address"], c["date"], c["duration"], "outgoing" if c["outgoing"] else "incoming") for c in expected["calls"]
+    )
+    voicemails = VoicemailExtractor().list_voicemails(accessor, contacts)["voicemails"]
+    assert sorted((v["phone_number"], v["date_received"], v["duration"]) for v in voicemails) == sorted(
+        (v["sender"], v["date"], v["duration"]) for v in expected["voicemails"]
+    )
+    for v in expected["voicemails"]:
+        audio = Path(VoicemailExtractor().get_audio_path(accessor, v["rowid"])).read_bytes()
+        assert audio.startswith(b"#!AMR\n") and len(audio) == 6 + 32 * 50 * v["duration"]
+
+
+def test_unencrypted_backups_leave_out_call_history(tmp_path):
+    backup_dir = generate("testpersona", "ios26", tmp_path)
+    expected = json.loads((tmp_path / EXPECTED).read_text())
+    assert expected["calls"] == [] and expected["absent"]["calls"] == "encrypted_only"
+    assert len(expected["voicemails"]) == 3
+    manifest = sqlite3.connect(backup_dir / "Manifest.db")
+    paths = {r[0] for r in manifest.execute("SELECT relativePath FROM Files")}
+    assert "Library/Voicemail/voicemail.db" in paths and not any("CallHistory" in p for p in paths)
+
+
+def test_encrypting_changes_only_what_apple_leaves_out(tmp_path):
+    generate("testpersona", "ios26", tmp_path / "plain", seed=7)
+    generate("testpersona", "ios26", tmp_path / "enc", password="pw", seed=7)
+    plain, enc = (json.loads((tmp_path / d / EXPECTED).read_text()) for d in ("plain", "enc"))
+    for key in ("contacts", "conversations", "voicemails"):
+        assert plain[key] == enc[key], key
 
 
 def test_same_phone_keeps_its_udid(tmp_path):

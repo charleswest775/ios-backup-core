@@ -16,18 +16,16 @@ import random
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Optional
 
 from backupgen.persona import REACTIONS, Chat, Message, Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.typedstream import attributed_body
-from backupgen.writers import cocoa_nanoseconds
+from backupgen.writers import cocoa_nanoseconds, country_code
 
 _REACTION_VERBS = {
     "love": "Loved", "like": "Liked", "dislike": "Disliked",
     "laugh": "Laughed at", "emphasize": "Emphasized", "question": "Questioned",
 }
-_COUNTRY = {"+44": "gb", "+41": "ch", "+1": "us", "+49": "de"}
 
 
 @dataclass
@@ -46,13 +44,6 @@ class Written:
 
 def _guid(rng: random.Random) -> str:
     return str(uuid.UUID(bytes=rng.randbytes(16))).upper()
-
-
-def _country(handle: str) -> Optional[str]:
-    for prefix, code in _COUNTRY.items():
-        if handle.startswith(prefix):
-            return code
-    return None
 
 
 def _utf16_length(text: str) -> int:
@@ -78,7 +69,7 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
         if key not in handle_ids:
             handle_ids[key] = handles_t.insert({
                 "id": handle,
-                "country": _country(handle),
+                "country": country_code(handle),
                 "service": service,
                 "uncanonicalized_id": handle if handle.startswith("+") else None,
                 "person_centric_id": None,

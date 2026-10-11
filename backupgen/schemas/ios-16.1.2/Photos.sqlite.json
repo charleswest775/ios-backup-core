@@ -15907,5 +15907,327 @@
     ]
    }
   }
- }
+ },
+ "entities": [
+  {
+   "Z_ENT": 1,
+   "Z_NAME": "AdditionalAssetAttributes",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 2,
+   "Z_NAME": "AlbumList",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 3,
+   "Z_NAME": "Asset",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 4,
+   "Z_NAME": "AssetAnalysisState",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 5,
+   "Z_NAME": "AssetContributor",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 6,
+   "Z_NAME": "AssetDescription",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 7,
+   "Z_NAME": "CharacterRecognitionAttributes",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 8,
+   "Z_NAME": "CloudFeedEntry",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 9,
+   "Z_NAME": "CloudFeedAssetsEntry",
+   "Z_SUPER": 8
+  },
+  {
+   "Z_ENT": 10,
+   "Z_NAME": "CloudFeedCommentsEntry",
+   "Z_SUPER": 8
+  },
+  {
+   "Z_ENT": 11,
+   "Z_NAME": "CloudMaster",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 12,
+   "Z_NAME": "CloudMasterMediaMetadata",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 13,
+   "Z_NAME": "CloudResource",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 14,
+   "Z_NAME": "CloudSharedAlbumInvitationRecord",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 15,
+   "Z_NAME": "CloudSharedComment",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 16,
+   "Z_NAME": "ComputedAssetAttributes",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 17,
+   "Z_NAME": "DeferredRebuildFace",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 18,
+   "Z_NAME": "DetectedFace",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 19,
+   "Z_NAME": "DetectedFaceGroup",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 20,
+   "Z_NAME": "DetectedFaceprint",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 21,
+   "Z_NAME": "DetectionTrait",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 22,
+   "Z_NAME": "EditedIPTCAttributes",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 23,
+   "Z_NAME": "ExtendedAttributes",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 24,
+   "Z_NAME": "FaceCrop",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 25,
+   "Z_NAME": "FileSystemBookmark",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 26,
+   "Z_NAME": "FileSystemVolume",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 27,
+   "Z_NAME": "GenericAlbum",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 28,
+   "Z_NAME": "Album",
+   "Z_SUPER": 27
+  },
+  {
+   "Z_ENT": 29,
+   "Z_NAME": "CloudSharedAlbum",
+   "Z_SUPER": 28
+  },
+  {
+   "Z_ENT": 30,
+   "Z_NAME": "DuplicateAlbum",
+   "Z_SUPER": 28
+  },
+  {
+   "Z_ENT": 31,
+   "Z_NAME": "LegacyFaceAlbum",
+   "Z_SUPER": 28
+  },
+  {
+   "Z_ENT": 32,
+   "Z_NAME": "PhotoStreamAlbum",
+   "Z_SUPER": 28
+  },
+  {
+   "Z_ENT": 33,
+   "Z_NAME": "ProjectAlbum",
+   "Z_SUPER": 28
+  },
+  {
+   "Z_ENT": 34,
+   "Z_NAME": "Conversation",
+   "Z_SUPER": 27
+  },
+  {
+   "Z_ENT": 35,
+   "Z_NAME": "FetchingAlbum",
+   "Z_SUPER": 27
+  },
+  {
+   "Z_ENT": 36,
+   "Z_NAME": "Folder",
+   "Z_SUPER": 27
+  },
+  {
+   "Z_ENT": 37,
+   "Z_NAME": "ImportSession",
+   "Z_SUPER": 27
+  },
+  {
+   "Z_ENT": 38,
+   "Z_NAME": "GlobalKeyValue",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 39,
+   "Z_NAME": "InternalResource",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 40,
+   "Z_NAME": "Keyword",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 41,
+   "Z_NAME": "LegacyFace",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 42,
+   "Z_NAME": "LimitedLibraryFetchFilter",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 43,
+   "Z_NAME": "MediaAnalysisAssetAttributes",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 44,
+   "Z_NAME": "Memory",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 45,
+   "Z_NAME": "MigrationHistory",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 46,
+   "Z_NAME": "Moment",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 47,
+   "Z_NAME": "Person",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 48,
+   "Z_NAME": "PersonReference",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 49,
+   "Z_NAME": "PhotoAnalysisAssetAttributes",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 50,
+   "Z_NAME": "PhotosHighlight",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 51,
+   "Z_NAME": "Question",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 52,
+   "Z_NAME": "SceneClassification",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 53,
+   "Z_NAME": "Sceneprint",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 54,
+   "Z_NAME": "Share",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 55,
+   "Z_NAME": "LibraryScope",
+   "Z_SUPER": 54
+  },
+  {
+   "Z_ENT": 56,
+   "Z_NAME": "MomentShare",
+   "Z_SUPER": 54
+  },
+  {
+   "Z_ENT": 57,
+   "Z_NAME": "ShareParticipant",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 58,
+   "Z_NAME": "Suggestion",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 59,
+   "Z_NAME": "UnmanagedAdjustment",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 60,
+   "Z_NAME": "UserFeedback",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 61,
+   "Z_NAME": "VisualSearchAttributes",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 16001,
+   "Z_NAME": "CHANGE",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 16002,
+   "Z_NAME": "TRANSACTION",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 16003,
+   "Z_NAME": "TRANSACTIONSTRING",
+   "Z_SUPER": 0
+  }
+ ]
 }
