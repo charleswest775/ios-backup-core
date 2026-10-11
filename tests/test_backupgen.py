@@ -147,6 +147,13 @@ def test_snapshots_only_hold_what_existed_by_their_date(tmp_path):
     assert len(counts["ios15"]["contacts"]) < len(counts["ios17"]["contacts"])  # Casey was added in 2023
 
 
+def test_answer_key_lists_absent_data_types(tmp_path):
+    generate("einstein", "ios15", tmp_path)
+    expected = json.loads((tmp_path / EXPECTED).read_text())
+    assert expected["absent"] == ["calls", "voicemail", "notes", "photos", "browser_history",
+                                  "calendar", "voice_memos", "health"]
+
+
 def test_same_phone_keeps_its_udid(tmp_path):
     udids = {}
     for snapshot, password in [("ios17", None), ("ios26", None), ("ios26", "pw")]:

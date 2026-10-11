@@ -26,6 +26,11 @@ from backupgen.writers import messages as messages_writer
 
 EXPECTED = "expected.json"
 
+# Every data type OpenExtract reads or is adding. The answer key lists the ones a backup doesn't hold
+# under "absent", so readers can be checked for clean empty results as well as for content.
+DATA_TYPES = ("messages", "contacts", "calls", "voicemail", "notes", "photos", "browser_history",
+              "calendar", "voice_memos", "health")
+
 
 def default_seed(persona_id: str, snapshot_id: str, encrypted: bool) -> int:
     digest = hashlib.sha256(f"{persona_id}/{snapshot_id}/{'enc' if encrypted else 'plain'}".encode()).digest()
@@ -107,6 +112,9 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
         })
         conv["message_count"] += 1
         conv["last_message_date"] = w.date.isoformat()
+    present = {"messages"} if written else set()
+    if cards:
+        present.add("contacts")
     return {
         "persona": persona.id,
         "snapshot": snapshot_id,
@@ -133,4 +141,5 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
             }
             for w in written
         ],
+        "absent": [t for t in DATA_TYPES if t not in present],
     }
