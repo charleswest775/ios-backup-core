@@ -18,6 +18,19 @@ from ios_backup_core.contacts import clean_phone_number, resolve_contact
 from ios_backup_core.timestamps import APPLE_EPOCH_OFFSET, apple_to_iso
 
 
+_CALL_TYPE_FACETIME_VIDEO = 8
+
+
+def _as_text(value) -> str:
+    """Addresses as text. Before iOS 17 ZADDRESS holds UTF-8 bytes in a BLOB, and all-digit
+    addresses (short codes) are stored as SQLite INTEGERs."""
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode("utf-8", "replace")
+    return str(value)
+
+
 class CallExtractor:
     """Extracts call history from iOS backups."""
 
@@ -148,7 +161,7 @@ class CallExtractor:
                 unix_ts = apple_ts + APPLE_EPOCH_OFFSET
                 iso_date = datetime.fromtimestamp(unix_ts, timezone.utc).isoformat()
 
-                address = row["address"] or ""
+                address = _as_text(row["address"])
                 contact_name = resolve_contact(address, contacts) or address or "Unknown"
                 direction = "outgoing" if row["is_from_me"] else "incoming"
                 app_name = "FaceTime Video" if row["item_type"] == 1 else "FaceTime Audio"
@@ -187,7 +200,7 @@ class CallExtractor:
             conn.close()
 
             for row in rows:
-                sender = row["sender"] or ""
+                sender = _as_text(row["sender"])
                 unix_ts = int(row["date"]) if row["date"] else 0
                 if not unix_ts:
                     continue
@@ -244,7 +257,7 @@ class CallExtractor:
         call_fingerprints: set = set()
 
         for row in all_rows:
-            address = row["address"] or ""
+            address = _as_text(row["address"])
             contact_name = resolve_contact(address, contacts) or address or "Unknown"
             originated = row["originated"]
             answered = row["answered"]
@@ -252,22 +265,28 @@ class CallExtractor:
             if originated is not None:
                 direction = "outgoing" if originated else "incoming"
             else:
-                direction = "outgoing" if row.get("call_type", 0) == 5 else "incoming"
+                direction = "outgoing" if row["call_type"] == 5 else "incoming"
 
-            if answered is not None:
+            # ZANSWERED only describes incoming calls; it stays 0 on outgoing
+            # calls that connected, so judge those by their duration.
+            if direction == "outgoing":
+                status = "answered" if (row["duration"] or 0) > 0 else "missed"
+            elif answered is not None:
                 status = "answered" if answered else "missed"
             else:
-                if direction == "incoming":
-                    status = "answered" if row.get("duration", 0) > 0 else "missed"
-                else:
-                    status = "answered"
+                status = "answered" if (row["duration"] or 0) > 0 else "missed"
 
             provider = row["service_provider"]
             app_name = "Phone"
             if provider:
                 p_lower = provider.lower()
                 if "facetime" in p_lower:
-                    app_name = "FaceTime Video" if row["is_video"] else "FaceTime Audio"
+                    # Older schemas have ZIS_VIDEO; otherwise ZCALLTYPE says it
+                    # (8 = FaceTime video, 16 = FaceTime audio).
+                    is_video = row["is_video"]
+                    if is_video is None:
+                        is_video = row["call_type"] == _CALL_TYPE_FACETIME_VIDEO
+                    app_name = "FaceTime Video" if is_video else "FaceTime Audio"
                 elif "whatsapp" in p_lower:
                     app_name = "WhatsApp"
                 elif "skype" in p_lower:

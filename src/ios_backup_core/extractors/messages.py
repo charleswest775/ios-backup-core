@@ -26,6 +26,10 @@ from ios_backup_core.text import (
 )
 from ios_backup_core.timestamps import apple_to_iso, iso_to_apple
 
+# Group chats have identifiers like "chat644566139839284925". Match the whole thing:
+# a 1:1 chat with an email handle such as chatham@example.com isn't a group.
+_GROUP_CHAT_IDENTIFIER = re.compile(r"chat\d+", re.IGNORECASE)
+
 
 class MessageExtractor:
     """Extracts messages and conversations from iOS sms.db."""
@@ -142,7 +146,7 @@ class MessageExtractor:
                 chat_identifier = row["chat_identifier"] or ""
                 display_name = row["display_name"] or ""
                 participant_count = len(participants_map.get(row["chat_id"], []))
-                is_group = participant_count > 1 or "chat" in chat_identifier.lower()
+                is_group = participant_count > 1 or bool(_GROUP_CHAT_IDENTIFIER.fullmatch(chat_identifier))
 
                 if not display_name:
                     if is_group and row["chat_id"] in participants_map:

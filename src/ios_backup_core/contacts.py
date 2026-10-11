@@ -26,14 +26,17 @@ def normalize_phone(phone: str) -> str:
     return digits
 
 
-def clean_phone_number(address: str) -> str:
+def clean_phone_number(address) -> str:
     """Strip non-numeric characters for better matching, except '+'.
+
+    Accepts non-strings: SQLite's dynamic typing means CallHistory's ZADDRESS
+    comes back as an int for all-digit addresses such as SMS short codes.
 
     Source: CallExtractor._clean_phone_number() in calls.py.
     """
-    if not address:
+    if address is None or address == "":
         return ""
-    return ''.join(c for c in address if c.isdigit() or c == '+')
+    return ''.join(c for c in str(address) if c.isdigit() or c == '+')
 
 
 def resolve_contact(identifier: str, contacts: dict) -> str:
@@ -44,8 +47,9 @@ def resolve_contact(identifier: str, contacts: dict) -> str:
     case-insensitive match. Returns empty string (not 'Unknown') when not found
     so callers can apply their own fallback.
     """
-    if not identifier:
+    if identifier is None or identifier == "":
         return ""
+    identifier = str(identifier)
 
     # Exact match
     if identifier in contacts:

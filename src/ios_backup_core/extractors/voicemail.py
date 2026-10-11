@@ -11,6 +11,8 @@ import os
 import sqlite3
 from datetime import datetime, timezone
 
+from ios_backup_core.contacts import resolve_contact
+
 
 class VoicemailExtractor:
     """Extracts voicemails from iOS backups."""
@@ -68,7 +70,7 @@ class VoicemailExtractor:
 
             for row in rows:
                 sender = row["sender"] or ""
-                caller_name = contacts.get(sender, sender)
+                caller_name = resolve_contact(sender, contacts) or sender
 
                 date_ts = int(row["date"]) if row["date"] else 0
                 iso_date = (

@@ -14,6 +14,7 @@ import os
 import re
 import sqlite3
 import sys
+from pathlib import Path
 from typing import Optional
 
 from ios_backup_core.timestamps import APPLE_EPOCH
@@ -50,6 +51,41 @@ def _apple_ts_to_iso(ts) -> Optional[str]:
         return None
 
 
+def asset_table(conn: sqlite3.Connection) -> str:
+    """The assets table: ZASSET from iOS 14, ZGENERICASSET before that."""
+    tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+    return "ZGENERICASSET" if "ZASSET" not in tables and "ZGENERICASSET" in tables else "ZASSET"
+
+
+def _column(row: sqlite3.Row, *names):
+    """The first of ``names`` that exists in ``row``, or None.
+
+    ZASSET columns are renamed between releases (iOS 15 has ZMODIFICATIONDATE and
+    ZAVALANCHEUUID, not ZDATEMODIFIED and ZBURSTUUID), and indexing a missing
+    column raises, which used to fail the whole listing.
+    """
+    keys = row.keys()
+    for name in names:
+        if name in keys:
+            return row[name]
+    return None
+
+
+# iOS writes -180 to both ZLATITUDE and ZLONGITUDE when an asset has no
+# location; it doesn't leave them NULL.
+_NO_LOCATION = -180.0
+
+
+def _location(latitude, longitude) -> tuple:
+    """(latitude, longitude) as floats, or (None, None) when the asset has no location."""
+    if latitude is None or longitude is None:
+        return None, None
+    latitude, longitude = float(latitude), float(longitude)
+    if _NO_LOCATION in (latitude, longitude):
+        return None, None
+    return latitude, longitude
+
+
 def _build_dcim_path(directory: str, filename: str) -> str:
     """Build the CameraRollDomain-relative path for a DCIM asset.
 
@@ -77,17 +113,29 @@ class PhotoExtractor:
             db_path = backup.get_file("PhotoData/Photos.sqlite", domain="CameraRollDomain")
         if not db_path or not os.path.exists(db_path):
             return None
-        try:
-            conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        # Photos.sqlite is a WAL database and backups don't include its -shm.
+        # A "mode=ro" connection still needs a -shm: on Linux SQLite creates one
+        # next to the file (inside the user's backup folder for unencrypted
+        # backups); on macOS the open fails on the first query. With no -wal
+        # there is nothing beyond the main file to read, so open it
+        # "immutable=1", which never touches -wal/-shm. Only when a -wal sits
+        # beside it try "mode=ro" first, so its rows are read too.
+        base = Path(db_path).resolve().as_uri()
+        uris = [f"{base}?mode=ro&immutable=1"]
+        if os.path.exists(db_path + "-wal"):
+            uris.insert(0, f"{base}?mode=ro")
+        for uri in uris:
+            conn = None
+            try:
+                conn = sqlite3.connect(uri, uri=True)
+                conn.execute("SELECT 1 FROM sqlite_master LIMIT 1").fetchone()
+            except sqlite3.Error:
+                if conn is not None:
+                    conn.close()
+                continue
             conn.row_factory = sqlite3.Row
             return conn
-        except Exception:
-            try:
-                conn = sqlite3.connect(db_path)
-                conn.row_factory = sqlite3.Row
-                return conn
-            except Exception:
-                return None
+        return None
 
     def _find_album_junction(self, conn: sqlite3.Connection):
         """Dynamically locate the junction table between ZGENERICALBUM and ZASSET.
@@ -137,23 +185,27 @@ class PhotoExtractor:
         filename = row["ZFILENAME"] or ""
         kind_int = row["ZKIND"] if row["ZKIND"] is not None else 0
         kind = _KIND_MAP.get(kind_int, "unknown")
+        width = _column(row, "ZWIDTH")
+        height = _column(row, "ZHEIGHT")
+        duration = _column(row, "ZDURATION")
+        latitude, longitude = _location(_column(row, "ZLATITUDE"), _column(row, "ZLONGITUDE"))
 
         return {
             "uuid": row["ZUUID"] or "",
             "filename": filename,
             "file_hash": file_hash,
             "kind": kind,
-            "date_created": _apple_ts_to_iso(row["ZDATECREATED"]),
-            "date_modified": _apple_ts_to_iso(row["ZDATEMODIFIED"]),
-            "width": row["ZWIDTH"] if row["ZWIDTH"] is not None else 0,
-            "height": row["ZHEIGHT"] if row["ZHEIGHT"] is not None else 0,
-            "duration": float(row["ZDURATION"]) if row["ZDURATION"] is not None else 0.0,
-            "favorite": bool(row["ZFAVORITE"]),
-            "hidden": bool(row["ZHIDDEN"]),
-            "has_adjustments": bool(row["ZHASADJUSTMENTS"]),
-            "burst_uuid": row["ZBURSTUUID"],
-            "latitude": float(row["ZLATITUDE"]) if row["ZLATITUDE"] is not None else None,
-            "longitude": float(row["ZLONGITUDE"]) if row["ZLONGITUDE"] is not None else None,
+            "date_created": _apple_ts_to_iso(_column(row, "ZDATECREATED")),
+            "date_modified": _apple_ts_to_iso(_column(row, "ZMODIFICATIONDATE", "ZDATEMODIFIED")),
+            "width": width if width is not None else 0,
+            "height": height if height is not None else 0,
+            "duration": float(duration) if duration is not None else 0.0,
+            "favorite": bool(_column(row, "ZFAVORITE")),
+            "hidden": bool(_column(row, "ZHIDDEN")),
+            "has_adjustments": bool(_column(row, "ZHASADJUSTMENTS")),
+            "burst_uuid": _column(row, "ZAVALANCHEUUID", "ZBURSTUUID"),
+            "latitude": latitude,
+            "longitude": longitude,
             "album_ids": album_ids,
         }
 
@@ -166,13 +218,14 @@ class PhotoExtractor:
         try:
             junc_table, albums_col, assets_col = self._find_album_junction(conn)
 
+            assets = asset_table(conn)
             try:
                 total_row = conn.execute(
-                    "SELECT COUNT(*) FROM ZASSET WHERE ZTRASHEDSTATE = 0"
+                    f"SELECT COUNT(*) FROM {assets} WHERE ZTRASHEDSTATE = 0"
                 ).fetchone()
                 total_assets = total_row[0] if total_row else 0
             except sqlite3.OperationalError:
-                total_row = conn.execute("SELECT COUNT(*) FROM ZASSET").fetchone()
+                total_row = conn.execute(f"SELECT COUNT(*) FROM {assets}").fetchone()
                 total_assets = total_row[0] if total_row else 0
 
             album_counts: dict = {}
@@ -261,12 +314,13 @@ class PhotoExtractor:
             # Hash lookup table: ZASSET.Z_PK → fileID from Manifest
             # (omitted — callers use backup.get_file with the ZDIRECTORY/ZFILENAME path)
 
-            base_query = "SELECT * FROM ZASSET"
+            assets = asset_table(conn)
+            base_query = f"SELECT * FROM {assets}"
             params: list = []
 
             if album_id and album_id != "__all__" and junc_table and albums_col and assets_col:
                 base_query = (
-                    f"SELECT a.* FROM ZASSET a "
+                    f"SELECT a.* FROM {assets} a "
                     f"JOIN '{junc_table}' j ON j.{assets_col} = a.Z_PK "
                     f"WHERE j.{albums_col} = ?"
                 )
