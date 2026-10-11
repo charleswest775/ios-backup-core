@@ -71,6 +71,21 @@ def _column(row: sqlite3.Row, *names):
     return None
 
 
+# iOS writes -180 to both ZLATITUDE and ZLONGITUDE when an asset has no
+# location; it doesn't leave them NULL.
+_NO_LOCATION = -180.0
+
+
+def _location(latitude, longitude) -> tuple:
+    """(latitude, longitude) as floats, or (None, None) when the asset has no location."""
+    if latitude is None or longitude is None:
+        return None, None
+    latitude, longitude = float(latitude), float(longitude)
+    if _NO_LOCATION in (latitude, longitude):
+        return None, None
+    return latitude, longitude
+
+
 def _build_dcim_path(directory: str, filename: str) -> str:
     """Build the CameraRollDomain-relative path for a DCIM asset.
 
@@ -173,8 +188,7 @@ class PhotoExtractor:
         width = _column(row, "ZWIDTH")
         height = _column(row, "ZHEIGHT")
         duration = _column(row, "ZDURATION")
-        latitude = _column(row, "ZLATITUDE")
-        longitude = _column(row, "ZLONGITUDE")
+        latitude, longitude = _location(_column(row, "ZLATITUDE"), _column(row, "ZLONGITUDE"))
 
         return {
             "uuid": row["ZUUID"] or "",
@@ -190,8 +204,8 @@ class PhotoExtractor:
             "hidden": bool(_column(row, "ZHIDDEN")),
             "has_adjustments": bool(_column(row, "ZHASADJUSTMENTS")),
             "burst_uuid": _column(row, "ZAVALANCHEUUID", "ZBURSTUUID"),
-            "latitude": float(latitude) if latitude is not None else None,
-            "longitude": float(longitude) if longitude is not None else None,
+            "latitude": latitude,
+            "longitude": longitude,
             "album_ids": album_ids,
         }
 
