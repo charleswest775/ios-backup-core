@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 from ios_backup_core.contacts import clean_phone_number, resolve_contact
 from ios_backup_core.extractors.browser_history import BrowserHistoryExtractor
 from ios_backup_core.extractors.calls import CallExtractor
+from ios_backup_core.extractors.messages import MessageExtractor
 from ios_backup_core.extractors.notes import NoteExtractor
 from ios_backup_core.extractors.photos import PhotoExtractor
 from ios_backup_core.timestamps import apple_to_iso
@@ -224,3 +225,27 @@ def test_photos_read_renamed_asset_columns(tmp_path):
     assert photo["date_modified"] is not None
     assert photo["burst_uuid"] == "BURST-1"
     assert photo["latitude"] == 35.6
+
+
+# ── messages ─────────────────────────────────────────────────────────────────
+
+
+def test_only_chat_number_identifiers_mark_a_group(tmp_path):
+    """A 1:1 chat whose email handle contains "chat" isn't a group."""
+    sms = _db(tmp_path / "sms.db", """
+        CREATE TABLE handle (ROWID INTEGER PRIMARY KEY, id TEXT, service TEXT);
+        CREATE TABLE chat (ROWID INTEGER PRIMARY KEY, chat_identifier TEXT, display_name TEXT, service_name TEXT);
+        CREATE TABLE message (ROWID INTEGER PRIMARY KEY, text TEXT, date INTEGER, is_from_me INTEGER,
+                              handle_id INTEGER, service TEXT);
+        CREATE TABLE chat_handle_join (chat_id INTEGER, handle_id INTEGER);
+        CREATE TABLE chat_message_join (chat_id INTEGER, message_id INTEGER);
+        INSERT INTO handle VALUES (1, 'chatham@example.com', 'iMessage'), (2, '+15555550100', 'iMessage');
+        INSERT INTO chat VALUES (1, 'chatham@example.com', '', 'iMessage'), (2, 'chat644566139839284925', '', 'iMessage');
+        INSERT INTO chat_handle_join VALUES (1, 1), (2, 2);
+        INSERT INTO message VALUES (1, 'hi', 700000000000000000, 0, 1, 'iMessage'),
+                                   (2, 'yo', 700000100000000000, 0, 2, 'iMessage');
+        INSERT INTO chat_message_join VALUES (1, 1), (2, 2);
+    """)
+    result = MessageExtractor().list_conversations(_FakeBackup({("HomeDomain", "Library/SMS/sms.db"): sms}), {})
+    kinds = {c["chat_id"]: c["is_group"] for c in result["conversations"]}
+    assert kinds == {1: False, 2: True}
