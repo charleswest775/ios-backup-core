@@ -18,10 +18,34 @@ from ios_backup_core.contacts import clean_phone_number, resolve_contact
 from ios_backup_core.timestamps import APPLE_EPOCH_OFFSET, apple_to_iso
 
 
+_CALL_TYPE_FACETIME_VIDEO = 8
+
+
+def _as_text(value) -> str:
+    """Addresses as text. Before iOS 17 ZADDRESS holds UTF-8 bytes in a BLOB, and all-digit
+    addresses (short codes) are stored as SQLite INTEGERs."""
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode("utf-8", "replace")
+    return str(value)
+
+
 class CallExtractor:
     """Extracts call history from iOS backups."""
 
     CALL_HISTORY_PATH = "Library/CallHistoryDB/CallHistory.storedata"
+
+    @staticmethod
+    def _is_db_path(rel_path: str) -> bool:
+        return rel_path.endswith((".storedata", ".db"))
+
+    def _db_listed(self, backup) -> bool:
+        """True if the manifest lists a call history database, readable or not."""
+        return any(
+            self._is_db_path(entry.get("path", ""))
+            for entry in backup.list_files(path_like="%CallHistory%")
+        )
 
     def _find_db_paths(self, backup) -> list:
         """Return all candidate call history DB paths by searching the manifest.
@@ -38,7 +62,7 @@ class CallExtractor:
             domain = entry.get("domain", "HomeDomain")
             file_hash = entry.get("hash", "")
 
-            if not (rel_path.endswith(".storedata") or rel_path.endswith(".db")):
+            if not self._is_db_path(rel_path):
                 if rel_path.endswith("-wal") or rel_path.endswith("-shm"):
                     backup.get_file(rel_path, domain=domain)
                 continue
@@ -137,7 +161,7 @@ class CallExtractor:
                 unix_ts = apple_ts + APPLE_EPOCH_OFFSET
                 iso_date = datetime.fromtimestamp(unix_ts, timezone.utc).isoformat()
 
-                address = row["address"] or ""
+                address = _as_text(row["address"])
                 contact_name = resolve_contact(address, contacts) or address or "Unknown"
                 direction = "outgoing" if row["is_from_me"] else "incoming"
                 app_name = "FaceTime Video" if row["item_type"] == 1 else "FaceTime Audio"
@@ -176,7 +200,7 @@ class CallExtractor:
             conn.close()
 
             for row in rows:
-                sender = row["sender"] or ""
+                sender = _as_text(row["sender"])
                 unix_ts = int(row["date"]) if row["date"] else 0
                 if not unix_ts:
                     continue
@@ -205,7 +229,19 @@ class CallExtractor:
         offset: int = 0,
         limit: int = 200,
     ) -> dict:
-        """List call history records, supplemented with FaceTime and voicemail records."""
+        """List call history records, supplemented with FaceTime and voicemail records.
+
+        When there are no records, ``calls`` is empty and ``empty_reason`` says why:
+
+        - ``"requires_encryption"``: the backup is unencrypted and has no call
+          history. Apple leaves call history out of unencrypted backups, so
+          ``error`` also carries the advice to turn on encryption.
+        - ``"not_in_backup"``: the backup is encrypted but has no call history.
+        - ``"no_records"``: the call history database exists but holds no calls.
+
+        A call history database that is listed in the backup but can't be read
+        is an ``error``, with no ``empty_reason``.
+        """
         db_paths = self._find_db_paths(backup)
 
         all_rows = []
@@ -221,7 +257,7 @@ class CallExtractor:
         call_fingerprints: set = set()
 
         for row in all_rows:
-            address = row["address"] or ""
+            address = _as_text(row["address"])
             contact_name = resolve_contact(address, contacts) or address or "Unknown"
             originated = row["originated"]
             answered = row["answered"]
@@ -229,22 +265,28 @@ class CallExtractor:
             if originated is not None:
                 direction = "outgoing" if originated else "incoming"
             else:
-                direction = "outgoing" if row.get("call_type", 0) == 5 else "incoming"
+                direction = "outgoing" if row["call_type"] == 5 else "incoming"
 
-            if answered is not None:
+            # ZANSWERED only describes incoming calls; it stays 0 on outgoing
+            # calls that connected, so judge those by their duration.
+            if direction == "outgoing":
+                status = "answered" if (row["duration"] or 0) > 0 else "missed"
+            elif answered is not None:
                 status = "answered" if answered else "missed"
             else:
-                if direction == "incoming":
-                    status = "answered" if row.get("duration", 0) > 0 else "missed"
-                else:
-                    status = "answered"
+                status = "answered" if (row["duration"] or 0) > 0 else "missed"
 
             provider = row["service_provider"]
             app_name = "Phone"
             if provider:
                 p_lower = provider.lower()
                 if "facetime" in p_lower:
-                    app_name = "FaceTime Video" if row["is_video"] else "FaceTime Audio"
+                    # Older schemas have ZIS_VIDEO; otherwise ZCALLTYPE says it
+                    # (8 = FaceTime video, 16 = FaceTime audio).
+                    is_video = row["is_video"]
+                    if is_video is None:
+                        is_video = row["call_type"] == _CALL_TYPE_FACETIME_VIDEO
+                    app_name = "FaceTime Video" if is_video else "FaceTime Audio"
                 elif "whatsapp" in p_lower:
                     app_name = "WhatsApp"
                 elif "skype" in p_lower:
@@ -291,11 +333,25 @@ class CallExtractor:
         _merge(self._read_facetime_from_sms(backup, contacts))
 
         if not call_records:
-            msg = errors[0] if errors else (
-                "Call history not found. Apple requires backups to be encrypted to include "
-                "call logs. Please enable 'Encrypt local backup' in iTunes/Finder."
-            )
-            return {"calls": [], "error": msg}
+            empty = {"calls": [], "total": 0, "offset": offset, "limit": limit}
+            if errors:
+                empty["error"] = errors[0]
+            elif db_paths:
+                empty["empty_reason"] = "no_records"
+            elif self._db_listed(backup):
+                empty["error"] = (
+                    "Call history is in this backup but could not be read. "
+                    "The backup may be incomplete or damaged."
+                )
+            elif backup.encrypted:
+                empty["empty_reason"] = "not_in_backup"
+            else:
+                empty["empty_reason"] = "requires_encryption"
+                empty["error"] = (
+                    "Call history not found. Apple requires backups to be encrypted to include "
+                    "call logs. Please enable 'Encrypt local backup' in iTunes/Finder."
+                )
+            return empty
 
         call_records.sort(key=lambda r: r["_unix_ts"] or 0, reverse=True)
         total = len(call_records)
