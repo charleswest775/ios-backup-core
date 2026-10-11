@@ -64,6 +64,29 @@ def placeholder(width: int, height: int, color: str, rng: random.Random) -> Imag
     return image
 
 
+class Renderer:
+    """Each persona photo as a camera JPEG, rendered once for the camera roll and for Messages."""
+
+    def __init__(self, persona, snapshot):
+        self.persona, self.snapshot = persona, snapshot
+        self.photos = {photo.id: photo for photo in persona.photos or []}
+        self._done: dict[str, tuple[bytes, int, int]] = {}
+
+    def jpeg(self, photo_id: str) -> tuple[bytes, int, int]:
+        if photo_id not in self._done:
+            photo = self.photos[photo_id]
+            if photo.placeholder:
+                width, height, color = photo.placeholder
+                # Seeded per photo, so a placeholder looks the same whichever writer draws it first.
+                image = placeholder(width, height, color, random.Random(f"{self.persona.id}/{photo.id}"))
+            else:
+                image = Image.open(io.BytesIO(fetch(photo.url, photo.sha1)))
+            taken = self.persona.device_time(photo.real_time).astimezone(self.persona.tz)
+            self._done[photo_id] = camera_jpeg(image, taken, self.snapshot.product_name, self.snapshot.ios,
+                                               photo.lat, photo.lon)
+        return self._done[photo_id]
+
+
 def _dms(value: float) -> tuple[float, float, float]:
     value = abs(value)
     degrees = int(value)

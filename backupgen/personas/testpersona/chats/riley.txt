@@ -9,6 +9,10 @@ service: iMessage
 09:05 riley: Lost an hour of sleep anyway 😴
 09:06 me +laugh
 09:07 me: Grüß dich, by the way — I'm practising my German. Ça va? Ελληνικά too. שלום. 你好
+== 2021-04-03
+10:25 me [photo:london-2]
+10:26 riley +love
+10:27 me: The view from the bridge this morning
 == 2023-07-04
 12:00 riley: This one is long on purpose: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 12:01 me +love

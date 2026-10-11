@@ -248,6 +248,26 @@ def test_photos_look_like_the_device_wrote_them(tmp_path):
     assert db.execute("SELECT ZTRASHEDSTATE FROM ZASSET WHERE ZFILENAME = ?", (expected["blurry"]["filename"],)).fetchone() == (1,)
 
 
+def test_photo_messages_carry_the_camera_roll_jpeg(tmp_path):
+    backup_dir = generate("testpersona", "ios17", tmp_path, password="pw")
+    expected = json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))
+    sent = next(m for m in expected["messages"] if m["attachment"])
+    assert sent["text"] == "" and sent["is_from_me"]
+    assert any(m["text"] == "Loved an image" for m in expected["messages"])
+    accessor = open_local_backup(str(backup_dir), password="pw")
+    contacts = ContactResolver().load_contacts(accessor)
+    extractor = MessageExtractor()
+    chat = next(c for c in extractor.list_conversations(accessor, contacts)["conversations"]
+                if c["chat_identifier"] == sent["chat_identifier"])
+    message = next(m for m in extractor.get_messages(accessor, chat["chat_id"], contacts, 0, 100)["messages"]
+                   if m["has_attachments"])
+    attachment = message["attachments"][0]
+    assert attachment["mime_type"] == "image/jpeg" and attachment["total_bytes"] == sent["attachment"]["bytes"]
+    sent_file = Path(accessor.get_file(attachment["filename"].removeprefix("~/"), "MediaDomain")).read_bytes()
+    camera_roll = Path(accessor.get_file("Media/DCIM/100APPLE/IMG_0002.JPG", "CameraRollDomain")).read_bytes()
+    assert sent_file == camera_roll
+
+
 def test_unencrypted_backups_leave_out_call_history(tmp_path):
     backup_dir = generate("testpersona", "ios26", tmp_path)
     expected = json.loads((tmp_path / EXPECTED).read_text())

@@ -16,8 +16,8 @@ A pack is a folder under ``personas/``:
       19:45 me +love
 
   ``+love`` is a tapback on the latest message from someone else. The reactions are
-  love, like, dislike, laugh, emphasize and question. Lines starting with ``#`` are
-  notes for reviewers.
+  love, like, dislike, laugh, emphasize and question. ``19:46 mileva [photo:bern-1]``
+  sends a photo from ``photos.json``. Lines starting with ``#`` are notes for reviewers.
 - ``calls.txt`` (optional): the phone's call history, one call per line under a date:
 
       == 1905-03-17
@@ -75,7 +75,7 @@ from backupgen.container import Host
 
 REACTIONS = {"love": 2000, "like": 2001, "dislike": 2002, "laugh": 2003, "emphasize": 2004, "question": 2005}
 CALL_SERVICES = ("phone", "facetime-audio", "facetime-video")
-_LINE = re.compile(r"^(\d{1,2}):(\d{2})\s+([A-Za-z0-9_-]+)(?::\s(.*)|\s+\+(\w+))\s*$")
+_LINE = re.compile(r"^(\d{1,2}):(\d{2})\s+([A-Za-z0-9_-]+)(?::\s(.*)|\s+\+(\w+)|\s+\[photo:([A-Za-z0-9_-]+)\])\s*$")
 _CALL = re.compile(r"^(\d{1,2}):(\d{2})\s+(in|out)\s+(\+\d+|[A-Za-z0-9_-]+)\s+(missed|[\dhms]+)(?:\s+(\S+))?\s*$")
 _VOICEMAIL = re.compile(r"^(\d{1,2}):(\d{2})\s+(\+\d+|[A-Za-z0-9_-]+)\s+([\dhms]+):\s(.+)$")
 _DURATION = re.compile(r"^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$")
@@ -114,6 +114,7 @@ class Message:
     text: Optional[str]
     reaction: Optional[str]
     where: str  # file:line, for error messages
+    photo: Optional[str] = None  # id of a photo in photos.json sent as an attachment
 
 
 @dataclass
@@ -278,10 +279,11 @@ def _parse_chat(path: Path, contacts: dict[str, Contact]) -> Chat:
         match = _LINE.match(line)
         if not match or day is None:
             raise PersonaError(f"{where}: can't parse {line!r}")
-        hour, minute, sender, text, reaction = match.groups()
+        hour, minute, sender, text, reaction, photo = match.groups()
         if reaction and reaction not in REACTIONS:
             raise PersonaError(f"{where}: unknown reaction +{reaction}")
-        messages.append(Message(datetime(day.year, day.month, day.day, int(hour), int(minute)), sender, text, reaction, where))
+        messages.append(Message(datetime(day.year, day.month, day.day, int(hour), int(minute)), sender, text, reaction,
+                                where, photo))
     participants = [p.strip() for p in headers.get("with", "").split(",") if p.strip()]
     chat = Chat(headers.get("chat", path.stem), participants, headers.get("service", "iMessage"), headers.get("name", ""), messages)
     for p in participants:
@@ -439,6 +441,10 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
     photos = _parse_photos(folder / "photos.json") if (folder / "photos.json").exists() else None
     start, end = (date.fromisoformat(d) for d in raw["real_period"])
     records = [m for chat in chats for m in chat.messages] + (calls or []) + (voicemails or []) + (notes or []) + (visits or []) + (photos or [])
+    photo_ids = {photo.id for photo in photos or []}
+    for message in (m for chat in chats for m in chat.messages if m.photo):
+        if message.photo not in photo_ids:
+            raise PersonaError(f"{message.where}: no photo {message.photo!r} in photos.json")
     for record in records:
         if not start <= record.real_time.date() <= end:
             raise PersonaError(f"{record.where}: {record.real_time.date()} is outside the persona's period {start}–{end}")

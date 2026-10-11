@@ -8,6 +8,9 @@ Rows follow what iOS writes:
   ``associated_message_guid = "p:0/<target guid>"`` and Apple's "Loved “…”" text.
 - In a 1:1 chat, both directions use the other person's handle. In a group,
   the sender's handle is used, or 0 for the owner.
+- A photo is a message whose text is U+FFFC (the attachment's place in the text), with
+  an ``attachment`` row pointing at ~/Library/SMS/Attachments/xx/nn/<GUID>/<name>, which
+  lives in the backup's MediaDomain. A tapback on it reads "Loved an image".
 """
 
 from __future__ import annotations
@@ -16,6 +19,7 @@ import random
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from typing import Optional
 
 from backupgen.persona import REACTIONS, Chat, Message, Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
@@ -40,6 +44,7 @@ class Written:
     sender_handle: str
     text: str
     is_reaction: bool
+    attachment: Optional[tuple[str, str, bytes]] = None  # (MediaDomain path, file name, bytes)
 
 
 def _guid(rng: random.Random) -> str:
@@ -54,7 +59,8 @@ def chat_identifier(persona: Persona, chat: Chat, room: str) -> str:
     return room if chat.is_group else persona.contacts[chat.participants[0]].handle
 
 
-def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: random.Random) -> list[Written]:
+def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: random.Random,
+             renderer=None) -> list[Written]:
     handles_t, chats_t, messages_t = db.table("handle"), db.table("chat"), db.table("message")
     chj, cmj = db.table("chat_handle_join"), db.table("chat_message_join")
     owner_email = persona.owner.emails[0][1] if persona.owner.emails else ""
@@ -130,9 +136,13 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
             if target is None:
                 raise ValueError(f"{message.where}: tapback with nothing to react to")
             _, target_guid, target_text = target
-            text = f"{_REACTION_VERBS[message.reaction]} “{target_text}”"
+            if target_text is None:  # a photo
+                text, range_length = f"{_REACTION_VERBS[message.reaction]} an image", 1
+            else:
+                text, range_length = f"{_REACTION_VERBS[message.reaction]} “{target_text}”", _utf16_length(target_text)
             associated_guid, associated_type = f"p:0/{target_guid}", REACTIONS[message.reaction]
-            range_length = _utf16_length(target_text)
+        elif message.photo:
+            text = "\ufffc"
         else:
             text = message.text
         date_ns = cocoa_nanoseconds(when)
@@ -169,7 +179,7 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
             "is_forward": 0,
             "was_downgraded": 0,
             "is_archive": 0,
-            "cache_has_attachments": 0,
+            "cache_has_attachments": int(bool(message.photo)),
             "cache_roomnames": room or None,
             "was_data_detected": 1,
             "was_deduplicated": 0,
@@ -200,10 +210,26 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
             "did_notify_recipient": 0,
         })
         cmj.insert({"chat_id": chat_rowid, "message_id": rowid, "message_date": date_ns})
+        attachment = None
+        if message.photo:
+            data, _, _ = renderer.jpeg(message.photo)
+            attachment_guid = _guid(rng)
+            name = f"IMG_{rng.randrange(1000, 9999)}.jpeg"
+            path = f"Library/SMS/Attachments/{rng.randrange(256):02x}/{rng.randrange(16):02d}/{attachment_guid}/{name}"
+            attachment_rowid = db.table("attachment").insert({
+                "guid": attachment_guid, "original_guid": attachment_guid,
+                "created_date": int(cocoa_nanoseconds(when) // 1_000_000_000), "start_date": 0,
+                "filename": f"~/{path}", "uti": "public.jpeg", "mime_type": "image/jpeg",
+                "transfer_state": 5, "is_outgoing": int(from_me), "transfer_name": name, "total_bytes": len(data),
+                "is_sticker": 0, "hide_attachment": 0, "ck_sync_state": 0, "is_commsafety_sensitive": 0,
+            })
+            db.table("message_attachment_join").insert({"message_id": rowid, "attachment_id": attachment_rowid})
+            attachment = (path, name, data)
         if not message.reaction:
-            latest.setdefault(chat.id, []).append((message.sender, guid, text))
+            latest.setdefault(chat.id, []).append((message.sender, guid, None if message.photo else text))
         sender_handle = "" if from_me else persona.contacts[message.sender].handle
-        written.append(Written(guid, chat.id, identifier, when, from_me, sender_handle, text, bool(message.reaction)))
+        written.append(Written(guid, chat.id, identifier, when, from_me, sender_handle, "" if message.photo else text,
+                               bool(message.reaction), attachment))
     for chat_id, (rowid, _, _) in chat_rows.items():
         incoming = [w for w in written if w.chat_identifier == chat_rows[chat_id][1] and not w.is_from_me]
         if incoming and chats_t.has("last_read_message_timestamp"):

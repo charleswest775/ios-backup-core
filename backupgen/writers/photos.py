@@ -15,15 +15,12 @@ Rows follow what iOS 13–26 write:
 
 from __future__ import annotations
 
-import io
 import random
 import re
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Optional
-
-from PIL import Image
 
 from backupgen import media
 from backupgen.persona import Persona, Snapshot
@@ -56,14 +53,8 @@ def _uuid(rng: random.Random) -> str:
     return str(uuid.UUID(bytes=rng.randbytes(16))).upper()
 
 
-def _image(photo, rng: random.Random) -> Image.Image:
-    if photo.placeholder:
-        width, height, color = photo.placeholder
-        return media.placeholder(width, height, color, rng)
-    return Image.open(io.BytesIO(media.fetch(photo.url, photo.sha1)))
-
-
-def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: random.Random) -> list[WrittenPhoto]:
+def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: random.Random,
+             renderer: media.Renderer) -> list[WrittenPhoto]:
     core = CoreData(db)
     asset_table = "ZASSET" if db.table("ZASSET") else "ZGENERICASSET"
     assets = db.table(asset_table)
@@ -92,8 +83,7 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
     for number, (when, photo) in enumerate(taken, start=1):
         filename = f"IMG_{number:04d}.JPG"
         local = when.astimezone(persona.tz)
-        data, width, height = media.camera_jpeg(_image(photo, rng), local, snapshot.product_name,
-                                                snapshot.ios, photo.lat, photo.lon)
+        data, width, height = renderer.jpeg(photo.id)
         located = photo.lat is not None
         stamp = cocoa_seconds(when)
         pk = assets.insert({

@@ -18,6 +18,7 @@ import tempfile
 from pathlib import Path
 from typing import Optional
 
+from backupgen import media
 from backupgen.container import BackupWriter, Device
 from backupgen.persona import Persona, load_persona
 from backupgen.sqlitegen import build
@@ -81,8 +82,10 @@ def generate(
         written_messages: list = []
         contact_rows: dict = {}
 
+        renderer = media.Renderer(persona, snapshot)
+
         def fill_messages(db):
-            written_messages.extend(messages_writer.populate(db, persona, snapshot, rng))
+            written_messages.extend(messages_writer.populate(db, persona, snapshot, rng, renderer))
 
         def fill_contacts(db):
             contact_rows.update(contacts_writer.populate(db, persona, snapshot, rng))
@@ -91,6 +94,9 @@ def generate(
         address_book = build(tmp / "AddressBook.sqlitedb", snapshot.schema, "AddressBook.sqlitedb", fill_contacts)
         images = build(tmp / "AddressBookImages.sqlitedb", snapshot.schema, "AddressBookImages.sqlitedb", lambda db: None)
         writer.add_file("HomeDomain", "Library/SMS/sms.db", sms)
+        for message in written_messages:
+            if message.attachment:
+                writer.add_file("MediaDomain", message.attachment[0], message.attachment[2])
         writer.add_file("HomeDomain", "Library/AddressBook/AddressBook.sqlitedb", address_book)
         writer.add_file("HomeDomain", "Library/AddressBook/AddressBookImages.sqlitedb", images)
 
@@ -127,7 +133,7 @@ def generate(
         if persona.photos is not None:
             photos: list = []
             library = build(tmp / "Photos.sqlite", snapshot.schema, "Photos.sqlite",
-                            lambda db: photos.extend(photos_writer.populate(db, persona, snapshot, rng)))
+                            lambda db: photos.extend(photos_writer.populate(db, persona, snapshot, rng, renderer)))
             writer.add_file("CameraRollDomain", "Media/PhotoData/Photos.sqlite", library)
             for photo in photos:
                 writer.add_file("CameraRollDomain", photo.relative_path, photo.data)
@@ -187,6 +193,7 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
             {
                 "guid": w.guid, "chat_identifier": w.chat_identifier, "date": w.date.isoformat(),
                 "is_from_me": w.is_from_me, "sender_handle": w.sender_handle, "text": w.text, "is_reaction": w.is_reaction,
+                "attachment": {"name": w.attachment[1], "bytes": len(w.attachment[2])} if w.attachment else None,
             }
             for w in messages
         ],
