@@ -22,8 +22,13 @@ _CALL_TYPE_FACETIME_VIDEO = 8
 
 
 def _as_text(value) -> str:
-    """Addresses as text. All-digit addresses (short codes) are stored as SQLite INTEGERs."""
-    return "" if value is None else str(value)
+    """Addresses as text. Before iOS 17 ZADDRESS holds UTF-8 bytes in a BLOB, and all-digit
+    addresses (short codes) are stored as SQLite INTEGERs."""
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode("utf-8", "replace")
+    return str(value)
 
 
 class CallExtractor:

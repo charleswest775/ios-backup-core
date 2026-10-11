@@ -1,7 +1,8 @@
 """Regression tests for problems OpenExtract's corpus tests found in a real iOS 15.3.1 backup.
 
 Each test builds the smallest database that reproduces the iOS 15 layout:
-- CallHistory: all-digit addresses stored as INTEGER, no ZIS_VIDEO column, ZANSWERED = 0 on outgoing calls.
+- CallHistory: addresses stored as BLOBs, all-digit ones as INTEGER, no ZIS_VIDEO column, ZANSWERED = 0 on
+  outgoing calls.
 - NoteStore: a note's creation date in ZCREATIONDATE3.
 - Safari: domain_expansion holding a short label ("nhl"), not a host.
 - Photos.sqlite: a WAL database shipped without its -shm file, with ZMODIFICATIONDATE / ZAVALANCHEUUID
@@ -73,6 +74,7 @@ def _call_history(tmp_path):
                 (2, "+15555550100", MAY_2023 + 60, 91.0, 8, 1, 0, "com.apple.FaceTime"),
                 (3, "+15555550100", MAY_2023 + 300, 101.0, 16, 0, 1, "com.apple.FaceTime"),
                 (4, "+15555550100", MAY_2023 + 600, 0.0, 1, 1, 0, "com.apple.Telephony"),
+                (5, b"+15555550100", MAY_2023 + 900, 30.0, 1, 0, 1, "com.apple.Telephony"),  # BLOB, as iOS 15 stores it
             ]
         ],
     )
@@ -93,6 +95,13 @@ def test_integer_call_address_lists_and_resolves(tmp_path):
     call = _calls(tmp_path)[1]
     assert call["address"] == "22000"
     assert call["contact_name"] == "Bank alerts"
+
+
+def test_blob_call_address_is_decoded(tmp_path):
+    backup = _FakeBackup({("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata"): _call_history(tmp_path)})
+    call = {c["call_id"]: c for c in CallExtractor().list_calls(backup, {"+15555550100": "Pat"})["calls"]}[5]
+    assert call["address"] == "+15555550100"
+    assert call["contact_name"] == "Pat"
 
 
 def test_facetime_video_comes_from_call_type_without_is_video(tmp_path):
