@@ -1,0 +1,4578 @@
+{
+ "database": "healthdb_secure.sqlite",
+ "ios": "13.4.1",
+ "build": "17E262",
+ "source": "public backup pub-hickman-13.4.1 (definitions only)",
+ "harvested": "2026-10-11",
+ "pragmas": {
+  "user_version": 13402,
+  "page_size": 4096,
+  "journal_mode": "wal",
+  "auto_vacuum": 2,
+  "encoding": "UTF-8"
+ },
+ "objects": [
+  {
+   "type": "table",
+   "name": "activity_caches",
+   "table": "activity_caches",
+   "sql": "CREATE TABLE activity_caches (data_id INTEGER PRIMARY KEY REFERENCES samples (data_id) ON DELETE CASCADE, cache_index INTEGER, sequence INTEGER NOT NULL, activity_mode INTEGER, wheelchair_use INTEGER, energy_burned REAL, energy_burned_goal REAL, energy_burned_goal_date REAL, move_minutes REAL, move_minutes_goal REAL, move_minutes_goal_date REAL, brisk_minutes REAL, brisk_minutes_goal REAL, brisk_minutes_goal_date REAL, active_hours REAL, active_hours_goal REAL, active_hours_goal_date REAL, steps REAL, pushes REAL, walk_distance REAL, deep_breathing_duration REAL, flights INTEGER, energy_burned_stats BLOB, move_minutes_stats BLOB, brisk_minutes_stats BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "category_samples",
+   "table": "category_samples",
+   "sql": "CREATE TABLE category_samples (data_id INTEGER PRIMARY KEY, value INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "objects",
+   "table": "objects",
+   "sql": "CREATE TABLE objects (data_id INTEGER PRIMARY KEY AUTOINCREMENT, uuid BLOB UNIQUE, provenance INTEGER NOT NULL REFERENCES data_provenances (ROWID) ON DELETE CASCADE, type INTEGER, creation_date REAL)"
+  },
+  {
+   "type": "table",
+   "name": "quantity_samples",
+   "table": "quantity_samples",
+   "sql": "CREATE TABLE quantity_samples (data_id INTEGER PRIMARY KEY, quantity REAL, original_quantity REAL, original_unit INTEGER REFERENCES unit_strings (ROWID) ON DELETE NO ACTION)"
+  },
+  {
+   "type": "table",
+   "name": "quantity_sample_series",
+   "table": "quantity_sample_series",
+   "sql": "CREATE TABLE quantity_sample_series (data_id INTEGER PRIMARY KEY REFERENCES samples (data_id) ON DELETE CASCADE, count INTEGER NOT NULL DEFAULT 0, insertion_era INTEGER, hfd_key INTEGER UNIQUE NOT NULL)"
+  },
+  {
+   "type": "table",
+   "name": "quantity_sample_statistics",
+   "table": "quantity_sample_statistics",
+   "sql": "CREATE TABLE quantity_sample_statistics (owner_id INTEGER PRIMARY KEY REFERENCES quantity_samples (data_id) ON DELETE CASCADE, min REAL, max REAL, most_recent REAL, most_recent_date REAL, most_recent_duration REAL)"
+  },
+  {
+   "type": "table",
+   "name": "samples",
+   "table": "samples",
+   "sql": "CREATE TABLE samples (data_id INTEGER PRIMARY KEY, start_date REAL, end_date REAL, data_type INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "workouts",
+   "table": "workouts",
+   "sql": "CREATE TABLE workouts (data_id INTEGER PRIMARY KEY, duration REAL, total_energy_burned REAL, total_basal_energy_burned REAL, total_distance REAL, activity_type INTEGER, goal_type INTEGER, goal REAL, total_w_steps REAL, total_flights_climbed REAL, condenser_version INTEGER, condenser_date REAL)"
+  },
+  {
+   "type": "table",
+   "name": "binary_samples",
+   "table": "binary_samples",
+   "sql": "CREATE TABLE binary_samples (data_id INTEGER PRIMARY KEY REFERENCES samples (data_id) ON DELETE CASCADE, payload BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "data_series",
+   "table": "data_series",
+   "sql": "CREATE TABLE data_series (data_id INTEGER PRIMARY KEY REFERENCES samples (data_id) ON DELETE CASCADE, frozen INTEGER NOT NULL DEFAULT 0, count INTEGER NOT NULL DEFAULT 0, insertion_era INTEGER NOT NULL DEFAULT 0, hfd_key INTEGER UNIQUE NOT NULL)"
+  },
+  {
+   "type": "table",
+   "name": "correlations",
+   "table": "correlations",
+   "sql": "CREATE TABLE correlations (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, correlation INTEGER, object INTEGER, provenance INTEGER, UNIQUE(correlation, object))"
+  },
+  {
+   "type": "table",
+   "name": "pending_associations",
+   "table": "pending_associations",
+   "sql": "CREATE TABLE pending_associations (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, parent_uuid BLOB NOT NULL, child_uuid BLOB NOT NULL, provenance INTEGER NOT NULL, UNIQUE(parent_uuid, child_uuid))"
+  },
+  {
+   "type": "table",
+   "name": "devices",
+   "table": "devices",
+   "sql": "CREATE TABLE devices (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, device_uuid BLOB, device_name TEXT, device_service INTEGER, device_last_connect REAL, device_enabled BOOLEAN default 1, UNIQUE(device_uuid, device_service))"
+  },
+  {
+   "type": "table",
+   "name": "metadata_keys",
+   "table": "metadata_keys",
+   "sql": "CREATE TABLE metadata_keys (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, key TEXT UNIQUE)"
+  },
+  {
+   "type": "table",
+   "name": "metadata_values",
+   "table": "metadata_values",
+   "sql": "CREATE TABLE metadata_values (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, key_id INTEGER, object_id INTEGER, value_type INTEGER NOT NULL DEFAULT 0, string_value TEXT, numerical_value REAL, date_value REAL, data_value BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "key_value_secure",
+   "table": "key_value_secure",
+   "sql": "CREATE TABLE key_value_secure (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, category INTEGER NOT NULL, domain TEXT NOT NULL, key TEXT NOT NULL, value, provenance INTEGER NOT NULL, mod_date REAL NOT NULL, UNIQUE(category, domain, key))"
+  },
+  {
+   "type": "table",
+   "name": "unit_strings",
+   "table": "unit_strings",
+   "sql": "CREATE TABLE unit_strings (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, unit_string TEXT UNIQUE)"
+  },
+  {
+   "type": "table",
+   "name": "workout_events",
+   "table": "workout_events",
+   "sql": "CREATE TABLE workout_events (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, owner_id INTEGER NOT NULL REFERENCES workouts (data_id) ON DELETE CASCADE, date REAL NOT NULL, type INTEGER NOT NULL, duration REAL NOT NULL, metadata BLOB, session_uuid BLOB, error BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "data_provenances",
+   "table": "data_provenances",
+   "sql": "CREATE TABLE data_provenances (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, sync_provenance INTEGER NOT NULL, origin_product_type TEXT NOT NULL, origin_build TEXT NOT NULL, local_product_type TEXT NOT NULL, local_build TEXT NOT NULL, source_id INTEGER NOT NULL, device_id INTEGER NOT NULL, source_version TEXT NOT NULL, tz_name TEXT NOT NULL, origin_major_version INTEGER NOT NULL, origin_minor_version INTEGER NOT NULL, origin_patch_version INTEGER NOT NULL, derived_flags INTEGER NOT NULL, UNIQUE(sync_provenance, origin_product_type, origin_build, local_product_type, local_build, source_id, device_id, source_version, tz_name, origin_major_version, origin_minor_version, origin_patch_version))"
+  },
+  {
+   "type": "table",
+   "name": "fitness_friend_achievements",
+   "table": "fitness_friend_achievements",
+   "sql": "CREATE TABLE fitness_friend_achievements (data_id INTEGER PRIMARY KEY, friend_uuid BLOB, template_unique_name TEXT, completed_date REAL, value)"
+  },
+  {
+   "type": "table",
+   "name": "fitness_friend_activity_snapshots",
+   "table": "fitness_friend_activity_snapshots",
+   "sql": "CREATE TABLE fitness_friend_activity_snapshots (data_id INTEGER PRIMARY KEY, friend_uuid BLOB, active_hours REAL, active_hours_goal REAL, brisk_minutes REAL, brisk_minutes_goal REAL, energy_burned REAL, energy_burned_goal REAL, move_minutes REAL, move_minutes_goal REAL, activity_move_mode INTEGER, steps REAL, walk_run_distance REAL, snapshot_index INTEGER, source_uuid BLOB, uploaded_date REAL, vulcan_count REAL, vulcan_condition INTEGER, timezone_offset INTEGER, UNIQUE(friend_uuid, snapshot_index, source_uuid))"
+  },
+  {
+   "type": "table",
+   "name": "fitness_friend_workouts",
+   "table": "fitness_friend_workouts",
+   "sql": "CREATE TABLE fitness_friend_workouts (data_id INTEGER PRIMARY KEY, friend_uuid BLOB, duration REAL, total_energy_burned REAL, total_basal_energy_burned REAL, total_distance REAL, activity_type INTEGER, goal_type INTEGER, goal REAL, bundle_id TEXT, is_watch_workout INTEGER, is_indoor_workout INTEGER, device_manufacturer TEXT, device_model TEXT, activity_move_mode INTEGER DEFAULT 0)"
+  },
+  {
+   "type": "table",
+   "name": "cda_documents",
+   "table": "cda_documents",
+   "sql": "CREATE TABLE cda_documents (data_id INTEGER PRIMARY KEY REFERENCES samples (data_id) ON DELETE CASCADE, document_data BLOB, title TEXT NOT NULL, patient_name TEXT NOT NULL, author_name TEXT NOT NULL, custodian_name TEXT NOT NULL)"
+  },
+  {
+   "type": "table",
+   "name": "object_authorizations",
+   "table": "object_authorizations",
+   "sql": "CREATE TABLE object_authorizations (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, object BLOB NOT NULL REFERENCES objects (uuid) ON DELETE CASCADE, source BLOB NOT NULL, status INTEGER NOT NULL, sync_provenance INTEGER NOT NULL, modification_date REAL NOT NULL, UNIQUE(object, source, sync_provenance))"
+  },
+  {
+   "type": "table",
+   "name": "external_sync_ids",
+   "table": "external_sync_ids",
+   "sql": "CREATE TABLE external_sync_ids (object_id INTEGER PRIMARY KEY REFERENCES objects (data_id) ON DELETE CASCADE, source_id INTEGER NOT NULL, object_code INTEGER NOT NULL, sid TEXT NOT NULL, version REAL NOT NULL, deleted INTEGER NON NULL)"
+  },
+  {
+   "type": "table",
+   "name": "clinical_credentials",
+   "table": "clinical_credentials",
+   "sql": "CREATE TABLE clinical_credentials (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, identifier BLOB NOT NULL, expiration_date REAL, scope TEXT, patient_id TEXT, creation_date REAL NOT NULL)"
+  },
+  {
+   "type": "table",
+   "name": "clinical_gateways",
+   "table": "clinical_gateways",
+   "sql": "CREATE TABLE clinical_gateways (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, external_id TEXT NOT NULL, last_reported_status INTEGER NOT NULL, revision INTEGER NOT NULL, raw_content BLOB NOT NULL, sync_anchor INTEGER NOT NULL UNIQUE, sync_provenance INTEGER NOT NULL, UNIQUE(external_id))"
+  },
+  {
+   "type": "table",
+   "name": "original_fhir_resources",
+   "table": "original_fhir_resources",
+   "sql": "CREATE TABLE original_fhir_resources (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT NOT NULL, account_id INTEGER NOT NULL REFERENCES clinical_accounts (ROWID) ON DELETE CASCADE, id TEXT NOT NULL, sync_provenance INTEGER NOT NULL, raw_content BLOB NOT NULL, received_date REAL NOT NULL, received_date_timezone TEXT NOT NULL, fhir_version TEXT NOT NULL, source_url TEXT, extraction_hints INTEGER, origin_major_version INTEGER NOT NULL, origin_minor_version INTEGER NOT NULL, origin_patch_version INTEGER NOT NULL, origin_build TEXT NOT NULL, UNIQUE(type, account_id, id))"
+  },
+  {
+   "type": "table",
+   "name": "original_fhir_resources_last_seen",
+   "table": "original_fhir_resources_last_seen",
+   "sql": "CREATE TABLE original_fhir_resources_last_seen (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, resource_id INTEGER NOT NULL REFERENCES original_fhir_resources (ROWID) ON DELETE CASCADE, last_seen_date REAL NOT NULL)"
+  },
+  {
+   "type": "table",
+   "name": "allergy_record_samples",
+   "table": "allergy_record_samples",
+   "sql": "CREATE TABLE allergy_record_samples (data_id INTEGER PRIMARY KEY, allergy_codings BLOB NOT NULL, onset_date BLOB, asserter TEXT, reactions BLOB, criticality_coding BLOB, last_occurence_date BLOB, recorded_date BLOB, status_coding BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "condition_record_samples",
+   "table": "condition_record_samples",
+   "sql": "CREATE TABLE condition_record_samples (data_id INTEGER PRIMARY KEY, condition_codings BLOB NOT NULL, category_codings BLOB NOT NULL, asserter TEXT, abatement BLOB, onset BLOB, recorded_date BLOB, clinical_status_coding BLOB, verification_status_coding BLOB, severity_codings BLOB, body_sites_codings BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "vaccination_record_samples",
+   "table": "vaccination_record_samples",
+   "sql": "CREATE TABLE vaccination_record_samples (data_id INTEGER PRIMARY KEY, vaccination_codings BLOB NOT NULL, expiration_date BLOB, dose_number TEXT, dose_quantity TEXT, performer TEXT, body_site_codings BLOB, reaction TEXT, not_given INTEGER NOT NULL, administration_date BLOB NOT NULL, status_coding BLOB, patient_reported INTEGER NOT NULL, route_codings BLOB, reasons_codings BLOB, reasons_not_given_codings BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "medication_dispense_record_samples",
+   "table": "medication_dispense_record_samples",
+   "sql": "CREATE TABLE medication_dispense_record_samples (data_id INTEGER PRIMARY KEY, medication_codings BLOB NOT NULL, quantity_dispensed BLOB, preparation_date BLOB, hand_over_date BLOB, dosages BLOB, earliest_dosage_date BLOB, status_coding BLOB, days_supply_quantity BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "medication_order_samples",
+   "table": "medication_order_samples",
+   "sql": "CREATE TABLE medication_order_samples (data_id INTEGER PRIMARY KEY, medication_codings BLOB NOT NULL, prescriber TEXT, number_of_fills INTEGER NOT NULL, dosages BLOB, earliest_dosage_date BLOB, written_date BLOB, ended_date BLOB, status_coding BLOB NOT NULL, reason_codings BLOB, reason_ended_codings BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "medication_record_samples",
+   "table": "medication_record_samples",
+   "sql": "CREATE TABLE medication_record_samples (data_id INTEGER PRIMARY KEY, medication_codings BLOB NOT NULL, assertion_type INTEGER NOT NULL, asserter TEXT, assertion_date BLOB, status_coding BLOB NOT NULL, dosages BLOB, earliest_dosage_date BLOB, reason_for_use_codings BLOB, not_taken INTEGER NOT NULL, reasons_not_taken_codings BLOB, effective_start_date BLOB, effective_end_date BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "diagnostic_test_result_samples",
+   "table": "diagnostic_test_result_samples",
+   "sql": "CREATE TABLE diagnostic_test_result_samples (data_id INTEGER PRIMARY KEY, diagnostic_test_codings BLOB NOT NULL, value BLOB, reference_ranges BLOB, effective_start_date BLOB, category TEXT NOT NULL, issue_date BLOB, effective_end_date BLOB, status_coding BLOB NOT NULL, interpretation_codings BLOB, comments TEXT, body_site_codings BLOB, method_codings BLOB, performers BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "diagnostic_test_report_samples",
+   "table": "diagnostic_test_report_samples",
+   "sql": "CREATE TABLE diagnostic_test_report_samples (data_id INTEGER PRIMARY KEY, diagnostic_test_codings BLOB, panel_name TEXT NOT NULL, results BLOB, effective_start_date BLOB, status_coding BLOB NOT NULL, effective_end_date BLOB, issue_date BLOB NOT NULL)"
+  },
+  {
+   "type": "table",
+   "name": "procedure_record_samples",
+   "table": "procedure_record_samples",
+   "sql": "CREATE TABLE procedure_record_samples (data_id INTEGER PRIMARY KEY, procedure_codings BLOB NOT NULL, performers BLOB, execution_start_date BLOB, execution_end_date BLOB, not_performed INTEGER NOT NULL, status_coding BLOB NOT NULL, category_codings BLOB, reason_codings BLOB, reasons_not_performed_codings BLOB, outcome_codings BLOB, complications_codings BLOB, follow_ups_codings BLOB, body_sites_codings BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "clinical_authorization_sessions",
+   "table": "clinical_authorization_sessions",
+   "sql": "CREATE TABLE clinical_authorization_sessions (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, query TEXT NOT NULL, state BLOB NOT NULL UNIQUE, code TEXT, creation_date REAL NOT NULL, gateway_id INTEGER REFERENCES clinical_gateways (ROWID) ON DELETE CASCADE, account_id INTEGER REFERENCES clinical_accounts (ROWID) ON DELETE CASCADE, CHECK((account_id IS NULL AND gateway_id IS NOT NULL) OR (account_id IS NOT NULL AND gateway_id IS NULL)))"
+  },
+  {
+   "type": "table",
+   "name": "clinical_accounts",
+   "table": "clinical_accounts",
+   "sql": "CREATE TABLE clinical_accounts (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, identifier BLOB NOT NULL UNIQUE, user_enabled_flag INTEGER NOT NULL, relogin_needed_flag INTEGER NOT NULL, creation_date REAL NOT NULL, last_fetch_date REAL, last_full_fetch_date REAL, last_extracted_rowid INTEGER, last_submitted_rowid INTEGER, last_extracted_rules_version INTEGER, patient_hash TEXT, credential_id INTEGER REFERENCES clinical_credentials (ROWID) ON DELETE SET NULL, gateway_id INTEGER NOT NULL UNIQUE REFERENCES clinical_gateways (ROWID) ON DELETE NO ACTION, sync_identifier BLOB NOT NULL UNIQUE, modification_date REAL NOT NULL, sync_anchor INTEGER NOT NULL UNIQUE, sync_provenance INTEGER NOT NULL)"
+  },
+  {
+   "type": "table",
+   "name": "clinical_deleted_accounts",
+   "table": "clinical_deleted_accounts",
+   "sql": "CREATE TABLE clinical_deleted_accounts (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, sync_identifier BLOB NOT NULL, deletion_date REAL NOT NULL, sync_provenance INTEGER NOT NULL, UNIQUE(sync_identifier))"
+  },
+  {
+   "type": "table",
+   "name": "account_owner_samples",
+   "table": "account_owner_samples",
+   "sql": "CREATE TABLE account_owner_samples (data_id INTEGER PRIMARY KEY, name TEXT NOT NULL, birth_date BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "unknown_record_samples",
+   "table": "unknown_record_samples",
+   "sql": "CREATE TABLE unknown_record_samples (data_id INTEGER PRIMARY KEY, display_name TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "clinical_record_samples",
+   "table": "clinical_record_samples",
+   "sql": "CREATE TABLE clinical_record_samples (data_id INTEGER PRIMARY KEY, display_name TEXT NOT NULL, fhir_resource_resource_type TEXT, fhir_resource_identifier TEXT, fhir_resource_data BLOB, fhir_resource_source_url TEXT, fhir_resource_last_updated_date REAL)"
+  },
+  {
+   "type": "table",
+   "name": "concept_index",
+   "table": "concept_index",
+   "sql": "CREATE TABLE concept_index (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, sample_uuid BLOB NOT NULL, concept_identifier INTEGER NOT NULL, version INTEGER NOT NULL, key_path TEXT NOT NULL, compound_index INTEGER, type INTEGER, ontology_version INTEGER NOT NULL DEFAULT 0)"
+  },
+  {
+   "type": "table",
+   "name": "schema_user_versions",
+   "table": "schema_user_versions",
+   "sql": "CREATE TABLE schema_user_versions (schema TEXT NOT NULL PRIMARY KEY, version INTEGER NOT NULL, modification_date DOUBLE NOT NULL)"
+  },
+  {
+   "type": "table",
+   "name": "ACHAchievementsPlugin_templates",
+   "table": "ACHAchievementsPlugin_templates",
+   "sql": "CREATE TABLE ACHAchievementsPlugin_templates             (ROWID INTEGER PRIMARY KEY AUTOINCREMENT,             unique_name TEXT UNIQUE NOT NULL,             version INTEGER,             minimum_engine_version INTEGER,             created_date REAL,             creator_device INTEGER,             source_name TEXT,             predicate TEXT,             value_expression TEXT,             progress_expression TEXT,             goal_expression TEXT,             triggers INTEGER,             earn_limit INTEGER,             visibility_predicate TEXT,             visibility_start_date TEXT,             visibility_end_date TEXT,             availability_predicate TEXT,             availability_start_date TEXT,             availability_end_date TEXT,             available_country_codes TEXT,             alertability_predicate TEXT,             alert_dates TEXT,             duplicateremoval_strategy INTEGER,             duplicateremoval_calendar_unit INTEGER,             earn_date INTEGER,             display_order INTEGER,             displays_earned_instance_count INTEGER,             canonical_unit TEXT,             sync_provenance INTEGER,             available_suffixes TEXT,             grace_predicate TEXT,             grace_visibility_predicate TEXT,             grace_value_expression TEXT,             grace_progress_expression TEXT,             grace_goal_expression TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "ACHAchievementsPlugin_earned_instances",
+   "table": "ACHAchievementsPlugin_earned_instances",
+   "sql": "CREATE TABLE ACHAchievementsPlugin_earned_instances             (ROWID INTEGER PRIMARY KEY AUTOINCREMENT,             template_unique_name TEXT,             created_date REAL,             earned_date TEXT,             value_in_canonical_unit REAL,             value_canonical_unit TEXT,             creator_device INTEGER,             sync_provenance INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "activitysharing_competitions",
+   "table": "activitysharing_competitions",
+   "sql": "CREATE TABLE activitysharing_competitions (data_id INTEGER PRIMARY KEY, friend_uuid BLOB, competition_uuid BLOB, competition_type INTEGER, current_cache_index INTEGER, last_pushed_cache_index INTEGER, scores BLOB, opponent_scores BLOB, start_date_components BLOB, duration_date_components BLOB, preferred_victory_badge_styles BLOB, maximum_points_per_day INTEGER, UNIQUE(friend_uuid, competition_uuid))"
+  },
+  {
+   "type": "table",
+   "name": "activitysharing_competition_lists",
+   "table": "activitysharing_competition_lists",
+   "sql": "CREATE TABLE activitysharing_competition_lists (data_id INTEGER PRIMARY KEY, friend_uuid BLOB, type INTEGER, system_fields BLOB, owner INTEGER, UNIQUE(friend_uuid, type))"
+  },
+  {
+   "type": "table",
+   "name": "medical_records",
+   "table": "medical_records",
+   "sql": "CREATE TABLE \"medical_records\" (data_id INTEGER PRIMARY KEY, note TEXT, entered_in_error INTEGER NON NULL, modified_date REAL, fhir_identifier TEXT NON NULL, locale TEXT, extraction_version INTEGER NON NULL, sort_date REAL NON NULL, sort_date_key_path TEXT NON NULL, country TEXT NOT NULL, state INTEGER NOT NULL DEFAULT 0)"
+  },
+  {
+   "type": "index",
+   "name": "activity_caches_cache_index",
+   "table": "activity_caches",
+   "sql": "CREATE INDEX activity_caches_cache_index ON activity_caches (cache_index)"
+  },
+  {
+   "type": "index",
+   "name": "quantity_sample_series_unfrozen",
+   "table": "quantity_sample_series",
+   "sql": "CREATE INDEX quantity_sample_series_unfrozen ON quantity_sample_series (insertion_era) WHERE (protected.quantity_sample_series.insertion_era IS NOT NULL)"
+  },
+  {
+   "type": "index",
+   "name": "samples_type_dates",
+   "table": "samples",
+   "sql": "CREATE INDEX samples_type_dates ON samples (data_type, start_date, end_date)"
+  },
+  {
+   "type": "index",
+   "name": "samples_type_end",
+   "table": "samples",
+   "sql": "CREATE INDEX samples_type_end ON samples (data_type, end_date)"
+  },
+  {
+   "type": "index",
+   "name": "samples_type_anchor",
+   "table": "samples",
+   "sql": "CREATE INDEX samples_type_anchor ON samples (data_type, data_id)"
+  },
+  {
+   "type": "index",
+   "name": "correlations_object",
+   "table": "correlations",
+   "sql": "CREATE INDEX correlations_object ON correlations (object)"
+  },
+  {
+   "type": "index",
+   "name": "pending_associations_child",
+   "table": "pending_associations",
+   "sql": "CREATE INDEX pending_associations_child ON pending_associations (child_uuid)"
+  },
+  {
+   "type": "index",
+   "name": "metadata_values_object",
+   "table": "metadata_values",
+   "sql": "CREATE INDEX metadata_values_object ON metadata_values (object_id)"
+  },
+  {
+   "type": "index",
+   "name": "external_sync_ids_source_object_code_sid_deleted",
+   "table": "external_sync_ids",
+   "sql": "CREATE INDEX external_sync_ids_source_object_code_sid_deleted ON external_sync_ids (source_id, object_code, sid, deleted)"
+  },
+  {
+   "type": "index",
+   "name": "concept_index_sample_uuids",
+   "table": "concept_index",
+   "sql": "CREATE INDEX concept_index_sample_uuids ON concept_index (sample_uuid)"
+  },
+  {
+   "type": "index",
+   "name": "concept_index_concept_index_concept_identifier_key_paths",
+   "table": "concept_index",
+   "sql": "CREATE INDEX concept_index_concept_index_concept_identifier_key_paths ON concept_index (concept_identifier, key_path)"
+  }
+ ],
+ "columns": {
+  "activity_caches": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "cache_index",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "activity_mode",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "wheelchair_use",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "energy_burned",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "energy_burned_goal",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "energy_burned_goal_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "move_minutes",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "move_minutes_goal",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "move_minutes_goal_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "brisk_minutes",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "brisk_minutes_goal",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "brisk_minutes_goal_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "active_hours",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "active_hours_goal",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "active_hours_goal_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "steps",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "pushes",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "walk_distance",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "deep_breathing_duration",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "flights",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "energy_burned_stats",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "move_minutes_stats",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "brisk_minutes_stats",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "category_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "value",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "objects": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "uuid",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "provenance",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "creation_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "quantity_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "quantity",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "original_quantity",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "original_unit",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "quantity_sample_series": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "count",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   },
+   {
+    "name": "insertion_era",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "hfd_key",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "quantity_sample_statistics": [
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "min",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "max",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "most_recent",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "most_recent_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "most_recent_duration",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "start_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "end_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "data_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "workouts": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "duration",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "total_energy_burned",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "total_basal_energy_burned",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "total_distance",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "activity_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "goal_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "goal",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "total_w_steps",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "total_flights_climbed",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "condenser_version",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "condenser_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "binary_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "payload",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "data_series": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "frozen",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   },
+   {
+    "name": "count",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   },
+   {
+    "name": "insertion_era",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   },
+   {
+    "name": "hfd_key",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "correlations": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "correlation",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "object",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "provenance",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "pending_associations": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "parent_uuid",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "child_uuid",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "provenance",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "devices": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "device_uuid",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "device_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "device_service",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "device_last_connect",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "device_enabled",
+    "type": "BOOLEAN",
+    "notnull": false,
+    "default": "1",
+    "pk": 0
+   }
+  ],
+  "metadata_keys": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "key",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "metadata_values": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "key_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "object_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value_type",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   },
+   {
+    "name": "string_value",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "numerical_value",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "date_value",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "data_value",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "key_value_secure": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "category",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "domain",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "key",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "provenance",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "mod_date",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "unit_strings": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "unit_string",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "workout_events": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "date",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "duration",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "metadata",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "session_uuid",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "error",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "data_provenances": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "sync_provenance",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "origin_product_type",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "origin_build",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "local_product_type",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "local_build",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "source_id",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "device_id",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "source_version",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "tz_name",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "origin_major_version",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "origin_minor_version",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "origin_patch_version",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "derived_flags",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "fitness_friend_achievements": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "friend_uuid",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "template_unique_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "completed_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "fitness_friend_activity_snapshots": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "friend_uuid",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "active_hours",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "active_hours_goal",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "brisk_minutes",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "brisk_minutes_goal",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "energy_burned",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "energy_burned_goal",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "move_minutes",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "move_minutes_goal",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "activity_move_mode",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "steps",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "walk_run_distance",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "snapshot_index",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "source_uuid",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "uploaded_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "vulcan_count",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "vulcan_condition",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "timezone_offset",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "fitness_friend_workouts": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "friend_uuid",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "duration",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "total_energy_burned",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "total_basal_energy_burned",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "total_distance",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "activity_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "goal_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "goal",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "bundle_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "is_watch_workout",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "is_indoor_workout",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "device_manufacturer",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "device_model",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "activity_move_mode",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": "0",
+    "pk": 0
+   }
+  ],
+  "cda_documents": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "document_data",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "title",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "patient_name",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "author_name",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "custodian_name",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "object_authorizations": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "object",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "source",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sync_provenance",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "modification_date",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "external_sync_ids": [
+   {
+    "name": "object_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "source_id",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "object_code",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sid",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "version",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "deleted",
+    "type": "INTEGER NON",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "clinical_credentials": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "identifier",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "expiration_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "scope",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "patient_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "creation_date",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "clinical_gateways": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_reported_status",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "revision",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "raw_content",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sync_anchor",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sync_provenance",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "original_fhir_resources": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "type",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "account_id",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "id",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sync_provenance",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "raw_content",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "received_date",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "received_date_timezone",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "fhir_version",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "source_url",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "extraction_hints",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "origin_major_version",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "origin_minor_version",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "origin_patch_version",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "origin_build",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "original_fhir_resources_last_seen": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "resource_id",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_seen_date",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "allergy_record_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "allergy_codings",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "onset_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "asserter",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "reactions",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "criticality_coding",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_occurence_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "recorded_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status_coding",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "condition_record_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "condition_codings",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "category_codings",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "asserter",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "abatement",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "onset",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "recorded_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "clinical_status_coding",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "verification_status_coding",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "severity_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "body_sites_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "vaccination_record_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "vaccination_codings",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "expiration_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "dose_number",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "dose_quantity",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "performer",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "body_site_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "reaction",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "not_given",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "administration_date",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status_coding",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "patient_reported",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "route_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "reasons_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "reasons_not_given_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "medication_dispense_record_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "medication_codings",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "quantity_dispensed",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "preparation_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "hand_over_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "dosages",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "earliest_dosage_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status_coding",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "days_supply_quantity",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "medication_order_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "medication_codings",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "prescriber",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "number_of_fills",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "dosages",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "earliest_dosage_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "written_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ended_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status_coding",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "reason_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "reason_ended_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "medication_record_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "medication_codings",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "assertion_type",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "asserter",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "assertion_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status_coding",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "dosages",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "earliest_dosage_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "reason_for_use_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "not_taken",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "reasons_not_taken_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "effective_start_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "effective_end_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "diagnostic_test_result_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "diagnostic_test_codings",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "reference_ranges",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "effective_start_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "category",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "issue_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "effective_end_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status_coding",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "interpretation_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "comments",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "body_site_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "method_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "performers",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "diagnostic_test_report_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "diagnostic_test_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "panel_name",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "results",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "effective_start_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status_coding",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "effective_end_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "issue_date",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "procedure_record_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "procedure_codings",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "performers",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "execution_start_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "execution_end_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "not_performed",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status_coding",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "category_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "reason_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "reasons_not_performed_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "outcome_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "complications_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "follow_ups_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "body_sites_codings",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "clinical_authorization_sessions": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "query",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "state",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "code",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "creation_date",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "gateway_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "account_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "clinical_accounts": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "identifier",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "user_enabled_flag",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "relogin_needed_flag",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "creation_date",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_fetch_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_full_fetch_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_extracted_rowid",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_submitted_rowid",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_extracted_rules_version",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "patient_hash",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "credential_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "gateway_id",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sync_identifier",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "modification_date",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sync_anchor",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sync_provenance",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "clinical_deleted_accounts": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "sync_identifier",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "deletion_date",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sync_provenance",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "account_owner_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "name",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "birth_date",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "unknown_record_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "display_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "clinical_record_samples": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "display_name",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "fhir_resource_resource_type",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "fhir_resource_identifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "fhir_resource_data",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "fhir_resource_source_url",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "fhir_resource_last_updated_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "concept_index": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "sample_uuid",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "concept_identifier",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "version",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "key_path",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "compound_index",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ontology_version",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   }
+  ],
+  "schema_user_versions": [
+   {
+    "name": "schema",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "version",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "modification_date",
+    "type": "DOUBLE",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ACHAchievementsPlugin_templates": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "unique_name",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "version",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "minimum_engine_version",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "created_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "creator_device",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "source_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "predicate",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value_expression",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "progress_expression",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "goal_expression",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "triggers",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "earn_limit",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "visibility_predicate",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "visibility_start_date",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "visibility_end_date",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "availability_predicate",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "availability_start_date",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "availability_end_date",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "available_country_codes",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "alertability_predicate",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "alert_dates",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "duplicateremoval_strategy",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "duplicateremoval_calendar_unit",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "earn_date",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "display_order",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "displays_earned_instance_count",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "canonical_unit",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sync_provenance",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "available_suffixes",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "grace_predicate",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "grace_visibility_predicate",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "grace_value_expression",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "grace_progress_expression",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "grace_goal_expression",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ACHAchievementsPlugin_earned_instances": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "template_unique_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "created_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "earned_date",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value_in_canonical_unit",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value_canonical_unit",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "creator_device",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sync_provenance",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "activitysharing_competitions": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "friend_uuid",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "competition_uuid",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "competition_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "current_cache_index",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_pushed_cache_index",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "scores",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "opponent_scores",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "start_date_components",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "duration_date_components",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "preferred_victory_badge_styles",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "maximum_points_per_day",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "activitysharing_competition_lists": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "friend_uuid",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "system_fields",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "medical_records": [
+   {
+    "name": "data_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "note",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "entered_in_error",
+    "type": "INTEGER NON",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "modified_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "fhir_identifier",
+    "type": "TEXT NON",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "locale",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "extraction_version",
+    "type": "INTEGER NON",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sort_date",
+    "type": "REAL NON",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sort_date_key_path",
+    "type": "TEXT NON",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "country",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "state",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   }
+  ]
+ },
+ "shape": {
+  "activity_caches": {
+   "data_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "cache_index": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "sequence": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "activity_mode": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "wheelchair_use": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "energy_burned": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "energy_burned_goal": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "energy_burned_goal_date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "move_minutes": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "move_minutes_goal": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "move_minutes_goal_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "brisk_minutes": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "brisk_minutes_goal": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "brisk_minutes_goal_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "active_hours": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "active_hours_goal": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "active_hours_goal_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "steps": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "pushes": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "walk_distance": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "deep_breathing_duration": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "flights": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "energy_burned_stats": {
+    "null_rate": 0.19,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   },
+   "move_minutes_stats": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "brisk_minutes_stats": {
+    "null_rate": 0.238,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   }
+  },
+  "category_samples": {
+   "data_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "value": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "objects": {
+   "data_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "uuid": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "provenance": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "creation_date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   }
+  },
+  "quantity_samples": {
+   "data_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "quantity": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "original_quantity": {
+    "null_rate": 0.888,
+    "types": [
+     "real"
+    ]
+   },
+   "original_unit": {
+    "null_rate": 0.888,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "quantity_sample_series": {
+   "data_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "count": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "insertion_era": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "hfd_key": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "quantity_sample_statistics": {
+   "owner_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "min": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "max": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "most_recent": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "most_recent_date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "most_recent_duration": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   }
+  },
+  "samples": {
+   "data_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "start_date": {
+    "null_rate": 0.006,
+    "types": [
+     "real"
+    ]
+   },
+   "end_date": {
+    "null_rate": 0.006,
+    "types": [
+     "real"
+    ]
+   },
+   "data_type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "workouts": {
+   "data_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "duration": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "total_energy_burned": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "total_basal_energy_burned": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "total_distance": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "activity_type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "goal_type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "goal": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "total_w_steps": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "total_flights_climbed": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "condenser_version": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "condenser_date": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "binary_samples": {
+   "data_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "payload": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   }
+  },
+  "data_series": {
+   "data_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "frozen": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "count": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "insertion_era": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "hfd_key": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "correlations": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "correlation": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "object": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "provenance": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "metadata_keys": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "key": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "metadata_values": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "key_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "object_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "value_type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "string_value": {
+    "null_rate": 0.984,
+    "types": [
+     "text"
+    ]
+   },
+   "numerical_value": {
+    "null_rate": 0.003,
+    "types": [
+     "real"
+    ]
+   },
+   "date_value": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "data_value": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "key_value_secure": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "category": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "domain": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "key": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "value": {
+    "null_rate": 0.0,
+    "types": [
+     "blob",
+     "integer",
+     "real",
+     "text"
+    ],
+    "blob_kinds": [
+     "bplist",
+     "other"
+    ]
+   },
+   "provenance": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "mod_date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   }
+  },
+  "unit_strings": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "unit_string": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "workout_events": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "owner_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "duration": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "metadata": {
+    "null_rate": 0.196,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "session_uuid": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "error": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "data_provenances": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "sync_provenance": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "origin_product_type": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "origin_build": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "local_product_type": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "local_build": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "source_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "device_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "source_version": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "tz_name": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "origin_major_version": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "origin_minor_version": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "origin_patch_version": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "derived_flags": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "external_sync_ids": {
+   "object_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "source_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "object_code": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "sid": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "version": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "deleted": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "schema_user_versions": {
+   "schema": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "version": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "modification_date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   }
+  },
+  "ACHAchievementsPlugin_templates": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "unique_name": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "version": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "minimum_engine_version": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "created_date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "creator_device": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "source_name": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "predicate": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "value_expression": {
+    "null_rate": 0.821,
+    "types": [
+     "text"
+    ]
+   },
+   "progress_expression": {
+    "null_rate": 0.857,
+    "types": [
+     "text"
+    ]
+   },
+   "goal_expression": {
+    "null_rate": 0.857,
+    "types": [
+     "text"
+    ]
+   },
+   "triggers": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "earn_limit": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "visibility_predicate": {
+    "null_rate": 0.679,
+    "types": [
+     "text"
+    ]
+   },
+   "visibility_start_date": {
+    "null_rate": 0.321,
+    "types": [
+     "text"
+    ]
+   },
+   "visibility_end_date": {
+    "null_rate": 0.321,
+    "types": [
+     "text"
+    ]
+   },
+   "availability_predicate": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "availability_start_date": {
+    "null_rate": 0.321,
+    "types": [
+     "text"
+    ]
+   },
+   "availability_end_date": {
+    "null_rate": 0.321,
+    "types": [
+     "text"
+    ]
+   },
+   "available_country_codes": {
+    "null_rate": 0.929,
+    "types": [
+     "text"
+    ]
+   },
+   "alertability_predicate": {
+    "null_rate": 0.993,
+    "types": [
+     "text"
+    ]
+   },
+   "alert_dates": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "duplicateremoval_strategy": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "duplicateremoval_calendar_unit": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "earn_date": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "display_order": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "displays_earned_instance_count": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "canonical_unit": {
+    "null_rate": 0.757,
+    "types": [
+     "text"
+    ]
+   },
+   "sync_provenance": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "available_suffixes": {
+    "null_rate": 0.993,
+    "types": [
+     "text"
+    ]
+   },
+   "grace_predicate": {
+    "null_rate": 0.986,
+    "types": [
+     "text"
+    ]
+   },
+   "grace_visibility_predicate": {
+    "null_rate": 0.986,
+    "types": [
+     "text"
+    ]
+   },
+   "grace_value_expression": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "grace_progress_expression": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "grace_goal_expression": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "ACHAchievementsPlugin_earned_instances": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "template_unique_name": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "created_date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "earned_date": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "value_in_canonical_unit": {
+    "null_rate": 0.125,
+    "types": [
+     "real"
+    ]
+   },
+   "value_canonical_unit": {
+    "null_rate": 0.125,
+    "types": [
+     "text"
+    ]
+   },
+   "creator_device": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "sync_provenance": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  }
+ }
+}

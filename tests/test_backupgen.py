@@ -56,7 +56,16 @@ def test_built_schema_is_identical_to_harvested(tmp_path, version, database):
     built = sorted((n, s) for _, n, s in schema_objects(path) if not n.startswith("sqlite_"))
     harvested = sorted((o["name"], o["sql"]) for o in load_schema(version, database)["objects"])
     assert built == harvested
-    assert path.read_bytes()[18] == 2, "should be a WAL-mode file, like the device's"
+    wal = load_schema(version, database)["pragmas"]["journal_mode"] == "wal"
+    assert path.read_bytes()[18] == (2 if wal else 1), "journal mode should match the device's"
+
+
+def test_missing_schema_falls_back_to_the_nearest_older_version():
+    assert load_schema("26.5", "NoteStore.sqlite")["ios"] == "17.3"
+    assert load_schema("16.2", "sms.db")["ios"] == "16.1.2"
+    assert load_schema("26.5", "Photos.sqlite")["ios"] == "26.5"
+    with pytest.raises(FileNotFoundError):
+        load_schema("12.0", "sms.db")
 
 
 def test_harvested_schemas_hold_no_rows_or_identifiers():

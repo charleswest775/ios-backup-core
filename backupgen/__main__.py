@@ -31,7 +31,8 @@ def main(argv=None) -> int:
     source = harvest.add_mutually_exclusive_group(required=True)
     source.add_argument("--backup", type=Path, help="backup folder (harvests every known database + container)")
     source.add_argument("--sqlite", type=Path, help="a single database file")
-    harvest.add_argument("--database", help="database name for --sqlite, e.g. sms.db")
+    harvest.add_argument("--database", action="append",
+                         help="database name, e.g. sms.db: required with --sqlite; with --backup, harvest only these (repeatable)")
     harvest.add_argument("--password")
     harvest.add_argument("--ios", required=True)
     harvest.add_argument("--build", required=True)
@@ -68,11 +69,12 @@ def main(argv=None) -> int:
         from backupgen import harvest as h
 
         if args.backup:
-            paths = h.harvest_backup(args.backup, args.password, args.ios, args.build, args.source)
+            paths = h.harvest_backup(args.backup, args.password, args.ios, args.build, args.source,
+                                     only=set(args.database) if args.database else None)
         else:
-            if not args.database:
-                parser.error("--database is required with --sqlite")
-            paths = [h.write_schema(args.ios, args.build, args.source, args.database, h.harvest_sqlite(args.sqlite))]
+            if not args.database or len(args.database) != 1:
+                parser.error("--sqlite needs exactly one --database")
+            paths = [h.write_schema(args.ios, args.build, args.source, args.database[0], h.harvest_sqlite(args.sqlite))]
         for path in paths:
             print(path)
         return 0

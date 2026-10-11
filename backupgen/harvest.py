@@ -30,11 +30,23 @@ DATABASES = {
     "sms.db": ("HomeDomain", "Library/SMS/sms.db"),
     "AddressBook.sqlitedb": ("HomeDomain", "Library/AddressBook/AddressBook.sqlitedb"),
     "AddressBookImages.sqlitedb": ("HomeDomain", "Library/AddressBook/AddressBookImages.sqlitedb"),
+    "CallHistory.storedata": ("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata"),
+    "voicemail.db": ("HomeDomain", "Library/Voicemail/voicemail.db"),
+    "NoteStore.sqlite": ("AppDomainGroup-group.com.apple.notes", "NoteStore.sqlite"),
+    "Photos.sqlite": ("CameraRollDomain", "Media/PhotoData/Photos.sqlite"),
+    "History.db": ("HomeDomain", "Library/Safari/History.db"),
+    "Calendar.sqlitedb": ("HomeDomain", "Library/Calendar/Calendar.sqlitedb"),
+    "healthdb.sqlite": ("HealthDomain", "Health/healthdb.sqlite"),
+    "healthdb_secure.sqlite": ("HealthDomain", "Health/healthdb_secure.sqlite"),
+    "CloudRecordings.db": ("MediaDomain", "Media/Recordings/CloudRecordings.db"),
 }
-_FTS_SHADOW_SUFFIXES = ("content", "segments", "segdir", "docsize", "stat", "data", "idx", "config")
+# Tables SQLite creates for a virtual table itself: FTS3/4/5, then R-tree (Photos' location index).
+_SHADOW_SUFFIXES = ("content", "segments", "segdir", "docsize", "stat", "data", "idx", "config", "node", "parent", "rowid")
 
 
-def _blob_kind(value: bytes) -> str:
+def _blob_kind(value: Optional[bytes]) -> str:
+    if not value:
+        return "empty"  # substr() of a zero-length blob is NULL
     if value.startswith(b"bplist00"):
         return "bplist"
     if value[:13] == b"\x04\x0bstreamtyped":
@@ -58,7 +70,7 @@ def harvest_sqlite(path: Path) -> dict:
         "SELECT type, name, tbl_name, sql FROM sqlite_master WHERE sql IS NOT NULL ORDER BY rowid"
     ).fetchall()
     virtual = {r["name"] for r in rows if r["type"] == "table" and re.search(r"CREATE\s+VIRTUAL\s+TABLE", r["sql"], re.I)}
-    shadows = {f"{v}_{s}" for v in virtual for s in _FTS_SHADOW_SUFFIXES}
+    shadows = {f"{v}_{s}" for v in virtual for s in _SHADOW_SUFFIXES}
     objects, columns, shape = [], {}, {}
     for r in rows:
         if r["name"].startswith("sqlite_"):
@@ -164,8 +176,9 @@ def write_schema(ios: str, build: str, source: str, name: str, harvested: dict) 
     return path
 
 
-def harvest_backup(backup_dir: Path, password: Optional[str], ios: str, build: str, source: str) -> list[Path]:
-    """Harvest every known database plus the container from an on-disk backup."""
+def harvest_backup(backup_dir: Path, password: Optional[str], ios: str, build: str, source: str,
+                   only: Optional[set[str]] = None) -> list[Path]:
+    """Harvest every known database plus the container from an on-disk backup, or just the databases in ``only``."""
     written = []
     with tempfile.TemporaryDirectory(prefix="backupgen-harvest-") as tmp:
         tmp = Path(tmp)
@@ -180,6 +193,8 @@ def harvest_backup(backup_dir: Path, password: Optional[str], ios: str, build: s
             backup, manifest_db = None, backup_dir / "Manifest.db"
         lookup = sqlite3.connect(f"{manifest_db.resolve().as_uri()}?mode=ro&immutable=1", uri=True)
         for name, (domain, relative_path) in DATABASES.items():
+            if only is not None and name not in only:
+                continue
             row = lookup.execute(
                 "SELECT fileID FROM Files WHERE domain = ? AND relativePath = ? AND flags = 1", (domain, relative_path)
             ).fetchone()
@@ -192,5 +207,6 @@ def harvest_backup(backup_dir: Path, password: Optional[str], ios: str, build: s
                 target.write_bytes((backup_dir / row[0][:2] / row[0]).read_bytes())
             written.append(write_schema(ios, build, source, name, harvest_sqlite(target)))
         lookup.close()
-        written.append(write_schema(ios, build, source, "container", harvest_container(backup_dir, manifest_db)))
+        if only is None:
+            written.append(write_schema(ios, build, source, "container", harvest_container(backup_dir, manifest_db)))
     return written

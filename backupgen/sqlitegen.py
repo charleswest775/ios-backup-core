@@ -41,8 +41,23 @@ def _placeholder_tokenizer(sql: str) -> str:
     return sql.replace(f"tokenize={name}", "tokenize=simple" + " " * (len(name) - len("simple")), 1)
 
 
+def _version(folder: Path) -> tuple[int, ...]:
+    return tuple(int(part) for part in folder.name.removeprefix("ios-").split("."))
+
+
 def load_schema(version: str, database: str) -> dict:
-    return json.loads((SCHEMAS_DIR / f"ios-{version}" / f"{database}.json").read_text(encoding="utf-8"))
+    """The schema harvested for this iOS version or, when there isn't one, the nearest older one.
+
+    The Simulator has no Notes, Phone or Voicemail, so newer versions can lack those databases.
+    """
+    path = SCHEMAS_DIR / f"ios-{version}" / f"{database}.json"
+    if not path.is_file():
+        wanted = _version(path.parent)
+        older = [p for p in SCHEMAS_DIR.glob(f"ios-*/{database}.json") if _version(p.parent) < wanted]
+        if not older:
+            raise FileNotFoundError(f"no {database} schema harvested for iOS {version} or earlier")
+        path = max(older, key=lambda p: _version(p.parent))
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 class Table:
