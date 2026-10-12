@@ -21,7 +21,7 @@ service: iMessage
 10:30 lucia: Gracias por venir, mija. La casa está muy callada sin ustedes
 10:45 me: Gracias a ti. Todo estuvo delicioso. Theo still talks about the flan
 10:46 lucia: Te mando la receta del flan
-10:47 lucia: https://www.example.org/recetas/flan-de-calabaza-de-lucia
+10:47 lucia: 2 tazas de calabaza asada, 5 huevos, 1 lata de leche condensada, 1 de evaporada, canela y vainilla. El caramelo primero. Baño maría, 350°, una hora. ¡Fácil!
 
 == 2025-04-13
 12:00 lucia: ¡Felicidades por la casa nueva! Theo me mandó fotos del jardín. Está precioso

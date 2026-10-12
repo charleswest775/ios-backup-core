@@ -231,7 +231,7 @@ service: iMessage
 20:07 theo: My mom is going to be so happy
 
 == 2025-02-18
-12:15 me: https://www.example.com/rentals/ne-duplex-fenced-yard-3br
+12:15 me: https://stonecrop.properties/rentals/ne-duplex-fenced-yard
 12:15 me: Look at this one. Fenced yard, a little porch, two bedrooms + an office nook
 12:31 theo: The kitchen has a window over the sink
 12:31 theo: I'm in love

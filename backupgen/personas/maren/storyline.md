@@ -3,6 +3,9 @@
 Entirely fictional. Written for backupgen and released CC0-1.0. Phone numbers are in the
 US 555-0100 to 0199 fictional range; emails use example.com/.org/.net. Real places, parks and
 public agencies are named; every person, business, school and the firm are invented.
+The businesses' websites in her Safari history use domain names that were unregistered when
+written (checked in DNS, October 2026), on niche top-level domains: cedarandsalt.pizza, alderbrook.vet
+and so on.
 
 All times are Pacific (America/Los_Angeles), even when she is travelling.
 
