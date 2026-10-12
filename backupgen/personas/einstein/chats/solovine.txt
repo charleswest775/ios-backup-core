@@ -1,0 +1,26 @@
+chat: solovine
+with: solovine
+service: iMessage
+
+# Maurice Solovine: Romanian philosophy student who answered Einstein's ad for private lessons around Easter 1902.
+
+== 1902-03-28
+16:40 solovine: Good afternoon. I saw your notice in the Anzeiger. Do you teach physics to a philosophy student?
+16:45 me: Especially to philosophy students. Come tomorrow; the first lesson is free.
+
+== 1902-03-30
+21:30 solovine: Thank you for yesterday. We never reached the lesson.
+21:32 me: That was the lesson. Come back on Tuesday and we'll argue some more. No charge.
+
+== 1902-04-08
+20:15 me: My friend Conrad Habicht from Schaffhausen has come to Bern to study. Shall the three of us read together?
+20:16 solovine: Yes! Philosophy is better argued in threes.
+
+== 1905-07-19
+19:30 solovine: Saw the Brownian motion paper in the library. Atoms you can count!
+19:35 me: Not count, exactly. But see their consequences.
+
+== 1905-11-14
+19:00 solovine: Lyon next week. I'll miss the suppers more than the philosophy.
+19:05 me: Write to me. I'll keep the Gruyère for your visits.
+19:06 solovine +love

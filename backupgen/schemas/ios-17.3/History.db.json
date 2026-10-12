@@ -1,0 +1,691 @@
+{
+ "database": "History.db",
+ "ios": "17.3",
+ "build": "21D50",
+ "source": "public backup pub-hickman-17.3 (definitions only)",
+ "harvested": "2026-10-11",
+ "pragmas": {
+  "user_version": 16,
+  "page_size": 4096,
+  "journal_mode": "wal",
+  "auto_vacuum": 0,
+  "encoding": "UTF-8"
+ },
+ "objects": [
+  {
+   "type": "table",
+   "name": "history_items",
+   "table": "history_items",
+   "sql": "CREATE TABLE history_items (id INTEGER PRIMARY KEY AUTOINCREMENT,url TEXT NOT NULL UNIQUE,domain_expansion TEXT NULL,visit_count INTEGER NOT NULL,daily_visit_counts BLOB NOT NULL,weekly_visit_counts BLOB NULL,autocomplete_triggers BLOB NULL,should_recompute_derived_visit_counts INTEGER NOT NULL,visit_count_score INTEGER NOT NULL,status_code INTEGER NOT NULL DEFAULT 0)"
+  },
+  {
+   "type": "table",
+   "name": "history_visits",
+   "table": "history_visits",
+   "sql": "CREATE TABLE history_visits (id INTEGER PRIMARY KEY AUTOINCREMENT,history_item INTEGER NOT NULL REFERENCES history_items(id) ON DELETE CASCADE,visit_time REAL NOT NULL,title TEXT NULL,load_successful BOOLEAN NOT NULL DEFAULT 1,http_non_get BOOLEAN NOT NULL DEFAULT 0,synthesized BOOLEAN NOT NULL DEFAULT 0,redirect_source INTEGER NULL UNIQUE REFERENCES history_visits(id) ON DELETE CASCADE,redirect_destination INTEGER NULL UNIQUE REFERENCES history_visits(id) ON DELETE CASCADE,origin INTEGER NOT NULL DEFAULT 0,generation INTEGER NOT NULL DEFAULT 0,attributes INTEGER NOT NULL DEFAULT 0,score INTEGER NOT NULL DEFAULT 0)"
+  },
+  {
+   "type": "table",
+   "name": "history_tombstones",
+   "table": "history_tombstones",
+   "sql": "CREATE TABLE history_tombstones (id INTEGER PRIMARY KEY AUTOINCREMENT,start_time REAL NOT NULL,end_time REAL NOT NULL,url TEXT,generation INTEGER NOT NULL DEFAULT 0)"
+  },
+  {
+   "type": "table",
+   "name": "metadata",
+   "table": "metadata",
+   "sql": "CREATE TABLE metadata (key TEXT NOT NULL UNIQUE, value)"
+  },
+  {
+   "type": "table",
+   "name": "history_client_versions",
+   "table": "history_client_versions",
+   "sql": "CREATE TABLE history_client_versions (client_version INTEGER PRIMARY KEY,last_seen REAL NOT NULL)"
+  },
+  {
+   "type": "table",
+   "name": "history_event_listeners",
+   "table": "history_event_listeners",
+   "sql": "CREATE TABLE history_event_listeners (listener_name TEXT PRIMARY KEY NOT NULL UNIQUE,last_seen REAL NOT NULL)"
+  },
+  {
+   "type": "table",
+   "name": "history_events",
+   "table": "history_events",
+   "sql": "CREATE TABLE history_events (id INTEGER PRIMARY KEY AUTOINCREMENT,event_type TEXT NOT NULL,event_time REAL NOT NULL,pending_listeners TEXT NOT NULL,value BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "history_tags",
+   "table": "history_tags",
+   "sql": "CREATE TABLE history_tags (id INTEGER PRIMARY KEY,type INTEGER NOT NULL,level INTEGER NOT NULL,identifier TEXT NOT NULL,title TEXT NOT NULL,modification_timestamp REAL NOT NULL,item_count INTEGER NOT NULL DEFAULT 0)"
+  },
+  {
+   "type": "table",
+   "name": "history_items_to_tags",
+   "table": "history_items_to_tags",
+   "sql": "CREATE TABLE history_items_to_tags (history_item INTEGER NOT NULL,tag_id INTEGER NOT NULL,timestamp REAL NOT NULL,FOREIGN KEY(tag_id) REFERENCES history_tags(id) ON DELETE CASCADE,FOREIGN KEY(history_item) REFERENCES history_items(id) ON DELETE CASCADE,UNIQUE(history_item, tag_id) ON CONFLICT REPLACE)"
+  },
+  {
+   "type": "index",
+   "name": "history_items__domain_expansion",
+   "table": "history_items",
+   "sql": "CREATE INDEX history_items__domain_expansion ON history_items (domain_expansion)"
+  },
+  {
+   "type": "index",
+   "name": "history_visits__last_visit",
+   "table": "history_visits",
+   "sql": "CREATE INDEX history_visits__last_visit ON history_visits (history_item, visit_time DESC, synthesized ASC)"
+  },
+  {
+   "type": "index",
+   "name": "history_visits__origin",
+   "table": "history_visits",
+   "sql": "CREATE INDEX history_visits__origin ON history_visits (origin, generation)"
+  },
+  {
+   "type": "index",
+   "name": "history_tombstones__generation",
+   "table": "history_tombstones",
+   "sql": "CREATE INDEX history_tombstones__generation ON history_tombstones (generation)"
+  },
+  {
+   "type": "index",
+   "name": "history_tombstones__end_time",
+   "table": "history_tombstones",
+   "sql": "CREATE INDEX history_tombstones__end_time ON history_tombstones (end_time)"
+  },
+  {
+   "type": "trigger",
+   "name": "increment_count_on_insert",
+   "table": "history_items_to_tags",
+   "sql": "CREATE TRIGGER increment_count_on_insert AFTER INSERT ON history_items_to_tags BEGIN  UPDATE history_tags SET item_count = item_count + 1 WHERE id = NEW.tag_id;END"
+  },
+  {
+   "type": "trigger",
+   "name": "decrement_count_on_delete",
+   "table": "history_items_to_tags",
+   "sql": "CREATE TRIGGER decrement_count_on_delete BEFORE DELETE ON history_items_to_tags BEGIN  UPDATE history_tags SET item_count = item_count - 1 WHERE id = OLD.tag_id;END"
+  }
+ ],
+ "columns": {
+  "history_items": [
+   {
+    "name": "id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "url",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "domain_expansion",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "visit_count",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "daily_visit_counts",
+    "type": "BLOB",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "weekly_visit_counts",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "autocomplete_triggers",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "should_recompute_derived_visit_counts",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "visit_count_score",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status_code",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   }
+  ],
+  "history_visits": [
+   {
+    "name": "id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "history_item",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "visit_time",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "title",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "load_successful",
+    "type": "BOOLEAN",
+    "notnull": true,
+    "default": "1",
+    "pk": 0
+   },
+   {
+    "name": "http_non_get",
+    "type": "BOOLEAN",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   },
+   {
+    "name": "synthesized",
+    "type": "BOOLEAN",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   },
+   {
+    "name": "redirect_source",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "redirect_destination",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "origin",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   },
+   {
+    "name": "generation",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   },
+   {
+    "name": "attributes",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   },
+   {
+    "name": "score",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   }
+  ],
+  "history_tombstones": [
+   {
+    "name": "id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "start_time",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "end_time",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "url",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "generation",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   }
+  ],
+  "metadata": [
+   {
+    "name": "key",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "history_client_versions": [
+   {
+    "name": "client_version",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "last_seen",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "history_event_listeners": [
+   {
+    "name": "listener_name",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "last_seen",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "history_events": [
+   {
+    "name": "id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "event_type",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "event_time",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "pending_listeners",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "history_tags": [
+   {
+    "name": "id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "level",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "identifier",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "title",
+    "type": "TEXT",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "modification_timestamp",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "item_count",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": "0",
+    "pk": 0
+   }
+  ],
+  "history_items_to_tags": [
+   {
+    "name": "history_item",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "tag_id",
+    "type": "INTEGER",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "timestamp",
+    "type": "REAL",
+    "notnull": true,
+    "default": null,
+    "pk": 0
+   }
+  ]
+ },
+ "shape": {
+  "history_items": {
+   "id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "url": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "domain_expansion": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "visit_count": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "daily_visit_counts": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "weekly_visit_counts": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "autocomplete_triggers": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "should_recompute_derived_visit_counts": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "visit_count_score": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "status_code": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "history_visits": {
+   "id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "history_item": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "visit_time": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "title": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "load_successful": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "http_non_get": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "synthesized": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "redirect_source": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "redirect_destination": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "origin": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "generation": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "attributes": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "score": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "metadata": {
+   "key": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "value": {
+    "null_rate": 0.0,
+    "types": [
+     "blob",
+     "integer",
+     "real"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   }
+  },
+  "history_event_listeners": {
+   "listener_name": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "last_seen": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   }
+  },
+  "history_tags": {
+   "id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "level": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "identifier": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "title": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "modification_timestamp": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "item_count": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  }
+ }
+}

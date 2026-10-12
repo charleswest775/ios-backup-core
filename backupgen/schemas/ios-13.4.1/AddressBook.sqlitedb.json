@@ -1,0 +1,2215 @@
+{
+ "database": "AddressBook.sqlitedb",
+ "ios": "13.4.1",
+ "build": "17E262",
+ "source": "public backup pub-hickman-13.4.1 (definitions only)",
+ "harvested": "2026-10-10",
+ "pragmas": {
+  "user_version": 0,
+  "page_size": 4096,
+  "journal_mode": "wal",
+  "auto_vacuum": 0,
+  "encoding": "UTF-8"
+ },
+ "objects": [
+  {
+   "type": "table",
+   "name": "_SqliteDatabaseProperties",
+   "table": "_SqliteDatabaseProperties",
+   "sql": "CREATE TABLE _SqliteDatabaseProperties (key TEXT, value TEXT, UNIQUE(key))"
+  },
+  {
+   "type": "table",
+   "name": "ABStore",
+   "table": "ABStore",
+   "sql": "CREATE TABLE ABStore (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, ExternalIdentifier TEXT, Type INTEGER, ConstraintsPath TEXT, ExternalModificationTag TEXT, ExternalSyncTag TEXT, StoreInternalIdentifier TEXT, AccountID INTEGER DEFAULT -1, Enabled INTEGER DEFAULT 1, SyncData BLOB, MeIdentifier INTEGER DEFAULT -1, Capabilities INTEGER DEFAULT 0, guid TEXT NOT NULL DEFAULT (ab_generate_guid()), LastSyncDate TEXT, UNIQUE(StoreInternalIdentifier), UNIQUE(guid))"
+  },
+  {
+   "type": "table",
+   "name": "ABPerson",
+   "table": "ABPerson",
+   "sql": "CREATE TABLE ABPerson (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, First TEXT, Last TEXT, Middle TEXT, FirstPhonetic TEXT, MiddlePhonetic TEXT, LastPhonetic TEXT, Organization TEXT, Department TEXT, Note TEXT, Kind INTEGER, Birthday TEXT, JobTitle TEXT, Nickname TEXT, Prefix TEXT, Suffix TEXT, FirstSort TEXT, LastSort TEXT, CreationDate INTEGER, ModificationDate INTEGER, CompositeNameFallback TEXT, ExternalIdentifier TEXT, ExternalModificationTag TEXT, ExternalUUID TEXT, StoreID INTEGER, DisplayName TEXT, ExternalRepresentation BLOB, FirstSortSection TEXT, LastSortSection TEXT, FirstSortLanguageIndex INTEGER DEFAULT 2147483647, LastSortLanguageIndex INTEGER DEFAULT 2147483647, PersonLink INTEGER DEFAULT -1, ImageURI TEXT, IsPreferredName INTEGER DEFAULT 1, guid TEXT NOT NULL DEFAULT (ab_generate_guid()), PhonemeData TEXT, AlternateBirthday TEXT, MapsData TEXT, FirstPronunciation TEXT, MiddlePronunciation TEXT, LastPronunciation TEXT, OrganizationPhonetic TEXT, OrganizationPronunciation TEXT, PreviousFamilyName TEXT, PreferredLikenessSource TEXT, PreferredPersonaIdentifier TEXT, PreferredChannel TEXT, DowntimeWhitelist TEXT, ImageType TEXT, ImageHash BLOB, UNIQUE(guid))"
+  },
+  {
+   "type": "table",
+   "name": "ABPersonChanges",
+   "table": "ABPersonChanges",
+   "sql": "CREATE TABLE ABPersonChanges (record INTEGER, type INTEGER, sequence_number INTEGER, Image INTEGER, ExternalIdentifier TEXT, StoreID INTEGER, PersonLink INTEGER, guid TEXT, Changes INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "ABPersonLink",
+   "table": "ABPersonLink",
+   "sql": "CREATE TABLE ABPersonLink (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, PreferredImagePersonID INTEGER DEFAULT -1, PreferredNamePersonID INTEGER DEFAULT -1, guid TEXT NOT NULL DEFAULT (ab_generate_guid()), UNIQUE(guid))"
+  },
+  {
+   "type": "table",
+   "name": "ABPersonSearchKey",
+   "table": "ABPersonSearchKey",
+   "sql": "CREATE TABLE ABPersonSearchKey (person_id INTEGER, SearchKey BLOB, NameOnlySearchKey BLOB, UNIQUE(person_id))"
+  },
+  {
+   "type": "table",
+   "name": "ABGroup",
+   "table": "ABGroup",
+   "sql": "CREATE TABLE ABGroup (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, ExternalIdentifier TEXT, StoreID INTEGER, ExternalModificationTag TEXT, ExternalRepresentation BLOB, ExternalUUID TEXT, guid TEXT NOT NULL DEFAULT (ab_generate_guid()), UNIQUE(guid))"
+  },
+  {
+   "type": "table",
+   "name": "ABGroupChanges",
+   "table": "ABGroupChanges",
+   "sql": "CREATE TABLE ABGroupChanges (record INTEGER, type INTEGER, sequence_number INTEGER, ExternalIdentifier TEXT, StoreID INTEGER, guid TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "ABAccount",
+   "table": "ABAccount",
+   "sql": "CREATE TABLE ABAccount (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, AccountIdentifier TEXT, Flags INTEGER, DefaultSourceID INTEGER, guid TEXT NOT NULL DEFAULT (ab_generate_guid()), UNIQUE(guid))"
+  },
+  {
+   "type": "table",
+   "name": "ABGroupMembers",
+   "table": "ABGroupMembers",
+   "sql": "CREATE TABLE ABGroupMembers (UID INTEGER PRIMARY KEY, group_id INTEGER, member_type INTEGER, member_id INTEGER, UNIQUE(group_id, member_type, member_id))"
+  },
+  {
+   "type": "table",
+   "name": "ABMultiValue",
+   "table": "ABMultiValue",
+   "sql": "CREATE TABLE ABMultiValue (UID INTEGER PRIMARY KEY, record_id INTEGER, property INTEGER, identifier INTEGER, label INTEGER, value TEXT, guid TEXT NOT NULL DEFAULT (ab_generate_guid()), UNIQUE(guid))"
+  },
+  {
+   "type": "table",
+   "name": "ABMultiValueLabel",
+   "table": "ABMultiValueLabel",
+   "sql": "CREATE TABLE ABMultiValueLabel (value TEXT, UNIQUE(value))"
+  },
+  {
+   "type": "table",
+   "name": "ABMultiValueEntry",
+   "table": "ABMultiValueEntry",
+   "sql": "CREATE TABLE ABMultiValueEntry (parent_id INTEGER, key INTEGER, value TEXT, UNIQUE(parent_id, key))"
+  },
+  {
+   "type": "table",
+   "name": "ABMultiValueEntryKey",
+   "table": "ABMultiValueEntryKey",
+   "sql": "CREATE TABLE ABMultiValueEntryKey (value TEXT, UNIQUE(value))"
+  },
+  {
+   "type": "table",
+   "name": "ABPhoneLastFour",
+   "table": "ABPhoneLastFour",
+   "sql": "CREATE TABLE ABPhoneLastFour (multivalue_id INTEGER PRIMARY KEY, value TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "ABPersonMultiValueDeletes",
+   "table": "ABPersonMultiValueDeletes",
+   "sql": "CREATE TABLE ABPersonMultiValueDeletes (record_id INTEGER, property_id INTEGER, identifier INTEGER, sequence_number INTEGER, record_uid TEXT, identifier_uid TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "FirstSortSectionCount",
+   "table": "FirstSortSectionCount",
+   "sql": "CREATE TABLE FirstSortSectionCount(LanguageIndex, Section TEXT, StoreID, number, UNIQUE(LanguageIndex, Section, StoreID))"
+  },
+  {
+   "type": "table",
+   "name": "LastSortSectionCount",
+   "table": "LastSortSectionCount",
+   "sql": "CREATE TABLE LastSortSectionCount(LanguageIndex, Section TEXT, StoreID, number, UNIQUE(LanguageIndex, Section, StoreID))"
+  },
+  {
+   "type": "table",
+   "name": "FirstSortSectionCountTotal",
+   "table": "FirstSortSectionCountTotal",
+   "sql": "CREATE TABLE FirstSortSectionCountTotal(LanguageIndex, Section TEXT, Type INT, number, UNIQUE(LanguageIndex, Section, Type))"
+  },
+  {
+   "type": "table",
+   "name": "LastSortSectionCountTotal",
+   "table": "LastSortSectionCountTotal",
+   "sql": "CREATE TABLE LastSortSectionCountTotal(LanguageIndex, Section TEXT, Type INT, number, UNIQUE(LanguageIndex, Section, Type))"
+  },
+  {
+   "type": "table",
+   "name": "ClientCursor",
+   "table": "ClientCursor",
+   "sql": "CREATE TABLE ClientCursor (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, store_id INTEGER, latest_consumed_sequence_number INTEGER, latest_consumed_timestamp REAL, client_identifier TEXT, UNIQUE(client_identifier, store_id))"
+  },
+  {
+   "type": "table",
+   "name": "ClientSequence",
+   "table": "ClientSequence",
+   "sql": "CREATE TABLE ClientSequence (sequence_number INTEGER,client_identifier TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "ClientCursorConsumed",
+   "table": "ClientCursorConsumed",
+   "sql": "CREATE TABLE ClientCursorConsumed (store_id INTEGER, consumed_entity_class INTEGER, consumed_entity_id INTEGER, consumed_change_id INTEGER, sequence_number INTEGER, client_identifier TEXT)"
+  },
+  {
+   "type": "shadow",
+   "name": "ABPersonFullTextSearch_content",
+   "table": "ABPersonFullTextSearch_content",
+   "sql": "CREATE TABLE 'ABPersonFullTextSearch_content'(docid INTEGER PRIMARY KEY, 'c0First', 'c1Last', 'c2Middle', 'c3FirstPhonetic', 'c4MiddlePhonetic', 'c5LastPhonetic', 'c6Organization', 'c7OrganizationPhonetic', 'c8Department', 'c9Note', 'c10Birthday', 'c11JobTitle', 'c12Nickname', 'c13Prefix', 'c14Suffix', 'c15DisplayName', 'c16Phone', 'c17Email', 'c18Address', 'c19SocialProfile', 'c20URL', 'c21RelatedNames', 'c22IM', 'c23Date', 'c24SupplementalCompositeNameTerms')"
+  },
+  {
+   "type": "shadow",
+   "name": "ABPersonFullTextSearch_segments",
+   "table": "ABPersonFullTextSearch_segments",
+   "sql": "CREATE TABLE 'ABPersonFullTextSearch_segments'(blockid INTEGER PRIMARY KEY, block BLOB)"
+  },
+  {
+   "type": "shadow",
+   "name": "ABPersonFullTextSearch_segdir",
+   "table": "ABPersonFullTextSearch_segdir",
+   "sql": "CREATE TABLE 'ABPersonFullTextSearch_segdir'(level INTEGER,idx INTEGER,start_block INTEGER,leaves_end_block INTEGER,end_block INTEGER,root BLOB,PRIMARY KEY(level, idx))"
+  },
+  {
+   "type": "shadow",
+   "name": "ABPersonFullTextSearch_docsize",
+   "table": "ABPersonFullTextSearch_docsize",
+   "sql": "CREATE TABLE 'ABPersonFullTextSearch_docsize'(docid INTEGER PRIMARY KEY, size BLOB)"
+  },
+  {
+   "type": "shadow",
+   "name": "ABPersonFullTextSearch_stat",
+   "table": "ABPersonFullTextSearch_stat",
+   "sql": "CREATE TABLE 'ABPersonFullTextSearch_stat'(id INTEGER PRIMARY KEY, value BLOB)"
+  },
+  {
+   "type": "index",
+   "name": "ClientCursorClientIdentifier",
+   "table": "ClientCursor",
+   "sql": "CREATE INDEX ClientCursorClientIdentifier ON ClientCursor(client_identifier, store_id)"
+  },
+  {
+   "type": "index",
+   "name": "ClientSequenceClientIdentifier",
+   "table": "ClientSequence",
+   "sql": "CREATE INDEX ClientSequenceClientIdentifier ON ClientSequence(client_identifier)"
+  },
+  {
+   "type": "index",
+   "name": "ClientCursorConsumedClientIdentifier",
+   "table": "ClientCursorConsumed",
+   "sql": "CREATE INDEX ClientCursorConsumedClientIdentifier ON ClientCursorConsumed(client_identifier, store_id)"
+  },
+  {
+   "type": "index",
+   "name": "ABFirstSortIndex",
+   "table": "ABPerson",
+   "sql": "CREATE INDEX ABFirstSortIndex on ABPerson(FirstSortLanguageIndex, FirstSortSection, FirstSort)"
+  },
+  {
+   "type": "index",
+   "name": "ABLastSortIndex",
+   "table": "ABPerson",
+   "sql": "CREATE INDEX ABLastSortIndex on ABPerson(LastSortLanguageIndex, LastSortSection, LastSort)"
+  },
+  {
+   "type": "index",
+   "name": "ABFirstSortStoreIndex",
+   "table": "ABPerson",
+   "sql": "CREATE INDEX ABFirstSortStoreIndex on ABPerson(StoreID, FirstSortLanguageIndex, FirstSortSection, FirstSort)"
+  },
+  {
+   "type": "index",
+   "name": "ABLastSortStoreIndex",
+   "table": "ABPerson",
+   "sql": "CREATE INDEX ABLastSortStoreIndex on ABPerson(StoreID, LastSortLanguageIndex, LastSortSection, LastSort)"
+  },
+  {
+   "type": "index",
+   "name": "ABPersonPersonLinkIndex",
+   "table": "ABPerson",
+   "sql": "CREATE INDEX ABPersonPersonLinkIndex on ABPerson(PersonLink)"
+  },
+  {
+   "type": "index",
+   "name": "ABPreferredFirstSortIndex",
+   "table": "ABPerson",
+   "sql": "CREATE INDEX ABPreferredFirstSortIndex on ABPerson(IsPreferredName, FirstSortLanguageIndex, FirstSortSection, FirstSort)"
+  },
+  {
+   "type": "index",
+   "name": "ABPreferredLastSortIndex",
+   "table": "ABPerson",
+   "sql": "CREATE INDEX ABPreferredLastSortIndex on ABPerson(IsPreferredName, LastSortLanguageIndex, LastSortSection, LastSort)"
+  },
+  {
+   "type": "index",
+   "name": "ABPersonExternalUUIDIndex",
+   "table": "ABPerson",
+   "sql": "CREATE INDEX ABPersonExternalUUIDIndex on ABPerson(ExternalUUID)"
+  },
+  {
+   "type": "index",
+   "name": "ABPersonExternalIdentifierIndex",
+   "table": "ABPerson",
+   "sql": "CREATE INDEX ABPersonExternalIdentifierIndex on ABPerson(ExternalIdentifier)"
+  },
+  {
+   "type": "index",
+   "name": "ABMultiValueRecordIDIndex",
+   "table": "ABMultiValue",
+   "sql": "CREATE INDEX ABMultiValueRecordIDIndex on ABMultiValue(record_id)"
+  },
+  {
+   "type": "index",
+   "name": "ABMultiValueLabelIndex",
+   "table": "ABMultiValue",
+   "sql": "CREATE INDEX ABMultiValueLabelIndex ON ABMultiValue(label)"
+  },
+  {
+   "type": "index",
+   "name": "ABMultiValueGUIDIndex",
+   "table": "ABMultiValue",
+   "sql": "CREATE INDEX ABMultiValueGUIDIndex ON ABMultiValue(guid)"
+  },
+  {
+   "type": "index",
+   "name": "ABMultiValuePropertyValueIndex",
+   "table": "ABMultiValue",
+   "sql": "CREATE INDEX ABMultiValuePropertyValueIndex ON ABMultiValue(property, value COLLATE NOCASE)"
+  },
+  {
+   "type": "index",
+   "name": "ABMultiValueEntryKeyIndex",
+   "table": "ABMultiValueEntry",
+   "sql": "CREATE INDEX ABMultiValueEntryKeyIndex ON ABMultiValueEntry(key)"
+  },
+  {
+   "type": "index",
+   "name": "ABPhoneLastFourIndex",
+   "table": "ABPhoneLastFour",
+   "sql": "CREATE INDEX ABPhoneLastFourIndex ON ABPhoneLastFour(value)"
+  },
+  {
+   "type": "trigger",
+   "name": "delete_clientcursor_consumed",
+   "table": "ClientCursor",
+   "sql": "CREATE TRIGGER delete_clientcursor_consumed AFTER DELETE ON ClientCursor \n    BEGIN \n        DELETE FROM ClientCursorConsumed WHERE client_identifier = OLD.client_identifier AND store_id = OLD.store_id; \n        DELETE FROM ClientSequence WHERE client_identifier = OLD.client_identifier; \n    END"
+  },
+  {
+   "type": "trigger",
+   "name": "DeletePersonLink",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER DeletePersonLink AFTER DELETE ON ABPerson BEGIN DELETE FROM ABPersonLink WHERE (ROWID = OLD.PersonLink AND (SELECT count() FROM ABPerson WHERE PersonLink = OLD.PersonLink) < 2); END"
+  },
+  {
+   "type": "trigger",
+   "name": "UpdatePersonLink",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER UpdatePersonLink AFTER UPDATE OF PersonLink ON ABPerson BEGIN DELETE FROM ABPersonLink WHERE (ROWID = OLD.PersonLink AND (SELECT count() FROM ABPerson WHERE PersonLink = OLD.PersonLink) < 2); END"
+  },
+  {
+   "type": "trigger",
+   "name": "UpdatePersonLinkUponPersonUnlink",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER UpdatePersonLinkUponPersonUnlink AFTER UPDATE OF PersonLink ON ABPerson WHEN OLD.PersonLink != -1 AND NEW.PersonLink = -1 BEGIN UPDATE ABPersonLink SET PreferredNamePersonID = (SELECT ROWID FROM ABPerson abp WHERE abp.PersonLink = OLD.PersonLink ORDER BY abp.ROWID LIMIT 1) WHERE (ROWID = OLD.PersonLink AND PreferredNamePersonID = OLD.ROWID); END"
+  },
+  {
+   "type": "trigger",
+   "name": "UpdatePersonUponLinkDeletion",
+   "table": "ABPersonLink",
+   "sql": "CREATE TRIGGER UpdatePersonUponLinkDeletion AFTER DELETE ON ABPersonLink BEGIN     UPDATE ABPerson SET PersonLink = -1, IsPreferredName = 1 WHERE PersonLink = OLD.ROWID; END"
+  },
+  {
+   "type": "trigger",
+   "name": "UpdatePersonUponLinkInsertion",
+   "table": "ABPersonLink",
+   "sql": "CREATE TRIGGER UpdatePersonUponLinkInsertion AFTER INSERT ON ABPersonLink \nBEGIN \n    UPDATE ABPerson SET IsPreferredName = ab_update_value_from_trigger(ROWID = NEW.PreferredNamePersonID, 'IsPreferredName', ROWID) WHERE PersonLink = NEW.ROWID; \nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "UpdatePersonUponLinkUpdate",
+   "table": "ABPersonLink",
+   "sql": "CREATE TRIGGER UpdatePersonUponLinkUpdate AFTER UPDATE ON ABPersonLink \nBEGIN \n    UPDATE ABPerson SET IsPreferredName = ab_update_value_from_trigger(ROWID = NEW.PreferredNamePersonID, 'IsPreferredName', ROWID) WHERE PersonLink = NEW.ROWID; \nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "NamePreferredPersonEditTrigger",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER NamePreferredPersonEditTrigger AFTER UPDATE OF Prefix, First, Middle, Last, Suffix, Organization, Kind ON ABPerson WHEN ((OLD.Prefix IS NOT NEW.Prefix) OR (OLD.First IS NOT NEW.First) OR (OLD.Middle IS NOT NEW.Middle) OR (OLD.Last IS NOT NEW.Last) OR (OLD.Suffix IS NOT NEW.Suffix) OR (OLD.Organization IS NOT NEW.Organization) OR (OLD.Kind IS NOT NEW.Kind)) BEGIN UPDATE ABPersonLink SET PreferredNamePersonID = OLD.ROWID WHERE (OLD.PersonLink = ROWID); END"
+  },
+  {
+   "type": "trigger",
+   "name": "NamePreferredPersonInsertTrigger",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER NamePreferredPersonInsertTrigger AFTER INSERT ON ABPerson BEGIN UPDATE ABPersonLink SET PreferredNamePersonID = NEW.ROWID WHERE (ROWID = NEW.PersonLink AND PreferredNamePersonID = -1); END"
+  },
+  {
+   "type": "trigger",
+   "name": "NamePreferredPersonDeleteTrigger",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER NamePreferredPersonDeleteTrigger AFTER DELETE ON ABPerson BEGIN UPDATE ABPersonLink SET PreferredNamePersonID = (SELECT ROWID FROM ABPerson abp WHERE abp.PersonLink = OLD.PersonLink ORDER BY abp.ROWID LIMIT 1) WHERE (ROWID = OLD.PersonLink AND PreferredNamePersonID = OLD.ROWID); END"
+  },
+  {
+   "type": "trigger",
+   "name": "UpdatePersonLinkField",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER UpdatePersonLinkField AFTER UPDATE OF PersonLink ON ABPerson \nWHEN OLD.PersonLink != NEW.PersonLink \nBEGIN \n    UPDATE ABPerson \n    SET IsPreferredName = ab_update_value_from_trigger((NEW.PersonLink = -1 OR ROWID = (SELECT PreferredNamePersonID FROM ABPersonLink abl WHERE abl.ROWID = NEW.PersonLink)), 'IsPreferredName', ROWID) \n    WHERE ROWID = NEW.ROWID; \nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "InitializePersonLinkField",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER InitializePersonLinkField AFTER INSERT ON ABPerson \nBEGIN \n    UPDATE ABPerson \n    SET IsPreferredName = ab_update_value_from_trigger((NEW.PersonLink = -1 OR ROWID = (SELECT PreferredNamePersonID FROM ABPersonLink abl WHERE abl.ROWID = NEW.PersonLink)), 'IsPreferredName', ROWID) \n    WHERE ROWID = NEW.ROWID; \nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "DeleteSearchKey",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER DeleteSearchKey AFTER DELETE ON ABPerson BEGIN DELETE FROM ABPersonSearchKey WHERE person_id = OLD.ROWID; END"
+  },
+  {
+   "type": "trigger",
+   "name": "delete_phone_last_four",
+   "table": "ABMultiValue",
+   "sql": "CREATE TRIGGER delete_phone_last_four AFTER DELETE ON ABMultiValue\nBEGIN\nDELETE FROM ABPhoneLastFour WHERE multivalue_id = OLD.UID;\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "FirstSortSectionInsert",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER FirstSortSectionInsert AFTER INSERT ON ABPerson BEGIN INSERT OR REPLACE INTO FirstSortSectionCount VALUES(NEW.FirstSortLanguageIndex, IFNULL(NEW.FirstSortSection, ''), NEW.StoreID, 1 + IFNULL((SELECT number from FirstSortSectionCount WHERE LanguageIndex = NEW.FirstSortLanguageIndex AND Section = IFNULL(NEW.FirstSortSection, '') AND StoreID = NEW.StoreID), 0)); END"
+  },
+  {
+   "type": "trigger",
+   "name": "FirstSortSectionUpdate",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER FirstSortSectionUpdate AFTER UPDATE ON ABPerson BEGIN INSERT OR REPLACE INTO FirstSortSectionCount VALUES(OLD.FirstSortLanguageIndex, IFNULL(OLD.FirstSortSection, ''), OLD.StoreID, (SELECT number from FirstSortSectionCount WHERE LanguageIndex = OLD.FirstSortLanguageIndex AND Section = IFNULL(OLD.FirstSortSection, '') AND StoreID = OLD.StoreID) - 1); DELETE FROM FirstSortSectionCount WHERE LanguageIndex = OLD.FirstSortLanguageIndex AND Section = IFNULL(OLD.FirstSortSection, '') AND StoreID = OLD.StoreID AND number = 0; INSERT OR REPLACE INTO FirstSortSectionCount VALUES(NEW.FirstSortLanguageIndex, IFNULL(NEW.FirstSortSection, ''), NEW.StoreID, 1 + IFNULL((SELECT number from FirstSortSectionCount WHERE LanguageIndex = NEW.FirstSortLanguageIndex AND Section = IFNULL(NEW.FirstSortSection, '') AND StoreID = NEW.StoreID), 0)); END"
+  },
+  {
+   "type": "trigger",
+   "name": "FirstSortSectionDelete",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER FirstSortSectionDelete AFTER DELETE ON ABPerson BEGIN INSERT OR REPLACE INTO FirstSortSectionCount VALUES(OLD.FirstSortLanguageIndex, IFNULL(OLD.FirstSortSection, ''), OLD.StoreID, (SELECT number from FirstSortSectionCount WHERE LanguageIndex = OLD.FirstSortLanguageIndex AND Section = IFNULL(OLD.FirstSortSection, '') AND StoreID = OLD.StoreID) - 1); DELETE FROM FirstSortSectionCount WHERE LanguageIndex = OLD.FirstSortLanguageIndex AND Section = IFNULL(OLD.FirstSortSection, '') AND StoreID = OLD.StoreID AND number = 0; END"
+  },
+  {
+   "type": "trigger",
+   "name": "LastSortSectionInsert",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER LastSortSectionInsert AFTER INSERT ON ABPerson BEGIN INSERT OR REPLACE INTO LastSortSectionCount VALUES(NEW.LastSortLanguageIndex, IFNULL(NEW.LastSortSection, ''), NEW.StoreID, 1 + IFNULL((SELECT number from LastSortSectionCount WHERE LanguageIndex = NEW.LastSortLanguageIndex AND Section = IFNULL(NEW.LastSortSection, '') AND StoreID = NEW.StoreID), 0)); END"
+  },
+  {
+   "type": "trigger",
+   "name": "LastSortSectionUpdate",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER LastSortSectionUpdate AFTER UPDATE ON ABPerson BEGIN INSERT OR REPLACE INTO LastSortSectionCount VALUES(OLD.LastSortLanguageIndex, IFNULL(OLD.LastSortSection, ''), OLD.StoreID, (SELECT number from LastSortSectionCount WHERE LanguageIndex = OLD.LastSortLanguageIndex AND Section = IFNULL(OLD.LastSortSection, '') AND StoreID = OLD.StoreID) - 1); DELETE FROM LastSortSectionCount WHERE LanguageIndex = OLD.LastSortLanguageIndex AND Section = IFNULL(OLD.LastSortSection, '') AND StoreID = OLD.StoreID AND number = 0; INSERT OR REPLACE INTO LastSortSectionCount VALUES(NEW.LastSortLanguageIndex, IFNULL(NEW.LastSortSection, ''), NEW.StoreID, 1 + IFNULL((SELECT number from LastSortSectionCount WHERE LanguageIndex = NEW.LastSortLanguageIndex AND Section = IFNULL(NEW.LastSortSection, '') AND StoreID = NEW.StoreID), 0)); END"
+  },
+  {
+   "type": "trigger",
+   "name": "LastSortSectionDelete",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER LastSortSectionDelete AFTER DELETE ON ABPerson BEGIN INSERT OR REPLACE INTO LastSortSectionCount VALUES(OLD.LastSortLanguageIndex, IFNULL(OLD.LastSortSection, ''), OLD.StoreID, (SELECT number from LastSortSectionCount WHERE LanguageIndex = OLD.LastSortLanguageIndex AND Section = IFNULL(OLD.LastSortSection, '') AND StoreID = OLD.StoreID) - 1); DELETE FROM LastSortSectionCount WHERE LanguageIndex = OLD.LastSortLanguageIndex AND Section = IFNULL(OLD.LastSortSection, '') AND StoreID = OLD.StoreID AND number = 0; END"
+  },
+  {
+   "type": "trigger",
+   "name": "FirstSortSectionTotalDelete",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER FirstSortSectionTotalDelete AFTER DELETE ON ABPerson \nWHEN OLD.IsPreferredName=1 \nBEGIN \n    INSERT OR REPLACE INTO FirstSortSectionCountTotal \n    VALUES( \n        OLD.FirstSortLanguageIndex, \n        IFNULL(OLD.FirstSortSection, ''), \n        0, \n        (SELECT number FROM FirstSortSectionCountTotal WHERE LanguageIndex = OLD.FirstSortLanguageIndex AND Section = IFNULL(OLD.FirstSortSection, '') AND Type = 0) - 1 \n    ); \n    \n    DELETE FROM FirstSortSectionCountTotal \n    WHERE LanguageIndex = OLD.FirstSortLanguageIndex AND \n        Section = IFNULL(OLD.FirstSortSection, '') AND \n        Type = 0 AND \n        number <= 0; \nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "LastSortSectionTotalDelete",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER LastSortSectionTotalDelete AFTER DELETE ON ABPerson \nWHEN OLD.IsPreferredName=1 \nBEGIN \n    INSERT OR REPLACE INTO LastSortSectionCountTotal \n    VALUES( \n        OLD.LastSortLanguageIndex, \n        IFNULL(OLD.LastSortSection, ''), \n        0, \n        (SELECT number FROM LastSortSectionCountTotal WHERE LanguageIndex = OLD.LastSortLanguageIndex AND Section = IFNULL(OLD.LastSortSection, '') AND Type = 0) - 1 \n    ); \n    \n    DELETE FROM LastSortSectionCountTotal \n    WHERE LanguageIndex = OLD.LastSortLanguageIndex AND \n        Section = IFNULL(OLD.LastSortSection, '') AND \n        Type = 0 AND \n        number <= 0; \nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "FirstSortSectionTotalInsert",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER FirstSortSectionTotalInsert AFTER INSERT ON ABPerson \nWHEN NEW.IsPreferredName=1 \nBEGIN \n    INSERT OR REPLACE INTO FirstSortSectionCountTotal \n    VALUES( \n        NEW.FirstSortLanguageIndex, \n        IFNULL(NEW.FirstSortSection, ''), \n        0, \n        1 + IFNULL((SELECT number from FirstSortSectionCountTotal WHERE LanguageIndex = NEW.FirstSortLanguageIndex AND Section = IFNULL(NEW.FirstSortSection, '') AND Type = 0), 0) \n    ); \nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "LastSortSectionTotalInsert",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER LastSortSectionTotalInsert AFTER INSERT ON ABPerson \nWHEN NEW.IsPreferredName=1 \nBEGIN \n    INSERT OR REPLACE INTO LastSortSectionCountTotal \n    VALUES( \n        NEW.LastSortLanguageIndex, \n        IFNULL(NEW.LastSortSection, ''), \n        0, \n        1 + IFNULL((SELECT number from LastSortSectionCountTotal WHERE LanguageIndex = NEW.LastSortLanguageIndex AND Section = IFNULL(NEW.LastSortSection, '') AND Type = 0), 0) \n    ); \nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "FirstSortSectionTotalUpdateIfWasPreferred",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER FirstSortSectionTotalUpdateIfWasPreferred AFTER UPDATE ON ABPerson \nWHEN OLD.IsPreferredName=1 \nBEGIN \n    INSERT OR REPLACE INTO FirstSortSectionCountTotal \n    VALUES( \n        OLD.FirstSortLanguageIndex, \n        IFNULL(OLD.FirstSortSection, ''), \n        0, \n        (SELECT number FROM FirstSortSectionCountTotal WHERE LanguageIndex = OLD.FirstSortLanguageIndex AND Section = IFNULL(OLD.FirstSortSection, '') AND Type = 0) - 1 \n    ); \n    \n    DELETE FROM FirstSortSectionCountTotal \n    WHERE LanguageIndex = OLD.FirstSortLanguageIndex AND \n        Section = IFNULL(OLD.FirstSortSection, '') AND \n        Type = 0 AND \n        number = 0; \nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "FirstSortSectionTotalUpdateIfIsPreferred",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER FirstSortSectionTotalUpdateIfIsPreferred AFTER UPDATE ON ABPerson \nWHEN NEW.IsPreferredName=1 \nBEGIN \n    INSERT OR REPLACE INTO FirstSortSectionCountTotal \n    VALUES( \n        NEW.FirstSortLanguageIndex, \n        IFNULL(NEW.FirstSortSection, ''), \n        0, \n        1 + IFNULL((SELECT number from FirstSortSectionCountTotal WHERE LanguageIndex = NEW.FirstSortLanguageIndex AND Section = IFNULL(NEW.FirstSortSection, '') AND Type = 0), 0) \n    ); \nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "LastSortSectionTotalUpdateIfWasPreferred",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER LastSortSectionTotalUpdateIfWasPreferred AFTER UPDATE ON ABPerson \nWHEN OLD.IsPreferredName=1 \nBEGIN \n    INSERT OR REPLACE INTO LastSortSectionCountTotal \n    VALUES( \n        OLD.LastSortLanguageIndex, \n        IFNULL(OLD.LastSortSection, ''), \n        0, \n        (SELECT number FROM LastSortSectionCountTotal WHERE LanguageIndex = OLD.LastSortLanguageIndex AND Section = IFNULL(OLD.LastSortSection, '') AND Type = 0) - 1 \n    ); \n    \n    DELETE FROM LastSortSectionCountTotal \n    WHERE LanguageIndex = OLD.LastSortLanguageIndex AND \n        Section = IFNULL(OLD.LastSortSection, '') AND \n        Type = 0 AND \n        number = 0; \nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "LastSortSectionTotalUpdateIfIsPreferred",
+   "table": "ABPerson",
+   "sql": "CREATE TRIGGER LastSortSectionTotalUpdateIfIsPreferred AFTER UPDATE ON ABPerson \nWHEN NEW.IsPreferredName=1 \nBEGIN \n    INSERT OR REPLACE INTO LastSortSectionCountTotal \n    VALUES( \n        NEW.LastSortLanguageIndex, \n        IFNULL(NEW.LastSortSection, ''), \n        0, \n        1 + IFNULL((SELECT number from LastSortSectionCountTotal WHERE LanguageIndex = NEW.LastSortLanguageIndex AND Section = IFNULL(NEW.LastSortSection, '') AND Type = 0), 0) \n    ); \nEND"
+  },
+  {
+   "type": "virtual",
+   "name": "ABPersonFullTextSearch",
+   "table": "ABPersonFullTextSearch",
+   "sql": "CREATE VIRTUAL TABLE ABPersonFullTextSearch USING fts4(tokenize=ab_cf_tokenizer language=\"en-US\" collator=\"en-US@collation=search\", First, Last, Middle, FirstPhonetic, MiddlePhonetic, LastPhonetic, Organization, OrganizationPhonetic, Department, Note, Birthday, JobTitle, Nickname, Prefix, Suffix, DisplayName, Phone, Email, Address, SocialProfile, URL, RelatedNames, IM, Date, SupplementalCompositeNameTerms)"
+  }
+ ],
+ "columns": {
+  "_SqliteDatabaseProperties": [
+   {
+    "name": "key",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABStore": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalIdentifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ConstraintsPath",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalModificationTag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalSyncTag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "StoreInternalIdentifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "AccountID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": "-1",
+    "pk": 0
+   },
+   {
+    "name": "Enabled",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": "1",
+    "pk": 0
+   },
+   {
+    "name": "SyncData",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "MeIdentifier",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": "-1",
+    "pk": 0
+   },
+   {
+    "name": "Capabilities",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": "0",
+    "pk": 0
+   },
+   {
+    "name": "guid",
+    "type": "TEXT",
+    "notnull": true,
+    "default": "ab_generate_guid()",
+    "pk": 0
+   },
+   {
+    "name": "LastSyncDate",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABPerson": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "First",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Last",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Middle",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "FirstPhonetic",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "MiddlePhonetic",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "LastPhonetic",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Organization",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Department",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Note",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Kind",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Birthday",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "JobTitle",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Nickname",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Prefix",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Suffix",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "FirstSort",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "LastSort",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "CreationDate",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ModificationDate",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "CompositeNameFallback",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalIdentifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalModificationTag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalUUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "StoreID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "DisplayName",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalRepresentation",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "FirstSortSection",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "LastSortSection",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "FirstSortLanguageIndex",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": "2147483647",
+    "pk": 0
+   },
+   {
+    "name": "LastSortLanguageIndex",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": "2147483647",
+    "pk": 0
+   },
+   {
+    "name": "PersonLink",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": "-1",
+    "pk": 0
+   },
+   {
+    "name": "ImageURI",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "IsPreferredName",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": "1",
+    "pk": 0
+   },
+   {
+    "name": "guid",
+    "type": "TEXT",
+    "notnull": true,
+    "default": "ab_generate_guid()",
+    "pk": 0
+   },
+   {
+    "name": "PhonemeData",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "AlternateBirthday",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "MapsData",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "FirstPronunciation",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "MiddlePronunciation",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "LastPronunciation",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "OrganizationPhonetic",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "OrganizationPronunciation",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "PreviousFamilyName",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "PreferredLikenessSource",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "PreferredPersonaIdentifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "PreferredChannel",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "DowntimeWhitelist",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ImageType",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ImageHash",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABPersonChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Image",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalIdentifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "StoreID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "PersonLink",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "guid",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Changes",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABPersonLink": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "PreferredImagePersonID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": "-1",
+    "pk": 0
+   },
+   {
+    "name": "PreferredNamePersonID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": "-1",
+    "pk": 0
+   },
+   {
+    "name": "guid",
+    "type": "TEXT",
+    "notnull": true,
+    "default": "ab_generate_guid()",
+    "pk": 0
+   }
+  ],
+  "ABPersonSearchKey": [
+   {
+    "name": "person_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "SearchKey",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "NameOnlySearchKey",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABGroup": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalIdentifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "StoreID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalModificationTag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalRepresentation",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalUUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "guid",
+    "type": "TEXT",
+    "notnull": true,
+    "default": "ab_generate_guid()",
+    "pk": 0
+   }
+  ],
+  "ABGroupChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ExternalIdentifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "StoreID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "guid",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABAccount": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "AccountIdentifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Flags",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "DefaultSourceID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "guid",
+    "type": "TEXT",
+    "notnull": true,
+    "default": "ab_generate_guid()",
+    "pk": 0
+   }
+  ],
+  "ABGroupMembers": [
+   {
+    "name": "UID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "group_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "member_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "member_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABMultiValue": [
+   {
+    "name": "UID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "record_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "property",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "identifier",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "label",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "guid",
+    "type": "TEXT",
+    "notnull": true,
+    "default": "ab_generate_guid()",
+    "pk": 0
+   }
+  ],
+  "ABMultiValueLabel": [
+   {
+    "name": "value",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABMultiValueEntry": [
+   {
+    "name": "parent_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "key",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABMultiValueEntryKey": [
+   {
+    "name": "value",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABPhoneLastFour": [
+   {
+    "name": "multivalue_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "value",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABPersonMultiValueDeletes": [
+   {
+    "name": "record_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "property_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "identifier",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "record_uid",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "identifier_uid",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "FirstSortSectionCount": [
+   {
+    "name": "LanguageIndex",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Section",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "StoreID",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "number",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "LastSortSectionCount": [
+   {
+    "name": "LanguageIndex",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Section",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "StoreID",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "number",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "FirstSortSectionCountTotal": [
+   {
+    "name": "LanguageIndex",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Section",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Type",
+    "type": "INT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "number",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "LastSortSectionCountTotal": [
+   {
+    "name": "LanguageIndex",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Section",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Type",
+    "type": "INT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "number",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ClientCursor": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "latest_consumed_sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "latest_consumed_timestamp",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "client_identifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ClientSequence": [
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "client_identifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ClientCursorConsumed": [
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "consumed_entity_class",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "consumed_entity_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "consumed_change_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "client_identifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ]
+ },
+ "shape": {
+  "_SqliteDatabaseProperties": {
+   "key": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "value": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "ABStore": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Name": {
+    "null_rate": 0.333,
+    "types": [
+     "text"
+    ]
+   },
+   "ExternalIdentifier": {
+    "null_rate": 0.333,
+    "types": [
+     "text"
+    ]
+   },
+   "Type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ConstraintsPath": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ExternalModificationTag": {
+    "null_rate": 0.667,
+    "types": [
+     "text"
+    ]
+   },
+   "ExternalSyncTag": {
+    "null_rate": 0.333,
+    "types": [
+     "text"
+    ]
+   },
+   "StoreInternalIdentifier": {
+    "null_rate": 0.667,
+    "types": [
+     "text"
+    ]
+   },
+   "AccountID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Enabled": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "SyncData": {
+    "null_rate": 0.333,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   },
+   "MeIdentifier": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Capabilities": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "guid": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "LastSyncDate": {
+    "null_rate": 0.333,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "ABPerson": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "First": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Last": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Middle": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "FirstPhonetic": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "MiddlePhonetic": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "LastPhonetic": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "Organization": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "Department": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "Note": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "Kind": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Birthday": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "JobTitle": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "Nickname": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "Prefix": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "Suffix": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "FirstSort": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "LastSort": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "CreationDate": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ModificationDate": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "CompositeNameFallback": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ExternalIdentifier": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ExternalModificationTag": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ExternalUUID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "StoreID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "DisplayName": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ExternalRepresentation": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "FirstSortSection": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "LastSortSection": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "FirstSortLanguageIndex": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "LastSortLanguageIndex": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "PersonLink": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ImageURI": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "IsPreferredName": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "guid": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "PhonemeData": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "AlternateBirthday": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "MapsData": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "FirstPronunciation": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "MiddlePronunciation": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "LastPronunciation": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "OrganizationPhonetic": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "OrganizationPronunciation": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "PreviousFamilyName": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "PreferredLikenessSource": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "PreferredPersonaIdentifier": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "PreferredChannel": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "DowntimeWhitelist": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ImageType": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ImageHash": {
+    "null_rate": 0.5,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   }
+  },
+  "ABPersonSearchKey": {
+   "person_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "SearchKey": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "NameOnlySearchKey": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   }
+  },
+  "ABAccount": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "AccountIdentifier": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Flags": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "DefaultSourceID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "guid": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "ABMultiValue": {
+   "UID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "record_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "property": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "identifier": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "label": {
+    "null_rate": 0.333,
+    "types": [
+     "integer"
+    ]
+   },
+   "value": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "guid": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "ABMultiValueLabel": {
+   "value": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "ABPhoneLastFour": {
+   "multivalue_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "value": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "FirstSortSectionCount": {
+   "LanguageIndex": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Section": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "StoreID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "number": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "LastSortSectionCount": {
+   "LanguageIndex": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Section": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "StoreID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "number": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "FirstSortSectionCountTotal": {
+   "LanguageIndex": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Section": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "number": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "LastSortSectionCountTotal": {
+   "LanguageIndex": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Section": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "number": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "ClientCursor": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "store_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "latest_consumed_sequence_number": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "latest_consumed_timestamp": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "client_identifier": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  }
+ }
+}

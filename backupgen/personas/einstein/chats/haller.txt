@@ -1,0 +1,27 @@
+chat: haller
+with: haller
+service: SMS
+
+# Friedrich Haller, founding director of the Federal Office for Intellectual Property (the Patent Office).
+
+== 1902-06-16
+11:00 haller: Herr Einstein, the Federal Council has appointed you Technical Expert, third class, at 3,500 francs a year. Please report on 23 June.
+11:15 me: Thank you, Herr Direktor. I will be there.
+
+== 1902-06-23
+08:00 me: Reporting for duty, Herr Direktor.
+
+== 1904-09-16
+10:30 haller: Your appointment is made permanent, with a salary of 3,900 francs.
+10:40 me: Thank you, Herr Direktor.
+
+== 1906-03-10
+11:00 haller: You are promoted to Technical Expert, second class, from 1 April. Salary 4,500 francs.
+11:05 me: Thank you. I will try to deserve it.
+
+== 1909-07-06
+16:00 me: Herr Direktor, I submit my resignation. I have been appointed to the University of Zurich.
+16:30 haller: Accepted, with regret. Your last day will be 15 October.
+
+== 1909-10-15
+17:00 haller: Thank you for your service to the Office, Professor Einstein. Good luck in Zurich.

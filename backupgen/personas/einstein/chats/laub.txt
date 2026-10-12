@@ -1,0 +1,21 @@
+chat: laub
+with: laub
+service: iMessage
+
+# Jakob Laub, a young Würzburg physicist and Einstein's first scientific collaborator.
+
+== 1908-03-01
+18:00 laub: I must confess I'm astonished that you sit in an office eight hours a day. It's a joke of history.
+18:10 me: The office pays the rent, and the patents keep my mind sharp. Come to Bern and see.
+
+== 1908-04-02
+21:00 laub: I arrive on Saturday for three weeks.
+21:05 me: Good. We'll start on the electrodynamics of moving media.
+
+== 1908-05-13
+19:00 me: Both papers are with the Annalen. Not bad for three weeks.
+19:05 laub +emphasize
+
+== 1908-09-25
+20:00 laub: Have you read Minkowski's Cologne lecture? Space and time as one four-dimensional world.
+20:10 me: Very learned. Too learned for me, I think. The physics was already there.

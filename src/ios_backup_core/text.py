@@ -257,13 +257,17 @@ def clean_message_text(text: str) -> str:
 
     # Strip object replacement / replacement characters and trim
     text = text.replace('\ufffc', '').replace('\ufffd', '').strip()
+    before = text
     text = _RE_KIMMSG.sub('', text)
     text = _RE_UUID.sub('', text)
     text = _RE_MEDIA_FILE.sub('', text)
 
-    # Remove junk wrapper quotes, spaces, or newlines left from stripping
-    text = _RE_JUNK_START.sub('', text)
-    text = _RE_JUNK_END.sub('', text)
+    # Remove junk wrapper quotes left from stripping identifiers. Only when
+    # something was stripped: otherwise a message that simply starts or ends
+    # with a quotation mark (He said "yes") would lose it.
+    if text != before:
+        text = _RE_JUNK_START.sub('', text)
+        text = _RE_JUNK_END.sub('', text)
     text = text.strip()
 
     # Strip TypedStream string-length prefix artifact from raw text column.

@@ -1,0 +1,175 @@
+{
+ "database": "AddressBookImages.sqlitedb",
+ "ios": "26.5",
+ "build": "23F77",
+ "source": "iOS Simulator runtime 26.5 (definitions only)",
+ "harvested": "2026-10-10",
+ "pragmas": {
+  "user_version": 0,
+  "page_size": 1024,
+  "journal_mode": "wal",
+  "auto_vacuum": 0,
+  "encoding": "UTF-8"
+ },
+ "objects": [
+  {
+   "type": "table",
+   "name": "_SqliteDatabaseProperties",
+   "table": "_SqliteDatabaseProperties",
+   "sql": "CREATE TABLE _SqliteDatabaseProperties (key TEXT, value TEXT, UNIQUE(key))"
+  },
+  {
+   "type": "table",
+   "name": "ABFullSizeImage",
+   "table": "ABFullSizeImage",
+   "sql": "CREATE TABLE ABFullSizeImage(record_id, crop_x, crop_y, crop_width, data)"
+  },
+  {
+   "type": "table",
+   "name": "ABThumbnailImage",
+   "table": "ABThumbnailImage",
+   "sql": "CREATE TABLE ABThumbnailImage(record_id, format, derived_from_format, data)"
+  },
+  {
+   "type": "index",
+   "name": "ABFullSizeImageRecordIDIndex",
+   "table": "ABFullSizeImage",
+   "sql": "CREATE UNIQUE INDEX ABFullSizeImageRecordIDIndex ON ABFullSizeImage(record_id)"
+  },
+  {
+   "type": "index",
+   "name": "ABImageRecordIDFormatIndex",
+   "table": "ABThumbnailImage",
+   "sql": "CREATE UNIQUE INDEX ABImageRecordIDFormatIndex ON ABThumbnailImage(record_id, format)"
+  },
+  {
+   "type": "table",
+   "name": "ABAvatarRecipe",
+   "table": "ABAvatarRecipe",
+   "sql": "CREATE TABLE ABAvatarRecipe(record_id, data)"
+  },
+  {
+   "type": "index",
+   "name": "ABAvatarRecipeRecordIDIndex",
+   "table": "ABAvatarRecipe",
+   "sql": "CREATE UNIQUE INDEX ABAvatarRecipeRecordIDIndex ON ABAvatarRecipe(record_id)"
+  }
+ ],
+ "columns": {
+  "_SqliteDatabaseProperties": [
+   {
+    "name": "key",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABFullSizeImage": [
+   {
+    "name": "record_id",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "crop_x",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "crop_y",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "crop_width",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "data",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABThumbnailImage": [
+   {
+    "name": "record_id",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "format",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "derived_from_format",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "data",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ABAvatarRecipe": [
+   {
+    "name": "record_id",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "data",
+    "type": "",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ]
+ },
+ "shape": {
+  "_SqliteDatabaseProperties": {
+   "key": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "value": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  }
+ }
+}

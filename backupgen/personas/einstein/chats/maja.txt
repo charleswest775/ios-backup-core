@@ -1,0 +1,29 @@
+chat: maja
+with: maja
+service: iMessage
+
+# Maja Einstein: trained at the teachers' college in Aarau, then studied Romance languages in Berlin, Bern and Paris.
+
+== 1900-07-28
+18:00 maja: Congratulations on the diploma, brother!
+18:05 me: Thank you, sister. Your turn next.
+
+== 1902-03-15
+20:00 maja: Exams at Aarau are nearly done. Then a teacher, like you were for five minutes.
+20:02 me: Eight weeks in Winterthur, thank you very much.
+20:02 maja +laugh
+
+== 1904-05-14
+12:00 me: You're an aunt! Hans Albert.
+12:01 maja +love
+12:02 maja: Tante Maja. I like the sound of that.
+
+== 1907-06-20
+19:00 maja: The National Bank opened today. Switzerland finally has proper money.
+19:05 me: And I'll finally have proper francs to spend on books.
+
+# Maja earned her doctorate at the University of Bern in 1909; the exact day isn't recorded.
+== 1909-12-20
+17:00 me: Dr. Maja Einstein! The Chevalier au Cygne is lucky to have you.
+17:05 maja: Two doctors in the family. Mama is unbearable.
+17:05 me +laugh

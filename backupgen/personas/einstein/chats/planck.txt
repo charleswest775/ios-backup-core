@@ -1,0 +1,22 @@
+chat: planck
+with: planck
+service: iMessage
+
+# Max Planck, Berlin. He defended and extended the relativity paper at the German Physical Society on 23 March 1906.
+# They first met in person at Salzburg in September 1909.
+
+== 1906-03-24
+10:00 planck: Herr Einstein, I spoke on your paper on the electrodynamics of moving bodies at the Physical Society yesterday. It deserves the widest attention.
+10:30 me: Herr Professor, I'm honoured, and a little alarmed.
+
+== 1907-11-09
+12:00 planck: Laue tells me he very much enjoyed meeting you in Bern.
+12:10 me: Please tell him I'm sorry about the cigar.
+
+== 1909-09-20
+21:00 me: I'm in Salzburg. I look forward to meeting you tomorrow at last.
+21:05 planck: As do I.
+
+== 1909-09-22
+09:00 planck: It was a great pleasure. We disagree about light quanta, but I enjoyed disagreeing with you.
+09:15 me: The feeling is mutual, Herr Professor.

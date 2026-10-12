@@ -1,0 +1,216 @@
+chat: mom
+with: mom
+service: iMessage
+
+# Karin Lindqvist, Maren's mom, in Missoula. Writes in full sentences, signs off now and then.
+
+== 2024-07-05
+09:10 mom: How did Juniper do with the fireworks? Ours went on until midnight. Dad slept through it.
+09:25 me: She was under the bed in her vest. Theo read to her. She's ok this morning, very clingy
+09:26 mom: Poor girl. Give her a scratch from Grandma Karin.
+09:26 me +love
+
+== 2024-07-14
+16:40 mom: The raspberries are coming in like crazy. I wish I could mail you some.
+16:45 me: Freeze some for Christmas!!
+16:46 mom: Already on it. 6 bags so far.
+
+== 2024-07-19
+12:35 me: Called Dad! He sounded so happy. He said he's going to spend his birthday "re-staining the deck"
+12:40 mom: That's his idea of a party. I'm taking him to the Mexican place tonight, he doesn't know yet.
+12:40 me +laugh
+
+== 2024-08-13
+19:20 mom: Are you all set for Rainier? Do you have enough warm things? It gets cold up there at night even in August.
+19:30 me: Yes Mom 😊 We have the good sleeping bags and Theo has 4 hats
+19:31 mom: Good. Send pictures!
+
+== 2024-08-18
+20:05 me [photo:rainier-05]
+20:05 me: Skyline Trail yesterday. The meadows were full of flowers
+20:12 mom: Oh Maren!!! That is breathtaking. Is that the mountain right there?
+20:13 me: Yep, that's Rainier. It looked close enough to touch
+20:15 mom: Dad wants to know the elevation of where you were standing.
+20:16 me: About 6,800 ft at Panorama Point. Tell him I'll show him the map at Christmas
+20:16 mom +love
+
+== 2024-09-08
+15:00 mom: Fall piano students started this week. I have a new little one who only wants to play the Star Wars theme.
+15:05 me: Teach her the Star Wars theme!
+15:06 mom: I am. Then she has to learn a minuet. That's the deal.
+15:06 me +laugh
+
+== 2024-10-06
+10:00 mom: Theo sent me the picture of you two at the waterfall! You look so happy.
+10:05 me: It was such a good day. My legs hurt today though
+10:06 mom: Take a hot bath. With Epsom salts.
+
+== 2024-10-22
+07:00 mom: Happy birthday to my girl!! 32 years ago today you made me a mother. Best day. Love, Mom
+07:20 me: Thank you Mom 💕 Theo's making cardamom buns, your recipe
+07:21 mom: He asked me for it last week. He's a keeper.
+07:21 me +love
+
+== 2024-11-01
+08:30 me: Submitted the big Linden set yesterday! 71 sheets
+08:40 mom: I'm so proud of you. I don't know what a "sheet" is but 71 sounds like a lot.
+08:41 me +laugh
+
+== 2024-11-29
+11:30 mom: How was Thanksgiving in Bend? Did you have tamales?
+11:40 me: SO many tamales. Lucía made 4 dozen. And pumpkin flan. I said "gracias, está delicioso" about 30 times
+11:41 mom: That's very nice. Tell her hello from us.
+
+== 2024-12-12
+20:00 mom: What time do you land on the 21st? Dad wants to pick you up.
+20:02 me: 3:55pm, the direct one from PDX
+20:03 mom: He'll be there at 3:15. You know Dad.
+20:03 me +laugh
+
+== 2024-12-27
+21:10 me: Home safe. Thank you for the best Christmas. Theo already misses your meatballs
+21:12 mom: We miss you already. The house is so quiet. Dad is doing the puzzle alone.
+21:13 me +love
+
+== 2025-01-19
+20:30 mom: How was the snowshoe weekend? It's -8 here this morning.
+20:35 me [photo:hood-08]
+20:35 me: Perfect. Blue sky Sunday and Mt. Hood all to ourselves
+20:40 mom: Beautiful. Please don't fall off any mountains.
+20:41 me: We stayed on the very flat part of the mountain
+
+== 2025-02-24
+10:30 me: Mom! We got the duplex! We move in April
+10:32 mom: Oh honey that's wonderful. A yard for Juniper!
+10:33 mom: Dad wants to know if it has a garage for his tools when he visits.
+10:33 me: It has a shed. He can have the shed
+10:34 mom +love
+
+== 2025-03-16
+19:00 mom: Erik said he had the best time with you. He said Theo's bread is better than any bakery in Boise.
+19:05 me: Don't tell Erik's bakery friends
+19:05 mom +laugh
+
+== 2025-03-30
+07:30 me: Happy birthday Mom!! 🎂🌷 I love you. Call you tonight?
+07:45 mom: Thank you sweetheart. Yes call after 7, Dad is taking me to brunch and then I'm napping.
+07:45 me +love
+
+== 2025-04-12
+18:30 me: We're in!! Everything's in boxes but we're in
+18:35 mom: Send me a picture of the yard!
+18:40 mom: Never mind, Theo sent one. The lilac!!
+18:41 me: The lilac is going to bloom in like 2 weeks
+
+== 2025-05-01
+09:00 mom: The lilac?
+09:15 me: Blooming!! The whole yard smells like it. June sits under it
+09:15 mom +love
+
+== 2025-05-27
+19:30 me [photo:olympic-12]
+19:30 me: Lake Crescent on Sunday. The water is so clear you can see the rocks 20 feet down
+19:40 mom: That looks like the lakes up by Glacier. Gorgeous.
+19:41 me: Dad would love it here
+
+== 2025-06-20
+14:00 mom: Dad and I are so excited for August. What do you want for dinner on the 9th?
+14:10 me: Your meatballs. Obviously
+14:11 mom: Obviously. And huckleberry pie?
+14:11 me +emphasize
+
+== 2025-07-19
+08:00 me: Happy birthday to Dad! Calling at lunch
+08:05 mom: He's already out on the deck with his coffee. He's 67 today and still thinks he's 40.
+
+== 2025-08-09
+14:45 me: Just passed Lookout Pass. 2 hours out
+14:47 mom: The meatballs are on. Dad is pacing.
+16:55 me: Here! June would have loved this road trip but she's spoiled at home with Maya
+
+== 2025-08-12
+19:00 me [photo:yellowstone-23]
+19:00 me: Grand Canyon of the Yellowstone from Artist Point. Dad was right, it's even better than the paintings
+19:10 mom: Dad says "told you so". He's very pleased with himself.
+19:10 me +laugh
+
+== 2025-08-15
+12:30 me: Leaving Gardiner. See you around 5:30 your time?
+12:32 mom: Pie will be out of the oven by then.
+
+== 2025-08-16
+20:30 me: Home! June is on my lap. She's 41 pounds and thinks she's 10
+20:35 mom: Thank you for stopping both ways. It was the best week. Dad hasn't stopped talking about the bison pictures.
+20:36 me +love
+
+== 2025-09-06
+14:30 me: Linden ribbon cutting was today. Kids cut the ribbon and then ran straight to the hill
+14:40 mom: Theo sent a video. I watched it 5 times. My daughter built a hill!
+14:41 me: I designed a hill. Ray's crew built it
+14:41 mom: Details.
+14:42 me +laugh
+
+== 2025-09-21
+21:00 me [photo:craterlake-01]
+21:00 me: Crater Lake. It's really this blue
+21:05 mom: I don't believe you. That's a filter.
+21:06 me: No filter!! The lake is 1,943 ft deep, that's why it's so blue
+21:07 mom: Dad wants to go next summer. I think he's serious.
+
+== 2025-10-22
+07:00 mom: Happy birthday to my girl. 33! Love you more than all the raspberries. Love, Mom
+07:15 me: Love you Mom 💕
+07:16 mom: Did Theo make the buns?
+07:16 me: Of course
+
+== 2025-11-18
+16:15 me: Big presentation went great!
+16:20 mom: Of course it did! I knew it would. Dad says congratulations to the "river girl".
+16:21 me +love
+
+== 2025-12-15
+19:30 mom: Flight confirmed! Landing Monday the 22nd at 1:40.
+19:31 me: Theo's picking you up. He's going to make a sign
+19:32 mom: Please don't let him make a sign.
+19:32 me: He's already making the sign
+
+== 2025-12-28
+18:00 mom: Home safe. Thank you for the best Christmas. We love the duplex. Dad wants a shed like yours.
+18:02 me: Tell him to come build one with Theo next summer
+18:03 mom +love
+
+== 2026-01-12
+10:45 me: Mom! I got promoted. I'm an Associate now
+10:50 mom: Oh Maren!!! I'm so proud of you. I'm calling Grandma right now.
+10:50 me +love
+
+== 2026-02-16
+20:30 me [photo:joshuatree-01]
+20:30 me: Joshua Tree. These trees are so weird and I love them
+20:40 mom: They look like Dr. Seuss drew them!
+20:41 me: That's what everyone says!! Theo says it every day
+
+== 2026-03-28
+19:50 mom: Did Erik call you??
+19:51 me: Yes!!! I'm so happy
+19:52 mom: I'm already thinking about flowers. Jess wants wildflowers. You'll help, won't you?
+19:52 me: Obviously. It's literally my job
+19:53 mom +love
+
+== 2026-03-30
+07:00 me: Happy birthday Mom!! 🌷🎂
+07:15 mom: Thank you sweetheart! 64 and still teaching the Star Wars theme.
+07:15 me +laugh
+
+== 2026-05-25
+19:30 me [photo:northcascades-14]
+19:30 me: North Cascades this weekend. Diablo Lake is really this green
+19:40 mom: First blue, now green. What color will the next one be?
+19:41 me: Red rocks? Maybe Utah next year
+19:41 mom +like
+
+== 2026-06-21
+17:00 mom: Dad and I booked Crater Lake for August! The lodge! We're going to do the boat tour.
+17:05 me: YES!!! You're going to love it. Wear good shoes for Cleetwood
+17:06 mom: Dad already bought new shoes. He's breaking them in on the stairs.
+17:06 me +laugh
