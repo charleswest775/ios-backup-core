@@ -9,12 +9,15 @@ The BackupReader high-level API wires all extractors together for convenience.
 
 import os
 import plistlib
+import shutil
 import sqlite3
 import sys
 import tempfile
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, Protocol, runtime_checkable
+
+from ios_backup_core.db import connect_readonly
 
 # iphone_backup_decrypt is a soft dependency — only needed for encrypted backups.
 try:
@@ -159,6 +162,27 @@ class LocalBackupAccessor:
         self._file_cache[cache_key] = None
         return None
 
+    def get_database(self, relative_path: str, domain: str = "HomeDomain") -> Optional[str]:
+        """Return a path to a SQLite database, with its -wal beside it if it has one.
+
+        In an unencrypted backup every file is stored under its own hash, so a
+        database's -wal never sits next to it and SQLite would ignore it. When
+        the backup has a non-empty -wal, both are copied into the temp dir
+        under matching names; the backup itself is never written to. Decrypted
+        files already land side by side in the temp dir.
+        """
+        db_path = self.get_file(relative_path, domain)
+        if not db_path:
+            return None
+        wal_path = self.get_file(relative_path + "-wal", domain)
+        if not wal_path or wal_path == db_path + "-wal" or os.path.getsize(wal_path) == 0:
+            return db_path
+        cache_key = f"db:{domain}:{relative_path}"
+        if cache_key not in self._file_cache:
+            name = os.path.basename(relative_path) or "database"
+            self._file_cache[cache_key] = self._copy_with_wal(db_path, wal_path, name)
+        return self._file_cache[cache_key] or db_path
+
     def list_files(
         self,
         domain: Optional[str] = None,
@@ -193,7 +217,7 @@ class LocalBackupAccessor:
             return []
 
         try:
-            conn = sqlite3.connect(manifest)
+            conn = connect_readonly(manifest, self)
             query = "SELECT fileID, domain, relativePath FROM Files WHERE 1=1"
             params = []
             if domain:
@@ -215,7 +239,6 @@ class LocalBackupAccessor:
 
     def cleanup(self) -> None:
         """Remove the temporary directory used for extracted files."""
-        import shutil
         if os.path.exists(self._temp_dir):
             shutil.rmtree(self._temp_dir, ignore_errors=True)
 
@@ -231,10 +254,31 @@ class LocalBackupAccessor:
         if self._manifest_db_path and os.path.exists(self._manifest_db_path):
             return self._manifest_db_path
         manifest_path = os.path.join(self._backup_dir, "Manifest.db")
-        if os.path.exists(manifest_path):
-            self._manifest_db_path = manifest_path
-            return manifest_path
-        return None
+        if not os.path.exists(manifest_path):
+            return None
+        wal_path = manifest_path + "-wal"
+        if os.path.isfile(wal_path) and os.path.getsize(wal_path) > 0:
+            # Finder left changes in the WAL (an interrupted backup, say).
+            copy = self._copy_with_wal(manifest_path, wal_path, "Manifest.db")
+            manifest_path = copy or manifest_path
+        self._manifest_db_path = manifest_path
+        return manifest_path
+
+    def _copy_with_wal(self, db_path: str, wal_path: str, name: str) -> Optional[str]:
+        """Copy a database and its WAL into the temp dir as <name> and <name>-wal."""
+        dest_dir = tempfile.mkdtemp(prefix="db_", dir=self._temp_dir)
+        dest = os.path.join(dest_dir, name)
+        try:
+            shutil.copyfile(db_path, dest)
+            shutil.copyfile(wal_path, dest + "-wal")
+        except OSError as e:
+            print(
+                f"[backup] could not copy {name} to read its WAL, reading it without: {e}",
+                file=sys.stderr, flush=True,
+            )
+            shutil.rmtree(dest_dir, ignore_errors=True)
+            return None
+        return dest
 
     def _get_manifest_conn(self) -> Optional[sqlite3.Connection]:
         if self._manifest_conn is not None:
@@ -243,9 +287,7 @@ class LocalBackupAccessor:
         if not manifest:
             return None
         try:
-            conn = sqlite3.connect(manifest)
-            conn.execute("PRAGMA query_only = TRUE")
-            conn.execute("PRAGMA synchronous = OFF")
+            conn = connect_readonly(manifest, self)
             conn.execute("PRAGMA cache_size = -10000")
             conn.execute("PRAGMA temp_store = MEMORY")
             self._manifest_conn = conn

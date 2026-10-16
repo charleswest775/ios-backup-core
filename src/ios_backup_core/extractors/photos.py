@@ -14,9 +14,9 @@ import os
 import re
 import sqlite3
 import sys
-from pathlib import Path
 from typing import Optional
 
+from ios_backup_core.db import connect_readonly, get_database
 from ios_backup_core.timestamps import APPLE_EPOCH
 
 # ZASSET.ZKIND → kind label
@@ -108,34 +108,17 @@ class PhotoExtractor:
 
     def _open_photos_db(self, backup) -> Optional[sqlite3.Connection]:
         """Open Photos.sqlite from the backup. Returns a connection or None."""
-        db_path = backup.get_file("Media/PhotoData/Photos.sqlite", domain="CameraRollDomain")
+        db_path = get_database(backup, "Media/PhotoData/Photos.sqlite", domain="CameraRollDomain")
         if not db_path or not os.path.exists(db_path):
-            db_path = backup.get_file("PhotoData/Photos.sqlite", domain="CameraRollDomain")
+            db_path = get_database(backup, "PhotoData/Photos.sqlite", domain="CameraRollDomain")
         if not db_path or not os.path.exists(db_path):
             return None
-        # Photos.sqlite is a WAL database and backups don't include its -shm.
-        # A "mode=ro" connection still needs a -shm: on Linux SQLite creates one
-        # next to the file (inside the user's backup folder for unencrypted
-        # backups); on macOS the open fails on the first query. With no -wal
-        # there is nothing beyond the main file to read, so open it
-        # "immutable=1", which never touches -wal/-shm. Only when a -wal sits
-        # beside it try "mode=ro" first, so its rows are read too.
-        base = Path(db_path).resolve().as_uri()
-        uris = [f"{base}?mode=ro&immutable=1"]
-        if os.path.exists(db_path + "-wal"):
-            uris.insert(0, f"{base}?mode=ro")
-        for uri in uris:
-            conn = None
-            try:
-                conn = sqlite3.connect(uri, uri=True)
-                conn.execute("SELECT 1 FROM sqlite_master LIMIT 1").fetchone()
-            except sqlite3.Error:
-                if conn is not None:
-                    conn.close()
-                continue
-            conn.row_factory = sqlite3.Row
-            return conn
-        return None
+        try:
+            conn = connect_readonly(db_path, backup)
+        except sqlite3.Error:
+            return None
+        conn.row_factory = sqlite3.Row
+        return conn
 
     def _find_album_junction(self, conn: sqlite3.Connection):
         """Dynamically locate the junction table between ZGENERICALBUM and ZASSET.

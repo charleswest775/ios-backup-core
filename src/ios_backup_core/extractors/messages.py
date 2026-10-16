@@ -5,8 +5,8 @@ Extracted from openextract/python/messages.py:MessageExtractor.
 Changes:
   - Imports replaced with ios_backup_core.* equivalents
   - Export methods (_export_*, get_attachment) removed — UI concern
-  - _pragma_cache and _indexed_dbs moved from module-level dicts into
-    instance attributes to avoid cross-instance state
+  - _pragma_cache moved from a module-level dict into an instance
+    attribute to avoid cross-instance state
   - _count_cache moved into instance
   - _tlog() calls removed — library is silent
   - Backup parameter typed as BackupAccessor protocol
@@ -17,6 +17,7 @@ import sqlite3
 from typing import Optional
 
 from ios_backup_core.contacts import resolve_contact
+from ios_backup_core.db import connect_readonly, get_database
 from ios_backup_core.schema import detect_message_schema
 from ios_backup_core.text import (
     _type_from_bundle_id,
@@ -43,48 +44,21 @@ class MessageExtractor:
         self._count_cache: dict[tuple, int] = {}
         # Cache of sms.db column sets, keyed by db_path
         self._pragma_cache: dict[str, dict] = {}
-        # Set of db_paths for which we've already created performance indexes
-        self._indexed_dbs: set[str] = set()
 
     def _get_sms_db(self, backup) -> Optional[str]:
-        db_path = backup.get_file(self.SMS_DB_PATH, domain="HomeDomain")
-        if db_path:
-            # Pre-extract WAL/SHM so SQLite merges recent uncommitted writes
-            backup.get_file(self.SMS_DB_PATH + "-wal", domain="HomeDomain")
-            backup.get_file(self.SMS_DB_PATH + "-shm", domain="HomeDomain")
-        return db_path
+        # Brings sms.db-wal along, so SQLite merges recent uncommitted writes
+        return get_database(backup, self.SMS_DB_PATH, domain="HomeDomain")
 
-    def _get_conn(self, db_path: str) -> sqlite3.Connection:
+    def _get_conn(self, db_path: str, backup=None) -> sqlite3.Connection:
+        # Read-only: the backup must never change. sms.db already indexes what
+        # the queries here need (message.date, chat_message_join's primary key).
         if db_path not in self._connections:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA synchronous = OFF")
             conn.execute("PRAGMA cache_size = -50000")
             conn.execute("PRAGMA temp_store = MEMORY")
-            self._ensure_indexes(conn, db_path)
-            conn.execute("PRAGMA query_only = TRUE")
             self._connections[db_path] = conn
         return self._connections[db_path]
-
-    def _ensure_indexes(self, conn, db_path: str) -> None:
-        """Create performance indexes on sms.db the first time it is opened.
-
-        Uses IF NOT EXISTS — idempotent. Errors silently ignored for read-only
-        filesystems.
-        """
-        if db_path in self._indexed_dbs:
-            return
-        try:
-            conn.executescript("""
-                CREATE INDEX IF NOT EXISTS _oe_cmj_chat
-                    ON chat_message_join (chat_id, message_id);
-                CREATE INDEX IF NOT EXISTS _oe_msg_date
-                    ON message (date);
-            """)
-            conn.commit()
-        except Exception:
-            pass
-        self._indexed_dbs.add(db_path)
 
     def list_conversations(self, backup, contacts: dict) -> dict:
         """List all conversations with preview info."""
@@ -92,7 +66,7 @@ class MessageExtractor:
         if not db_path:
             return {"conversations": [], "error": "sms.db not found"}
 
-        conn = self._get_conn(db_path)
+        conn = self._get_conn(db_path, backup)
         conversations = []
         try:
             rows = conn.execute("""
@@ -191,7 +165,7 @@ class MessageExtractor:
         if not db_path:
             return {"messages": [], "error": "sms.db not found"}
 
-        conn = self._get_conn(db_path)
+        conn = self._get_conn(db_path, backup)
         messages = []
 
         try:
@@ -439,7 +413,7 @@ class MessageExtractor:
         if not db_path:
             return {"results": []}
 
-        conn = self._get_conn(db_path)
+        conn = self._get_conn(db_path, backup)
 
         # Detect nanosecond timestamps for date conversion
         if db_path not in self._pragma_cache:

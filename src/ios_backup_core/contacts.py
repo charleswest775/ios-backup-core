@@ -10,6 +10,8 @@ import re
 import sqlite3
 from typing import TYPE_CHECKING
 
+from ios_backup_core.db import connect_readonly, get_database
+
 if TYPE_CHECKING:
     from ios_backup_core.backup import BackupAccessor
 
@@ -127,16 +129,14 @@ class ContactResolver:
             return self._cache[udid]
 
         contacts: dict = {}
-        db_path = backup.get_file(self.ADDRESS_BOOK_PATH, domain="HomeDomain")
+        db_path = get_database(backup, self.ADDRESS_BOOK_PATH, domain="HomeDomain")
         if not db_path:
             self._cache[udid] = contacts
             return contacts
 
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
-            conn.execute("PRAGMA synchronous = OFF")
             conn.execute("PRAGMA cache_size = -10000")
             conn.execute("PRAGMA temp_store = MEMORY")
 
@@ -189,13 +189,13 @@ class ContactResolver:
 
     def list_contacts(self, backup) -> dict:
         """Get full contact list with all details."""
-        db_path = backup.get_file(self.ADDRESS_BOOK_PATH, domain="HomeDomain")
+        db_path = get_database(backup, self.ADDRESS_BOOK_PATH, domain="HomeDomain")
         if not db_path:
             return {"contacts": []}
 
         contact_list = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
 
             persons = conn.execute("""

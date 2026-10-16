@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from ios_backup_core.contacts import clean_phone_number, resolve_contact
+from ios_backup_core.db import connect_readonly, get_database
 from ios_backup_core.timestamps import APPLE_EPOCH_OFFSET, apple_to_iso
 
 
@@ -50,8 +51,7 @@ class CallExtractor:
     def _find_db_paths(self, backup) -> list:
         """Return all candidate call history DB paths by searching the manifest.
 
-        Also extracts any accompanying WAL/SHM files so SQLite can read
-        un-checkpointed records automatically.
+        Each comes with its -wal, so SQLite reads un-checkpointed records too.
         """
         candidates = []
         seen_hashes: set = set()
@@ -63,29 +63,23 @@ class CallExtractor:
             file_hash = entry.get("hash", "")
 
             if not self._is_db_path(rel_path):
-                if rel_path.endswith("-wal") or rel_path.endswith("-shm"):
-                    backup.get_file(rel_path, domain=domain)
                 continue
 
             if file_hash in seen_hashes:
                 continue
 
-            p = backup.get_file(rel_path, domain=domain)
+            p = get_database(backup, rel_path, domain=domain)
             if p:
                 seen_hashes.add(file_hash)
                 candidates.append(p)
-                backup.get_file(rel_path + "-wal", domain=domain)
-                backup.get_file(rel_path + "-shm", domain=domain)
 
         return candidates
 
-    def _read_db(self, db_path: str, seen_ids: set) -> list:
+    def _read_db(self, db_path: str, seen_ids: set, backup=None) -> list:
         """Read all call records from a single DB, skipping IDs already seen."""
         rows_out = []
-        conn = sqlite3.connect(db_path)
+        conn = connect_readonly(db_path, backup)
         conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA query_only = TRUE")
-        conn.execute("PRAGMA synchronous = OFF")
         conn.execute("PRAGMA cache_size = -10000")
         conn.execute("PRAGMA temp_store = MEMORY")
         cursor = conn.cursor()
@@ -125,18 +119,14 @@ class CallExtractor:
 
     def _read_facetime_from_sms(self, backup, contacts: dict) -> list:
         """Read FaceTime calls from sms.db (item_type 1=video, 2=audio)."""
-        db_path = backup.get_file("Library/SMS/sms.db", domain="HomeDomain")
+        db_path = get_database(backup, "Library/SMS/sms.db", domain="HomeDomain")
         if not db_path:
             return []
 
-        backup.get_file("Library/SMS/sms.db-wal", domain="HomeDomain")
-        backup.get_file("Library/SMS/sms.db-shm", domain="HomeDomain")
-
         rows_out = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
 
             sample = conn.execute(
                 "SELECT date FROM message WHERE item_type IN (1,2) LIMIT 1"
@@ -183,15 +173,14 @@ class CallExtractor:
 
     def _read_voicemails_as_calls(self, backup, contacts: dict) -> list:
         """Read voicemail.db and return each entry as a synthetic call record."""
-        db_path = backup.get_file("Library/Voicemail/voicemail.db", domain="HomeDomain")
+        db_path = get_database(backup, "Library/Voicemail/voicemail.db", domain="HomeDomain")
         if not db_path:
             return []
 
         rows_out = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
             rows = conn.execute("""
                 SELECT ROWID, sender, date, duration
                 FROM voicemail
@@ -249,7 +238,7 @@ class CallExtractor:
         errors = []
         for db_path in db_paths:
             try:
-                all_rows.extend(self._read_db(db_path, seen_ids))
+                all_rows.extend(self._read_db(db_path, seen_ids, backup))
             except Exception as e:
                 errors.append(str(e))
 
