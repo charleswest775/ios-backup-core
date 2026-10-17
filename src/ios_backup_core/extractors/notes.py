@@ -11,6 +11,7 @@ Changes:
 import gzip
 import sqlite3
 
+from ios_backup_core.db import connect_readonly, get_database
 from ios_backup_core.protobuf import extract_protobuf_strings
 from ios_backup_core.timestamps import apple_to_iso
 
@@ -37,43 +38,42 @@ class NoteExtractor:
     def list_notes(self, backup) -> dict:
         """List all notes with content."""
         # Try legacy notes.sqlite first (iOS < 9 / older path)
-        db_path = backup.get_file(self.NOTES_DB_PATH, domain="HomeDomain")
+        db_path = get_database(backup, self.NOTES_DB_PATH, domain="HomeDomain")
 
         notes = []
 
         if db_path:
-            notes = self._parse_legacy_notes(db_path)
+            notes = self._parse_legacy_notes(db_path, backup)
 
         if not notes:
             # Try the group container path for newer iOS via manifest scan.
             files = backup.list_files(path_like="%NoteStore.sqlite")
             for f in files:
-                extracted = backup.get_file(f["path"], domain=f["domain"])
+                extracted = get_database(backup, f["path"], domain=f["domain"])
                 if extracted:
-                    notes = self._parse_notestore(extracted)
+                    notes = self._parse_notestore(extracted, backup)
                     if notes:
                         break
 
         if not notes:
             # Encrypted backups: Manifest.db is encrypted so list_files() returns
             # nothing. Try the well-known iOS 11+ group container path directly.
-            notestore_path = backup.get_file(
+            notestore_path = get_database(
+                backup,
                 "NoteStore.sqlite",
                 domain="AppDomainGroup-group.com.apple.notes",
             )
             if notestore_path:
-                notes = self._parse_notestore(notestore_path)
+                notes = self._parse_notestore(notestore_path, backup)
 
         return {"notes": notes}
 
-    def _parse_legacy_notes(self, db_path: str) -> list:
+    def _parse_legacy_notes(self, db_path: str, backup=None) -> list:
         """Parse the older notes.sqlite format."""
         notes = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
-            conn.execute("PRAGMA synchronous = OFF")
             conn.execute("PRAGMA cache_size = -10000")
             conn.execute("PRAGMA temp_store = MEMORY")
 
@@ -111,14 +111,12 @@ class NoteExtractor:
 
         return notes
 
-    def _parse_notestore(self, db_path: str) -> list:
+    def _parse_notestore(self, db_path: str, backup=None) -> list:
         """Parse the newer NoteStore.sqlite format (iOS 11+)."""
         notes = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
-            conn.execute("PRAGMA synchronous = OFF")
             conn.execute("PRAGMA cache_size = -10000")
             conn.execute("PRAGMA temp_store = MEMORY")
 

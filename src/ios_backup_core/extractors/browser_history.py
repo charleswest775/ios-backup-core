@@ -14,6 +14,7 @@ import sys
 from datetime import datetime, timezone
 from urllib.parse import urlparse
 
+from ios_backup_core.db import connect_readonly, get_database
 from ios_backup_core.timestamps import apple_to_iso, firefox_to_iso
 
 
@@ -36,25 +37,18 @@ class BrowserHistoryExtractor:
         "AppDomainGroup-group.org.mozilla.ios.Fennec",
     ]
 
-    def _ensure_wal(self, backup, relative_path: str, domain: str) -> None:
-        """Extract WAL/SHM files alongside the main DB so SQLite can merge them."""
-        backup.get_file(relative_path + "-wal", domain=domain)
-        backup.get_file(relative_path + "-shm", domain=domain)
-
     def _find_all_firefox_dbs(self, backup) -> list:
         """Return list of (db_path, schema) for all Firefox history databases found."""
         found = []
         for domain in self.FIREFOX_DOMAINS:
             for path in self.FIREFOX_LEGACY_PATHS:
-                db_path = backup.get_file(path, domain=domain)
+                db_path = get_database(backup, path, domain=domain)
                 if db_path:
-                    self._ensure_wal(backup, path, domain)
                     found.append((db_path, "legacy"))
                     break
             for path in self.FIREFOX_PLACES_PATHS:
-                db_path = backup.get_file(path, domain=domain)
+                db_path = get_database(backup, path, domain=domain)
                 if db_path:
-                    self._ensure_wal(backup, path, domain)
                     found.append((db_path, "places"))
                     break
         if not found:
@@ -63,21 +57,19 @@ class BrowserHistoryExtractor:
                     for f in backup.list_files(path_like=pattern):
                         domain = f.get("domain", "")
                         if "mozilla" in domain.lower() or "firefox" in domain.lower():
-                            db_path = backup.get_file(f["path"], domain=domain)
+                            db_path = get_database(backup, f["path"], domain=domain)
                             if db_path:
-                                self._ensure_wal(backup, f["path"], domain)
                                 found.append((db_path, schema))
             except Exception:
                 pass
         return found
 
     def _has_safari_visits(self, backup) -> bool:
-        db_path = backup.get_file(self.SAFARI_HISTORY_PATH, domain=self.SAFARI_DOMAIN)
+        db_path = get_database(backup, self.SAFARI_HISTORY_PATH, domain=self.SAFARI_DOMAIN)
         if not db_path:
             return False
-        self._ensure_wal(backup, self.SAFARI_HISTORY_PATH, self.SAFARI_DOMAIN)
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             count = conn.execute("SELECT COUNT(*) FROM history_visits").fetchone()[0]
             conn.close()
             return count > 0
@@ -87,7 +79,7 @@ class BrowserHistoryExtractor:
     def _has_firefox_visits(self, backup) -> bool:
         for db_path, schema in self._find_all_firefox_dbs(backup):
             try:
-                conn = sqlite3.connect(db_path)
+                conn = connect_readonly(db_path, backup)
                 table = "visits" if schema == "legacy" else "moz_historyvisits"
                 count = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
                 conn.close()
@@ -170,17 +162,14 @@ class BrowserHistoryExtractor:
 
     def _get_safari_history(self, backup) -> tuple:
         """Get Safari browser history. Returns (visits_list, total_count)."""
-        db_path = backup.get_file(self.SAFARI_HISTORY_PATH, domain=self.SAFARI_DOMAIN)
+        db_path = get_database(backup, self.SAFARI_HISTORY_PATH, domain=self.SAFARI_DOMAIN)
         if not db_path:
             return [], 0
-        self._ensure_wal(backup, self.SAFARI_HISTORY_PATH, self.SAFARI_DOMAIN)
 
         visits = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
-            conn.execute("PRAGMA synchronous = OFF")
             conn.execute("PRAGMA cache_size = -10000")
             conn.execute("PRAGMA temp_store = MEMORY")
             cursor = conn.cursor()
@@ -235,14 +224,13 @@ class BrowserHistoryExtractor:
 
         return visits, len(visits)
 
-    def _read_firefox_db(self, db_path: str, schema: str, id_prefix: str) -> list:
+    def _read_firefox_db(self, db_path: str, schema: str, id_prefix: str,
+                         backup=None) -> list:
         """Read visits from a single Firefox database."""
         visits = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
-            conn.execute("PRAGMA synchronous = OFF")
             conn.execute("PRAGMA cache_size = -10000")
             conn.execute("PRAGMA temp_store = MEMORY")
             cursor = conn.cursor()
@@ -295,7 +283,7 @@ class BrowserHistoryExtractor:
         legacy_visits = []
 
         for db_path, schema in dbs:
-            visits = self._read_firefox_db(db_path, schema, schema[0])
+            visits = self._read_firefox_db(db_path, schema, schema[0], backup)
             if schema == "places":
                 places_visits.extend(visits)
             else:

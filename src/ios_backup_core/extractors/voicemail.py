@@ -12,6 +12,7 @@ import sqlite3
 from datetime import datetime, timezone
 
 from ios_backup_core.contacts import resolve_contact
+from ios_backup_core.db import connect_readonly, get_database
 
 
 class VoicemailExtractor:
@@ -31,7 +32,7 @@ class VoicemailExtractor:
         A voicemail.db that is listed in the backup but can't be read is an
         ``error``, with no ``empty_reason``.
         """
-        db_path = backup.get_file(self.VOICEMAIL_DB_PATH, domain="HomeDomain")
+        db_path = get_database(backup, self.VOICEMAIL_DB_PATH, domain="HomeDomain")
         if not db_path:
             if backup.list_files(domain="HomeDomain", path_like=self.VOICEMAIL_DB_PATH):
                 return {
@@ -45,7 +46,7 @@ class VoicemailExtractor:
 
         voicemails = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
 
