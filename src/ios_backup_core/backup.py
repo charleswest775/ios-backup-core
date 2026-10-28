@@ -7,8 +7,11 @@ Electron/sidecar-specific pieces removed. Logging stripped — library is silent
 The BackupReader high-level API wires all extractors together for convenience.
 """
 
+import hashlib
 import os
 import plistlib
+import posixpath
+import re
 import shutil
 import sqlite3
 import sys
@@ -128,10 +131,7 @@ class LocalBackupAccessor:
             cached = self._file_cache[cache_key]
             return cached if cached else None
 
-        output_path = os.path.join(
-            self._temp_dir,
-            relative_path.replace("/", "--").replace("\\", "--"),
-        )
+        output_path = os.path.join(self._temp_dir, _temp_name(domain, relative_path))
 
         if self._encrypted and self._decrypted_backup:
             try:
@@ -308,6 +308,29 @@ class LocalBackupAccessor:
             return row[0] if row else None
         except Exception:
             return None
+
+
+_SQLITE_COMPANIONS = ("-wal", "-shm", "-journal")
+
+
+def _temp_name(domain: str, relative_path: str) -> str:
+    """A short file name, legal on every OS, for a backup file copied to the temp dir.
+
+    Backup paths can be long and can hold characters Windows forbids in a file
+    name ("How was an iPhone set up?.pdf"), so the name is a SHA-1 of the domain
+    and path, plus the original extension for callers that read it. A
+    database's -wal, -shm or -journal gets its database's name plus that
+    suffix, so it lands beside the database where SQLite looks for it.
+    """
+    base, companion = relative_path, ""
+    for suffix in _SQLITE_COMPANIONS:
+        if relative_path.endswith(suffix):
+            base, companion = relative_path[: -len(suffix)], suffix
+            break
+    digest = hashlib.sha1(f"{domain}-{base}".encode()).hexdigest()
+    ext = posixpath.splitext(posixpath.basename(base.replace("\\", "/")))[1]
+    ext = re.sub(r"[^A-Za-z0-9]", "", ext)[:16]
+    return f"{digest}.{ext}{companion}" if ext else digest + companion
 
 
 # ---------------------------------------------------------------------------

@@ -139,11 +139,11 @@ def _wal_database(tmp_path: Path) -> tuple:
     return main, wal
 
 
-def _backup_with(tmp_path: Path, files: dict) -> Path:
+def _backup_with(tmp_path: Path, files: dict, password=None) -> Path:
     device = Device(name="Test iPhone", product_type="iPhone15,4", product_name="iPhone 15",
                     ios="17.3", build="21D50", phone_number="+44 7700 900001")
     writer = BackupWriter(tmp_path / "out", device, datetime(2024, 2, 1, tzinfo=timezone.utc),
-                          "17.3", password=None, seed=1)
+                          "17.3", password=password, seed=1)
     for rel_path, data in files.items():
         writer.add_file("HomeDomain", rel_path, data)
     return writer.finalize()
@@ -170,6 +170,18 @@ def test_a_wal_in_the_backup_is_merged_from_a_copy(tmp_path, read_only):
     else:
         assert _rows(open_local_backup(str(backup_dir))) == [1, 2]
     assert _snapshot(backup_dir) == before
+
+
+def test_a_decrypted_wal_lands_beside_its_database(tmp_path):
+    """Decrypted files get hashed names in the temp dir. A database's -wal gets
+    the matching name, so the database is read where it was decrypted to
+    instead of being copied a second time (sms.db can run to gigabytes)."""
+    main, wal = _wal_database(tmp_path)
+    backup_dir = _backup_with(tmp_path, {TEST_DB: main, TEST_DB + "-wal": wal}, password="pw")
+    accessor = open_local_backup(str(backup_dir), password="pw")
+    db_path = accessor.get_database(TEST_DB)
+    assert db_path == accessor.get_file(TEST_DB), "read in place, not copied"
+    assert _rows(accessor) == [1, 2]
 
 
 def test_a_stray_wal_beside_a_backup_file_is_left_alone(tmp_path):
