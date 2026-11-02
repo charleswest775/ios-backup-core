@@ -213,6 +213,10 @@ class MessageExtractor:
                     date_clauses.append("m.date <= ?")
                     date_params.append(apple_to_val)
             where_extra = (" AND " + " AND ".join(date_clauses)) if date_clauses else ""
+            # The date clauses need their own message join in the page subquery.
+            # Without it m.date is the outer row's date, so LIMIT/OFFSET would
+            # page the whole chat instead of the messages in the date range.
+            page_join = "INNER JOIN message m ON m.ROWID = cmj.message_id" if date_clauses else ""
 
             rows = conn.execute(f"""
                 SELECT {', '.join(select_parts)}
@@ -221,6 +225,7 @@ class MessageExtractor:
                 WHERE m.ROWID IN (
                     SELECT DISTINCT cmj.message_id
                     FROM chat_message_join cmj
+                    {page_join}
                     WHERE cmj.chat_id = ?{where_extra}
                     ORDER BY cmj.message_id DESC
                     LIMIT ? OFFSET ?
