@@ -1,0 +1,10 @@
+folder: Work
+created: 2022-01-20 16:02
+modified: 2024-01-15 09:30
+pinned: yes
+
+Release checklist
+[x] Tag the build
+[x] Write the notes
+[ ] Tell support
+Ask Jordan about the "big" migration.

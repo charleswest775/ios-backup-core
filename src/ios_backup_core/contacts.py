@@ -10,6 +10,8 @@ import re
 import sqlite3
 from typing import TYPE_CHECKING
 
+from ios_backup_core.db import connect_readonly, get_database
+
 if TYPE_CHECKING:
     from ios_backup_core.backup import BackupAccessor
 
@@ -55,14 +57,17 @@ def add_phone_suffix_key(contacts: dict, phone: str, name: str) -> None:
         contacts[key] = ""
 
 
-def clean_phone_number(address: str) -> str:
+def clean_phone_number(address) -> str:
     """Strip non-numeric characters for better matching, except '+'.
+
+    Accepts non-strings: SQLite's dynamic typing means CallHistory's ZADDRESS
+    comes back as an int for all-digit addresses such as SMS short codes.
 
     Source: CallExtractor._clean_phone_number() in calls.py.
     """
-    if not address:
+    if address is None or address == "":
         return ""
-    return ''.join(c for c in address if c.isdigit() or c == '+')
+    return ''.join(c for c in str(address) if c.isdigit() or c == '+')
 
 
 def resolve_contact(identifier: str, contacts: dict) -> str:
@@ -73,8 +78,9 @@ def resolve_contact(identifier: str, contacts: dict) -> str:
     case-insensitive match. Returns empty string (not 'Unknown') when not found
     so callers can apply their own fallback.
     """
-    if not identifier:
+    if identifier is None or identifier == "":
         return ""
+    identifier = str(identifier)
 
     # Exact match
     if identifier in contacts:
@@ -153,16 +159,14 @@ class ContactResolver:
             return self._cache[udid]
 
         contacts: dict = {}
-        db_path = backup.get_file(self.ADDRESS_BOOK_PATH, domain="HomeDomain")
+        db_path = get_database(backup, self.ADDRESS_BOOK_PATH, domain="HomeDomain")
         if not db_path:
             self._cache[udid] = contacts
             return contacts
 
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
-            conn.execute("PRAGMA synchronous = OFF")
             conn.execute("PRAGMA cache_size = -10000")
             conn.execute("PRAGMA temp_store = MEMORY")
 
@@ -216,13 +220,13 @@ class ContactResolver:
 
     def list_contacts(self, backup) -> dict:
         """Get full contact list with all details."""
-        db_path = backup.get_file(self.ADDRESS_BOOK_PATH, domain="HomeDomain")
+        db_path = get_database(backup, self.ADDRESS_BOOK_PATH, domain="HomeDomain")
         if not db_path:
             return {"contacts": []}
 
         contact_list = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
 
             persons = conn.execute("""

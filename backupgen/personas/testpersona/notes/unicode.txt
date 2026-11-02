@@ -1,0 +1,7 @@
+folder: Work
+created: 2025-03-09 08:00
+
+Ünïcödé — títle 🎉
+Grüß dich. שלום. 你好. Emoji in the middle 👩🏽‍💻 of a line.
+
+A blank line above, and a long line: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

@@ -69,6 +69,9 @@ class TestCallStatus:
     def test_missing_values(self):
         assert _call_status("incoming", None, None) == "missed"
 
+    def test_unanswered_incoming_with_duration_is_missed(self):
+        assert _call_status("incoming", 0, 12.0) == "missed"
+
 
 class TestCleanText:
     def test_strips_control_and_private_use(self):

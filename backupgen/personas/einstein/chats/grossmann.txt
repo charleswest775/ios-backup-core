@@ -1,0 +1,40 @@
+chat: grossmann
+with: grossmann
+service: iMessage
+
+# Marcel Grossmann: ETH classmate. His father recommended Einstein to the Patent Office director in 1901.
+
+== 1901-04-14
+19:00 me: Your father wrote to Haller about me. I don't know how to thank you both.
+19:10 grossmann: Get the job and that's thanks enough.
+
+== 1901-07-30
+20:30 me: The Frauenfeld post went to you! Congratulations, they chose well.
+20:35 grossmann: I'm sorry it wasn't you too, Albert.
+20:36 me: One of us employed is a start.
+
+== 1901-12-18
+18:00 me: Applied to the Patent Office today. Fingers crossed for the federal government.
+
+== 1902-06-16
+18:20 me: I'm in! Technical Expert, third class. Tell your father he was right about me.
+18:25 grossmann +love
+
+== 1905-04-30
+22:40 me: Finished my dissertation tonight. It's dedicated to you.
+22:45 grossmann: To me? Albert, I'm honoured.
+22:46 me: Your lecture notes got me through the Poly. It's the least I can do.
+
+# Grossmann became professor of descriptive geometry at the ETH in 1907 (month not found).
+== 1907-07-15
+19:00 me: Professor Grossmann! The Poly finally knows what it has.
+19:05 grossmann: And you still at the Patent Office. The world is upside down.
+
+== 1908-01-20
+21:00 me: Is anything open at the Technikum in Winterthur? I'd like to teach again.
+21:10 grossmann: I'll ask around this week.
+
+== 1909-05-07
+14:00 grossmann: Associate professor at the University of Zurich! Welcome back.
+14:05 me: We'll have coffee every week, I promise.
+14:05 grossmann +love

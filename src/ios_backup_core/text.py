@@ -1,17 +1,18 @@
 """
 Attributed body parsing and message text cleanup.
 
-Extracted verbatim from messages.py. All parsing logic is battle-tested
-against real iPhone backups — do not rewrite.
+``attributedBody`` TypedStream blobs are deserialized with ``pytypedstream``;
+bplist NSKeyedArchiver uses ``plistlib``.
 """
 
 import plistlib
 import re
 from typing import Optional
 
+from typedstream.stream import TypedStreamReader
+
 # ---------------------------------------------------------------------------
-# Pre-compiled regex patterns (used both in parse_attributed_body and
-# clean_message_text — share a single compiled instance for performance)
+# Pre-compiled regex patterns for clean_message_text
 # ---------------------------------------------------------------------------
 _RE_KIMMSG = re.compile(r'__kIM\w+')
 _RE_UUID = re.compile(
@@ -24,7 +25,6 @@ _RE_MEDIA_FILE = re.compile(
 )
 _RE_JUNK_START = re.compile(r'^[ \n"\uFFFD\uFFFC]+')
 _RE_JUNK_END = re.compile(r'[ \n"\uFFFD\uFFFC]+$')
-_RE_APPLE_CONST = re.compile(r'^k[A-Z][A-Z0-9\-_]{10,}')
 
 # ---------------------------------------------------------------------------
 # Bundle ID → message type mapping (authoritative column check first)
@@ -100,18 +100,49 @@ def _detect_type_from_objects(objects: list) -> str:
     return "text"
 
 
+def _parse_typedstream_pytypedstream(data: bytes) -> Optional[str]:
+    """Read a TypedStream blob with pytypedstream and return the message text.
+
+    Uses the first string payload from the stream (the body). Later strings are
+    usually internal names such as ``__kIM...``, not user-visible text.
+    """
+    try:
+        for event in TypedStreamReader.from_data(data):
+            if type(event) is not bytes:
+                continue
+            try:
+                text = event.decode("utf-8")
+            except UnicodeDecodeError:
+                text = event.decode("utf-8", "replace")
+            if not text or text.startswith("__kIM"):
+                continue
+            # Skip Objective-C class names (NSString, WNSValue, …). Require no
+            # whitespace so real messages like "CFO said yes" are kept.
+            if text in _NS_CLASS_NAMES or (
+                " " not in text and re.match(r"^W?(NS|CF)[A-Z]", text)
+            ):
+                continue
+            return text
+    except Exception:
+        return None
+    return None
+
+
 # ---------------------------------------------------------------------------
-# Core parsing functions — copied verbatim, do not alter logic
+# Core parsing functions
 # ---------------------------------------------------------------------------
 
 def parse_attributed_body(data: bytes) -> tuple[str, str]:
     """Extract plain text and message type from an NSAttributedString BLOB.
 
+    Parsing is attempted via binary plist (NSKeyedArchiver) first, then TypedStream via
+    pytypedstream. 
+
     Returns (text, message_type) where message_type is one of:
       'text', 'location', 'payment', 'audio', 'fitness',
-      'game', 'digital_touch', 'handwriting', 'system'
-
-    Copied verbatim from messages.py — battle-tested against real backups.
+      'game', 'digital_touch', 'handwriting', 'system'.
+      
+    If parsing fails return `("", "text")`.
     """
     if not data:
         return "", "text"
@@ -143,108 +174,24 @@ def parse_attributed_body(data: bytes) -> tuple[str, str]:
                     ns_string_val = _resolve(root_obj.get("NS.string"))
                     if isinstance(ns_string_val, str) and ns_string_val:
                         return ns_string_val, "text"
-
-            # Fallback: longest clean string in $objects (skips internal keys / class names)
-            candidate = ""
-            for obj in objects:
-                if not isinstance(obj, str):
-                    continue
-                if obj in _NS_CLASS_NAMES:
-                    continue
-                # Skip NSKeyedArchiver structural strings
-                if obj.startswith('$') or obj == '$null':
-                    continue
-                # Skip NS/CF class name strings (e.g. "NSFont", "WNSValue", "CFString")
-                if re.match(r'^W?(NS|CF)[A-Z]', obj):
-                    continue
-                # Skip GUIDs and file attachment references
-                if "kIMFileTransferGUID" in obj or "kIMMessagePart" in obj:
-                    continue
-                if re.match(
-                    r'^\$?[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$',
-                    obj, re.IGNORECASE
-                ):
-                    continue
-                if re.search(
-                    r'[\d_A-Fa-f\-]+(\.fullsizerender)*\.(jpeg|jpg|heic|heif|png|gif|mov|mp4|m4a|caf|pdf|doc|docx)',
-                    obj, re.IGNORECASE
-                ):
-                    continue
-                # Skip Apple internal constant strings (e.g. "kUSD-CAD-AUD-HKD-...")
-                if _RE_APPLE_CONST.match(obj):
-                    continue
-                if len(obj) > len(candidate):
-                    candidate = obj
-            if candidate:
-                return candidate, "text"
         except Exception:
             pass
         # bplist00 data that couldn't be parsed shouldn't be raw-decoded (produces garbage)
         return "", "text"
 
-    # 2. TypedStream / raw binary fallback — also check for system message clues
+    # 2. TypedStream via pytypedstream.
+    # Structured parse runs first. A raw fragment scan (e.g. "Maps" inside
+    # "Meet at Maps at 5") used to drop real text. Fall back to the scan only
+    # when the structured body is missing or empty after stripping U+FFFC.
     try:
-        raw = data.decode('utf-8', errors='replace')
+        archived = _parse_typedstream_pytypedstream(data)
+        if archived is not None and archived.replace("\ufffc", "").strip():
+            return archived, "text"
 
-        # Quick system-type scan on raw text before cleaning
+        raw = data.decode("utf-8", errors="replace")
         for fragment, msg_type in _BALLOON_TYPE_MAP:
             if fragment in raw:
                 return "", msg_type
-
-        text = raw
-        # Strip TypedStream / NSKeyedArchiver structural noise.
-        # ORDER MATTERS: remove full GUIDs and __kIM keys BEFORE $\w+ cleanup,
-        # because $\w+ would consume the first GUID segment (e.g. "$19129343")
-        # leaving an unrecognisable "-A4D6-…" fragment behind.
-        text = re.sub(r'streamtyped', '', text)              # TypedStream magic word
-        text = re.sub(r'__kIM\w+', '', text)                 # __kIMFileTransferGUIDAttributeName …
-        text = re.sub(r'at_\d+_', '', text)                  # attachment ref prefix "at_0_"
-        # Full GUIDs (with or without leading $)
-        text = re.sub(
-            r'\$?[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}',
-            '', text, flags=re.IGNORECASE
-        )
-        # Partial GUIDs (tail segments left after splitting on control chars)
-        text = re.sub(
-            r'(?<![.\w])[0-9A-Fa-f]{4,}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{8,}',
-            '', text, flags=re.IGNORECASE
-        )
-        text = re.sub(r'\$\w+', '', text)                    # $classname, $classes, $top …
-        text = re.sub(r'W?(NS|CF)[A-Z][A-Za-z]*', '', text) # NSFont, CFString, WNSValue …
-        text = re.sub(r'Z?(NS|CF)\.\w+', '', text)          # NS.rangeval, ZNS.special …
-        text = re.sub(r'\b[A-Z][a-z]{3,}/', '', text)       # TypedStream class tags: Email/ DateTime/
-        text = re.sub(r'mailto:', '', text, flags=re.IGNORECASE)
-        text = re.sub(
-            r'[\d_A-Fa-f\-]+(\.fullsizerender)*\.(jpeg|jpg|heic|heif|png|gif|mov|mp4|m4a|caf|pdf|doc|docx)',
-            '', text, flags=re.IGNORECASE
-        )
-        for c in _NS_CLASS_NAMES:
-            text = text.replace(c, "")
-
-        parts = re.split(r'[\x00-\x08\x0b\x0c\x0e-\x1f]+', text)
-        candidate = ""
-        for p in parts:
-            p = p.strip().replace('\ufffc', '').replace('\ufffd', '').strip()
-            # Strip TypedStream string length-prefix artifact: '+' followed by one
-            # printable byte that encodes the declared length (e.g. "+I"=73, "+ "=32).
-            # Only strip when the declared length closely matches the remaining text.
-            m_prefix = re.match(r'^\+([\x20-\x7e])(.*)', p, re.DOTALL)
-            if m_prefix:
-                declared = ord(m_prefix.group(1))
-                remainder = m_prefix.group(2)
-                if abs(len(remainder.rstrip()) - declared) <= 3:
-                    p = remainder.lstrip()
-            # For strings containing an email address, use a regex to extract just
-            # the address and discard surrounding TypedStream noise (UEmail/, type bytes).
-            # Use lowercase-only TLD ([a-z]{2,}) so uppercase TypedStream type bytes
-            # (e.g. the 'U' in 'comUEmail') are not consumed as part of the TLD.
-            if '@' in p:
-                m_email = re.search(r'[\w._%+\-]+@[\w.\-]+\.[a-z]{2,}', p)
-                p = m_email.group(0) if m_email else ''
-            if p and len(p) > len(candidate) and len(p) > 3:
-                candidate = p
-
-        return candidate, "text"
     except Exception:
         pass
 
@@ -305,21 +252,25 @@ def clean_message_text(text: str) -> str:
     identifiers, UUIDs, media filenames, junk characters, and TypedStream
     string-length prefix artifacts.
 
-    Extracted from the inline cleanup block in messages.py:get_messages()
-    (lines 689-724). Logic is unchanged — do not rewrite.
+    Extracted from the inline cleanup block in messages.py:get_messages().
+    Logic is unchanged — do not rewrite.
     """
     if not text:
         return text
 
     # Strip object replacement / replacement characters and trim
     text = text.replace('\ufffc', '').replace('\ufffd', '').strip()
+    before = text
     text = _RE_KIMMSG.sub('', text)
     text = _RE_UUID.sub('', text)
     text = _RE_MEDIA_FILE.sub('', text)
 
-    # Remove junk wrapper quotes, spaces, or newlines left from stripping
-    text = _RE_JUNK_START.sub('', text)
-    text = _RE_JUNK_END.sub('', text)
+    # Remove junk wrapper quotes left from stripping identifiers. Only when
+    # something was stripped: otherwise a message that simply starts or ends
+    # with a quotation mark (He said "yes") would lose it.
+    if text != before:
+        text = _RE_JUNK_START.sub('', text)
+        text = _RE_JUNK_END.sub('', text)
     text = text.strip()
 
     # Strip TypedStream string-length prefix artifact from raw text column.

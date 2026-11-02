@@ -9,10 +9,13 @@ description = "Cross-platform iPhone backup extraction and data normalization li
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
-dependencies = ["iphone-backup-decrypt>=0.5.0"]
+dependencies = [
+    "iphone-backup-decrypt>=0.5.0",
+    "pytypedstream>=0.1.0",
+]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff"]
+dev = ["pytest", "ruff", "pillow"]  # pillow: backupgen draws and labels photos
 
 [tool.setuptools.packages.find]
 where = ["src"]

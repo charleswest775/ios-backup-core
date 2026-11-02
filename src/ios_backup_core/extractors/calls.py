@@ -17,7 +17,11 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from ios_backup_core.contacts import clean_phone_number, resolve_contact
+from ios_backup_core.db import connect_readonly, get_database
 from ios_backup_core.timestamps import APPLE_EPOCH_OFFSET, apple_to_iso
+
+
+_CALL_TYPE_FACETIME_VIDEO = 8
 
 
 def _clean_text(value) -> str:
@@ -25,7 +29,9 @@ def _clean_text(value) -> str:
 
     Third-party (CallKit) providers such as Teams/Skype can store ZADDRESS /
     ZNAME as raw bytes, a binary plist, or text containing control and
-    private-use characters, which showed up as garbage in the call list.
+    private-use characters, which showed up as garbage in the call list. Before
+    iOS 17 ZADDRESS holds UTF-8 bytes in a BLOB, and all-digit addresses (short
+    codes) are stored as SQLite INTEGERs.
     """
     if value is None:
         return ""
@@ -53,16 +59,12 @@ def _clean_text(value) -> str:
 def _call_status(direction: str, answered, duration) -> str:
     """Derive answered/missed.
 
-    ZANSWERED only describes incoming calls: iOS leaves it 0 on outgoing calls
-    even when they connected, so outgoing calls were shown as "missed" with a
-    positive duration (#59 in openextract). A non-zero duration means the call
-    connected, whichever way it went.
+    ZANSWERED only describes incoming calls; it stays 0 on outgoing calls that
+    connected, so judge those by their duration (#59 in openextract).
     """
-    if (duration or 0) > 0:
-        return "answered"
-    if direction == "incoming" and answered:
-        return "answered"
-    return "missed"
+    if direction == "outgoing" or answered is None:
+        return "answered" if (duration or 0) > 0 else "missed"
+    return "answered" if answered else "missed"
 
 
 class CallExtractor:
@@ -70,11 +72,21 @@ class CallExtractor:
 
     CALL_HISTORY_PATH = "Library/CallHistoryDB/CallHistory.storedata"
 
+    @staticmethod
+    def _is_db_path(rel_path: str) -> bool:
+        return rel_path.endswith((".storedata", ".db"))
+
+    def _db_listed(self, backup) -> bool:
+        """True if the manifest lists a call history database, readable or not."""
+        return any(
+            self._is_db_path(entry.get("path", ""))
+            for entry in backup.list_files(path_like="%CallHistory%")
+        )
+
     def _find_db_paths(self, backup) -> list:
         """Return all candidate call history DB paths by searching the manifest.
 
-        Also extracts any accompanying WAL/SHM files so SQLite can read
-        un-checkpointed records automatically.
+        Each comes with its -wal, so SQLite reads un-checkpointed records too.
         """
         candidates = []
         seen_hashes: set = set()
@@ -85,30 +97,24 @@ class CallExtractor:
             domain = entry.get("domain", "HomeDomain")
             file_hash = entry.get("hash", "")
 
-            if not (rel_path.endswith(".storedata") or rel_path.endswith(".db")):
-                if rel_path.endswith("-wal") or rel_path.endswith("-shm"):
-                    backup.get_file(rel_path, domain=domain)
+            if not self._is_db_path(rel_path):
                 continue
 
             if file_hash in seen_hashes:
                 continue
 
-            p = backup.get_file(rel_path, domain=domain)
+            p = get_database(backup, rel_path, domain=domain)
             if p:
                 seen_hashes.add(file_hash)
                 candidates.append(p)
-                backup.get_file(rel_path + "-wal", domain=domain)
-                backup.get_file(rel_path + "-shm", domain=domain)
 
         return candidates
 
-    def _read_db(self, db_path: str, seen_ids: set) -> list:
+    def _read_db(self, db_path: str, seen_ids: set, backup=None) -> list:
         """Read all call records from a single DB, skipping IDs already seen."""
         rows_out = []
-        conn = sqlite3.connect(db_path)
+        conn = connect_readonly(db_path, backup)
         conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA query_only = TRUE")
-        conn.execute("PRAGMA synchronous = OFF")
         conn.execute("PRAGMA cache_size = -10000")
         conn.execute("PRAGMA temp_store = MEMORY")
         cursor = conn.cursor()
@@ -150,18 +156,14 @@ class CallExtractor:
 
     def _read_facetime_from_sms(self, backup, contacts: dict) -> list:
         """Read FaceTime calls from sms.db (item_type 1=video, 2=audio)."""
-        db_path = backup.get_file("Library/SMS/sms.db", domain="HomeDomain")
+        db_path = get_database(backup, "Library/SMS/sms.db", domain="HomeDomain")
         if not db_path:
             return []
 
-        backup.get_file("Library/SMS/sms.db-wal", domain="HomeDomain")
-        backup.get_file("Library/SMS/sms.db-shm", domain="HomeDomain")
-
         rows_out = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
 
             sample = conn.execute(
                 "SELECT date FROM message WHERE item_type IN (1,2) LIMIT 1"
@@ -186,7 +188,7 @@ class CallExtractor:
                 unix_ts = apple_ts + APPLE_EPOCH_OFFSET
                 iso_date = datetime.fromtimestamp(unix_ts, timezone.utc).isoformat()
 
-                address = row["address"] or ""
+                address = _clean_text(row["address"])
                 contact_name = resolve_contact(address, contacts) or address or "Unknown"
                 direction = "outgoing" if row["is_from_me"] else "incoming"
                 app_name = "FaceTime Video" if row["item_type"] == 1 else "FaceTime Audio"
@@ -208,15 +210,14 @@ class CallExtractor:
 
     def _read_voicemails_as_calls(self, backup, contacts: dict) -> list:
         """Read voicemail.db and return each entry as a synthetic call record."""
-        db_path = backup.get_file("Library/Voicemail/voicemail.db", domain="HomeDomain")
+        db_path = get_database(backup, "Library/Voicemail/voicemail.db", domain="HomeDomain")
         if not db_path:
             return []
 
         rows_out = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
             rows = conn.execute("""
                 SELECT ROWID, sender, date, duration
                 FROM voicemail
@@ -225,7 +226,7 @@ class CallExtractor:
             conn.close()
 
             for row in rows:
-                sender = row["sender"] or ""
+                sender = _clean_text(row["sender"])
                 unix_ts = int(row["date"]) if row["date"] else 0
                 if not unix_ts:
                     continue
@@ -254,7 +255,19 @@ class CallExtractor:
         offset: int = 0,
         limit: int = 200,
     ) -> dict:
-        """List call history records, supplemented with FaceTime and voicemail records."""
+        """List call history records, supplemented with FaceTime and voicemail records.
+
+        When there are no records, ``calls`` is empty and ``empty_reason`` says why:
+
+        - ``"requires_encryption"``: the backup is unencrypted and has no call
+          history. Apple leaves call history out of unencrypted backups, so
+          ``error`` also carries the advice to turn on encryption.
+        - ``"not_in_backup"``: the backup is encrypted but has no call history.
+        - ``"no_records"``: the call history database exists but holds no calls.
+
+        A call history database that is listed in the backup but can't be read
+        is an ``error``, with no ``empty_reason``.
+        """
         db_paths = self._find_db_paths(backup)
 
         all_rows = []
@@ -262,7 +275,7 @@ class CallExtractor:
         errors = []
         for db_path in db_paths:
             try:
-                all_rows.extend(self._read_db(db_path, seen_ids))
+                all_rows.extend(self._read_db(db_path, seen_ids, backup))
             except Exception as e:
                 errors.append(str(e))
 
@@ -288,7 +301,12 @@ class CallExtractor:
             if provider:
                 p_lower = provider.lower()
                 if "facetime" in p_lower:
-                    app_name = "FaceTime Video" if row["is_video"] else "FaceTime Audio"
+                    # Older schemas have ZIS_VIDEO; otherwise ZCALLTYPE says it
+                    # (8 = FaceTime video, 16 = FaceTime audio).
+                    is_video = row["is_video"]
+                    if is_video is None:
+                        is_video = row["call_type"] == _CALL_TYPE_FACETIME_VIDEO
+                    app_name = "FaceTime Video" if is_video else "FaceTime Audio"
                 elif "whatsapp" in p_lower:
                     app_name = "WhatsApp"
                 elif "skype" in p_lower:
@@ -335,11 +353,25 @@ class CallExtractor:
         _merge(self._read_facetime_from_sms(backup, contacts))
 
         if not call_records:
-            msg = errors[0] if errors else (
-                "Call history not found. Apple requires backups to be encrypted to include "
-                "call logs. Please enable 'Encrypt local backup' in iTunes/Finder."
-            )
-            return {"calls": [], "error": msg}
+            empty = {"calls": [], "total": 0, "offset": offset, "limit": limit}
+            if errors:
+                empty["error"] = errors[0]
+            elif db_paths:
+                empty["empty_reason"] = "no_records"
+            elif self._db_listed(backup):
+                empty["error"] = (
+                    "Call history is in this backup but could not be read. "
+                    "The backup may be incomplete or damaged."
+                )
+            elif backup.encrypted:
+                empty["empty_reason"] = "not_in_backup"
+            else:
+                empty["empty_reason"] = "requires_encryption"
+                empty["error"] = (
+                    "Call history not found. Apple requires backups to be encrypted to include "
+                    "call logs. Please enable 'Encrypt local backup' in iTunes/Finder."
+                )
+            return empty
 
         call_records.sort(key=lambda r: r["_unix_ts"] or 0, reverse=True)
         total = len(call_records)

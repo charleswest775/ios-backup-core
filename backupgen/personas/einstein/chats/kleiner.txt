@@ -1,0 +1,39 @@
+chat: kleiner
+with: kleiner
+service: SMS
+
+# Alfred Kleiner, physics professor at the University of Zurich: doctoral adviser and later sponsor.
+
+== 1901-11-23
+16:00 me: Herr Professor, I've submitted my dissertation on molecular forces in gases.
+16:30 kleiner: Received. I'll read it over the holidays.
+
+== 1901-12-19
+21:00 me: Thank you for the afternoon, Herr Professor. I'll write up the electrodynamics of moving bodies as you suggested.
+21:20 kleiner: Do. It deserves to be published.
+
+== 1902-02-01
+12:00 kleiner: Your withdrawal is noted and the fees have been refunded.
+
+# Sources disagree on when the 1905 dissertation was handed in (April or 20 July); Wikipedia gives 20 July.
+== 1905-07-20
+15:00 me: Herr Professor, my dissertation: "A New Determination of Molecular Dimensions".
+15:30 kleiner: Received with pleasure.
+
+== 1905-07-27
+17:00 kleiner: The faculty has approved your dissertation. Congratulations, Herr Einstein.
+17:10 me: Thank you, Herr Professor!
+
+== 1906-01-15
+10:00 kleiner: Your doctorate is conferred today. Congratulations, Dr. Einstein.
+
+== 1908-02-08
+11:00 kleiner: You were prompt with the Habilitation. Good. Bern would be foolish to refuse you twice.
+
+== 1909-02-11
+22:00 kleiner: Excellent lecture to the Physical Society tonight.
+22:10 me: Thank you. Zurich audiences ask hard questions.
+
+== 1909-05-07
+12:00 kleiner: It's settled: associate professor of theoretical physics, from October.
+12:05 me: I'm very grateful, Herr Professor.

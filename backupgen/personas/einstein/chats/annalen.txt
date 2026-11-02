@@ -1,0 +1,54 @@
+chat: annalen
+with: annalen
+service: SMS
+
+# Annalen der Physik. Each "received" text is sent on the date the journal recorded receiving the manuscript.
+
+== 1900-12-16
+10:00 annalen: Annalen der Physik: manuscript received, "Conclusions Drawn from the Phenomena of Capillarity".
+
+== 1902-04-30
+10:00 annalen: Annalen der Physik: manuscript received, "On the Thermodynamic Theory of the Difference in Potentials between Metals and Fully Dissociated Solutions of Their Salts".
+
+== 1902-06-26
+10:00 annalen: Annalen der Physik: manuscript received, "Kinetic Theory of Thermal Equilibrium and of the Second Law of Thermodynamics".
+
+== 1903-01-26
+10:00 annalen: Annalen der Physik: manuscript received, "A Theory of the Foundations of Thermodynamics".
+
+== 1904-03-29
+10:00 annalen: Annalen der Physik: manuscript received, "On the General Molecular Theory of Heat".
+
+== 1905-03-10
+15:00 annalen: The Beiblätter would welcome your reviews of new work in thermodynamics. Are you available?
+15:30 me: Gladly.
+
+== 1905-03-18
+10:00 annalen: Annalen der Physik: manuscript received, "On a Heuristic Point of View Concerning the Production and Transformation of Light".
+
+== 1905-05-11
+10:00 annalen: Annalen der Physik: manuscript received, "On the Movement of Small Particles Suspended in Stationary Liquids Required by the Molecular-Kinetic Theory of Heat".
+
+== 1905-06-30
+10:00 annalen: Annalen der Physik: manuscript received, "On the Electrodynamics of Moving Bodies".
+
+== 1905-08-19
+10:00 annalen: Annalen der Physik: manuscript received, "A New Determination of Molecular Dimensions".
+
+== 1905-09-27
+10:00 annalen: Annalen der Physik: manuscript received, "Does the Inertia of a Body Depend upon Its Energy Content?"
+
+== 1905-12-19
+10:00 annalen: Annalen der Physik: manuscript received, "On the Theory of Brownian Motion".
+
+== 1906-11-09
+10:00 annalen: Annalen der Physik: manuscript received, "Planck's Theory of Radiation and the Theory of Specific Heat".
+
+== 1907-05-14
+10:00 annalen: Annalen der Physik: manuscript received, "On the Inertia of Energy Required by the Relativity Principle".
+
+== 1908-05-02
+10:00 annalen: Annalen der Physik: manuscript received (Einstein and Laub), "On the Fundamental Electromagnetic Equations for Moving Bodies".
+
+== 1908-05-13
+10:00 annalen: Annalen der Physik: manuscript received (Einstein and Laub), "On the Ponderomotive Forces Exerted on Bodies at Rest in the Electromagnetic Field".

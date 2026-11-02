@@ -1,0 +1,15 @@
+{
+ "description": "Placeholder photos for the generator's tests: one without a location, a portrait one, a favourite, one in two albums and one in Recently Deleted.",
+ "photos": [
+  {"id": "london-1", "taken": "2021-04-03T10:12", "lat": 51.5007, "lon": -0.1246, "place": "Westminster, London",
+   "albums": ["Weekends"], "placeholder": {"size": [800, 600], "color": "#6f8fb3"}},
+  {"id": "london-2", "taken": "2021-04-03T10:20", "lat": 51.5033, "lon": -0.1195, "place": "South Bank, London",
+   "favorite": true, "albums": ["Weekends", "Best"], "placeholder": {"size": [600, 800], "color": "#b3926f"}},
+  {"id": "desk", "taken": "2022-01-20T16:30", "place": "No location",
+   "placeholder": {"size": [800, 600], "color": "#7a7a7a"}},
+  {"id": "blurry", "taken": "2023-09-01T18:00", "lat": 55.9533, "lon": -3.1883, "place": "Edinburgh",
+   "trashed": true, "albums": ["Weekends"], "placeholder": {"size": [800, 600], "color": "#3d5a3d"}},
+  {"id": "edinburgh", "taken": "2023-09-02T09:45", "lat": 55.9486, "lon": -3.1999, "place": "Edinburgh Castle",
+   "albums": ["Best"], "placeholder": {"size": [2400, 1800], "color": "#8a6fb3"}}
+ ]
+}

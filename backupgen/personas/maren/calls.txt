@@ -1,0 +1,320 @@
+# Maren's call history. Pacific times throughout.
+# Every voicemail in voicemails.txt has its missed call here at the same minute.
+# Unknown numbers (not contacts): 0190 car-warranty robocall, 0191 delivery driver,
+# 0192/0193/0195/0198 unanswered, 0194 wrong number, 0196 a Missoula pizza place (second night at her parents'), 0199 survey.
+
+== 2024-07-01
+18:20 out mom 24m
+== 2024-07-07
+10:05 in mom 31m
+== 2024-07-10
+12:15 out crankcoast 2m40s
+== 2024-07-16
+09:30 in grace 14m
+== 2024-07-19
+12:30 out dad 18m
+== 2024-07-21
+19:00 in leah 34m facetime-audio
+== 2024-07-22
+17:45 in +15035550190 missed
+== 2024-07-25
+17:40 out theo 2m
+== 2024-07-28
+19:10 out mom 42m facetime-video
+== 2024-08-09
+18:30 in sam 6m
+== 2024-08-12
+14:05 in priya 7m
+== 2024-08-13
+20:00 out ashley 3m
+== 2024-08-16
+14:40 out theo 1m30s
+== 2024-08-18
+18:55 out ashley 1m05s
+== 2024-08-20
+21:40 in tom 8m
+== 2024-08-25
+10:20 in mom 36m
+== 2024-08-30
+11:15 in +15035550190 missed
+== 2024-09-05
+16:00 out alderbrook 3m20s
+== 2024-09-08
+17:00 in mom 28m
+== 2024-09-14
+09:40 in sam 2m
+== 2024-09-19
+13:10 in owen 9m
+== 2024-09-22
+19:30 out claire 47m
+== 2024-09-27
+15:30 in +19715550191 1m10s
+== 2024-09-29
+20:15 out leah 22m
+== 2024-10-05
+06:35 out leah 45s
+== 2024-10-06
+11:00 out mom 25m facetime-video
+== 2024-10-11
+17:55 in owen 6m
+== 2024-10-17
+12:20 out fernleaf 2m
+== 2024-10-22
+07:45 in mom 12m
+08:15 in ingrid missed
+12:05 out ingrid 9m
+18:00 in linnea 7m
+== 2024-10-30
+22:45 out theo 2m30s
+== 2024-11-03
+10:30 in mom 33m
+== 2024-11-07
+15:20 in grace 11m
+== 2024-11-09
+18:58 in leah 1m
+== 2024-11-13
+17:30 out theo 1m30s
+== 2024-11-21
+12:10 in +12065550192 missed
+== 2024-11-27
+18:45 out lucia 1m30s
+== 2024-11-28
+11:00 in mom 18m facetime-video
+== 2024-12-01
+18:00 in leah 41m facetime-video
+== 2024-12-04
+07:30 out erik 14m
+== 2024-12-05
+19:00 out doug 8m
+== 2024-12-10
+17:50 out talus 4m
+== 2024-12-11
+09:00 out ridgeline 3m
+== 2024-12-15
+17:30 out leah 12m
+== 2024-12-21
+13:20 out leah 2m
+== 2024-12-25
+11:00 out lucia 15m facetime-video
+== 2025-01-05
+18:00 in mom 29m
+== 2025-01-06
+08:45 in natalie 21m
+== 2025-01-15
+14:30 in doug missed
+18:10 out doug 3m
+== 2025-01-17
+17:20 out cedarsalt 1m40s
+== 2025-01-18
+07:20 in sam 50s
+== 2025-01-26
+10:15 out mom 34m
+== 2025-01-31
+08:50 in owen 2m
+== 2025-02-02
+16:00 out ingrid 22m
+== 2025-02-09
+12:00 in mom 26m facetime-video
+== 2025-02-19
+11:30 in natalie 12m
+== 2025-02-20
+16:50 out theo 1m
+17:25 out gloria 1m
+== 2025-02-21
+18:40 in bea 4m
+== 2025-02-22
+08:15 in owen 3m
+== 2025-02-24
+09:52 in gloria missed
+10:05 out gloria 4m12s
+== 2025-02-25
+09:30 out stonecrop 7m
+== 2025-02-26
+20:00 in erik 18m
+== 2025-03-02
+11:00 in dad 15m
+== 2025-03-10
+12:40 in tidewater missed
+13:05 out tidewater 9m
+== 2025-03-18
+10:45 in +13605550193 missed
+== 2025-03-23
+15:00 out mom 38m
+== 2025-03-27
+12:10 in theo 5m
+== 2025-03-30
+19:10 out mom 47m facetime-video
+== 2025-04-04
+10:15 out thimbleberry 3m
+== 2025-04-12
+07:20 in tidewater 1m
+07:30 out theo 45s
+== 2025-04-19
+18:30 out hana 25m
+== 2025-04-26
+07:15 in nadia 1m
+== 2025-05-01
+17:30 out crankcoast 2m
+== 2025-05-03
+15:50 in crankcoast 1m10s
+== 2025-05-11
+10:00 out mom 35m facetime-video
+== 2025-05-16
+16:40 out sudsy 2m
+== 2025-05-22
+18:20 out ashley 3m
+== 2025-06-01
+11:00 in mom 22m
+== 2025-06-03
+13:15 in +15415550194 40s
+== 2025-06-08
+22:45 out leah 1h04m
+== 2025-06-15
+10:30 out dad 25m
+== 2025-06-16
+06:55 in ray 1m30s
+== 2025-06-24
+09:15 in ray 3m40s
+== 2025-06-29
+18:00 out claire 52m
+== 2025-07-10
+07:05 in ray 2m
+== 2025-07-13
+10:30 in mom 30m
+== 2025-07-19
+12:15 out dad 21m
+== 2025-07-20
+14:00 out maya 6m
+== 2025-07-30
+13:20 in theo 2m
+== 2025-08-05
+15:40 in ridgeline missed
+16:00 out ridgeline 1m30s
+== 2025-08-15
+18:15 out +14065550196 2m
+== 2025-08-13
+17:00 in maya 3m facetime-video
+== 2025-08-24
+10:00 out mom 15m
+== 2025-08-28
+14:30 in grace 6m
+== 2025-08-29
+17:00 out theo 3m
+== 2025-08-31
+19:30 in leah 18m
+== 2025-08-18
+08:40 out tanager 2m
+== 2025-09-03
+12:30 out willowash 2m
+== 2025-09-12
+15:10 in willowash missed
+== 2025-09-14
+18:30 in mom 33m
+== 2025-09-19
+20:00 in nadia 5m
+== 2025-09-20
+06:10 in sam 40s
+== 2025-09-25
+17:45 out theo 1m10s
+== 2025-09-30
+12:10 out basalt 2m
+== 2025-10-05
+11:30 out mom 28m
+== 2025-10-08
+16:20 in +19715550199 40s
+== 2025-10-22
+07:40 in mom 14m facetime-video
+12:00 in ingrid 11m
+17:30 in linnea 6m
+== 2025-11-02
+10:00 out mom 31m
+== 2025-11-09
+08:35 out leah 4m
+== 2025-11-10
+09:15 in gloria 4m
+== 2025-11-18
+15:20 in natalie 8m
+== 2025-11-23
+17:00 out lucia 7m
+== 2025-11-26
+16:10 in erik 1m30s
+== 2025-11-27
+11:00 out mom 20m facetime-video
+== 2025-11-30
+19:00 out claire 38m
+== 2025-12-04
+12:15 out erik 11m
+== 2025-12-10
+17:20 out theo 2m
+== 2025-12-14
+16:00 out mom 25m
+== 2025-12-22
+13:45 in mom 1m
+== 2025-12-25
+09:30 in erik 15m facetime-video
+10:30 out lucia 12m facetime-video
+== 2025-12-28
+20:00 out leah 25m
+== 2026-01-04
+17:00 out mom 22m
+== 2026-01-07
+11:30 in +12085550195 missed
+== 2026-01-12
+11:00 in mom 9m
+12:30 in ingrid 7m
+== 2026-01-24
+21:25 out erik 26m
+== 2026-01-27
+21:30 out rosa 12m
+== 2026-02-02
+18:30 out ingrid 20m
+== 2026-02-06
+12:00 out maya 4m
+== 2026-02-10
+18:00 in ivy 6m
+== 2026-02-15
+18:00 in maya 2m facetime-video
+== 2026-02-22
+11:00 in mom 29m
+== 2026-02-25
+12:05 in theo 4m
+== 2026-02-28
+19:00 in leah 30m facetime-audio
+== 2026-03-15
+10:00 out mom 26m
+== 2026-03-28
+07:55 in erik missed
+08:40 out erik 22m
+12:30 out jess 9m
+== 2026-03-30
+19:15 out mom 38m facetime-video
+== 2026-04-07
+16:30 out sudsy 2m
+== 2026-04-11
+11:10 out leah 36m
+== 2026-04-15
+17:30 out theo 2m30s
+== 2026-04-29
+14:20 in +15035550198 missed
+== 2026-05-10
+10:00 out mom 41m facetime-video
+== 2026-05-14
+19:30 out hana 16m
+== 2026-05-22
+18:40 in hana 50s
+== 2026-05-30
+11:20 in callum 1m30s
+== 2026-05-31
+10:30 in mom 27m
+== 2026-06-14
+11:20 out erik 19m
+== 2026-06-17
+16:00 out theo 1m
+== 2026-06-21
+10:30 out dad 33m
+16:30 in leah 12m
+== 2026-06-22
+18:40 in dad missed
+19:10 out dad 14m
+== 2026-06-26
+17:00 out cedarsalt 1m45s

@@ -54,15 +54,74 @@ class TestParseAttributedBody:
         assert msg_type == "text"
 
     def test_location_balloon_detected(self):
-        # Embed a known location fragment to trigger type detection
+        # No readable body: fragment scan still classifies the balloon.
         raw = b"streamtypedMaps__kIMLocationShare"
         text, msg_type = parse_attributed_body(raw)
-        assert msg_type in ("location", "text")  # depends on which trigger fires
+        assert text == ""
+        assert msg_type == "location"
+
+    def test_typedstream_keeps_text_containing_balloon_fragment(self):
+        # "Maps" is a location fragment, but a real NSString body must win.
+        blob = self._typedstream_nsstring(b"Meet at Maps at 5")
+        text, msg_type = parse_attributed_body(blob)
+        assert text == "Meet at Maps at 5"
+        assert msg_type == "text"
+
+    def test_typedstream_object_replacement_falls_back_to_fragment_scan(self):
+        # Balloon rows often carry only U+FFFC. That is not useful text.
+        blob = self._typedstream_nsstring("\ufffc".encode("utf-8")) + b"Maps"
+        text, msg_type = parse_attributed_body(blob)
+        assert text == ""
+        assert msg_type == "location"
 
     def test_bplist_unicode_text(self):
         blob = _make_bplist_attributed_string("Héllo wörld 😀")
         text, msg_type = parse_attributed_body(blob)
         assert "Héllo" in text or text == "Héllo wörld 😀"
+        assert msg_type == "text"
+
+    def _typedstream_nsstring(self, message: bytes) -> bytes:
+        """Minimal valid TypedStream NSString (pytypedstream-compatible)."""
+        return (
+            b"\x04\x0bstreamtyped\x81\xe8\x03\x84\x01@\x84\x84\x84\x08NSString"
+            b"\x01\x84\x84\x08NSObject\x00\x85\x84\x01+"
+            + bytes([len(message)])
+            + message
+            + b"\x86"
+        )
+
+    def test_typedstream_pytypedstream_prefers_nsstring_over_soup(self):
+        msg = b"I can do June 21"
+        soup = b'$%&,-.39=>CK"OPQTWX\\bfghijU'
+        # Trailing detector bplist junk is longer than the real message; a
+        # printable-run heuristic would pick the soup. Structured parse must not.
+        blob = self._typedstream_nsstring(msg) + b"bplist00WversionYdd-result" + soup
+        text, msg_type = parse_attributed_body(blob)
+        assert text == "I can do June 21"
+        assert msg_type == "text"
+        assert "OPQTWX" not in text
+
+    def test_typedstream_keeps_messages_starting_with_ns_or_cf_words(self):
+        # Class-name filter must not drop human text like "CFO said yes".
+        blob = self._typedstream_nsstring(b"CFO said yes")
+        text, msg_type = parse_attributed_body(blob)
+        assert text == "CFO said yes"
+        assert msg_type == "text"
+
+    def test_typedstream_no_scrape_fallback_when_unreadable(self):
+        # Incomplete stream — pytypedstream fails. We must NOT scrape printable
+        # runs (that path preferred detector soup). Callers use SQL text instead.
+        msg = b"I can do June 21"
+        soup = b'$%&,-.39=>CK"OPQTWX\\bfghijU'
+        blob = (
+            b"\x04\x0bstreamtyped\x84\x84\x08NSString\x01\x84\x01+"
+            + bytes([len(msg)])
+            + msg
+            + b"bplist00WversionYdd-result"
+            + soup
+        )
+        text, msg_type = parse_attributed_body(blob)
+        assert text == ""
         assert msg_type == "text"
 
 
@@ -89,6 +148,14 @@ class TestCleanMessageText:
     def test_preserves_normal_text(self):
         msg = "Hey, are you coming tonight?"
         assert clean_message_text(msg) == msg
+
+    def test_preserves_quotes_at_the_ends(self):
+        # Found by backupgen's answer key: closing quotes were being stripped.
+        for msg in ('He said "yes"', '"Quoted" at the start', '"Fully quoted"'):
+            assert clean_message_text(msg) == msg
+
+    def test_strips_quotes_left_by_removed_identifiers(self):
+        assert clean_message_text('"__kIMFileTransferGUIDAttributeName" hello') == "hello"
 
     def test_empty_string_unchanged(self):
         assert clean_message_text("") == ""

@@ -1,0 +1,791 @@
+{
+ "database": "CallHistory.storedata",
+ "ios": "13.4.1",
+ "build": "17E262",
+ "source": "public backup pub-hickman-13.4.1 (definitions only)",
+ "harvested": "2026-10-11",
+ "pragmas": {
+  "user_version": 0,
+  "page_size": 4096,
+  "journal_mode": "wal",
+  "auto_vacuum": 2,
+  "encoding": "UTF-8"
+ },
+ "objects": [
+  {
+   "type": "table",
+   "name": "ZCALLDBPROPERTIES",
+   "table": "ZCALLDBPROPERTIES",
+   "sql": "CREATE TABLE ZCALLDBPROPERTIES ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZTIMER_ALL FLOAT, ZTIMER_INCOMING FLOAT, ZTIMER_LAST FLOAT, ZTIMER_LIFETIME FLOAT, ZTIMER_OUTGOING FLOAT )"
+  },
+  {
+   "type": "table",
+   "name": "ZCALLRECORD",
+   "table": "ZCALLRECORD",
+   "sql": "CREATE TABLE ZCALLRECORD ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZANSWERED INTEGER, ZCALL_CATEGORY INTEGER, ZCALLTYPE INTEGER, ZDISCONNECTED_CAUSE INTEGER, ZFACE_TIME_DATA INTEGER, ZFILTERED_OUT_REASON INTEGER, ZHANDLE_TYPE INTEGER, ZNUMBER_AVAILABILITY INTEGER, ZORIGINATED INTEGER, ZREAD INTEGER, ZVERIFICATIONSTATUS INTEGER, ZDATE TIMESTAMP, ZDURATION FLOAT, ZISO_COUNTRY_CODE VARCHAR, ZLOCATION VARCHAR, ZNAME VARCHAR, ZSERVICE_PROVIDER VARCHAR, ZUNIQUE_ID VARCHAR, ZLOCALPARTICIPANTUUID BLOB, ZOUTGOINGLOCALPARTICIPANTUUID BLOB, ZADDRESS BLOB )"
+  },
+  {
+   "type": "table",
+   "name": "Z_2REMOTEPARTICIPANTHANDLES",
+   "table": "Z_2REMOTEPARTICIPANTHANDLES",
+   "sql": "CREATE TABLE Z_2REMOTEPARTICIPANTHANDLES ( Z_2REMOTEPARTICIPANTCALLS INTEGER, Z_3REMOTEPARTICIPANTHANDLES INTEGER, PRIMARY KEY (Z_2REMOTEPARTICIPANTCALLS, Z_3REMOTEPARTICIPANTHANDLES) )"
+  },
+  {
+   "type": "table",
+   "name": "ZHANDLE",
+   "table": "ZHANDLE",
+   "sql": "CREATE TABLE ZHANDLE ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZTYPE INTEGER, ZNORMALIZEDVALUE VARCHAR, ZVALUE BLOB )"
+  },
+  {
+   "type": "table",
+   "name": "Z_PRIMARYKEY",
+   "table": "Z_PRIMARYKEY",
+   "sql": "CREATE TABLE Z_PRIMARYKEY (Z_ENT INTEGER PRIMARY KEY, Z_NAME VARCHAR, Z_SUPER INTEGER, Z_MAX INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "Z_METADATA",
+   "table": "Z_METADATA",
+   "sql": "CREATE TABLE Z_METADATA (Z_VERSION INTEGER PRIMARY KEY, Z_UUID VARCHAR(255), Z_PLIST BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "Z_MODELCACHE",
+   "table": "Z_MODELCACHE",
+   "sql": "CREATE TABLE Z_MODELCACHE (Z_CONTENT BLOB)"
+  },
+  {
+   "type": "index",
+   "name": "Z_2REMOTEPARTICIPANTHANDLES_Z_3REMOTEPARTICIPANTHANDLES_INDEX",
+   "table": "Z_2REMOTEPARTICIPANTHANDLES",
+   "sql": "CREATE INDEX Z_2REMOTEPARTICIPANTHANDLES_Z_3REMOTEPARTICIPANTHANDLES_INDEX ON Z_2REMOTEPARTICIPANTHANDLES (Z_3REMOTEPARTICIPANTHANDLES, Z_2REMOTEPARTICIPANTCALLS)"
+  },
+  {
+   "type": "index",
+   "name": "Z_CallRecord_byDateIndex",
+   "table": "ZCALLRECORD",
+   "sql": "CREATE INDEX Z_CallRecord_byDateIndex ON ZCALLRECORD (ZDATE COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_CallRecord_byLocalParticipantUUIDIndex",
+   "table": "ZCALLRECORD",
+   "sql": "CREATE INDEX Z_CallRecord_byLocalParticipantUUIDIndex ON ZCALLRECORD (ZLOCALPARTICIPANTUUID COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_CallRecord_byOutgoingLocalParticipantUUIDIndex",
+   "table": "ZCALLRECORD",
+   "sql": "CREATE INDEX Z_CallRecord_byOutgoingLocalParticipantUUIDIndex ON ZCALLRECORD (ZOUTGOINGLOCALPARTICIPANTUUID COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_CallRecord_UNIQUE_unique_id",
+   "table": "ZCALLRECORD",
+   "sql": "CREATE UNIQUE INDEX Z_CallRecord_UNIQUE_unique_id ON ZCALLRECORD (ZUNIQUE_ID COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_Handle_byValueIndex",
+   "table": "ZHANDLE",
+   "sql": "CREATE INDEX Z_Handle_byValueIndex ON ZHANDLE (ZVALUE COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_Handle_byNormalizedValueIndex",
+   "table": "ZHANDLE",
+   "sql": "CREATE INDEX Z_Handle_byNormalizedValueIndex ON ZHANDLE (ZNORMALIZEDVALUE COLLATE BINARY ASC)"
+  }
+ ],
+ "columns": {
+  "ZCALLDBPROPERTIES": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTIMER_ALL",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTIMER_INCOMING",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTIMER_LAST",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTIMER_LIFETIME",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTIMER_OUTGOING",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ZCALLRECORD": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZANSWERED",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCALL_CATEGORY",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCALLTYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDISCONNECTED_CAUSE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFACE_TIME_DATA",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFILTERED_OUT_REASON",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZHANDLE_TYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNUMBER_AVAILABILITY",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZORIGINATED",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZREAD",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZVERIFICATIONSTATUS",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDATE",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDURATION",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZISO_COUNTRY_CODE",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLOCATION",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSERVICE_PROVIDER",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZUNIQUE_ID",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLOCALPARTICIPANTUUID",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZOUTGOINGLOCALPARTICIPANTUUID",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZADDRESS",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_2REMOTEPARTICIPANTHANDLES": [
+   {
+    "name": "Z_2REMOTEPARTICIPANTCALLS",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_3REMOTEPARTICIPANTHANDLES",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 2
+   }
+  ],
+  "ZHANDLE": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNORMALIZEDVALUE",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZVALUE",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_PRIMARYKEY": [
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_NAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_SUPER",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_MAX",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_METADATA": [
+   {
+    "name": "Z_VERSION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_UUID",
+    "type": "VARCHAR(255)",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_PLIST",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_MODELCACHE": [
+   {
+    "name": "Z_CONTENT",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ]
+ },
+ "shape": {
+  "ZCALLDBPROPERTIES": {
+   "Z_PK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_OPT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZTIMER_ALL": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "ZTIMER_INCOMING": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "ZTIMER_LAST": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "ZTIMER_LIFETIME": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "ZTIMER_OUTGOING": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   }
+  },
+  "ZCALLRECORD": {
+   "Z_PK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_OPT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZANSWERED": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZCALL_CATEGORY": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZCALLTYPE": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZDISCONNECTED_CAUSE": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZFACE_TIME_DATA": {
+    "null_rate": 0.974,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZFILTERED_OUT_REASON": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZHANDLE_TYPE": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZNUMBER_AVAILABILITY": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZORIGINATED": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZREAD": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZVERIFICATIONSTATUS": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZDATE": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "ZDURATION": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "ZISO_COUNTRY_CODE": {
+    "null_rate": 0.053,
+    "types": [
+     "text"
+    ]
+   },
+   "ZLOCATION": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ZNAME": {
+    "null_rate": 0.974,
+    "types": [
+     "text"
+    ]
+   },
+   "ZSERVICE_PROVIDER": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ZUNIQUE_ID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ZLOCALPARTICIPANTUUID": {
+    "null_rate": 0.053,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "ZOUTGOINGLOCALPARTICIPANTUUID": {
+    "null_rate": 0.053,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "ZADDRESS": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   }
+  },
+  "Z_2REMOTEPARTICIPANTHANDLES": {
+   "Z_2REMOTEPARTICIPANTCALLS": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_3REMOTEPARTICIPANTHANDLES": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "ZHANDLE": {
+   "Z_PK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_OPT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZTYPE": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZNORMALIZEDVALUE": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ZVALUE": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   }
+  },
+  "Z_PRIMARYKEY": {
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_NAME": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Z_SUPER": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_MAX": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "Z_METADATA": {
+   "Z_VERSION": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_UUID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Z_PLIST": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   }
+  },
+  "Z_MODELCACHE": {
+   "Z_CONTENT": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   }
+  }
+ },
+ "entities": [
+  {
+   "Z_ENT": 1,
+   "Z_NAME": "CallDBProperties",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 2,
+   "Z_NAME": "CallRecord",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 3,
+   "Z_NAME": "Handle",
+   "Z_SUPER": 0
+  }
+ ]
+}

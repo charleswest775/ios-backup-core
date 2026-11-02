@@ -1,0 +1,5622 @@
+{
+ "database": "Calendar.sqlitedb",
+ "ios": "15.3.1",
+ "build": "19D52",
+ "source": "public backup pub-hickman-15.3.1 (definitions only)",
+ "harvested": "2026-10-11",
+ "pragmas": {
+  "user_version": 0,
+  "page_size": 4096,
+  "journal_mode": "wal",
+  "auto_vacuum": 2,
+  "encoding": "UTF-8"
+ },
+ "objects": [
+  {
+   "type": "table",
+   "name": "_SqliteDatabaseProperties",
+   "table": "_SqliteDatabaseProperties",
+   "sql": "CREATE TABLE _SqliteDatabaseProperties (key TEXT, value TEXT, UNIQUE(key))"
+  },
+  {
+   "type": "table",
+   "name": "Store",
+   "table": "Store",
+   "sql": "CREATE TABLE Store (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, default_alarm_offset INTEGER, type INTEGER, constraint_path TEXT, disabled INTEGER, external_id TEXT, persistent_id TEXT, flags INTEGER, creator_bundle_id TEXT, creator_code_signing_identity TEXT, only_creator_can_modify INTEGER, external_mod_tag TEXT, preferred_event_private_value INTEGER, strictest_event_private_value INTEGER, last_sync_error INTEGER, last_sync_start REAL, last_sync_end REAL, delegated_account_owner_store_id TEXT, delegated_account_default_calendar_for_new_events_id INTEGER, shows_notifications INTEGER, flags2 INTEGER, last_sync_error_data BLOB, display_order INTEGER, owner_name TEXT, default_all_day_alarm_offset INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "StoreChanges",
+   "table": "StoreChanges",
+   "sql": "CREATE TABLE StoreChanges (record INTEGER, type INTEGER, sequence_number INTEGER, default_alarm_offset INTEGER, default_all_day_alarm_offset INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "Calendar",
+   "table": "Calendar",
+   "sql": "CREATE TABLE Calendar (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, store_id INTEGER, title TEXT, flags INTEGER, color TEXT, symbolic_color_name TEXT, color_is_display INTEGER, type TEXT, supported_entity_types INTEGER, external_id TEXT, external_mod_tag TEXT, external_id_tag TEXT, external_rep BLOB, display_order INTEGER, UUID TEXT, shared_owner_name TEXT, shared_owner_address TEXT, sharing_status INTEGER, sharing_invitation_response INTEGER, published_URL TEXT, is_published INTEGER, invitation_status INTEGER, sync_token TEXT, self_identity_id INTEGER, self_identity_email TEXT, self_identity_phone_number TEXT, owner_identity_id INTEGER, owner_identity_email TEXT, owner_identity_phone_number TEXT, notes TEXT, bulk_requests BLOB, subcal_account_id TEXT, push_key TEXT, digest BLOB, refresh_date REAL, subscription_id TEXT, last_sync_error INTEGER, last_sync_start REAL, last_sync_end REAL, last_sync_error_data BLOB, subcal_url TEXT, refresh_interval INTEGER, pubcal_account_id TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "CalendarChanges",
+   "table": "CalendarChanges",
+   "sql": "CREATE TABLE CalendarChanges (record INTEGER, type INTEGER, sequence_number INTEGER, store_id INTEGER, title INTEGER, flags INTEGER, color INTEGER, external_id TEXT, external_id_tag TEXT, display_order INTEGER, UUID TEXT, old_flags INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "Recurrence",
+   "table": "Recurrence",
+   "sql": "CREATE TABLE Recurrence (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, frequency INTEGER, interval INTEGER, week_start INTEGER, count INTEGER, cached_end_date REAL, cached_end_date_tz TEXT, end_date REAL, specifier TEXT, by_month_months INTEGER, owner_id INTEGER, external_id TEXT, external_mod_tag TEXT, external_id_tag TEXT, external_rep BLOB, UUID TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "RecurrenceChanges",
+   "table": "RecurrenceChanges",
+   "sql": "CREATE TABLE RecurrenceChanges (record INTEGER, type INTEGER, sequence_number INTEGER, external_id TEXT, store_id INTEGER, event_id_tomb INTEGER, calendar_id INTEGER, end_date_tomb REAL, UUID TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "Alarm",
+   "table": "Alarm",
+   "sql": "CREATE TABLE Alarm (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, trigger_date REAL, trigger_interval INTEGER, type INTEGER, calendaritem_owner_id INTEGER, calendar_owner_id INTEGER, external_id TEXT, external_mod_tag TEXT, external_id_tag TEXT, external_rep BLOB, UUID TEXT, proximity INTEGER, disabled INTEGER, location_id INTEGER, acknowledgedDate REAL, default_alarm INTEGER, orig_alarm_id INTEGER, email_address TEXT, bookmark BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "AlarmChanges",
+   "table": "AlarmChanges",
+   "sql": "CREATE TABLE AlarmChanges (record INTEGER, type INTEGER, sequence_number INTEGER, calendaritem_owner_id INTEGER, calendar_owner_id INTEGER, external_id TEXT, store_id INTEGER, calendar_id INTEGER, UUID TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "Participant",
+   "table": "Participant",
+   "sql": "CREATE TABLE Participant (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, entity_type INTEGER, type INTEGER, status INTEGER, pending_status INTEGER, role INTEGER, identity_id INTEGER, owner_id INTEGER, external_rep BLOB, UUID TEXT, email TEXT, phone_number TEXT, is_self INTEGER, comment TEXT, schedule_agent INTEGER, flags INTEGER, last_modified REAL, proposed_start_date REAL, invited_by TEXT, proposed_start_date_status INTEGER, schedule_status INTEGER, comment_last_modified REAL)"
+  },
+  {
+   "type": "table",
+   "name": "ParticipantChanges",
+   "table": "ParticipantChanges",
+   "sql": "CREATE TABLE ParticipantChanges (record INTEGER, type INTEGER, sequence_number INTEGER, entity_type INTEGER, status INTEGER, role INTEGER, owner_id INTEGER, UUID TEXT, email TEXT, phone_number TEXT, comment TEXT, store_id INTEGER, calendar_id INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "Identity",
+   "table": "Identity",
+   "sql": "CREATE TABLE Identity (display_name TEXT, address TEXT, first_name TEXT, last_name TEXT, UNIQUE (display_name, address, first_name, last_name))"
+  },
+  {
+   "type": "table",
+   "name": "EventAction",
+   "table": "EventAction",
+   "sql": "CREATE TABLE EventAction (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, event_id INTEGER, external_id TEXT, external_mod_tag TEXT, external_folder_id TEXT, external_schedule_id TEXT, external_rep BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "EventActionChanges",
+   "table": "EventActionChanges",
+   "sql": "CREATE TABLE EventActionChanges (record INTEGER, type INTEGER, sequence_number INTEGER, event_id INTEGER, external_id TEXT, external_folder_id TEXT, external_schedule_id TEXT, store_id INTEGER, calendar_id INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "CalendarItem",
+   "table": "CalendarItem",
+   "sql": "CREATE TABLE CalendarItem (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, summary TEXT, location_id INTEGER, client_location_id INTEGER, description TEXT, start_date REAL, start_tz TEXT, end_date REAL, end_tz TEXT, all_day INTEGER, calendar_id INTEGER, orig_item_id INTEGER, orig_date REAL, organizer_id INTEGER, self_attendee_id INTEGER, status INTEGER, invitation_status INTEGER, availability INTEGER, privacy_level INTEGER, url TEXT, last_modified REAL, sequence_num INTEGER, birthday_id INTEGER, modified_properties INTEGER, external_tracking_status INTEGER, external_id TEXT, external_mod_tag TEXT, unique_identifier TEXT, external_schedule_id TEXT, external_rep BLOB, response_comment TEXT, last_synced_response_comment TEXT, hidden INTEGER, has_recurrences INTEGER, has_attendees INTEGER, UUID TEXT, entity_type INTEGER, priority INTEGER, due_date REAL, due_tz TEXT, due_all_day INTEGER, completion_date REAL, creation_date REAL, action TEXT, app_link BLOB, display_order INTEGER, created_by_id INTEGER, modified_by_id INTEGER, shared_item_created_date REAL, shared_item_created_tz TEXT, shared_item_modified_date REAL, shared_item_modified_tz TEXT, invitation_changed_properties INTEGER, default_alarm_removed INTEGER, phantom_master INTEGER, participation_status_modified_date REAL, calendar_scale TEXT, travel_time INTEGER, travel_advisory_behavior INTEGER, start_location_id INTEGER, end_location_id INTEGER, suggested_event_info_id INTEGER, first_alert_date REAL, proposed_start_date REAL, can_forward INTEGER, location_prediction_state INTEGER, fired_ttl INTEGER, disallow_propose_new_time INTEGER, structured_data BLOB, local_structured_data BLOB, junk_status INTEGER, conference_url TEXT, contact_identifier TEXT, recurrence_set TEXT, flags INTEGER, contact_name TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "CalendarItemChanges",
+   "table": "CalendarItemChanges",
+   "sql": "CREATE TABLE CalendarItemChanges (record INTEGER, type INTEGER, sequence_number INTEGER, summary INTEGER, location_id INTEGER, description INTEGER, start_date INTEGER, start_tz INTEGER, end_date INTEGER, end_tz INTEGER, all_day INTEGER, calendar_id INTEGER, external_id TEXT, unique_identifier TEXT, UUID TEXT, entity_type INTEGER, recurrence_set TEXT, store_id INTEGER, has_dirty_instance_attributes INTEGER, old_calendar_id INTEGER, old_external_id TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "ExceptionDate",
+   "table": "ExceptionDate",
+   "sql": "CREATE TABLE ExceptionDate (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, owner_id INTEGER, date REAL, sync_order INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "ExceptionDateChanges",
+   "table": "ExceptionDateChanges",
+   "sql": "CREATE TABLE ExceptionDateChanges (record INTEGER, type INTEGER, sequence_number INTEGER, owner_id INTEGER, date REAL, store_id INTEGER, calendar_id INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "Attachment",
+   "table": "Attachment",
+   "sql": "CREATE TABLE Attachment (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, owner_id INTEGER, external_id TEXT, external_mod_tag TEXT, external_rep BLOB, url TEXT, UUID TEXT, data BLOB, format TEXT, is_binary INTEGER, filename TEXT, local_url TEXT, file_size INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "AttachmentChanges",
+   "table": "AttachmentChanges",
+   "sql": "CREATE TABLE AttachmentChanges (record INTEGER, type INTEGER, sequence_number INTEGER, owner_id INTEGER, external_id TEXT, external_mod_tag TEXT, UUID TEXT, store_id INTEGER, calendar_id INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "Category",
+   "table": "Category",
+   "sql": "CREATE TABLE Category (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, entity_type INTEGER, hidden INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "CategoryLink",
+   "table": "CategoryLink",
+   "sql": "CREATE TABLE CategoryLink (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, owner_id INTEGER, category_id INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "Location",
+   "table": "Location",
+   "sql": "CREATE TABLE Location (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, address TEXT, latitude INTEGER, longitude INTEGER, reference_frame INTEGER, address_book_id TEXT, mapkit_handle BLOB, radius INTEGER, routing TEXT, derived_from TEXT, item_owner_id INTEGER, alarm_owner_id INTEGER, start_loc_owner_id INTEGER, end_loc_owner_id INTEGER, client_loc_owner_id INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "Sharee",
+   "table": "Sharee",
+   "sql": "CREATE TABLE Sharee (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, owner_id INTEGER, external_id TEXT, external_rep BLOB, UUID TEXT, identity_id INTEGER, status INTEGER, access_level INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "ShareeChanges",
+   "table": "ShareeChanges",
+   "sql": "CREATE TABLE ShareeChanges (record INTEGER, type INTEGER, sequence_number INTEGER, owner_id INTEGER, UUID TEXT, status INTEGER, access_level INTEGER, display_name TEXT, address TEXT, store_id INTEGER, calendar_id INTEGER, first_name TEXT, last_name TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "Notification",
+   "table": "Notification",
+   "sql": "CREATE TABLE Notification (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, entity_type INTEGER, calendar_id INTEGER, invite_reply_calendar_id INTEGER, external_id TEXT, external_mod_tag TEXT, UUID TEXT, summary TEXT, creation_date REAL, last_modified REAL, status INTEGER, host_url TEXT, in_reply_to TEXT, identity_id INTEGER, alerted INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "NotificationChanges",
+   "table": "NotificationChanges",
+   "sql": "CREATE TABLE NotificationChanges (record INTEGER, type INTEGER, sequence_number INTEGER, entity_type INTEGER, calendar_id INTEGER, invite_reply_calendar_id INTEGER, external_id TEXT, UUID TEXT, store_id INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "ResourceChange",
+   "table": "ResourceChange",
+   "sql": "CREATE TABLE ResourceChange (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, notification_id INTEGER, calendar_id INTEGER, calendar_item_id INTEGER, identity_id INTEGER, change_type INTEGER, timestamp REAL, changed_properties INTEGER, create_count INTEGER, update_count INTEGER, delete_count INTEGER, deleted_summary TEXT, deleted_start_date REAL, alerted INTEGER, public_status INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "SuggestedEventInfo",
+   "table": "SuggestedEventInfo",
+   "sql": "CREATE TABLE SuggestedEventInfo (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, owner_id INTEGER, opaque_key TEXT, unique_key TEXT, changed_fields INTEGER, changes_acknowledged INTEGER, timestamp REAL, extraction_group_identifier TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "Contact",
+   "table": "Contact",
+   "sql": "CREATE TABLE Contact (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, owner_id INTEGER, contact_id TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "ContactChanges",
+   "table": "ContactChanges",
+   "sql": "CREATE TABLE ContactChanges (record INTEGER, type INTEGER, sequence_number INTEGER, owner_id INTEGER, contact_id TEXT, store_id INTEGER, calendar_id INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "Conference",
+   "table": "Conference",
+   "sql": "CREATE TABLE Conference (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT, owner_id INTEGER, url TEXT, feature TEXT, info TEXT, language TEXT, region TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "OccurrenceCache",
+   "table": "OccurrenceCache",
+   "sql": "CREATE TABLE OccurrenceCache (day REAL, event_id INTEGER, calendar_id INTEGER, store_id INTEGER, occurrence_date REAL, occurrence_start_date REAL, occurrence_end_date REAL)"
+  },
+  {
+   "type": "table",
+   "name": "OccurrenceCacheDays",
+   "table": "OccurrenceCacheDays",
+   "sql": "CREATE TABLE OccurrenceCacheDays (calendar_id INTEGER, store_id INTEGER, day REAL, count INTEGER, PRIMARY KEY (calendar_id, day))"
+  },
+  {
+   "type": "table",
+   "name": "ScheduledTaskCache",
+   "table": "ScheduledTaskCache",
+   "sql": "CREATE TABLE ScheduledTaskCache (day REAL, date_for_sorting REAL, completed INTEGER, task_id INTEGER, count INTEGER, PRIMARY KEY (day, task_id))"
+  },
+  {
+   "type": "table",
+   "name": "ClientCursor",
+   "table": "ClientCursor",
+   "sql": "CREATE TABLE ClientCursor (     ROWID INTEGER PRIMARY KEY AUTOINCREMENT,     client_identifier TEXT,     store_id INTEGER,     latest_consumed_sequence_number INTEGER,     latest_consumed_timestamp REAL,     UNIQUE(client_identifier) )"
+  },
+  {
+   "type": "table",
+   "name": "ClientSequence",
+   "table": "ClientSequence",
+   "sql": "CREATE TABLE ClientSequence (client_identifier TEXT, sequence_number INTEGER )"
+  },
+  {
+   "type": "table",
+   "name": "ClientCursorConsumed",
+   "table": "ClientCursorConsumed",
+   "sql": "CREATE TABLE ClientCursorConsumed (    client_identifier TEXT,     consumed_entity_class INTEGER,     consumed_entity_id INTEGER,     consumed_change_id INTEGER,     sequence_number INTEGER )"
+  },
+  {
+   "type": "index",
+   "name": "StoreExternalId",
+   "table": "Store",
+   "sql": "CREATE INDEX StoreExternalId on Store(external_id)"
+  },
+  {
+   "type": "index",
+   "name": "CalendarExternalId",
+   "table": "Calendar",
+   "sql": "CREATE INDEX CalendarExternalId on Calendar(external_id)"
+  },
+  {
+   "type": "index",
+   "name": "CalendarStoreId",
+   "table": "Calendar",
+   "sql": "CREATE INDEX CalendarStoreId on Calendar(store_id)"
+  },
+  {
+   "type": "index",
+   "name": "CalendarUUID",
+   "table": "Calendar",
+   "sql": "CREATE INDEX CalendarUUID on Calendar(UUID)"
+  },
+  {
+   "type": "index",
+   "name": "CalendarSelfIdentityId",
+   "table": "Calendar",
+   "sql": "CREATE INDEX CalendarSelfIdentityId on Calendar(self_identity_id)"
+  },
+  {
+   "type": "index",
+   "name": "RecurrenceEndCountIndex",
+   "table": "Recurrence",
+   "sql": "CREATE INDEX RecurrenceEndCountIndex on Recurrence(end_date, count)"
+  },
+  {
+   "type": "index",
+   "name": "RecurrenceExternalId",
+   "table": "Recurrence",
+   "sql": "CREATE INDEX RecurrenceExternalId on Recurrence(external_id)"
+  },
+  {
+   "type": "index",
+   "name": "RecurrenceOwnerIdIndex",
+   "table": "Recurrence",
+   "sql": "CREATE INDEX RecurrenceOwnerIdIndex on Recurrence(owner_id)"
+  },
+  {
+   "type": "index",
+   "name": "RecurrenceUUID",
+   "table": "Recurrence",
+   "sql": "CREATE INDEX RecurrenceUUID on Recurrence(UUID)"
+  },
+  {
+   "type": "index",
+   "name": "AlarmExternalId",
+   "table": "Alarm",
+   "sql": "CREATE INDEX AlarmExternalId on Alarm(external_id)"
+  },
+  {
+   "type": "index",
+   "name": "AlarmUUID",
+   "table": "Alarm",
+   "sql": "CREATE INDEX AlarmUUID on Alarm(UUID)"
+  },
+  {
+   "type": "index",
+   "name": "AlarmTriggerDate",
+   "table": "Alarm",
+   "sql": "CREATE INDEX AlarmTriggerDate on Alarm(trigger_date)"
+  },
+  {
+   "type": "index",
+   "name": "AlarmCalendarItemOwnerId",
+   "table": "Alarm",
+   "sql": "CREATE INDEX AlarmCalendarItemOwnerId on Alarm(calendaritem_owner_id)"
+  },
+  {
+   "type": "index",
+   "name": "AlarmCalendarOwnerId",
+   "table": "Alarm",
+   "sql": "CREATE INDEX AlarmCalendarOwnerId on Alarm(calendar_owner_id)"
+  },
+  {
+   "type": "index",
+   "name": "ParticipantUUID",
+   "table": "Participant",
+   "sql": "CREATE INDEX ParticipantUUID on Participant(UUID)"
+  },
+  {
+   "type": "index",
+   "name": "ParticipantEntityType",
+   "table": "Participant",
+   "sql": "CREATE INDEX ParticipantEntityType on Participant(entity_type)"
+  },
+  {
+   "type": "index",
+   "name": "ParticipantOwnerId",
+   "table": "Participant",
+   "sql": "CREATE INDEX ParticipantOwnerId on Participant(owner_id)"
+  },
+  {
+   "type": "index",
+   "name": "ParticipantIdentityId",
+   "table": "Participant",
+   "sql": "CREATE INDEX ParticipantIdentityId on Participant(identity_id)"
+  },
+  {
+   "type": "index",
+   "name": "ParticipantEmail",
+   "table": "Participant",
+   "sql": "CREATE INDEX ParticipantEmail on Participant(email)"
+  },
+  {
+   "type": "index",
+   "name": "ParticipantPhoneNumber",
+   "table": "Participant",
+   "sql": "CREATE INDEX ParticipantPhoneNumber on Participant(phone_number)"
+  },
+  {
+   "type": "index",
+   "name": "ParticipantProposedStartDate",
+   "table": "Participant",
+   "sql": "CREATE INDEX ParticipantProposedStartDate on Participant(proposed_start_date)"
+  },
+  {
+   "type": "index",
+   "name": "EventActionEventId",
+   "table": "EventAction",
+   "sql": "CREATE INDEX EventActionEventId on EventAction(event_id)"
+  },
+  {
+   "type": "index",
+   "name": "EventActionExternalId",
+   "table": "EventAction",
+   "sql": "CREATE INDEX EventActionExternalId on EventAction(external_id)"
+  },
+  {
+   "type": "index",
+   "name": "EventActionFolderId",
+   "table": "EventAction",
+   "sql": "CREATE INDEX EventActionFolderId on EventAction(external_folder_id)"
+  },
+  {
+   "type": "index",
+   "name": "EventStatus",
+   "table": "CalendarItem",
+   "sql": "CREATE INDEX EventStatus on CalendarItem(status)"
+  },
+  {
+   "type": "index",
+   "name": "EventHiddenEndDateStartDate",
+   "table": "CalendarItem",
+   "sql": "CREATE INDEX EventHiddenEndDateStartDate on CalendarItem(hidden, end_date, start_date)"
+  },
+  {
+   "type": "index",
+   "name": "EventExternalIdCalId",
+   "table": "CalendarItem",
+   "sql": "CREATE INDEX EventExternalIdCalId on CalendarItem(external_id, calendar_id)"
+  },
+  {
+   "type": "index",
+   "name": "EventExternalUniqueIdentifierCalId",
+   "table": "CalendarItem",
+   "sql": "CREATE INDEX EventExternalUniqueIdentifierCalId on CalendarItem(unique_identifier, calendar_id)"
+  },
+  {
+   "type": "index",
+   "name": "EventUUID",
+   "table": "CalendarItem",
+   "sql": "CREATE INDEX EventUUID on CalendarItem(UUID)"
+  },
+  {
+   "type": "index",
+   "name": "CalendarItemDueDate",
+   "table": "CalendarItem",
+   "sql": "CREATE INDEX CalendarItemDueDate on CalendarItem(due_date)"
+  },
+  {
+   "type": "index",
+   "name": "EventInvitationStatus",
+   "table": "CalendarItem",
+   "sql": "CREATE INDEX EventInvitationStatus on CalendarItem(invitation_status)"
+  },
+  {
+   "type": "index",
+   "name": "CalendarItemOriginalItemId",
+   "table": "CalendarItem",
+   "sql": "CREATE INDEX CalendarItemOriginalItemId on CalendarItem(orig_item_id)"
+  },
+  {
+   "type": "index",
+   "name": "CalendarItemOriginalDate",
+   "table": "CalendarItem",
+   "sql": "CREATE INDEX CalendarItemOriginalDate on CalendarItem(orig_date)"
+  },
+  {
+   "type": "index",
+   "name": "CalendarItemCalendarId",
+   "table": "CalendarItem",
+   "sql": "CREATE INDEX CalendarItemCalendarId on CalendarItem(calendar_id)"
+  },
+  {
+   "type": "index",
+   "name": "ExceptionDateOwnerId",
+   "table": "ExceptionDate",
+   "sql": "CREATE INDEX ExceptionDateOwnerId on ExceptionDate(owner_id)"
+  },
+  {
+   "type": "index",
+   "name": "AttachmentEventId",
+   "table": "Attachment",
+   "sql": "CREATE INDEX AttachmentEventId on Attachment(owner_id)"
+  },
+  {
+   "type": "index",
+   "name": "AttachmentUUID",
+   "table": "Attachment",
+   "sql": "CREATE INDEX AttachmentUUID on Attachment(UUID)"
+  },
+  {
+   "type": "index",
+   "name": "CategoryNameAndType",
+   "table": "Category",
+   "sql": "CREATE UNIQUE INDEX CategoryNameAndType on Category(name, entity_type)"
+  },
+  {
+   "type": "index",
+   "name": "OwnerID",
+   "table": "CategoryLink",
+   "sql": "CREATE INDEX OwnerID on CategoryLink(owner_id)"
+  },
+  {
+   "type": "index",
+   "name": "LocationOwnerItemId",
+   "table": "Location",
+   "sql": "CREATE INDEX LocationOwnerItemId on Location(item_owner_id)"
+  },
+  {
+   "type": "index",
+   "name": "LocationStartLocOwnerItemId",
+   "table": "Location",
+   "sql": "CREATE INDEX LocationStartLocOwnerItemId on Location(start_loc_owner_id) WHERE start_loc_owner_id > 0"
+  },
+  {
+   "type": "index",
+   "name": "LocationEndLocOwnerItemId",
+   "table": "Location",
+   "sql": "CREATE INDEX LocationEndLocOwnerItemId on Location(end_loc_owner_id) WHERE end_loc_owner_id > 0"
+  },
+  {
+   "type": "index",
+   "name": "LocationClientLocOwnerItemId",
+   "table": "Location",
+   "sql": "CREATE INDEX LocationClientLocOwnerItemId on Location(client_loc_owner_id) WHERE client_loc_owner_id > 0"
+  },
+  {
+   "type": "index",
+   "name": "ShareeUUID",
+   "table": "Sharee",
+   "sql": "CREATE INDEX ShareeUUID on Sharee(UUID)"
+  },
+  {
+   "type": "index",
+   "name": "ShareeOwnerId",
+   "table": "Sharee",
+   "sql": "CREATE INDEX ShareeOwnerId on Sharee(owner_id)"
+  },
+  {
+   "type": "index",
+   "name": "ShareeStatus",
+   "table": "Sharee",
+   "sql": "CREATE INDEX ShareeStatus on Sharee(status)"
+  },
+  {
+   "type": "index",
+   "name": "ShareeAccessLevel",
+   "table": "Sharee",
+   "sql": "CREATE INDEX ShareeAccessLevel on Sharee(access_level)"
+  },
+  {
+   "type": "index",
+   "name": "ShareeIdentityId",
+   "table": "Sharee",
+   "sql": "CREATE INDEX ShareeIdentityId on Sharee(identity_id)"
+  },
+  {
+   "type": "index",
+   "name": "NotificationUUIDCalendarId",
+   "table": "Notification",
+   "sql": "CREATE INDEX NotificationUUIDCalendarId on Notification(UUID, calendar_id)"
+  },
+  {
+   "type": "index",
+   "name": "NotificationEntityType",
+   "table": "Notification",
+   "sql": "CREATE INDEX NotificationEntityType on Notification(entity_type)"
+  },
+  {
+   "type": "index",
+   "name": "NotificationExternalIDCalendarId",
+   "table": "Notification",
+   "sql": "CREATE INDEX NotificationExternalIDCalendarId on Notification(external_id, calendar_id)"
+  },
+  {
+   "type": "index",
+   "name": "NotificationCalendarId",
+   "table": "Notification",
+   "sql": "CREATE INDEX NotificationCalendarId on Notification(calendar_id)"
+  },
+  {
+   "type": "index",
+   "name": "ResourceChangeNotificationID",
+   "table": "ResourceChange",
+   "sql": "CREATE INDEX ResourceChangeNotificationID on ResourceChange(notification_id)"
+  },
+  {
+   "type": "index",
+   "name": "ResourceChangeCalendarID",
+   "table": "ResourceChange",
+   "sql": "CREATE INDEX ResourceChangeCalendarID on ResourceChange(calendar_item_id)"
+  },
+  {
+   "type": "index",
+   "name": "ResourceChangeCalendarItemID",
+   "table": "ResourceChange",
+   "sql": "CREATE INDEX ResourceChangeCalendarItemID on ResourceChange(calendar_item_id)"
+  },
+  {
+   "type": "index",
+   "name": "ResourceChangeIdentityID",
+   "table": "ResourceChange",
+   "sql": "CREATE INDEX ResourceChangeIdentityID on ResourceChange(identity_id)"
+  },
+  {
+   "type": "index",
+   "name": "SuggestedEventInfoOwnerId",
+   "table": "SuggestedEventInfo",
+   "sql": "CREATE INDEX SuggestedEventInfoOwnerId on SuggestedEventInfo(owner_id)"
+  },
+  {
+   "type": "index",
+   "name": "ContactID",
+   "table": "Contact",
+   "sql": "CREATE INDEX ContactID on Contact(contact_id)"
+  },
+  {
+   "type": "index",
+   "name": "ConferenceEventId",
+   "table": "Conference",
+   "sql": "CREATE INDEX ConferenceEventId on Conference(owner_id)"
+  },
+  {
+   "type": "index",
+   "name": "ConferenceUUID",
+   "table": "Conference",
+   "sql": "CREATE INDEX ConferenceUUID on Conference(uuid)"
+  },
+  {
+   "type": "index",
+   "name": "OccurrenceCacheDayEventIdOccurrenceDate",
+   "table": "OccurrenceCache",
+   "sql": "CREATE INDEX OccurrenceCacheDayEventIdOccurrenceDate on OccurrenceCache(day, event_id, occurrence_date)"
+  },
+  {
+   "type": "index",
+   "name": "OccurrenceCacheOccurrenceDateEventId",
+   "table": "OccurrenceCache",
+   "sql": "CREATE INDEX OccurrenceCacheOccurrenceDateEventId on OccurrenceCache(occurrence_date, event_id)"
+  },
+  {
+   "type": "index",
+   "name": "OccurrenceCacheCalendarId",
+   "table": "OccurrenceCache",
+   "sql": "CREATE INDEX OccurrenceCacheCalendarId on OccurrenceCache(calendar_id)"
+  },
+  {
+   "type": "index",
+   "name": "OccurrenceCacheDaysCount",
+   "table": "OccurrenceCacheDays",
+   "sql": "CREATE INDEX OccurrenceCacheDaysCount on OccurrenceCacheDays(count)"
+  },
+  {
+   "type": "index",
+   "name": "OccurrenceCacheDaysDayCalendarId",
+   "table": "OccurrenceCacheDays",
+   "sql": "CREATE INDEX OccurrenceCacheDaysDayCalendarId on OccurrenceCacheDays(day, calendar_id)"
+  },
+  {
+   "type": "index",
+   "name": "ScheduledTaskCacheDayTaskId",
+   "table": "ScheduledTaskCache",
+   "sql": "CREATE INDEX ScheduledTaskCacheDayTaskId on ScheduledTaskCache(day)"
+  },
+  {
+   "type": "index",
+   "name": "ScheduledTaskCacheTaskId",
+   "table": "ScheduledTaskCache",
+   "sql": "CREATE INDEX ScheduledTaskCacheTaskId on ScheduledTaskCache(task_id)"
+  },
+  {
+   "type": "index",
+   "name": "ClientCursorClientIdentifier",
+   "table": "ClientCursor",
+   "sql": "CREATE INDEX ClientCursorClientIdentifier ON ClientCursor(client_identifier)"
+  },
+  {
+   "type": "index",
+   "name": "ClientSequenceClientIdentifier",
+   "table": "ClientSequence",
+   "sql": "CREATE INDEX ClientSequenceClientIdentifier ON ClientSequence(client_identifier)"
+  },
+  {
+   "type": "index",
+   "name": "ClientCursorConsumedClientIdentifier",
+   "table": "ClientCursorConsumed",
+   "sql": "CREATE INDEX ClientCursorConsumedClientIdentifier ON ClientCursorConsumed(client_identifier)"
+  },
+  {
+   "type": "trigger",
+   "name": "delete_store_members",
+   "table": "Store",
+   "sql": "CREATE TRIGGER delete_store_members AFTER DELETE ON Store\nBEGIN\nDELETE FROM Calendar WHERE store_id = OLD.ROWID;\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "delete_store_changes",
+   "table": "Store",
+   "sql": "CREATE TRIGGER delete_store_changes AFTER DELETE ON Store\nBEGIN\nDELETE FROM CalendarChanges WHERE store_id = OLD.ROWID;DELETE FROM CalendarItemChanges WHERE store_id = OLD.ROWID;DELETE FROM AlarmChanges WHERE store_id = OLD.ROWID;DELETE FROM RecurrenceChanges WHERE store_id = OLD.ROWID;DELETE FROM ParticipantChanges WHERE store_id = OLD.ROWID;DELETE FROM AttachmentChanges WHERE store_id = OLD.ROWID;DELETE FROM ContactChanges WHERE store_id = OLD.ROWID;DELETE FROM EventActionChanges WHERE store_id = OLD.ROWID;DELETE FROM ExceptionDateChanges WHERE store_id = OLD.ROWID;DELETE FROM NotificationChanges WHERE store_id = OLD.ROWID;DELETE FROM ShareeChanges WHERE store_id = OLD.ROWID;\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "delete_calendar_members",
+   "table": "Calendar",
+   "sql": "CREATE TRIGGER delete_calendar_members AFTER DELETE ON Calendar\nBEGIN\nDELETE FROM OccurrenceCacheDays where calendar_id = OLD.ROWID;DELETE FROM OccurrenceCache where calendar_id = OLD.ROWID;DELETE FROM CalendarItem WHERE calendar_id = OLD.ROWID;DELETE FROM OccurrenceCacheDays WHERE count = 0;DELETE FROM Notification WHERE calendar_id = OLD.ROWID; DELETE FROM sharee where owner_id = OLD.ROWID;DELETE FROM Alarm WHERE calendar_owner_id = OLD.ROWID;\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "cascade_alarm_delete",
+   "table": "Alarm",
+   "sql": "CREATE TRIGGER cascade_alarm_delete AFTER DELETE ON Alarm\nBEGIN\nDELETE FROM Location WHERE alarm_owner_id = OLD.ROWID;\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "delete_event_alarms_recurs",
+   "table": "CalendarItem",
+   "sql": "CREATE TRIGGER delete_event_alarms_recurs AFTER DELETE ON CalendarItem\nBEGIN\nDELETE FROM Location WHERE item_owner_id = OLD.ROWID;DELETE FROM Location WHERE start_loc_owner_id > 0 AND start_loc_owner_id = OLD.ROWID;DELETE FROM Location WHERE end_loc_owner_id > 0 AND end_loc_owner_id = OLD.ROWID;DELETE FROM Location WHERE client_loc_owner_id > 0 AND client_loc_owner_id = OLD.ROWID;DELETE FROM Alarm WHERE calendaritem_owner_id = OLD.ROWID;DELETE FROM Recurrence WHERE owner_id = OLD.ROWID;DELETE FROM Participant WHERE owner_id = OLD.ROWID;DELETE FROM ExceptionDate WHERE owner_id = OLD.ROWID;DELETE FROM OccurrenceCache WHERE event_id = OLD.ROWID;DELETE FROM OccurrenceCacheDays WHERE count = 0;DELETE FROM Attachment WHERE owner_id = OLD.ROWID;DELETE FROM ScheduledTaskCache WHERE task_id = OLD.ROWID;DELETE FROM EventAction WHERE event_id = OLD.ROWID;DELETE FROM SuggestedEventInfo WHERE ROWID = OLD.suggested_event_info_id;\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "delete_resource_changes_for_notification",
+   "table": "Notification",
+   "sql": "CREATE TRIGGER delete_resource_changes_for_notification AFTER DELETE ON Notification\nBEGIN\nDELETE FROM ResourceChange WHERE notification_id NOT IN (SELECT ROWID FROM Notification WHERE entity_type = 17 OR entity_type = 19);\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "delete_notification_calendar",
+   "table": "ResourceChange",
+   "sql": "CREATE TRIGGER delete_notification_calendar AFTER DELETE ON ResourceChange\nBEGIN\nDELETE FROM ResourceChange WHERE calendar_id NOT IN (SELECT ROWID FROM Calendar);\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "update_cache_days_after_delete",
+   "table": "OccurrenceCache",
+   "sql": "CREATE TRIGGER update_cache_days_after_delete AFTER DELETE ON OccurrenceCache\nBEGIN\nUPDATE OccurrenceCacheDays SET count = count - 1 WHERE day = OLD.day AND calendar_id = OLD.calendar_id;UPDATE OccurrenceCacheDays SET count = count - 1 WHERE day = OLD.day AND calendar_id = -2;\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "update_cache_days_after_insert",
+   "table": "OccurrenceCache",
+   "sql": "CREATE TRIGGER update_cache_days_after_insert AFTER INSERT ON OccurrenceCache\nBEGIN\nREPLACE INTO OccurrenceCacheDays VALUES (NEW.calendar_id, NEW.store_id, NEW.day, 1 + IFNULL((SELECT count FROM OccurrenceCacheDays WHERE day = NEW.day AND calendar_id = NEW.calendar_id), 0));\nREPLACE INTO OccurrenceCacheDays VALUES (-2, -2, NEW.day, 1 + IFNULL((SELECT count FROM OccurrenceCacheDays WHERE day = NEW.day AND calendar_id = -2), 0));\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "update_cache_days_after_update",
+   "table": "OccurrenceCache",
+   "sql": "CREATE TRIGGER update_cache_days_after_update AFTER UPDATE OF day ON OccurrenceCache\nBEGIN\nREPLACE INTO OccurrenceCacheDays VALUES (NEW.calendar_id, NEW.store_id, NEW.day, 1 + IFNULL((SELECT count FROM OccurrenceCacheDays WHERE day = NEW.day AND calendar_id = NEW.calendar_id), 0));\nREPLACE INTO OccurrenceCacheDays VALUES (-2, -2, NEW.day, 1 + IFNULL((SELECT count FROM OccurrenceCacheDays WHERE day = NEW.day AND calendar_id = -2), 0));\nUPDATE OccurrenceCacheDays SET count = count - 1 WHERE day = OLD.day AND calendar_id = OLD.calendar_id;UPDATE OccurrenceCacheDays SET count = count - 1 WHERE day = OLD.day AND calendar_id = -2;\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "update_task_cache_count_after_insert",
+   "table": "ScheduledTaskCache",
+   "sql": "CREATE TRIGGER update_task_cache_count_after_insert AFTER INSERT ON ScheduledTaskCache\nBEGIN\n    REPLACE INTO ScheduledTaskCache VALUES (NEW.day, NULL, NULL, -2, 1 + IFNULL((SELECT count FROM ScheduledTaskCache WHERE day = NEW.day AND task_id = -2), 0));\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "update_task_cache_count_after_update",
+   "table": "ScheduledTaskCache",
+   "sql": "CREATE TRIGGER update_task_cache_count_after_update AFTER UPDATE OF day ON ScheduledTaskCache\nBEGIN\n    UPDATE ScheduledTaskCache SET count = count - 1 WHERE day = OLD.day AND task_id = -2;\n    REPLACE INTO ScheduledTaskCache VALUES (NEW.day, NULL, NULL, -2, IFNULL((SELECT count FROM ScheduledTaskCache WHERE day = NEW.day AND task_id = -2), 0));\n    DELETE FROM ScheduledTaskCache WHERE day = OLD.day AND count = 0;\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "update_task_cache_days_after_delete",
+   "table": "ScheduledTaskCache",
+   "sql": "CREATE TRIGGER update_task_cache_days_after_delete AFTER DELETE ON ScheduledTaskCache\nBEGIN\n    UPDATE ScheduledTaskCache SET count = count - 1 WHERE day = OLD.day AND task_id = -2;\n    DELETE FROM ScheduledTaskCache WHERE day = OLD.day AND count = 0;\nEND"
+  },
+  {
+   "type": "trigger",
+   "name": "delete_clientcursor_consumed",
+   "table": "ClientCursor",
+   "sql": "CREATE TRIGGER delete_clientcursor_consumed AFTER DELETE ON ClientCursor     BEGIN         DELETE FROM ClientCursorConsumed WHERE client_identifier = OLD.client_identifier;         DELETE FROM ClientSequence WHERE client_identifier = OLD.client_identifier;     END"
+  }
+ ],
+ "columns": {
+  "_SqliteDatabaseProperties": [
+   {
+    "name": "key",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Store": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "default_alarm_offset",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "constraint_path",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "disabled",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "persistent_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "flags",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "creator_bundle_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "creator_code_signing_identity",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "only_creator_can_modify",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_mod_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "preferred_event_private_value",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "strictest_event_private_value",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_sync_error",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_sync_start",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_sync_end",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "delegated_account_owner_store_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "delegated_account_default_calendar_for_new_events_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "shows_notifications",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "flags2",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_sync_error_data",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "display_order",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "default_all_day_alarm_offset",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "StoreChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "default_alarm_offset",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "default_all_day_alarm_offset",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Calendar": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "title",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "flags",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "color",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "symbolic_color_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "color_is_display",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "supported_entity_types",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_mod_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_rep",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "display_order",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "shared_owner_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "shared_owner_address",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sharing_status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sharing_invitation_response",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "published_URL",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "is_published",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "invitation_status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sync_token",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "self_identity_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "self_identity_email",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "self_identity_phone_number",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner_identity_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner_identity_email",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner_identity_phone_number",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "notes",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "bulk_requests",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "subcal_account_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "push_key",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "digest",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "refresh_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "subscription_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_sync_error",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_sync_start",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_sync_end",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_sync_error_data",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "subcal_url",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "refresh_interval",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "pubcal_account_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "CalendarChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "title",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "flags",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "color",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "display_order",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "old_flags",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Recurrence": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "frequency",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "interval",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "week_start",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "count",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "cached_end_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "cached_end_date_tz",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "end_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "specifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "by_month_months",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_mod_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_rep",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "RecurrenceChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "event_id_tomb",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "end_date_tomb",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Alarm": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "trigger_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "trigger_interval",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendaritem_owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_mod_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_rep",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "proximity",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "disabled",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "location_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "acknowledgedDate",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "default_alarm",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "orig_alarm_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "email_address",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "bookmark",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "AlarmChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendaritem_owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Participant": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "entity_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "pending_status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "role",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "identity_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_rep",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "email",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "phone_number",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "is_self",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "comment",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "schedule_agent",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "flags",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_modified",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "proposed_start_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "invited_by",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "proposed_start_date_status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "schedule_status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "comment_last_modified",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ParticipantChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "entity_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "role",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "email",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "phone_number",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "comment",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Identity": [
+   {
+    "name": "display_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "address",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "first_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "EventAction": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "event_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_mod_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_folder_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_schedule_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_rep",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "EventActionChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "event_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_folder_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_schedule_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "CalendarItem": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "summary",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "location_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "client_location_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "description",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "start_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "start_tz",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "end_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "end_tz",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "all_day",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "orig_item_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "orig_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "organizer_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "self_attendee_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "invitation_status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "availability",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "privacy_level",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "url",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_modified",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_num",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "birthday_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "modified_properties",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_tracking_status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_mod_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "unique_identifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_schedule_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_rep",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "response_comment",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_synced_response_comment",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "hidden",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "has_recurrences",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "has_attendees",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "entity_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "priority",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "due_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "due_tz",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "due_all_day",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "completion_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "creation_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "action",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "app_link",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "display_order",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "created_by_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "modified_by_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "shared_item_created_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "shared_item_created_tz",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "shared_item_modified_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "shared_item_modified_tz",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "invitation_changed_properties",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "default_alarm_removed",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "phantom_master",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "participation_status_modified_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_scale",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "travel_time",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "travel_advisory_behavior",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "start_location_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "end_location_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "suggested_event_info_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "first_alert_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "proposed_start_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "can_forward",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "location_prediction_state",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "fired_ttl",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "disallow_propose_new_time",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "structured_data",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "local_structured_data",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "junk_status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "conference_url",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "contact_identifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "recurrence_set",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "flags",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "contact_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "CalendarItemChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "summary",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "location_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "description",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "start_date",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "start_tz",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "end_date",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "end_tz",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "all_day",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "unique_identifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "entity_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "recurrence_set",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "has_dirty_instance_attributes",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "old_calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "old_external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ExceptionDate": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sync_order",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ExceptionDateChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Attachment": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_mod_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_rep",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "url",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "data",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "format",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "is_binary",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "filename",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "local_url",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "file_size",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "AttachmentChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_mod_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Category": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "entity_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "hidden",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "CategoryLink": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "category_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Location": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "title",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "address",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "latitude",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "longitude",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "reference_frame",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "address_book_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "mapkit_handle",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "radius",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "routing",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "derived_from",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "item_owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "alarm_owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "start_loc_owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "end_loc_owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "client_loc_owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Sharee": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_rep",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "identity_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "access_level",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ShareeChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "access_level",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "display_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "address",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "first_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_name",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Notification": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "entity_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "invite_reply_calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_mod_tag",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "summary",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "creation_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "last_modified",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "host_url",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "in_reply_to",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "identity_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "alerted",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "NotificationChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "entity_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "invite_reply_calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "external_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "UUID",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ResourceChange": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "notification_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_item_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "identity_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "change_type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "timestamp",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "changed_properties",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "create_count",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "update_count",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "delete_count",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "deleted_summary",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "deleted_start_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "alerted",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "public_status",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "SuggestedEventInfo": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "opaque_key",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "unique_key",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "changed_fields",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "changes_acknowledged",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "timestamp",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "extraction_group_identifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Contact": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "contact_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ContactChanges": [
+   {
+    "name": "record",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "type",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "contact_id",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Conference": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "uuid",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "owner_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "url",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "feature",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "info",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "language",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "region",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "OccurrenceCache": [
+   {
+    "name": "day",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "event_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "occurrence_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "occurrence_start_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "occurrence_end_date",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "OccurrenceCacheDays": [
+   {
+    "name": "calendar_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "day",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 2
+   },
+   {
+    "name": "count",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ScheduledTaskCache": [
+   {
+    "name": "day",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "date_for_sorting",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "completed",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "task_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 2
+   },
+   {
+    "name": "count",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ClientCursor": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "client_identifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "store_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "latest_consumed_sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "latest_consumed_timestamp",
+    "type": "REAL",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ClientSequence": [
+   {
+    "name": "client_identifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ClientCursorConsumed": [
+   {
+    "name": "client_identifier",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "consumed_entity_class",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "consumed_entity_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "consumed_change_id",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sequence_number",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ]
+ },
+ "shape": {
+  "_SqliteDatabaseProperties": {
+   "key": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "value": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "Store": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "name": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "default_alarm_offset": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "constraint_path": {
+    "null_rate": 0.6,
+    "types": [
+     "text"
+    ]
+   },
+   "disabled": {
+    "null_rate": 0.4,
+    "types": [
+     "integer"
+    ]
+   },
+   "external_id": {
+    "null_rate": 0.4,
+    "types": [
+     "text"
+    ]
+   },
+   "persistent_id": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "flags": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "creator_bundle_id": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "creator_code_signing_identity": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "only_creator_can_modify": {
+    "null_rate": 0.4,
+    "types": [
+     "integer"
+    ]
+   },
+   "external_mod_tag": {
+    "null_rate": 0.6,
+    "types": [
+     "text"
+    ]
+   },
+   "preferred_event_private_value": {
+    "null_rate": 0.4,
+    "types": [
+     "integer"
+    ]
+   },
+   "strictest_event_private_value": {
+    "null_rate": 0.4,
+    "types": [
+     "integer"
+    ]
+   },
+   "last_sync_error": {
+    "null_rate": 0.4,
+    "types": [
+     "integer"
+    ]
+   },
+   "last_sync_start": {
+    "null_rate": 0.6,
+    "types": [
+     "real"
+    ]
+   },
+   "last_sync_end": {
+    "null_rate": 0.6,
+    "types": [
+     "real"
+    ]
+   },
+   "delegated_account_owner_store_id": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "delegated_account_default_calendar_for_new_events_id": {
+    "null_rate": 0.4,
+    "types": [
+     "integer"
+    ]
+   },
+   "shows_notifications": {
+    "null_rate": 0.4,
+    "types": [
+     "integer"
+    ]
+   },
+   "flags2": {
+    "null_rate": 0.2,
+    "types": [
+     "integer"
+    ]
+   },
+   "last_sync_error_data": {
+    "null_rate": 0.6,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   },
+   "display_order": {
+    "null_rate": 0.4,
+    "types": [
+     "integer"
+    ]
+   },
+   "owner_name": {
+    "null_rate": 0.6,
+    "types": [
+     "text"
+    ]
+   },
+   "default_all_day_alarm_offset": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "Calendar": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "store_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "title": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "flags": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "color": {
+    "null_rate": 0.083,
+    "types": [
+     "text"
+    ]
+   },
+   "symbolic_color_name": {
+    "null_rate": 0.75,
+    "types": [
+     "text"
+    ]
+   },
+   "color_is_display": {
+    "null_rate": 0.417,
+    "types": [
+     "integer"
+    ]
+   },
+   "type": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "supported_entity_types": {
+    "null_rate": 0.083,
+    "types": [
+     "integer"
+    ]
+   },
+   "external_id": {
+    "null_rate": 0.417,
+    "types": [
+     "text"
+    ]
+   },
+   "external_mod_tag": {
+    "null_rate": 0.417,
+    "types": [
+     "text"
+    ]
+   },
+   "external_id_tag": {
+    "null_rate": 0.5,
+    "types": [
+     "text"
+    ]
+   },
+   "external_rep": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "display_order": {
+    "null_rate": 0.417,
+    "types": [
+     "integer"
+    ]
+   },
+   "UUID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "shared_owner_name": {
+    "null_rate": 0.5,
+    "types": [
+     "text"
+    ]
+   },
+   "shared_owner_address": {
+    "null_rate": 0.5,
+    "types": [
+     "text"
+    ]
+   },
+   "sharing_status": {
+    "null_rate": 0.417,
+    "types": [
+     "integer"
+    ]
+   },
+   "sharing_invitation_response": {
+    "null_rate": 0.417,
+    "types": [
+     "integer"
+    ]
+   },
+   "published_URL": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "is_published": {
+    "null_rate": 0.417,
+    "types": [
+     "integer"
+    ]
+   },
+   "invitation_status": {
+    "null_rate": 0.417,
+    "types": [
+     "integer"
+    ]
+   },
+   "sync_token": {
+    "null_rate": 0.583,
+    "types": [
+     "text"
+    ]
+   },
+   "self_identity_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "self_identity_email": {
+    "null_rate": 0.5,
+    "types": [
+     "text"
+    ]
+   },
+   "self_identity_phone_number": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "owner_identity_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "owner_identity_email": {
+    "null_rate": 0.5,
+    "types": [
+     "text"
+    ]
+   },
+   "owner_identity_phone_number": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "notes": {
+    "null_rate": 0.917,
+    "types": [
+     "text"
+    ]
+   },
+   "bulk_requests": {
+    "null_rate": 0.667,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   },
+   "subcal_account_id": {
+    "null_rate": 0.917,
+    "types": [
+     "text"
+    ]
+   },
+   "push_key": {
+    "null_rate": 0.667,
+    "types": [
+     "text"
+    ]
+   },
+   "digest": {
+    "null_rate": 0.917,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "refresh_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "subscription_id": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "last_sync_error": {
+    "null_rate": 0.417,
+    "types": [
+     "integer"
+    ]
+   },
+   "last_sync_start": {
+    "null_rate": 0.917,
+    "types": [
+     "real"
+    ]
+   },
+   "last_sync_end": {
+    "null_rate": 0.917,
+    "types": [
+     "real"
+    ]
+   },
+   "last_sync_error_data": {
+    "null_rate": 0.917,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   },
+   "subcal_url": {
+    "null_rate": 0.917,
+    "types": [
+     "text"
+    ]
+   },
+   "refresh_interval": {
+    "null_rate": 0.417,
+    "types": [
+     "integer"
+    ]
+   },
+   "pubcal_account_id": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "CalendarChanges": {
+   "record": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "sequence_number": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "store_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "title": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "flags": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "color": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "external_id": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "external_id_tag": {
+    "null_rate": 0.951,
+    "types": [
+     "text"
+    ]
+   },
+   "display_order": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "UUID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "old_flags": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "Recurrence": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "frequency": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "interval": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "week_start": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "count": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "cached_end_date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "cached_end_date_tz": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "end_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "specifier": {
+    "null_rate": 0.615,
+    "types": [
+     "text"
+    ]
+   },
+   "by_month_months": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "owner_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "external_id": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "external_mod_tag": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "external_id_tag": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "external_rep": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "UUID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "Alarm": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "trigger_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "trigger_interval": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "calendaritem_owner_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "calendar_owner_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "external_id": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "external_mod_tag": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "external_id_tag": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "external_rep": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   },
+   "UUID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "proximity": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "disabled": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "location_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "acknowledgedDate": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "default_alarm": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "orig_alarm_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "email_address": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "bookmark": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "Participant": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "entity_type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "status": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "pending_status": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "role": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "identity_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "owner_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "external_rep": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "UUID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "email": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "phone_number": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "is_self": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "comment": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "schedule_agent": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "flags": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "last_modified": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "proposed_start_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "invited_by": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "proposed_start_date_status": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "schedule_status": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "comment_last_modified": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "Identity": {
+   "display_name": {
+    "null_rate": 0.2,
+    "types": [
+     "text"
+    ]
+   },
+   "address": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "first_name": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "last_name": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "EventActionChanges": {
+   "record": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "sequence_number": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "event_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "external_id": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "external_folder_id": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "external_schedule_id": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "store_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "calendar_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "CalendarItem": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "summary": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "location_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "client_location_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "description": {
+    "null_rate": 0.782,
+    "types": [
+     "text"
+    ]
+   },
+   "start_date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "start_tz": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "end_date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "end_tz": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "all_day": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "calendar_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "orig_item_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "orig_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "organizer_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "self_attendee_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "status": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "invitation_status": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "availability": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "privacy_level": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "url": {
+    "null_rate": 0.977,
+    "types": [
+     "text"
+    ]
+   },
+   "last_modified": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "sequence_num": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "birthday_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "modified_properties": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "external_tracking_status": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "external_id": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "external_mod_tag": {
+    "null_rate": 0.97,
+    "types": [
+     "text"
+    ]
+   },
+   "unique_identifier": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "external_schedule_id": {
+    "null_rate": 0.992,
+    "types": [
+     "text"
+    ]
+   },
+   "external_rep": {
+    "null_rate": 0.008,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   },
+   "response_comment": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "last_synced_response_comment": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "hidden": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "has_recurrences": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "has_attendees": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "UUID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "entity_type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "priority": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "due_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "due_tz": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "due_all_day": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "completion_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "creation_date": {
+    "null_rate": 0.97,
+    "types": [
+     "real"
+    ]
+   },
+   "action": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "app_link": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "display_order": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "created_by_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "modified_by_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "shared_item_created_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "shared_item_created_tz": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "shared_item_modified_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "shared_item_modified_tz": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "invitation_changed_properties": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "default_alarm_removed": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "phantom_master": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "participation_status_modified_date": {
+    "null_rate": 0.992,
+    "types": [
+     "real"
+    ]
+   },
+   "calendar_scale": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "travel_time": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "travel_advisory_behavior": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "start_location_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "end_location_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "suggested_event_info_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "first_alert_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "proposed_start_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "can_forward": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "location_prediction_state": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "fired_ttl": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "disallow_propose_new_time": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "structured_data": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "local_structured_data": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "junk_status": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "conference_url": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "contact_identifier": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "recurrence_set": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "flags": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "contact_name": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "Category": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "name": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "entity_type": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "hidden": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "CategoryLink": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "owner_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "category_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "Location": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "title": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "address": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "latitude": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "longitude": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "reference_frame": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "address_book_id": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "mapkit_handle": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "radius": {
+    "null_rate": 0.25,
+    "types": [
+     "real"
+    ]
+   },
+   "routing": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "derived_from": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "item_owner_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "alarm_owner_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "start_loc_owner_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "end_loc_owner_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "client_loc_owner_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "OccurrenceCache": {
+   "day": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "event_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "calendar_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "store_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "occurrence_date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "occurrence_start_date": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "occurrence_end_date": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   }
+  },
+  "OccurrenceCacheDays": {
+   "calendar_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "store_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "day": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "count": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "ClientCursor": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "client_identifier": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "store_id": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "latest_consumed_sequence_number": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "latest_consumed_timestamp": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   }
+  },
+  "ClientSequence": {
+   "client_identifier": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "sequence_number": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  }
+ }
+}

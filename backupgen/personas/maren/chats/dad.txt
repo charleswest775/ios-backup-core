@@ -1,0 +1,50 @@
+chat: dad
+with: dad
+service: iMessage
+
+# Greg Lindqvist, Maren's dad. Semi-retired land surveyor. Loves maps, short sentences.
+
+== 2024-08-14
+19:00 dad: Skyline Trail is about 5.5 miles with 1,700 ft of gain. Take more water than you think. Dad
+19:05 me: Thanks Dad. 3 liters each
+19:06 dad: Good.
+
+== 2024-12-12
+18:30 dad: Did you get the new tires before the mountain trip?
+18:32 me: Yes! Ridgeline put them on today. All-weather ones
+18:33 dad: Check the pressure when it gets cold. It drops.
+18:33 me +like
+
+== 2025-03-02
+10:00 dad: Looked at the duplex on the county map. Good lot. Slopes away from the house. No drainage worries.
+10:05 me: You looked up our new house on the county GIS??
+10:06 dad: Of course.
+10:06 me +laugh
+
+== 2025-07-28
+20:00 dad: For Yellowstone. Go in the West entrance early, before 7. Lamar Valley at dawn for animals. Bring binoculars.
+20:01 dad: https://www.nps.gov/yell/planyourvisit/maps.htm
+20:05 me: We're doing Lamar on Wednesday at sunrise!
+20:06 dad: Good plan. Fill up the tank in Gardiner, not in the park.
+20:06 me +like
+
+== 2025-08-13
+07:30 me: Dad! Lamar Valley at sunrise. You were right. Bison everywhere
+07:35 dad: Told you. Count them for me.
+07:36 me: I stopped at 200
+
+== 2025-12-26
+11:00 dad: Thank you for showing me the river park drawings. The terraces are clever. You get your grading skills from me.
+11:05 me: I definitely do. You taught me to read contours on the kitchen table
+11:06 dad: With the old Missoula quad. I still have it.
+11:06 me +love
+
+== 2026-01-12
+11:30 dad: Associate. Very proud. You earned it. Dad
+11:35 me: Thank you Dad 💕
+
+== 2026-06-22
+19:00 dad: Is Cleetwood Cove trail really 700 ft? Mom wants to know if I can do it.
+19:05 me: About 700 ft down and back up, a little over a mile each way. Go slow and take breaks. You'll be fine
+19:06 dad: I've been doing the stairs at the high school.
+19:06 me +love

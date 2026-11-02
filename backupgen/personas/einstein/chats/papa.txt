@@ -1,0 +1,18 @@
+chat: papa
+with: papa
+service: SMS
+
+# Hermann Einstein ran electrical businesses in northern Italy. He died in Milan on 10 October 1902.
+
+== 1900-09-04
+09:00 papa: We start with Canneto tomorrow, then Isola della Scala. Bring a notebook.
+09:10 me: And then Venice?
+09:12 papa: And then Venice.
+
+== 1901-05-16
+19:00 me: First day of teaching at the Technikum in Winterthur.
+19:30 papa: Good. Steady work, steady pay.
+
+== 1902-06-16
+18:35 me: Papa, I have the Patent Office position. 3,500 francs a year.
+18:50 papa: I'm proud of you, Albert.
