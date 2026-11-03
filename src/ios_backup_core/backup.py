@@ -518,3 +518,13 @@ class BackupReader:
         extractor = VoicemailExtractor()
         contacts = self.contacts()
         return extractor.list_voicemails(self._accessor, contacts)
+
+    def voice_memos(self):
+        """List Voice Memos recordings."""
+        from ios_backup_core.extractors.voice_memos import VoiceMemoExtractor
+        return VoiceMemoExtractor().list_voice_memos(self._accessor)
+
+    def calendar_events(self, calendar_id: Optional[int] = None):
+        """List calendar events and calendars."""
+        from ios_backup_core.extractors.calendar_events import CalendarExtractor
+        return CalendarExtractor().list_events(self._accessor, calendar_id=calendar_id)

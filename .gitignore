@@ -12,3 +12,6 @@ build/
 .ruff_cache/
 .mypy_cache/
 *.so
+
+# macOS Finder metadata
+.DS_Store
