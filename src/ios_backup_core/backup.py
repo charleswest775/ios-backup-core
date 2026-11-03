@@ -507,7 +507,7 @@ class BackupReader:
         return extractor.list_notes(self._accessor)
 
     def browser_history(self, **kwargs):
-        """List browser history (Safari + Firefox)."""
+        """List browser history (Safari, Firefox, Chrome, Edge, Brave)."""
         from ios_backup_core.extractors.browser_history import BrowserHistoryExtractor
         extractor = BrowserHistoryExtractor()
         return extractor.list_browser_history(self._accessor, **kwargs)
