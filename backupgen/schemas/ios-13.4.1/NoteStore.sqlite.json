@@ -1,0 +1,3005 @@
+{
+ "database": "NoteStore.sqlite",
+ "ios": "13.4.1",
+ "build": "17E262",
+ "source": "public backup pub-hickman-13.4.1 (definitions only)",
+ "harvested": "2026-10-11",
+ "pragmas": {
+  "user_version": 0,
+  "page_size": 4096,
+  "journal_mode": "wal",
+  "auto_vacuum": 2,
+  "encoding": "UTF-8"
+ },
+ "objects": [
+  {
+   "type": "table",
+   "name": "ZICCLOUDSTATE",
+   "table": "ZICCLOUDSTATE",
+   "sql": "CREATE TABLE ZICCLOUDSTATE ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZCURRENTLOCALVERSION INTEGER, ZINCLOUD INTEGER, ZLATESTVERSIONSYNCEDTOCLOUD INTEGER, ZCLOUDSYNCINGOBJECT INTEGER, Z2_CLOUDSYNCINGOBJECT INTEGER, ZLOCALVERSIONDATE TIMESTAMP )"
+  },
+  {
+   "type": "table",
+   "name": "ZICCLOUDSYNCINGOBJECT",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE TABLE ZICCLOUDSYNCINGOBJECT ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZCRYPTOITERATIONCOUNT INTEGER, ZISPASSWORDPROTECTED INTEGER, ZMARKEDFORDELETION INTEGER, ZMINIMUMSUPPORTEDNOTESVERSION INTEGER, ZNEEDSINITIALFETCHFROMCLOUD INTEGER, ZNEEDSTOBEFETCHEDFROMCLOUD INTEGER, ZNEEDSTOSAVEUSERSPECIFICRECORD INTEGER, ZCLOUDSTATE INTEGER, ZACCOUNT INTEGER, ZCHECKEDFORLOCATION INTEGER, ZFILESIZE INTEGER, ZHANDWRITINGSUMMARYVERSION INTEGER, ZHASMARKUPDATA INTEGER, ZIMAGECLASSIFICATIONSUMMARYVERSION INTEGER, ZIMAGEFILTERTYPE INTEGER, ZOCRSUMMARYVERSION INTEGER, ZORIENTATION INTEGER, ZSECTION INTEGER, ZLOCATION INTEGER, ZMEDIA INTEGER, ZNOTE INTEGER, ZNOTEUSINGTITLEFORNOTETITLE INTEGER, ZPARENTATTACHMENT INTEGER, ZAPPEARANCETYPE INTEGER, ZSCALEWHENDRAWING INTEGER, ZVERSION INTEGER, ZVERSIONOUTOFDATE INTEGER, ZATTACHMENT INTEGER, ZSTATE INTEGER, ZACCOUNT1 INTEGER, ZTYPE INTEGER, ZACCOUNT2 INTEGER, ZATTACHMENT1 INTEGER, ZATTACHMENTVIEWTYPE INTEGER, ZISPINNED INTEGER, ZLEGACYNOTEWASPLAINTEXT INTEGER, ZNOTEHASCHANGES INTEGER, ZPAPERSTYLETYPE INTEGER, ZPREFERREDBACKGROUNDTYPE INTEGER, ZACCOUNT3 INTEGER, ZFOLDER INTEGER, ZNOTEDATA INTEGER, ZTITLESOURCEATTACHMENT INTEGER, ZISHIDDENNOTECONTAINER INTEGER, ZSORTORDER INTEGER, ZOWNER INTEGER, ZACCOUNTTYPE INTEGER, ZDIDCHOOSETOMIGRATE INTEGER, ZDIDFINISHMIGRATION INTEGER, ZDIDMIGRATEONMAC INTEGER, ZSTOREDATASEPARATELY INTEGER, ZACCOUNTDATA INTEGER, ZCUSTOMNOTESORTTYPEVALUE INTEGER, ZFOLDERTYPE INTEGER, ZIMPORTEDFROMLEGACY INTEGER, ZACCOUNT4 INTEGER, ZPARENT INTEGER, ZCREATIONDATE TIMESTAMP, ZCROPPINGQUADBOTTOMLEFTX FLOAT, ZCROPPINGQUADBOTTOMLEFTY FLOAT, ZCROPPINGQUADBOTTOMRIGHTX FLOAT, ZCROPPINGQUADBOTTOMRIGHTY FLOAT, ZCROPPINGQUADTOPLEFTX FLOAT, ZCROPPINGQUADTOPLEFTY FLOAT, ZCROPPINGQUADTOPRIGHTX FLOAT, ZCROPPINGQUADTOPRIGHTY FLOAT, ZDURATION FLOAT, ZMODIFICATIONDATE TIMESTAMP, ZORIGINX FLOAT, ZORIGINY FLOAT, ZPREVIEWUPDATEDATE TIMESTAMP, ZSIZEHEIGHT FLOAT, ZSIZEWIDTH FLOAT, ZHEIGHT FLOAT, ZMODIFIEDDATE TIMESTAMP, ZSCALE FLOAT, ZWIDTH FLOAT, ZSTATEMODIFICATIONDATE TIMESTAMP, ZMODIFICATIONDATEATIMPORT TIMESTAMP, ZCREATIONDATE1 TIMESTAMP, ZFOLDERMODIFICATIONDATE TIMESTAMP, ZLASTNOTIFIEDDATE TIMESTAMP, ZLASTVIEWEDMODIFICATIONDATE TIMESTAMP, ZLEGACYMODIFICATIONDATEATIMPORT TIMESTAMP, ZMODIFICATIONDATE1 TIMESTAMP, ZCUSTOMNOTESORTTYPEMODIFICATIONDATE TIMESTAMP, ZDATEFORLASTTITLEMODIFICATION TIMESTAMP, ZPARENTMODIFICATIONDATE TIMESTAMP, ZIDENTIFIER VARCHAR, ZPASSWORDHINT VARCHAR, ZZONEOWNERNAME VARCHAR, ZADDITIONALINDEXABLETEXT VARCHAR, ZFALLBACKSUBTITLEIOS VARCHAR, ZFALLBACKSUBTITLEMAC VARCHAR, ZFALLBACKTITLE VARCHAR, ZHANDWRITINGSUMMARY VARCHAR, ZIMAGECLASSIFICATIONSUMMARY VARCHAR, ZOCRSUMMARY VARCHAR, ZREMOTEFILEURLSTRING VARCHAR, ZSUMMARY VARCHAR, ZTITLE VARCHAR, ZTYPEUTI VARCHAR, ZURLSTRING VARCHAR, ZUSERTITLE VARCHAR, ZDEVICEIDENTIFIER VARCHAR, ZCONTENTHASHATIMPORT VARCHAR, ZFILENAME VARCHAR, ZLEGACYCONTENTHASHATIMPORT VARCHAR, ZLEGACYIMPORTDEVICEIDENTIFIER VARCHAR, ZLEGACYMANAGEDOBJECTIDURIREPRESENTATION VARCHAR, ZSELECTEDINKCOLORSTRING VARCHAR, ZSELECTEDINKIDENTIFIER VARCHAR, ZSNIPPET VARCHAR, ZTHUMBNAILATTACHMENTIDENTIFIER VARCHAR, ZTITLE1 VARCHAR, ZACCOUNTNAMEFORACCOUNTLISTSORTING VARCHAR, ZNESTEDTITLEFORSORTING VARCHAR, ZNAME VARCHAR, ZUSERRECORDNAME VARCHAR, ZTITLE2 VARCHAR, ZASSETCRYPTOINITIALIZATIONVECTOR BLOB, ZASSETCRYPTOTAG BLOB, ZCRYPTOINITIALIZATIONVECTOR BLOB, ZCRYPTOSALT BLOB, ZCRYPTOTAG BLOB, ZCRYPTOWRAPPEDKEY BLOB, ZENCRYPTEDVALUESJSON BLOB, ZSERVERRECORDDATA BLOB, ZSERVERSHAREDATA BLOB, ZUNAPPLIEDENCRYPTEDRECORD BLOB, ZUSERSPECIFICSERVERRECORDDATA BLOB, ZMERGEABLEDATA BLOB, ZFALLBACKIMAGECRYPTOINITIALIZATIONVECTOR BLOB, ZFALLBACKIMAGECRYPTOTAG BLOB, ZMARKUPMODELDATA BLOB, ZMERGEABLEDATA1 BLOB, ZMETADATADATA BLOB, ZCRYPTOMETADATAINITIALIZATIONVECTOR BLOB, ZCRYPTOMETADATATAG BLOB, ZENCRYPTEDMETADATA BLOB, ZMETADATA BLOB, ZLASTNOTIFIEDTIMESTAMPDATA BLOB, ZLASTVIEWEDTIMESTAMPDATA BLOB, ZREPLICAIDTOUSERIDDICTDATA BLOB, ZCRYPTOVERIFIER BLOB, ZMERGEABLEDATA2 BLOB )"
+  },
+  {
+   "type": "table",
+   "name": "ZICLOCATION",
+   "table": "ZICLOCATION",
+   "sql": "CREATE TABLE ZICLOCATION ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZPLACEUPDATED INTEGER, ZATTACHMENT INTEGER, ZLATITUDE FLOAT, ZLONGITUDE FLOAT, ZPLACEMARKDATA BLOB )"
+  },
+  {
+   "type": "table",
+   "name": "ZICNOTEDATA",
+   "table": "ZICNOTEDATA",
+   "sql": "CREATE TABLE ZICNOTEDATA ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZNOTE INTEGER, ZCRYPTOINITIALIZATIONVECTOR BLOB, ZCRYPTOTAG BLOB, ZDATA BLOB )"
+  },
+  {
+   "type": "table",
+   "name": "ZICSERVERCHANGETOKEN",
+   "table": "ZICSERVERCHANGETOKEN",
+   "sql": "CREATE TABLE ZICSERVERCHANGETOKEN ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZDATABASESCOPE INTEGER, ZACCOUNT INTEGER, ZOWNERNAME VARCHAR, ZZONENAME VARCHAR, ZCKSERVERCHANGETOKENDATA BLOB )"
+  },
+  {
+   "type": "table",
+   "name": "Z_PRIMARYKEY",
+   "table": "Z_PRIMARYKEY",
+   "sql": "CREATE TABLE Z_PRIMARYKEY (Z_ENT INTEGER PRIMARY KEY, Z_NAME VARCHAR, Z_SUPER INTEGER, Z_MAX INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "Z_METADATA",
+   "table": "Z_METADATA",
+   "sql": "CREATE TABLE Z_METADATA (Z_VERSION INTEGER PRIMARY KEY, Z_UUID VARCHAR(255), Z_PLIST BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "Z_MODELCACHE",
+   "table": "Z_MODELCACHE",
+   "sql": "CREATE TABLE Z_MODELCACHE (Z_CONTENT BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "ACHANGE",
+   "table": "ACHANGE",
+   "sql": "CREATE TABLE ACHANGE ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZCHANGETYPE INTEGER, ZENTITY INTEGER, ZENTITYPK INTEGER, ZTRANSACTIONID INTEGER, ZCOLUMNS BLOB )"
+  },
+  {
+   "type": "table",
+   "name": "ATRANSACTION",
+   "table": "ATRANSACTION",
+   "sql": "CREATE TABLE ATRANSACTION ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZAUTHORTS INTEGER, ZBUNDLEIDTS INTEGER, ZCONTEXTNAMETS INTEGER, ZPROCESSIDTS INTEGER, ZTIMESTAMP FLOAT, ZAUTHOR VARCHAR, ZBUNDLEID VARCHAR, ZCONTEXTNAME VARCHAR, ZPROCESSID VARCHAR, ZQUERYGEN BLOB )"
+  },
+  {
+   "type": "table",
+   "name": "ATRANSACTIONSTRING",
+   "table": "ATRANSACTIONSTRING",
+   "sql": "CREATE TABLE ATRANSACTIONSTRING ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZNAME VARCHAR )"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSTATE_ZCLOUDSYNCINGOBJECT_INDEX",
+   "table": "ZICCLOUDSTATE",
+   "sql": "CREATE INDEX ZICCLOUDSTATE_ZCLOUDSYNCINGOBJECT_INDEX ON ZICCLOUDSTATE (ZCLOUDSYNCINGOBJECT)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZCLOUDSTATE_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZCLOUDSTATE_INDEX ON ZICCLOUDSYNCINGOBJECT (ZCLOUDSTATE)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZACCOUNT_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZACCOUNT_INDEX ON ZICCLOUDSYNCINGOBJECT (ZACCOUNT)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZLOCATION_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZLOCATION_INDEX ON ZICCLOUDSYNCINGOBJECT (ZLOCATION)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZMEDIA_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZMEDIA_INDEX ON ZICCLOUDSYNCINGOBJECT (ZMEDIA)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZNOTE_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZNOTE_INDEX ON ZICCLOUDSYNCINGOBJECT (ZNOTE)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZNOTEUSINGTITLEFORNOTETITLE_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZNOTEUSINGTITLEFORNOTETITLE_INDEX ON ZICCLOUDSYNCINGOBJECT (ZNOTEUSINGTITLEFORNOTETITLE)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZPARENTATTACHMENT_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZPARENTATTACHMENT_INDEX ON ZICCLOUDSYNCINGOBJECT (ZPARENTATTACHMENT)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZATTACHMENT_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZATTACHMENT_INDEX ON ZICCLOUDSYNCINGOBJECT (ZATTACHMENT)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZACCOUNT1_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZACCOUNT1_INDEX ON ZICCLOUDSYNCINGOBJECT (ZACCOUNT1)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZACCOUNT2_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZACCOUNT2_INDEX ON ZICCLOUDSYNCINGOBJECT (ZACCOUNT2)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZATTACHMENT1_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZATTACHMENT1_INDEX ON ZICCLOUDSYNCINGOBJECT (ZATTACHMENT1)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZACCOUNT3_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZACCOUNT3_INDEX ON ZICCLOUDSYNCINGOBJECT (ZACCOUNT3)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZFOLDER_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZFOLDER_INDEX ON ZICCLOUDSYNCINGOBJECT (ZFOLDER)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZNOTEDATA_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZNOTEDATA_INDEX ON ZICCLOUDSYNCINGOBJECT (ZNOTEDATA)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZTITLESOURCEATTACHMENT_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZTITLESOURCEATTACHMENT_INDEX ON ZICCLOUDSYNCINGOBJECT (ZTITLESOURCEATTACHMENT)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZOWNER_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZOWNER_INDEX ON ZICCLOUDSYNCINGOBJECT (ZOWNER)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZACCOUNTDATA_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZACCOUNTDATA_INDEX ON ZICCLOUDSYNCINGOBJECT (ZACCOUNTDATA)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZACCOUNT4_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZACCOUNT4_INDEX ON ZICCLOUDSYNCINGOBJECT (ZACCOUNT4)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_ZPARENT_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_ZPARENT_INDEX ON ZICCLOUDSYNCINGOBJECT (ZPARENT)"
+  },
+  {
+   "type": "index",
+   "name": "ZICCLOUDSYNCINGOBJECT_Z_ENT_INDEX",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE INDEX ZICCLOUDSYNCINGOBJECT_Z_ENT_INDEX ON ZICCLOUDSYNCINGOBJECT (Z_ENT)"
+  },
+  {
+   "type": "index",
+   "name": "Z_ICCloudSyncingObject_UNIQUE_identifier",
+   "table": "ZICCLOUDSYNCINGOBJECT",
+   "sql": "CREATE UNIQUE INDEX Z_ICCloudSyncingObject_UNIQUE_identifier ON ZICCLOUDSYNCINGOBJECT (ZIDENTIFIER COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "ZICLOCATION_ZATTACHMENT_INDEX",
+   "table": "ZICLOCATION",
+   "sql": "CREATE INDEX ZICLOCATION_ZATTACHMENT_INDEX ON ZICLOCATION (ZATTACHMENT)"
+  },
+  {
+   "type": "index",
+   "name": "ZICLOCATION_Z_ENT_INDEX",
+   "table": "ZICLOCATION",
+   "sql": "CREATE INDEX ZICLOCATION_Z_ENT_INDEX ON ZICLOCATION (Z_ENT)"
+  },
+  {
+   "type": "index",
+   "name": "ZICNOTEDATA_ZNOTE_INDEX",
+   "table": "ZICNOTEDATA",
+   "sql": "CREATE INDEX ZICNOTEDATA_ZNOTE_INDEX ON ZICNOTEDATA (ZNOTE)"
+  },
+  {
+   "type": "index",
+   "name": "ZICSERVERCHANGETOKEN_ZACCOUNT_INDEX",
+   "table": "ZICSERVERCHANGETOKEN",
+   "sql": "CREATE INDEX ZICSERVERCHANGETOKEN_ZACCOUNT_INDEX ON ZICSERVERCHANGETOKEN (ZACCOUNT)"
+  },
+  {
+   "type": "index",
+   "name": "ACHANGE_ZTRANSACTIONID_INDEX",
+   "table": "ACHANGE",
+   "sql": "CREATE INDEX ACHANGE_ZTRANSACTIONID_INDEX ON ACHANGE (ZTRANSACTIONID)"
+  },
+  {
+   "type": "index",
+   "name": "ATRANSACTION_ZAUTHORTS_INDEX",
+   "table": "ATRANSACTION",
+   "sql": "CREATE INDEX ATRANSACTION_ZAUTHORTS_INDEX ON ATRANSACTION (ZAUTHORTS)"
+  },
+  {
+   "type": "index",
+   "name": "ATRANSACTION_ZBUNDLEIDTS_INDEX",
+   "table": "ATRANSACTION",
+   "sql": "CREATE INDEX ATRANSACTION_ZBUNDLEIDTS_INDEX ON ATRANSACTION (ZBUNDLEIDTS)"
+  },
+  {
+   "type": "index",
+   "name": "ATRANSACTION_ZCONTEXTNAMETS_INDEX",
+   "table": "ATRANSACTION",
+   "sql": "CREATE INDEX ATRANSACTION_ZCONTEXTNAMETS_INDEX ON ATRANSACTION (ZCONTEXTNAMETS)"
+  },
+  {
+   "type": "index",
+   "name": "ATRANSACTION_ZPROCESSIDTS_INDEX",
+   "table": "ATRANSACTION",
+   "sql": "CREATE INDEX ATRANSACTION_ZPROCESSIDTS_INDEX ON ATRANSACTION (ZPROCESSIDTS)"
+  },
+  {
+   "type": "index",
+   "name": "Z_TRANSACTION_TransactionAuthorIndex",
+   "table": "ATRANSACTION",
+   "sql": "CREATE INDEX Z_TRANSACTION_TransactionAuthorIndex ON ATRANSACTION (ZAUTHOR COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_TRANSACTION_TransactionTimestampIndex",
+   "table": "ATRANSACTION",
+   "sql": "CREATE INDEX Z_TRANSACTION_TransactionTimestampIndex ON ATRANSACTION (ZTIMESTAMP COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_TRANSACTIONSTRING_UNIQUE_NAME",
+   "table": "ATRANSACTIONSTRING",
+   "sql": "CREATE UNIQUE INDEX Z_TRANSACTIONSTRING_UNIQUE_NAME ON ATRANSACTIONSTRING (ZNAME COLLATE BINARY ASC)"
+  }
+ ],
+ "columns": {
+  "ZICCLOUDSTATE": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCURRENTLOCALVERSION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZINCLOUD",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLATESTVERSIONSYNCEDTOCLOUD",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCLOUDSYNCINGOBJECT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z2_CLOUDSYNCINGOBJECT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLOCALVERSIONDATE",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ZICCLOUDSYNCINGOBJECT": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCRYPTOITERATIONCOUNT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZISPASSWORDPROTECTED",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMARKEDFORDELETION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMINIMUMSUPPORTEDNOTESVERSION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNEEDSINITIALFETCHFROMCLOUD",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNEEDSTOBEFETCHEDFROMCLOUD",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNEEDSTOSAVEUSERSPECIFICRECORD",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCLOUDSTATE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZACCOUNT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCHECKEDFORLOCATION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFILESIZE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZHANDWRITINGSUMMARYVERSION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZHASMARKUPDATA",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZIMAGECLASSIFICATIONSUMMARYVERSION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZIMAGEFILTERTYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZOCRSUMMARYVERSION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZORIENTATION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSECTION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLOCATION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMEDIA",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNOTE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNOTEUSINGTITLEFORNOTETITLE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPARENTATTACHMENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZAPPEARANCETYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSCALEWHENDRAWING",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZVERSION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZVERSIONOUTOFDATE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZATTACHMENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSTATE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZACCOUNT1",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZACCOUNT2",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZATTACHMENT1",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZATTACHMENTVIEWTYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZISPINNED",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLEGACYNOTEWASPLAINTEXT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNOTEHASCHANGES",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPAPERSTYLETYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPREFERREDBACKGROUNDTYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZACCOUNT3",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFOLDER",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNOTEDATA",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTITLESOURCEATTACHMENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZISHIDDENNOTECONTAINER",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSORTORDER",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZOWNER",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZACCOUNTTYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDIDCHOOSETOMIGRATE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDIDFINISHMIGRATION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDIDMIGRATEONMAC",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSTOREDATASEPARATELY",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZACCOUNTDATA",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCUSTOMNOTESORTTYPEVALUE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFOLDERTYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZIMPORTEDFROMLEGACY",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZACCOUNT4",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPARENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCREATIONDATE",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCROPPINGQUADBOTTOMLEFTX",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCROPPINGQUADBOTTOMLEFTY",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCROPPINGQUADBOTTOMRIGHTX",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCROPPINGQUADBOTTOMRIGHTY",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCROPPINGQUADTOPLEFTX",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCROPPINGQUADTOPLEFTY",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCROPPINGQUADTOPRIGHTX",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCROPPINGQUADTOPRIGHTY",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDURATION",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMODIFICATIONDATE",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZORIGINX",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZORIGINY",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPREVIEWUPDATEDATE",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSIZEHEIGHT",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSIZEWIDTH",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZHEIGHT",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMODIFIEDDATE",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSCALE",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZWIDTH",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSTATEMODIFICATIONDATE",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMODIFICATIONDATEATIMPORT",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCREATIONDATE1",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFOLDERMODIFICATIONDATE",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLASTNOTIFIEDDATE",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLASTVIEWEDMODIFICATIONDATE",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLEGACYMODIFICATIONDATEATIMPORT",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMODIFICATIONDATE1",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCUSTOMNOTESORTTYPEMODIFICATIONDATE",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDATEFORLASTTITLEMODIFICATION",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPARENTMODIFICATIONDATE",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZIDENTIFIER",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPASSWORDHINT",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZZONEOWNERNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZADDITIONALINDEXABLETEXT",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFALLBACKSUBTITLEIOS",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFALLBACKSUBTITLEMAC",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFALLBACKTITLE",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZHANDWRITINGSUMMARY",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZIMAGECLASSIFICATIONSUMMARY",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZOCRSUMMARY",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZREMOTEFILEURLSTRING",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSUMMARY",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTITLE",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTYPEUTI",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZURLSTRING",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZUSERTITLE",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDEVICEIDENTIFIER",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCONTENTHASHATIMPORT",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFILENAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLEGACYCONTENTHASHATIMPORT",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLEGACYIMPORTDEVICEIDENTIFIER",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLEGACYMANAGEDOBJECTIDURIREPRESENTATION",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSELECTEDINKCOLORSTRING",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSELECTEDINKIDENTIFIER",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSNIPPET",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTHUMBNAILATTACHMENTIDENTIFIER",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTITLE1",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZACCOUNTNAMEFORACCOUNTLISTSORTING",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNESTEDTITLEFORSORTING",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZUSERRECORDNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTITLE2",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZASSETCRYPTOINITIALIZATIONVECTOR",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZASSETCRYPTOTAG",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCRYPTOINITIALIZATIONVECTOR",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCRYPTOSALT",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCRYPTOTAG",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCRYPTOWRAPPEDKEY",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZENCRYPTEDVALUESJSON",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSERVERRECORDDATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSERVERSHAREDATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZUNAPPLIEDENCRYPTEDRECORD",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZUSERSPECIFICSERVERRECORDDATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMERGEABLEDATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFALLBACKIMAGECRYPTOINITIALIZATIONVECTOR",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFALLBACKIMAGECRYPTOTAG",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMARKUPMODELDATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMERGEABLEDATA1",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMETADATADATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCRYPTOMETADATAINITIALIZATIONVECTOR",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCRYPTOMETADATATAG",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZENCRYPTEDMETADATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMETADATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLASTNOTIFIEDTIMESTAMPDATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLASTVIEWEDTIMESTAMPDATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZREPLICAIDTOUSERIDDICTDATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCRYPTOVERIFIER",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZMERGEABLEDATA2",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ZICLOCATION": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPLACEUPDATED",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZATTACHMENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLATITUDE",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLONGITUDE",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPLACEMARKDATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ZICNOTEDATA": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNOTE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCRYPTOINITIALIZATIONVECTOR",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCRYPTOTAG",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ZICSERVERCHANGETOKEN": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDATABASESCOPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZACCOUNT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZOWNERNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZZONENAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCKSERVERCHANGETOKENDATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_PRIMARYKEY": [
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_NAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_SUPER",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_MAX",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_METADATA": [
+   {
+    "name": "Z_VERSION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_UUID",
+    "type": "VARCHAR(255)",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_PLIST",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_MODELCACHE": [
+   {
+    "name": "Z_CONTENT",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ACHANGE": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCHANGETYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZENTITY",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZENTITYPK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTRANSACTIONID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCOLUMNS",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ATRANSACTION": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZAUTHORTS",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZBUNDLEIDTS",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCONTEXTNAMETS",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPROCESSIDTS",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTIMESTAMP",
+    "type": "FLOAT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZAUTHOR",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZBUNDLEID",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCONTEXTNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPROCESSID",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZQUERYGEN",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ATRANSACTIONSTRING": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ]
+ },
+ "shape": {
+  "ZICCLOUDSTATE": {
+   "Z_PK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_OPT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZCURRENTLOCALVERSION": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZINCLOUD": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZLATESTVERSIONSYNCEDTOCLOUD": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZCLOUDSYNCINGOBJECT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z2_CLOUDSYNCINGOBJECT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZLOCALVERSIONDATE": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   }
+  },
+  "ZICCLOUDSYNCINGOBJECT": {
+   "Z_PK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_OPT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZCRYPTOITERATIONCOUNT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZISPASSWORDPROTECTED": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZMARKEDFORDELETION": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZMINIMUMSUPPORTEDNOTESVERSION": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZNEEDSINITIALFETCHFROMCLOUD": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZNEEDSTOBEFETCHEDFROMCLOUD": {
+    "null_rate": 0.875,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZNEEDSTOSAVEUSERSPECIFICRECORD": {
+    "null_rate": 0.625,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZCLOUDSTATE": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZACCOUNT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCHECKEDFORLOCATION": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZFILESIZE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZHANDWRITINGSUMMARYVERSION": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZHASMARKUPDATA": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZIMAGECLASSIFICATIONSUMMARYVERSION": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZIMAGEFILTERTYPE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZOCRSUMMARYVERSION": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZORIENTATION": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZSECTION": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZLOCATION": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZMEDIA": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZNOTE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZNOTEUSINGTITLEFORNOTETITLE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZPARENTATTACHMENT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZAPPEARANCETYPE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZSCALEWHENDRAWING": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZVERSION": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZVERSIONOUTOFDATE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZATTACHMENT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZSTATE": {
+    "null_rate": 0.875,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZACCOUNT1": {
+    "null_rate": 0.875,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZTYPE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZACCOUNT2": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZATTACHMENT1": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZATTACHMENTVIEWTYPE": {
+    "null_rate": 0.625,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZISPINNED": {
+    "null_rate": 0.625,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZLEGACYNOTEWASPLAINTEXT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZNOTEHASCHANGES": {
+    "null_rate": 0.625,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZPAPERSTYLETYPE": {
+    "null_rate": 0.625,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZPREFERREDBACKGROUNDTYPE": {
+    "null_rate": 0.75,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZACCOUNT3": {
+    "null_rate": 0.625,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZFOLDER": {
+    "null_rate": 0.625,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZNOTEDATA": {
+    "null_rate": 0.625,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZTITLESOURCEATTACHMENT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZISHIDDENNOTECONTAINER": {
+    "null_rate": 0.5,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZSORTORDER": {
+    "null_rate": 0.5,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZOWNER": {
+    "null_rate": 0.5,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZACCOUNTTYPE": {
+    "null_rate": 0.875,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZDIDCHOOSETOMIGRATE": {
+    "null_rate": 0.875,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZDIDFINISHMIGRATION": {
+    "null_rate": 0.875,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZDIDMIGRATEONMAC": {
+    "null_rate": 0.875,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZSTOREDATASEPARATELY": {
+    "null_rate": 0.875,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZACCOUNTDATA": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCUSTOMNOTESORTTYPEVALUE": {
+    "null_rate": 0.625,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZFOLDERTYPE": {
+    "null_rate": 0.625,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZIMPORTEDFROMLEGACY": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZACCOUNT4": {
+    "null_rate": 0.625,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZPARENT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCREATIONDATE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCROPPINGQUADBOTTOMLEFTX": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCROPPINGQUADBOTTOMLEFTY": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCROPPINGQUADBOTTOMRIGHTX": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCROPPINGQUADBOTTOMRIGHTY": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCROPPINGQUADTOPLEFTX": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCROPPINGQUADTOPLEFTY": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCROPPINGQUADTOPRIGHTX": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCROPPINGQUADTOPRIGHTY": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZDURATION": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZMODIFICATIONDATE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZORIGINX": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZORIGINY": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZPREVIEWUPDATEDATE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZSIZEHEIGHT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZSIZEWIDTH": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZHEIGHT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZMODIFIEDDATE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZSCALE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZWIDTH": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZSTATEMODIFICATIONDATE": {
+    "null_rate": 0.875,
+    "types": [
+     "real"
+    ]
+   },
+   "ZMODIFICATIONDATEATIMPORT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCREATIONDATE1": {
+    "null_rate": 0.625,
+    "types": [
+     "real"
+    ]
+   },
+   "ZFOLDERMODIFICATIONDATE": {
+    "null_rate": 0.625,
+    "types": [
+     "real"
+    ]
+   },
+   "ZLASTNOTIFIEDDATE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZLASTVIEWEDMODIFICATIONDATE": {
+    "null_rate": 0.625,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZLEGACYMODIFICATIONDATEATIMPORT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZMODIFICATIONDATE1": {
+    "null_rate": 0.625,
+    "types": [
+     "real"
+    ]
+   },
+   "ZCUSTOMNOTESORTTYPEMODIFICATIONDATE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZDATEFORLASTTITLEMODIFICATION": {
+    "null_rate": 0.875,
+    "types": [
+     "real"
+    ]
+   },
+   "ZPARENTMODIFICATIONDATE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZIDENTIFIER": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ZPASSWORDHINT": {
+    "null_rate": 0.625,
+    "types": [
+     "text"
+    ]
+   },
+   "ZZONEOWNERNAME": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZADDITIONALINDEXABLETEXT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZFALLBACKSUBTITLEIOS": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZFALLBACKSUBTITLEMAC": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZFALLBACKTITLE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZHANDWRITINGSUMMARY": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZIMAGECLASSIFICATIONSUMMARY": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZOCRSUMMARY": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZREMOTEFILEURLSTRING": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZSUMMARY": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZTITLE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZTYPEUTI": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZURLSTRING": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZUSERTITLE": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZDEVICEIDENTIFIER": {
+    "null_rate": 0.875,
+    "types": [
+     "text"
+    ]
+   },
+   "ZCONTENTHASHATIMPORT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZFILENAME": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZLEGACYCONTENTHASHATIMPORT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZLEGACYIMPORTDEVICEIDENTIFIER": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZLEGACYMANAGEDOBJECTIDURIREPRESENTATION": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZSELECTEDINKCOLORSTRING": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZSELECTEDINKIDENTIFIER": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZSNIPPET": {
+    "null_rate": 0.875,
+    "types": [
+     "text"
+    ]
+   },
+   "ZTHUMBNAILATTACHMENTIDENTIFIER": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZTITLE1": {
+    "null_rate": 0.625,
+    "types": [
+     "text"
+    ]
+   },
+   "ZACCOUNTNAMEFORACCOUNTLISTSORTING": {
+    "null_rate": 0.5,
+    "types": [
+     "text"
+    ]
+   },
+   "ZNESTEDTITLEFORSORTING": {
+    "null_rate": 0.875,
+    "types": [
+     "text"
+    ]
+   },
+   "ZNAME": {
+    "null_rate": 0.875,
+    "types": [
+     "text"
+    ]
+   },
+   "ZUSERRECORDNAME": {
+    "null_rate": 0.875,
+    "types": [
+     "text"
+    ]
+   },
+   "ZTITLE2": {
+    "null_rate": 0.625,
+    "types": [
+     "text"
+    ]
+   },
+   "ZASSETCRYPTOINITIALIZATIONVECTOR": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZASSETCRYPTOTAG": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCRYPTOINITIALIZATIONVECTOR": {
+    "null_rate": 0.75,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "ZCRYPTOSALT": {
+    "null_rate": 0.625,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "ZCRYPTOTAG": {
+    "null_rate": 0.75,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "ZCRYPTOWRAPPEDKEY": {
+    "null_rate": 0.75,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "ZENCRYPTEDVALUESJSON": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZSERVERRECORDDATA": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   },
+   "ZSERVERSHAREDATA": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZUNAPPLIEDENCRYPTEDRECORD": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZUSERSPECIFICSERVERRECORDDATA": {
+    "null_rate": 0.625,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   },
+   "ZMERGEABLEDATA": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZFALLBACKIMAGECRYPTOINITIALIZATIONVECTOR": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZFALLBACKIMAGECRYPTOTAG": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZMARKUPMODELDATA": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZMERGEABLEDATA1": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZMETADATADATA": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCRYPTOMETADATAINITIALIZATIONVECTOR": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCRYPTOMETADATATAG": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZENCRYPTEDMETADATA": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZMETADATA": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZLASTNOTIFIEDTIMESTAMPDATA": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZLASTVIEWEDTIMESTAMPDATA": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZREPLICAIDTOUSERIDDICTDATA": {
+    "null_rate": 0.625,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "ZCRYPTOVERIFIER": {
+    "null_rate": 0.875,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "ZMERGEABLEDATA2": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "ZICNOTEDATA": {
+   "Z_PK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_OPT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZNOTE": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZCRYPTOINITIALIZATIONVECTOR": {
+    "null_rate": 0.333,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "ZCRYPTOTAG": {
+    "null_rate": 0.333,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   },
+   "ZDATA": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "gzip",
+     "other"
+    ]
+   }
+  },
+  "ZICSERVERCHANGETOKEN": {
+   "Z_PK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_OPT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZDATABASESCOPE": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZACCOUNT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZOWNERNAME": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZZONENAME": {
+    "null_rate": 0.5,
+    "types": [
+     "text"
+    ]
+   },
+   "ZCKSERVERCHANGETOKENDATA": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   }
+  },
+  "Z_PRIMARYKEY": {
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_NAME": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Z_SUPER": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_MAX": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "Z_METADATA": {
+   "Z_VERSION": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_UUID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Z_PLIST": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   }
+  },
+  "Z_MODELCACHE": {
+   "Z_CONTENT": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   }
+  },
+  "ACHANGE": {
+   "Z_PK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_OPT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCHANGETYPE": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZENTITY": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZENTITYPK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZTRANSACTIONID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZCOLUMNS": {
+    "null_rate": 0.144,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   }
+  },
+  "ATRANSACTION": {
+   "Z_PK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_OPT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZAUTHORTS": {
+    "null_rate": 0.628,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZBUNDLEIDTS": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZCONTEXTNAMETS": {
+    "null_rate": 0.628,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZPROCESSIDTS": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZTIMESTAMP": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "ZAUTHOR": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZBUNDLEID": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZCONTEXTNAME": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZPROCESSID": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZQUERYGEN": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "ATRANSACTIONSTRING": {
+   "Z_PK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_OPT": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZNAME": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  }
+ },
+ "entities": [
+  {
+   "Z_ENT": 1,
+   "Z_NAME": "ICCloudState",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 2,
+   "Z_NAME": "ICCloudSyncingObject",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 3,
+   "Z_NAME": "ICAccountData",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 4,
+   "Z_NAME": "ICAttachment",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 5,
+   "Z_NAME": "ICAttachmentPreviewImage",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 6,
+   "Z_NAME": "ICDeviceMigrationState",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 7,
+   "Z_NAME": "ICLegacyTombstone",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 8,
+   "Z_NAME": "ICMedia",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 9,
+   "Z_NAME": "ICNote",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 10,
+   "Z_NAME": "ICNoteContainer",
+   "Z_SUPER": 2
+  },
+  {
+   "Z_ENT": 11,
+   "Z_NAME": "ICAccount",
+   "Z_SUPER": 10
+  },
+  {
+   "Z_ENT": 12,
+   "Z_NAME": "ICFolder",
+   "Z_SUPER": 10
+  },
+  {
+   "Z_ENT": 13,
+   "Z_NAME": "ICLocation",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 14,
+   "Z_NAME": "ICAttachmentLocation",
+   "Z_SUPER": 13
+  },
+  {
+   "Z_ENT": 15,
+   "Z_NAME": "ICNoteData",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 16,
+   "Z_NAME": "ICServerChangeToken",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 16001,
+   "Z_NAME": "CHANGE",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 16002,
+   "Z_NAME": "TRANSACTION",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 16003,
+   "Z_NAME": "TRANSACTIONSTRING",
+   "Z_SUPER": 0
+  }
+ ]
+}

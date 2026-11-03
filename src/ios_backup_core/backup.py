@@ -10,6 +10,8 @@ The BackupReader high-level API wires all extractors together for convenience.
 import hashlib
 import os
 import plistlib
+import posixpath
+import re
 import shutil
 import sqlite3
 import sys
@@ -17,6 +19,8 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, Protocol, runtime_checkable
+
+from ios_backup_core.db import connect_readonly
 
 # iphone_backup_decrypt is a soft dependency — only needed for encrypted backups.
 try:
@@ -62,9 +66,6 @@ class BackupAccessor(Protocol):
         Each entry is a dict with keys: 'hash', 'domain', 'path'.
         """
         ...
-
-
-_SQLITE_SIDECARS = ("-wal", "-shm", "-journal")
 
 
 # ---------------------------------------------------------------------------
@@ -130,14 +131,7 @@ class LocalBackupAccessor:
             cached = self._file_cache[cache_key]
             return cached if cached else None
 
-        # Prefix with a short domain hash: different domains can hold files at
-        # the same relative path (e.g. both Firefox app groups ship
-        # profile.profile/browser.db), and they must not overwrite each other.
-        domain_tag = hashlib.sha1(domain.encode("utf-8")).hexdigest()[:8]
-        output_path = os.path.join(
-            self._temp_dir,
-            domain_tag + "--" + relative_path.replace("/", "--").replace("\\", "--"),
-        )
+        output_path = os.path.join(self._temp_dir, _temp_name(domain, relative_path))
 
         if self._encrypted and self._decrypted_backup:
             try:
@@ -169,43 +163,25 @@ class LocalBackupAccessor:
         return None
 
     def get_database(self, relative_path: str, domain: str = "HomeDomain") -> Optional[str]:
-        """Return a path to a SQLite database with its -wal/-shm/-journal files beside it.
+        """Return a path to a SQLite database, with its -wal beside it if it has one.
 
-        iOS often leaves recent writes in the write-ahead log. In an
-        unencrypted backup every file is stored under its own hash, so SQLite
-        never finds the WAL next to the main file and silently shows stale
-        data. When sidecars exist, copy the set into the temp dir under
-        matching names so SQLite merges them on open.
+        In an unencrypted backup every file is stored under its own hash, so a
+        database's -wal never sits next to it and SQLite would ignore it. When
+        the backup has a non-empty -wal, both are copied into the temp dir
+        under matching names; the backup itself is never written to. Decrypted
+        files already land side by side in the temp dir.
         """
-        main = self.get_file(relative_path, domain)
-        if not main:
+        db_path = self.get_file(relative_path, domain)
+        if not db_path:
             return None
-        sidecars = {}
-        for suffix in _SQLITE_SIDECARS:
-            path = self.get_file(relative_path + suffix, domain)
-            if path:
-                sidecars[suffix] = path
-        if all(path == main + suffix for suffix, path in sidecars.items()):
-            return main  # no sidecars, or already co-located (decrypted copies)
-
+        wal_path = self.get_file(relative_path + "-wal", domain)
+        if not wal_path or wal_path == db_path + "-wal" or os.path.getsize(wal_path) == 0:
+            return db_path
         cache_key = f"db:{domain}:{relative_path}"
-        cached = self._file_cache.get(cache_key)
-        if cached:
-            return cached
-        dest_dir = tempfile.mkdtemp(prefix="db_", dir=self._temp_dir)
-        dest = os.path.join(dest_dir, os.path.basename(relative_path) or "database")
-        try:
-            shutil.copyfile(main, dest)
-            for suffix, path in sidecars.items():
-                shutil.copyfile(path, dest + suffix)
-        except OSError as e:
-            print(
-                f"[backup.get_database] copy failed for {domain}:{relative_path}: {e}",
-                file=sys.stderr, flush=True,
-            )
-            return main
-        self._file_cache[cache_key] = dest
-        return dest
+        if cache_key not in self._file_cache:
+            name = os.path.basename(relative_path) or "database"
+            self._file_cache[cache_key] = self._copy_with_wal(db_path, wal_path, name)
+        return self._file_cache[cache_key] or db_path
 
     def list_files(
         self,
@@ -241,7 +217,7 @@ class LocalBackupAccessor:
             return []
 
         try:
-            conn = sqlite3.connect(manifest)
+            conn = connect_readonly(manifest, self)
             query = "SELECT fileID, domain, relativePath FROM Files WHERE 1=1"
             params = []
             if domain:
@@ -278,10 +254,31 @@ class LocalBackupAccessor:
         if self._manifest_db_path and os.path.exists(self._manifest_db_path):
             return self._manifest_db_path
         manifest_path = os.path.join(self._backup_dir, "Manifest.db")
-        if os.path.exists(manifest_path):
-            self._manifest_db_path = manifest_path
-            return manifest_path
-        return None
+        if not os.path.exists(manifest_path):
+            return None
+        wal_path = manifest_path + "-wal"
+        if os.path.isfile(wal_path) and os.path.getsize(wal_path) > 0:
+            # Finder left changes in the WAL (an interrupted backup, say).
+            copy = self._copy_with_wal(manifest_path, wal_path, "Manifest.db")
+            manifest_path = copy or manifest_path
+        self._manifest_db_path = manifest_path
+        return manifest_path
+
+    def _copy_with_wal(self, db_path: str, wal_path: str, name: str) -> Optional[str]:
+        """Copy a database and its WAL into the temp dir as <name> and <name>-wal."""
+        dest_dir = tempfile.mkdtemp(prefix="db_", dir=self._temp_dir)
+        dest = os.path.join(dest_dir, name)
+        try:
+            shutil.copyfile(db_path, dest)
+            shutil.copyfile(wal_path, dest + "-wal")
+        except OSError as e:
+            print(
+                f"[backup] could not copy {name} to read its WAL, reading it without: {e}",
+                file=sys.stderr, flush=True,
+            )
+            shutil.rmtree(dest_dir, ignore_errors=True)
+            return None
+        return dest
 
     def _get_manifest_conn(self) -> Optional[sqlite3.Connection]:
         if self._manifest_conn is not None:
@@ -290,9 +287,7 @@ class LocalBackupAccessor:
         if not manifest:
             return None
         try:
-            conn = sqlite3.connect(manifest)
-            conn.execute("PRAGMA query_only = TRUE")
-            conn.execute("PRAGMA synchronous = OFF")
+            conn = connect_readonly(manifest, self)
             conn.execute("PRAGMA cache_size = -10000")
             conn.execute("PRAGMA temp_store = MEMORY")
             self._manifest_conn = conn
@@ -315,17 +310,27 @@ class LocalBackupAccessor:
             return None
 
 
-def open_database(backup, relative_path: str, domain: str = "HomeDomain") -> Optional[str]:
-    """Return a readable local path for a SQLite database in the backup.
+_SQLITE_COMPANIONS = ("-wal", "-shm", "-journal")
 
-    Uses the accessor's WAL-aware ``get_database`` when it has one (see
-    LocalBackupAccessor.get_database) and falls back to ``get_file`` for
-    other BackupAccessor implementations.
+
+def _temp_name(domain: str, relative_path: str) -> str:
+    """A short file name, legal on every OS, for a backup file copied to the temp dir.
+
+    Backup paths can be long and can hold characters Windows forbids in a file
+    name ("How was an iPhone set up?.pdf"), so the name is a SHA-1 of the domain
+    and path, plus the original extension for callers that read it. A
+    database's -wal, -shm or -journal gets its database's name plus that
+    suffix, so it lands beside the database where SQLite looks for it.
     """
-    get_database = getattr(backup, "get_database", None)
-    if callable(get_database):
-        return get_database(relative_path, domain=domain)
-    return backup.get_file(relative_path, domain=domain)
+    base, companion = relative_path, ""
+    for suffix in _SQLITE_COMPANIONS:
+        if relative_path.endswith(suffix):
+            base, companion = relative_path[: -len(suffix)], suffix
+            break
+    digest = hashlib.sha1(f"{domain}-{base}".encode()).hexdigest()
+    ext = posixpath.splitext(posixpath.basename(base.replace("\\", "/")))[1]
+    ext = re.sub(r"[^A-Za-z0-9]", "", ext)[:16]
+    return f"{digest}.{ext}{companion}" if ext else digest + companion
 
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,39 @@
+chat: kenji
+with: kenji
+service: iMessage
+
+# Kenji Mori, designer at Tanager from March 2025. Maren is his informal mentor.
+
+== 2025-03-03
+08:40 kenji: Hi Maren, it's Kenji! Bea gave me your number. I'm outside but the door is locked?
+08:41 me: Welcome!! Coming down now. The buzzer has been broken since 2019
+08:41 kenji +laugh
+
+== 2025-04-02
+17:30 kenji: Is it ok to ask a dumb question? What's the difference between a bioswale and a rain garden
+17:35 me: Not dumb at all! Short version: a swale moves water along, a rain garden holds it and lets it soak in. Long version over coffee tomorrow?
+17:36 kenji: Yes please
+
+== 2025-06-27
+12:10 kenji: Can I come on the next Linden site visit? I've never seen a project being built
+12:12 me: Yes! Monday 7am. Wear boots and bring a hard hat, there's one on the shelf by Bea's desk
+12:12 kenji +love
+
+== 2025-06-30
+11:00 kenji: Ray let me use the laser level!! This is the best day of my job so far
+11:01 me: Wait until you see them place the boulders
+
+== 2025-12-19
+16:00 kenji: Thank you for this year. I learned so much from you
+16:02 me: You made my year easier! Happy holidays Kenji, enjoy your trip home
+16:03 kenji: I'll bring you back the good rice crackers from Osaka
+
+== 2026-03-23
+10:00 kenji: Priya was serious about Monday off. I'm at the coast!! 🌊
+10:05 me: I'm on the couch with June. Same energy
+10:05 kenji +laugh
+
+== 2026-05-28
+14:20 kenji: Do you have the plant palette from Linden? I want to reference it for the library courtyard
+14:25 me: Sending! It's in Projects > Linden > 04 Planting. The rain garden list is the good one
+14:26 kenji +like

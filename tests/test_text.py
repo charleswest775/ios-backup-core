@@ -54,10 +54,25 @@ class TestParseAttributedBody:
         assert msg_type == "text"
 
     def test_location_balloon_detected(self):
-        # Embed a known location fragment to trigger type detection
+        # No readable body: fragment scan still classifies the balloon.
         raw = b"streamtypedMaps__kIMLocationShare"
         text, msg_type = parse_attributed_body(raw)
-        assert msg_type in ("location", "text")  # depends on which trigger fires
+        assert text == ""
+        assert msg_type == "location"
+
+    def test_typedstream_keeps_text_containing_balloon_fragment(self):
+        # "Maps" is a location fragment, but a real NSString body must win.
+        blob = self._typedstream_nsstring(b"Meet at Maps at 5")
+        text, msg_type = parse_attributed_body(blob)
+        assert text == "Meet at Maps at 5"
+        assert msg_type == "text"
+
+    def test_typedstream_object_replacement_falls_back_to_fragment_scan(self):
+        # Balloon rows often carry only U+FFFC. That is not useful text.
+        blob = self._typedstream_nsstring("\ufffc".encode("utf-8")) + b"Maps"
+        text, msg_type = parse_attributed_body(blob)
+        assert text == ""
+        assert msg_type == "location"
 
     def test_bplist_unicode_text(self):
         blob = _make_bplist_attributed_string("Héllo wörld 😀")
@@ -133,6 +148,14 @@ class TestCleanMessageText:
     def test_preserves_normal_text(self):
         msg = "Hey, are you coming tonight?"
         assert clean_message_text(msg) == msg
+
+    def test_preserves_quotes_at_the_ends(self):
+        # Found by backupgen's answer key: closing quotes were being stripped.
+        for msg in ('He said "yes"', '"Quoted" at the start', '"Fully quoted"'):
+            assert clean_message_text(msg) == msg
+
+    def test_strips_quotes_left_by_removed_identifiers(self):
+        assert clean_message_text('"__kIMFileTransferGUIDAttributeName" hello') == "hello"
 
     def test_empty_string_unchanged(self):
         assert clean_message_text("") == ""

@@ -1,0 +1,26 @@
+chat: alderbrook
+with: alderbrook
+service: SMS
+
+# Alderbrook Veterinary Clinic, Juniper's vet. Appointment reminders by SMS.
+
+== 2024-09-10
+10:00 alderbrook: Alderbrook Veterinary Clinic: Juniper has an appointment with Dr. Alvarez on Thu 9/12 at 9:30 AM. Reply C to confirm or call 503-555-0123 to reschedule.
+10:15 me: C
+10:15 alderbrook: Thank you! Juniper's appointment is confirmed. See you Thursday.
+
+== 2025-09-15
+10:00 alderbrook: Alderbrook Veterinary Clinic: Juniper is due for her annual exam and vaccines. Book online at https://www.example.com/alderbrook-vet/book or call 503-555-0123.
+
+== 2025-09-30
+10:00 alderbrook: Alderbrook Veterinary Clinic: Juniper has an appointment with Dr. Alvarez on Thu 10/2 at 9:00 AM. Reply C to confirm or call 503-555-0123 to reschedule.
+10:02 me: C
+10:02 alderbrook: Thank you! Juniper's appointment is confirmed. See you Thursday.
+
+== 2026-04-06
+10:00 alderbrook: Alderbrook Veterinary Clinic: Juniper has a weight check with Dr. Alvarez on Wed 4/8 at 10:45 AM. Reply C to confirm or call 503-555-0123 to reschedule.
+10:30 me: C
+10:30 alderbrook: Thank you! Juniper's appointment is confirmed. See you Wednesday.
+
+== 2026-04-08
+12:00 alderbrook: Thanks for visiting Alderbrook today! Juniper's visit summary is in your pet portal. Tell us how we did: https://www.example.com/alderbrook-vet/survey

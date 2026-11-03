@@ -1,0 +1,37 @@
+chat: mama
+with: mama
+service: SMS
+
+# Pauline Einstein. After Hermann's death in October 1902 she went to live with her sister's family in Hechingen.
+
+== 1900-12-16
+12:00 me: Mama, my first paper has been accepted by the Annalen der Physik.
+12:30 mama: Bravo, Albert! Papa will be so proud.
+
+== 1901-02-21
+13:00 me: I'm a Swiss citizen as of today.
+13:20 mama: Congratulations, my dear. Now find a job to go with it.
+
+== 1902-06-16
+18:45 me: Mama, your son is a federal civil servant. Technical Expert at the Patent Office in Bern.
+19:00 mama: Finally a secure position! I'm so relieved.
+
+== 1902-10-20
+20:00 me: Thinking of you, Mama. Write when you're settled.
+
+# Year only: Pauline moved to Hechingen in 1903.
+== 1903-03-01
+19:00 mama: I'm with Fanny and Rudolf in Hechingen now. The house is full, which is good.
+
+== 1904-05-14
+11:00 me: You have a grandson! Hans Albert, born this morning. Mother and child are well.
+11:20 mama: A grandson! Kiss him for me.
+11:21 mama +love
+
+== 1906-01-15
+16:30 me: Doctor of philosophy, University of Zurich.
+16:50 mama: My son the doctor!
+
+== 1909-05-07
+13:30 me: Mama, I'm to be a professor in Zurich.
+13:45 mama: Professor! I always knew.

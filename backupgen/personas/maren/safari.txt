@@ -1,0 +1,566 @@
+# Safari history: real public pages (nps.gov, recreation.gov, weather.gov, Wikipedia, REI Expert Advice)
+# and fictional local businesses' own sites. Pacific times.
+== 2024-07-02
+19:15 https://www.recreation.gov/camping/campgrounds/232466 | Cougar Rock Campground, Mount Rainier National Park - Recreation.gov
+19:18 https://www.nps.gov/mora/index.htm | Mount Rainier National Park (U.S. National Park Service)
+19:19 https://www.nps.gov/mora/planyourvisit/paradise.htm | Paradise - Mount Rainier National Park (U.S. National Park Service)
+== 2024-07-03
+21:20 https://www.akc.org/expert-advice/training/dog-afraid-of-fireworks/ | How to Help Your Dog With Fireworks Anxiety – American Kennel Club
+== 2024-07-06
+09:05 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+09:08 https://www.portland.gov/parks/forest-park | Forest Park | Portland.gov
+== 2024-07-07
+08:29 https://www.kingarthurbaking.com/recipes/classic-sourdough-bread-recipe | Classic Sourdough Bread Recipe | King Arthur Baking
+== 2024-07-11
+12:40 https://en.wikipedia.org/wiki/Natural_playground | Natural playground - Wikipedia
+12:41 https://www.asla.org/ | American Society of Landscape Architects
+== 2024-07-14
+20:25 https://en.wikipedia.org/wiki/Mount_Rainier | Mount Rainier - Wikipedia
+20:26 https://en.wikipedia.org/wiki/Hoary_marmot | Hoary marmot - Wikipedia
+== 2024-07-17
+21:10 https://en.wikipedia.org/wiki/Natural_playground | Natural playground - Wikipedia
+21:12 https://en.wikipedia.org/wiki/Quercus_macrocarpa | Quercus macrocarpa - Wikipedia
+21:15 https://plants.usda.gov/home/plantProfile?symbol=QUMA2 | Plant Profile | USDA PLANTS Database
+== 2024-07-20
+08:30 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-07-24
+13:05 https://en.wikipedia.org/wiki/Rain_garden | Rain garden - Wikipedia
+13:06 https://plants.usda.gov/home/plantProfile?symbol=CAOB3 | Plant Profile | USDA PLANTS Database
+13:09 https://www.npsoregon.org/ | Native Plant Society of Oregon
+== 2024-07-26
+12:36 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+18:50 https://www.rei.com/learn/expert-advice/backpacking-tent.html | How to Choose a Backpacking Tent | REI Expert Advice
+== 2024-07-28
+12:35 https://www.nps.gov/mora/planyourvisit/conditions.htm | Current Conditions - Mount Rainier National Park (U.S. National Park Service)
+12:36 https://www.nps.gov/mora/learn/nature/wildflowers.htm | Wildflowers - Mount Rainier National Park (U.S. National Park Service)
+12:38 https://en.wikipedia.org/wiki/Lupinus_latifolius | Lupinus latifolius - Wikipedia
+== 2024-08-03
+09:10 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+18:59 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-08-08
+20:00 https://www.nps.gov/mora/planyourvisit/skyline-trail.htm | Skyline Trail - Mount Rainier National Park (U.S. National Park Service)
+20:04 https://www.wta.org/go-hiking/hikes/skyline-trail-loop | Skyline Trail Loop — Washington Trails Association
+== 2024-08-11
+21:30 https://www.rei.com/learn/expert-advice/sleeping-bag.html | How to Choose a Sleeping Bag | REI Expert Advice
+== 2024-08-12
+18:25 https://forecast.weather.gov/MapClick.php?lat=46.7865&lon=-121.7353 | 7-Day Forecast for Latitude 46.79°N and Longitude 121.74°W (Elev. 5420 ft)
+18:28 https://www.nps.gov/mora/planyourvisit/conditions.htm | Current Conditions - Mount Rainier National Park (U.S. National Park Service)
+== 2024-08-14
+07:45 https://forecast.weather.gov/MapClick.php?lat=46.7865&lon=-121.7353 | 7-Day Forecast for Latitude 46.79°N and Longitude 121.74°W (Elev. 5420 ft)
+== 2024-08-15
+20:40 https://forecast.weather.gov/MapClick.php?lat=46.7865&lon=-121.7353 | 7-Day Forecast for Latitude 46.79°N and Longitude 121.74°W (Elev. 5420 ft)
+20:42 https://www.nps.gov/mora/planyourvisit/skyline-trail.htm | Skyline Trail - Mount Rainier National Park (U.S. National Park Service)
+== 2024-08-17
+07:10 https://www.nps.gov/mora/planyourvisit/conditions.htm | Current Conditions - Mount Rainier National Park (U.S. National Park Service)
+20:05 https://en.wikipedia.org/wiki/Hoary_marmot | Hoary marmot - Wikipedia
+20:06 https://en.wikipedia.org/wiki/Lupinus_latifolius | Lupinus latifolius - Wikipedia
+== 2024-08-19
+07:37 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-08-20
+17:34 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+17:38 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-08-23
+12:26 https://basaltclimbing.fitness/schedule | Schedule — Basalt Climbing Gym
+== 2024-08-24
+10:00 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-09-01
+09:30 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+09:31 https://trimet.org/ | TriMet: Portland's Transit
+== 2024-09-03
+16:00 https://en.wikipedia.org/wiki/Common_garter_snake | Common garter snake - Wikipedia
+== 2024-09-05
+15:55 https://alderbrook.vet/book | Book an Appointment — Alderbrook Veterinary Clinic
+19:25 https://en.wikipedia.org/wiki/Rough-skinned_newt | Rough-skinned newt - Wikipedia
+== 2024-09-06
+21:45 https://www.recreation.gov/ | Recreation.gov - Camping, Cabins, RVs, Permits, Passes & More
+== 2024-09-12
+20:30 https://en.wikipedia.org/wiki/Border_Collie | Border Collie - Wikipedia
+== 2024-09-13
+21:00 https://www.portland.gov/parks/forest-park | Forest Park | Portland.gov
+== 2024-09-20
+12:17 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-09-21
+08:45 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-09-27
+16:00 https://forecast.weather.gov/MapClick.php?lat=45.5762&lon=-122.1158 | 7-Day Forecast for Latitude 45.58°N and Longitude 122.12°W (Elev. 98 ft)
+16:02 https://www.fs.usda.gov/crgnsa | Columbia River Gorge National Scenic Area
+== 2024-09-28
+11:20 https://www.oregonhikers.org/field_guide/Wahkeena_Falls_Loop_Hike | Wahkeena Falls Loop Hike - Oregon Hikers
+11:23 https://en.wikipedia.org/wiki/Multnomah_Falls | Multnomah Falls - Wikipedia
+== 2024-10-01
+21:22 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-10-04
+21:00 https://forecast.weather.gov/MapClick.php?lat=45.5762&lon=-122.1158 | 7-Day Forecast for Latitude 45.58°N and Longitude 122.12°W (Elev. 98 ft)
+21:01 https://www.tripcheck.com/ | TripCheck - Oregon Traveler Information
+== 2024-10-05
+05:55 https://forecast.weather.gov/MapClick.php?lat=45.5762&lon=-122.1158 | 7-Day Forecast for Latitude 45.58°N and Longitude 122.12°W (Elev. 98 ft)
+== 2024-10-06
+20:10 https://en.wikipedia.org/wiki/Multnomah_Falls | Multnomah Falls - Wikipedia
+== 2024-10-09
+19:49 https://www.kingarthurbaking.com/recipes/classic-sourdough-bread-recipe | Classic Sourdough Bread Recipe | King Arthur Baking
+== 2024-10-12
+09:00 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-10-15
+21:15 https://en.wikipedia.org/wiki/Cardamom_bun | Cardamom bun - Wikipedia
+== 2024-10-17
+12:15 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-10-23
+07:44 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-10-26
+09:40 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+09:42 https://www.kingarthurbaking.com/recipes/classic-sourdough-bread-recipe | Classic Sourdough Bread Recipe | King Arthur Baking
+== 2024-10-31
+19:45 https://waterdata.usgs.gov/monitoring-location/14211720/ | USGS 14211720 WILLAMETTE RIVER AT PORTLAND, OR
+== 2024-11-02
+10:10 https://en.wikipedia.org/wiki/Sourdough | Sourdough - Wikipedia
+10:13 https://www.kingarthurbaking.com/recipes/classic-sourdough-bread-recipe | Classic Sourdough Bread Recipe | King Arthur Baking
+12:58 https://waterdata.usgs.gov/monitoring-location/14211720/ | USGS 14211720 WILLAMETTE RIVER AT PORTLAND, OR
+== 2024-11-09
+16:30 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-11-20
+12:10 https://www.spanishdict.com/guide/por-vs-para | Por vs. Para in Spanish | SpanishDict
+== 2024-11-21
+12:01 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-11-26
+21:00 https://forecast.weather.gov/MapClick.php?lat=44.0582&lon=-121.3153 | 7-Day Forecast for Latitude 44.06°N and Longitude 121.32°W (Elev. 3625 ft)
+21:04 https://www.tripcheck.com/ | TripCheck - Oregon Traveler Information
+== 2024-11-27
+13:30 https://www.tripcheck.com/ | TripCheck - Oregon Traveler Information
+== 2024-12-01
+10:50 https://es.wikipedia.org/wiki/Flan | Flan - Wikipedia, la enciclopedia libre
+10:51 https://en.wikipedia.org/wiki/Tamale | Tamale - Wikipedia
+== 2024-12-02
+19:35 https://www.fs.usda.gov/mthood | Mt. Hood National Forest
+19:37 https://en.wikipedia.org/wiki/Timberline_Lodge | Timberline Lodge - Wikipedia
+== 2024-12-05
+18:40 https://en.wikipedia.org/wiki/Timberline_Lodge | Timberline Lodge - Wikipedia
+18:41 https://www.oregon.gov/odot/winter-travel/pages/sno-park-permits.aspx | Sno-Park Permits : Winter Travel : State of Oregon
+== 2024-12-10
+17:40 https://talusoutdoor.supply/rentals | Rentals — Talus Outdoor Supply
+17:43 https://www.rei.com/learn/expert-advice/snowshoeing-beginners.html | Snowshoeing for Beginners | REI Expert Advice
+== 2024-12-11
+08:50 https://ridgelineauto.repair/ | Ridgeline Auto Repair — Portland, OR
+== 2024-12-14
+13:00 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2024-12-19
+20:20 https://www.flypdx.com/ | Portland International Airport (PDX)
+20:21 https://flymissoula.com/ | Missoula Montana Airport
+20:25 https://forecast.weather.gov/MapClick.php?lat=46.8721&lon=-113.994 | 7-Day Forecast for Latitude 46.87°N and Longitude 113.99°W (Elev. 3209 ft)
+== 2024-12-21
+11:30 https://www.flypdx.com/ | Portland International Airport (PDX)
+== 2024-12-26
+10:05 https://en.wikipedia.org/wiki/Lefse | Lefse - Wikipedia
+== 2024-12-31
+17:58 https://trimet.org/ | TriMet: Portland's Transit
+18:45 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-01-04
+09:30 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-01-05
+18:19 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+18:50 https://forecast.weather.gov/MapClick.php?lat=45.3311&lon=-121.7113 | 7-Day Forecast for Latitude 45.33°N and Longitude 121.71°W (Elev. 5948 ft)
+18:52 https://nwac.us/ | Northwest Avalanche Center
+18:56 https://www.oregon.gov/odot/winter-travel/pages/sno-park-permits.aspx | Sno-Park Permits : Winter Travel : State of Oregon
+== 2025-01-06
+08:20 https://en.wikipedia.org/wiki/Willamette_River | Willamette River - Wikipedia
+08:23 https://waterdata.usgs.gov/monitoring-location/14211720/ | USGS 14211720 WILLAMETTE RIVER AT PORTLAND, OR
+12:36 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-01-11
+08:54 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-01-13
+18:10 https://forecast.weather.gov/MapClick.php?lat=45.3311&lon=-121.7113 | 7-Day Forecast for Latitude 45.33°N and Longitude 121.71°W (Elev. 5948 ft)
+18:11 https://www.tripcheck.com/ | TripCheck - Oregon Traveler Information
+== 2025-01-15
+12:01 https://trimet.org/ | TriMet: Portland's Transit
+== 2025-01-16
+19:15 https://forecast.weather.gov/MapClick.php?lat=45.3311&lon=-121.7113 | 7-Day Forecast for Latitude 45.33°N and Longitude 121.71°W (Elev. 5948 ft)
+19:17 https://nwac.us/ | Northwest Avalanche Center
+== 2025-01-17
+17:10 https://talusoutdoor.supply/rentals | Rentals — Talus Outdoor Supply
+17:11 https://cedarandsalt.pizza/menu | Menu — Cedar & Salt Pizza
+== 2025-01-18
+06:40 https://www.tripcheck.com/ | TripCheck - Oregon Traveler Information
+06:42 https://forecast.weather.gov/MapClick.php?lat=45.3311&lon=-121.7113 | 7-Day Forecast for Latitude 45.33°N and Longitude 121.71°W (Elev. 5948 ft)
+== 2025-01-22
+12:30 https://msc.fema.gov/portal/home | FEMA Flood Map Service Center | Welcome!
+12:34 https://en.wikipedia.org/wiki/Populus_trichocarpa | Populus trichocarpa - Wikipedia
+== 2025-01-29
+14:30 https://waterdata.usgs.gov/monitoring-location/14211720/ | USGS 14211720 WILLAMETTE RIVER AT PORTLAND, OR
+14:31 https://www.portlandmaps.com/ | PortlandMaps
+== 2025-02-01
+09:15 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-02-06
+21:20 https://stonecrop.properties/rentals?pets=dogs&yard=1 | Rentals That Allow Dogs — Stonecrop Property Management
+21:22 https://stonecrop.properties/rentals/se-bungalow-garden | SE Bungalow, 2 BR, Garden — Stonecrop Property Management
+21:24 https://stonecrop.properties/rentals?pets=dogs&yard=1 | Rentals That Allow Dogs — Stonecrop Property Management
+== 2025-02-09
+20:15 https://basaltclimbing.fitness/schedule | Schedule — Basalt Climbing Gym
+20:19 https://en.wikipedia.org/wiki/Grade_(climbing) | Grade (climbing) - Wikipedia
+== 2025-02-11
+21:35 https://www.spanishdict.com/guide/por-vs-para | Por vs. Para in Spanish | SpanishDict
+== 2025-02-13
+22:00 https://stonecrop.properties/rentals?pets=dogs&yard=1 | Rentals That Allow Dogs — Stonecrop Property Management
+22:04 https://stonecrop.properties/rentals/ne-duplex-fenced-yard | NE Duplex with Fenced Yard, 2 BR + Office — Stonecrop Property Management
+== 2025-02-18
+12:10 https://stonecrop.properties/rentals/ne-duplex-fenced-yard | NE Duplex with Fenced Yard, 2 BR + Office — Stonecrop Property Management
+12:11 https://www.portlandmaps.com/ | PortlandMaps
+== 2025-02-19
+20:30 https://riverbendparks.foundation/cottonwood-landing | Cottonwood Landing — Riverbend Parks Foundation
+20:34 https://riverbendparks.foundation/cottonwood-landing/open-house | Community Open House, Feb 22 — Riverbend Parks Foundation
+== 2025-02-20
+16:30 https://stonecrop.properties/rentals/ne-duplex-fenced-yard | NE Duplex with Fenced Yard, 2 BR + Office — Stonecrop Property Management
+== 2025-02-22
+07:30 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-02-25
+09:15 https://tidewatermoving.services/ | Tidewater Moving Co. — Local Moves in Portland
+== 2025-03-02
+10:10 https://www.portlandmaps.com/ | PortlandMaps
+== 2025-03-08
+09:00 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+09:04 https://tidewatermoving.services/ | Tidewater Moving Co. — Local Moves in Portland
+== 2025-03-12
+22:00 https://en.wikipedia.org/wiki/Grade_(climbing) | Grade (climbing) - Wikipedia
+22:03 https://www.rei.com/learn/expert-advice/climbing-shoes.html | How to Choose Climbing Shoes | REI Expert Advice
+== 2025-03-14
+16:40 https://www.flypdx.com/ | Portland International Airport (PDX)
+== 2025-03-15
+08:50 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+08:52 https://www.portland.gov/parks/forest-park | Forest Park | Portland.gov
+12:33 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-03-21
+16:00 https://msc.fema.gov/portal/home | FEMA Flood Map Service Center | Welcome!
+16:02 https://waterdata.usgs.gov/monitoring-location/14211720/ | USGS 14211720 WILLAMETTE RIVER AT PORTLAND, OR
+== 2025-03-28
+12:26 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-03-29
+10:00 https://www.wta.org/go-hiking/hikes/dog-mountain | Dog Mountain — Washington Trails Association
+10:01 https://en.wikipedia.org/wiki/Balsamorhiza_sagittata | Balsamorhiza sagittata - Wikipedia
+== 2025-04-02
+17:40 https://en.wikipedia.org/wiki/Bioswale | Bioswale - Wikipedia
+17:43 https://en.wikipedia.org/wiki/Rain_garden | Rain garden - Wikipedia
+== 2025-04-04
+08:27 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+10:05 https://thimbleberry.garden/plants | Plant List — Thimbleberry Native Nursery
+== 2025-04-06
+19:30 https://www.usps.com/manage/forward.htm | Change of Address - Forward Mail | USPS
+19:31 https://dmv2u.oregon.gov/ | DMV2U - Oregon DMV
+== 2025-04-12
+06:45 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-04-14
+19:05 https://www.spanishdict.com/translate/lilac | Lilac in Spanish | English to Spanish Translation - SpanishDict
+== 2025-04-18
+21:47 https://cedarandsalt.pizza/menu | Menu — Cedar & Salt Pizza
+== 2025-04-20
+09:15 https://thimbleberry.garden/plants | Plant List — Thimbleberry Native Nursery
+09:17 https://en.wikipedia.org/wiki/Ribes_sanguineum | Ribes sanguineum - Wikipedia
+09:19 https://en.wikipedia.org/wiki/Acer_circinatum | Acer circinatum - Wikipedia
+09:22 https://en.wikipedia.org/wiki/Camassia_quamash | Camassia quamash - Wikipedia
+== 2025-04-25
+21:00 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+21:01 https://www.wta.org/go-hiking/hikes/dog-mountain | Dog Mountain — Washington Trails Association
+== 2025-05-01
+17:20 https://crankandcoast.bike/service | Service & Repairs — Crank & Coast Cycles
+== 2025-05-10
+20:30 https://www.nps.gov/olym/index.htm | Olympic National Park (U.S. National Park Service)
+20:31 https://www.nps.gov/olym/planyourvisit/visiting-the-hoh.htm | Visiting the Hoh - Olympic National Park (U.S. National Park Service)
+20:35 https://www.nps.gov/olym/planyourvisit/kalaloch-campground.htm | Kalaloch Campground - Olympic National Park (U.S. National Park Service)
+20:37 https://www.recreation.gov/camping/campgrounds/247592 | Kalaloch Campground, Olympic National Park - Recreation.gov
+== 2025-05-14
+08:25 https://waterdata.usgs.gov/monitoring-location/14211720/ | USGS 14211720 WILLAMETTE RIVER AT PORTLAND, OR
+== 2025-05-16
+16:30 https://sudsypup.dog/book | Book a Groom — Sudsy Pup Grooming
+== 2025-05-18
+21:00 https://www.nps.gov/olym/planyourvisit/hurricane-ridge.htm | Hurricane Ridge - Olympic National Park (U.S. National Park Service)
+21:03 https://www.nps.gov/olym/planyourvisit/lake-crescent.htm | Lake Crescent - Olympic National Park (U.S. National Park Service)
+21:04 https://tidesandcurrents.noaa.gov/noaatidepredictions.html?id=9442396 | Tide Predictions - 9442396 La Push, Quillayute River WA - NOAA Tides & Currents
+== 2025-05-20
+19:00 https://forecast.weather.gov/MapClick.php?lat=47.8601&lon=-123.9348 | 7-Day Forecast for Latitude 47.86°N and Longitude 123.93°W (Elev. 591 ft)
+19:04 https://www.recreation.gov/camping/campgrounds/247592 | Kalaloch Campground, Olympic National Park - Recreation.gov
+== 2025-05-23
+21:10 https://forecast.weather.gov/MapClick.php?lat=47.8601&lon=-123.9348 | 7-Day Forecast for Latitude 47.86°N and Longitude 123.93°W (Elev. 591 ft)
+21:11 https://tidesandcurrents.noaa.gov/noaatidepredictions.html?id=9442396 | Tide Predictions - 9442396 La Push, Quillayute River WA - NOAA Tides & Currents
+21:14 https://www.nps.gov/olym/planyourvisit/hurricane-ridge.htm | Hurricane Ridge - Olympic National Park (U.S. National Park Service)
+== 2025-05-24
+20:45 https://en.wikipedia.org/wiki/Hoh_Rainforest | Hoh Rainforest - Wikipedia
+20:46 https://en.wikipedia.org/wiki/Roosevelt_elk | Roosevelt elk - Wikipedia
+== 2025-05-26
+07:20 https://www.nps.gov/olym/planyourvisit/hurricane-ridge.htm | Hurricane Ridge - Olympic National Park (U.S. National Park Service)
+21:00 https://en.wikipedia.org/wiki/Olympic_marmot | Olympic marmot - Wikipedia
+21:02 https://en.wikipedia.org/wiki/Ruby_Beach | Ruby Beach - Wikipedia
+== 2025-05-28
+22:10 https://en.wikipedia.org/wiki/Banneton | Banneton - Wikipedia
+22:14 https://en.wikipedia.org/wiki/Lame_(kitchen_tool) | Lame (kitchen tool) - Wikipedia
+== 2025-05-31
+17:16 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-06-05
+08:00 https://en.wikipedia.org/wiki/Banana_slug | Banana slug - Wikipedia
+08:02 https://en.wikipedia.org/wiki/Hosta | Hosta - Wikipedia
+== 2025-06-10
+06:55 https://www.nps.gov/crla/planyourvisit/boat-tours.htm | Boat Tours - Crater Lake National Park (U.S. National Park Service)
+06:59 https://www.nps.gov/crla/index.htm | Crater Lake National Park (U.S. National Park Service)
+== 2025-06-14
+09:30 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-06-24
+09:40 https://www.portlandmaps.com/ | PortlandMaps
+== 2025-07-01
+21:12 https://trimet.org/ | TriMet: Portland's Transit
+== 2025-07-03
+20:00 https://www.akc.org/expert-advice/training/dog-afraid-of-fireworks/ | How to Help Your Dog With Fireworks Anxiety – American Kennel Club
+20:04 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-07-12
+18:30 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-07-15
+06:20 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+20:30 https://www.nps.gov/yell/index.htm | Yellowstone National Park (U.S. National Park Service)
+20:32 https://www.nps.gov/yell/planyourvisit/maps.htm | Maps - Yellowstone National Park (U.S. National Park Service)
+20:35 https://www.nps.gov/yell/planyourvisit/parkroads.htm | Park Roads - Yellowstone National Park (U.S. National Park Service)
+20:38 https://www.nps.gov/yell/planyourvisit/exploreoldfaithful.htm | Old Faithful - Yellowstone National Park (U.S. National Park Service)
+== 2025-07-16
+21:15 https://www.nps.gov/yell/learn/nature/wolves.htm | Wolves - Yellowstone National Park (U.S. National Park Service)
+21:18 https://en.wikipedia.org/wiki/Lamar_Valley | Lamar Valley - Wikipedia
+21:19 https://www.rei.com/learn/expert-advice/binoculars.html | How to Choose Binoculars | REI Expert Advice
+== 2025-07-18
+18:37 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-07-20
+10:30 https://www.nps.gov/subjects/bears/bear-spray.htm | Bear Spray - Bears (U.S. National Park Service)
+10:34 https://www.nps.gov/yell/planyourvisit/safety.htm | Safety - Yellowstone National Park (U.S. National Park Service)
+10:35 https://www.nps.gov/planyourvisit/passes.htm | Entrance Passes (U.S. National Park Service)
+== 2025-07-28
+20:05 https://www.nps.gov/yell/planyourvisit/maps.htm | Maps - Yellowstone National Park (U.S. National Park Service)
+== 2025-08-02
+09:00 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+09:02 https://forecast.weather.gov/MapClick.php?lat=44.6621&lon=-111.1041 | 7-Day Forecast for Latitude 44.66°N and Longitude 111.10°W (Elev. 6667 ft)
+== 2025-08-07
+21:30 https://forecast.weather.gov/MapClick.php?lat=44.6621&lon=-111.1041 | 7-Day Forecast for Latitude 44.66°N and Longitude 111.10°W (Elev. 6667 ft)
+21:33 https://forecast.weather.gov/MapClick.php?lat=46.8721&lon=-113.994 | 7-Day Forecast for Latitude 46.87°N and Longitude 113.99°W (Elev. 3209 ft)
+21:36 https://www.511mt.net/ | Montana 511
+== 2025-08-09
+05:40 https://www.tripcheck.com/ | TripCheck - Oregon Traveler Information
+05:43 https://www.511mt.net/ | Montana 511
+== 2025-08-10
+21:00 https://en.wikipedia.org/wiki/Grand_Prismatic_Spring | Grand Prismatic Spring - Wikipedia
+21:02 https://en.wikipedia.org/wiki/Thermophile | Thermophile - Wikipedia
+== 2025-08-11
+07:15 https://www.nps.gov/yell/planyourvisit/exploreoldfaithful.htm | Old Faithful - Yellowstone National Park (U.S. National Park Service)
+19:30 https://www.nps.gov/yell/planyourvisit/exploreoldfaithful.htm | Old Faithful - Yellowstone National Park (U.S. National Park Service)
+19:33 https://en.wikipedia.org/wiki/American_bison | American bison - Wikipedia
+== 2025-08-12
+20:15 https://en.wikipedia.org/wiki/Grand_Canyon_of_the_Yellowstone | Grand Canyon of the Yellowstone - Wikipedia
+20:18 https://en.wikipedia.org/wiki/Thomas_Moran | Thomas Moran - Wikipedia
+== 2025-08-13
+19:40 https://en.wikipedia.org/wiki/Lamar_Valley | Lamar Valley - Wikipedia
+19:42 https://www.nps.gov/yell/learn/nature/wolves.htm | Wolves - Yellowstone National Park (U.S. National Park Service)
+== 2025-08-14
+20:20 https://en.wikipedia.org/wiki/Mammoth_Hot_Springs | Mammoth Hot Springs - Wikipedia
+== 2025-08-15
+11:50 https://www.511mt.net/ | Montana 511
+11:53 https://forecast.weather.gov/MapClick.php?lat=46.8721&lon=-113.994 | 7-Day Forecast for Latitude 46.87°N and Longitude 113.99°W (Elev. 3209 ft)
+== 2025-08-17
+08:59 https://www.kingarthurbaking.com/recipes/classic-sourdough-bread-recipe | Classic Sourdough Bread Recipe | King Arthur Baking
+11:20 https://www.spanishdict.com/translate/wolf | Wolf in Spanish | English to Spanish Translation - SpanishDict
+11:24 https://www.spanishdict.com/translate/bison | Bison in Spanish | English to Spanish Translation - SpanishDict
+11:28 https://www.spanishdict.com/translate/qu%C3%A9%20maravilla | Qué maravilla | Spanish to English Translation - SpanishDict
+== 2025-08-24
+18:42 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-08-27
+17:35 https://en.wikipedia.org/wiki/Dahlia | Dahlia - Wikipedia
+== 2025-09-03
+12:20 https://willowandash.gallery/framing | Custom Framing — Willow & Ash Frame Shop
+== 2025-09-04
+21:00 https://en.wikipedia.org/wiki/Quercus_macrocarpa | Quercus macrocarpa - Wikipedia
+21:02 https://tanagerlandscape.studio/projects/linden-schoolyard | Linden Elementary Schoolyard — Tanager Landscape Studio
+== 2025-09-10
+19:10 https://www.nps.gov/crla/planyourvisit/cleetwood-cove-trail.htm | Cleetwood Cove Trail - Crater Lake National Park (U.S. National Park Service)
+19:12 https://www.nps.gov/crla/planyourvisit/rim-drive.htm | Rim Drive - Crater Lake National Park (U.S. National Park Service)
+19:16 https://www.nps.gov/crla/planyourvisit/boat-tours.htm | Boat Tours - Crater Lake National Park (U.S. National Park Service)
+== 2025-09-13
+08:30 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-09-17
+20:40 https://forecast.weather.gov/MapClick.php?lat=42.9446&lon=-122.109 | 7-Day Forecast for Latitude 42.94°N and Longitude 122.11°W (Elev. 7100 ft)
+20:44 https://www.nps.gov/crla/planyourvisit/conditions.htm | Current Conditions - Crater Lake National Park (U.S. National Park Service)
+== 2025-09-19
+20:20 https://forecast.weather.gov/MapClick.php?lat=42.9446&lon=-122.109 | 7-Day Forecast for Latitude 42.94°N and Longitude 122.11°W (Elev. 7100 ft)
+20:23 https://www.nps.gov/crla/planyourvisit/cleetwood-cove-trail.htm | Cleetwood Cove Trail - Crater Lake National Park (U.S. National Park Service)
+== 2025-09-20
+05:45 https://www.tripcheck.com/ | TripCheck - Oregon Traveler Information
+20:30 https://en.wikipedia.org/wiki/Wizard_Island | Wizard Island - Wikipedia
+20:31 https://en.wikipedia.org/wiki/Mount_Mazama | Mount Mazama - Wikipedia
+== 2025-09-21
+08:10 https://www.nps.gov/crla/planyourvisit/rim-drive.htm | Rim Drive - Crater Lake National Park (U.S. National Park Service)
+08:14 https://www.nps.gov/crla/planyourvisit/conditions.htm | Current Conditions - Crater Lake National Park (U.S. National Park Service)
+21:10 https://en.wikipedia.org/wiki/Crater_Lake | Crater Lake - Wikipedia
+== 2025-09-28
+08:04 https://trimet.org/ | TriMet: Portland's Transit
+== 2025-09-30
+12:00 https://basaltclimbing.fitness/schedule | Schedule — Basalt Climbing Gym
+12:02 https://alderbrook.vet/book | Book an Appointment — Alderbrook Veterinary Clinic
+== 2025-10-11
+09:30 https://en.wikipedia.org/wiki/Camassia_quamash | Camassia quamash - Wikipedia
+09:32 https://thimbleberry.garden/plants | Plant List — Thimbleberry Native Nursery
+== 2025-10-14
+20:45 https://www.recreation.gov/camping/campgrounds/272299 | Jumbo Rocks Campground, Joshua Tree National Park - Recreation.gov
+20:46 https://www.nps.gov/jotr/planyourvisit/campgrounds.htm | Campgrounds - Joshua Tree National Park (U.S. National Park Service)
+20:47 https://www.nps.gov/jotr/index.htm | Joshua Tree National Park (U.S. National Park Service)
+== 2025-10-15
+21:20 https://www.nps.gov/jotr/planyourvisit/climbing.htm | Climbing - Joshua Tree National Park (U.S. National Park Service)
+21:24 https://www.mountainproject.com/area/105720495/joshua-tree-national-park | Joshua Tree National Park Rock Climbing - Mountain Project
+== 2025-10-18
+08:50 https://www.oregonhikers.org/field_guide/Larch_Mountain_Crater_Loop_Hike | Larch Mountain Crater Loop Hike - Oregon Hikers
+08:53 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-10-19
+14:00 https://www.oregonhikers.org/field_guide/Larch_Mountain_Crater_Loop_Hike | Larch Mountain Crater Loop Hike - Oregon Hikers
+== 2025-10-28
+19:46 https://www.recreation.gov/ | Recreation.gov - Camping, Cabins, RVs, Permits, Passes & More
+== 2025-11-08
+10:00 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-11-10
+19:00 https://en.wikipedia.org/wiki/Populus_trichocarpa | Populus trichocarpa - Wikipedia
+19:02 https://waterdata.usgs.gov/monitoring-location/14211720/ | USGS 14211720 WILLAMETTE RIVER AT PORTLAND, OR
+19:03 https://msc.fema.gov/portal/home | FEMA Flood Map Service Center | Welcome!
+== 2025-11-15
+20:10 https://en.wikipedia.org/wiki/Brining | Brining - Wikipedia
+20:12 https://www.kingarthurbaking.com/recipes/classic-sourdough-bread-recipe | Classic Sourdough Bread Recipe | King Arthur Baking
+== 2025-11-22
+09:30 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-11-25
+21:00 https://es.wikipedia.org/wiki/Flan | Flan - Wikipedia, la enciclopedia libre
+21:02 https://en.wikipedia.org/wiki/Brining | Brining - Wikipedia
+== 2025-12-02
+19:10 https://www.spanishdict.com/translate/alba%C3%B1il | Albañil | Spanish to English Translation - SpanishDict
+== 2025-12-07
+12:25 https://www.kingarthurbaking.com/recipes/classic-sourdough-bread-recipe | Classic Sourdough Bread Recipe | King Arthur Baking
+== 2025-12-13
+11:10 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2025-12-15
+19:20 https://www.flypdx.com/ | Portland International Airport (PDX)
+== 2025-12-19
+12:37 https://cedarandsalt.pizza/menu | Menu — Cedar & Salt Pizza
+== 2025-12-22
+13:20 https://www.flypdx.com/ | Portland International Airport (PDX)
+== 2025-12-23
+14:10 https://en.wikipedia.org/wiki/Krumkake | Krumkake - Wikipedia
+== 2025-12-31
+12:50 https://basaltclimbing.fitness/schedule | Schedule — Basalt Climbing Gym
+== 2026-01-09
+07:05 https://www.recreation.gov/camping/campgrounds/234059 | Colonial Creek North Campground, North Cascades National Park - Recreation.gov
+07:08 https://www.nps.gov/noca/index.htm | North Cascades National Park (U.S. National Park Service)
+== 2026-01-11
+19:22 https://trimet.org/ | TriMet: Portland's Transit
+== 2026-01-17
+09:20 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2026-01-20
+19:10 https://flypsp.com/ | Palm Springs International Airport
+19:11 https://www.nps.gov/jotr/planyourvisit/things2do.htm | Things To Do - Joshua Tree National Park (U.S. National Park Service)
+19:14 https://en.wikipedia.org/wiki/Yucca_brevifolia | Yucca brevifolia - Wikipedia
+== 2026-01-24
+21:40 https://en.wikipedia.org/wiki/Boise_River_Greenbelt | Boise River Greenbelt - Wikipedia
+21:41 https://www.timeanddate.com/sun/usa/boise?month=3&year=2026 | Sunrise and sunset times in Boise, March 2026
+== 2026-01-27
+21:00 https://forecast.weather.gov/MapClick.php?lat=33.9873&lon=-116.0193 | 7-Day Forecast for Latitude 33.99°N and Longitude 116.02°W (Elev. 4396 ft)
+21:01 https://www.mountainproject.com/area/105720495/joshua-tree-national-park | Joshua Tree National Park Rock Climbing - Mountain Project
+21:02 https://www.rei.com/learn/expert-advice/sleeping-bag.html | How to Choose a Sleeping Bag | REI Expert Advice
+== 2026-02-03
+19:45 https://www.timeanddate.com/sun/usa/boise?month=3&year=2026 | Sunrise and sunset times in Boise, March 2026
+19:46 https://en.wikipedia.org/wiki/Boise_River_Greenbelt | Boise River Greenbelt - Wikipedia
+== 2026-02-07
+10:00 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2026-02-11
+20:30 https://forecast.weather.gov/MapClick.php?lat=33.9873&lon=-116.0193 | 7-Day Forecast for Latitude 33.99°N and Longitude 116.02°W (Elev. 4396 ft)
+20:31 https://www.nps.gov/jotr/planyourvisit/campgrounds.htm | Campgrounds - Joshua Tree National Park (U.S. National Park Service)
+== 2026-02-13
+06:30 https://www.flypdx.com/ | Portland International Airport (PDX)
+== 2026-02-14
+20:40 https://en.wikipedia.org/wiki/Cylindropuntia_bigelovii | Cylindropuntia bigelovii - Wikipedia
+20:41 https://en.wikipedia.org/wiki/Yucca_brevifolia | Yucca brevifolia - Wikipedia
+== 2026-02-15
+07:30 https://www.nps.gov/jotr/planyourvisit/things2do.htm | Things To Do - Joshua Tree National Park (U.S. National Park Service)
+== 2026-02-16
+13:30 https://flypsp.com/ | Palm Springs International Airport
+== 2026-02-22
+19:02 https://waterdata.usgs.gov/monitoring-location/14211720/ | USGS 14211720 WILLAMETTE RIVER AT PORTLAND, OR
+== 2026-02-28
+09:30 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2026-03-02
+18:48 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2026-03-14
+10:15 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2026-03-20
+21:11 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2026-03-28
+10:00 https://en.wikipedia.org/wiki/Boise_River_Greenbelt | Boise River Greenbelt - Wikipedia
+== 2026-04-08
+10:30 https://alderbrook.vet/book | Book an Appointment — Alderbrook Veterinary Clinic
+== 2026-04-18
+09:20 https://www.wta.org/go-hiking/hikes/catherine-creek | Catherine Creek — Washington Trails Association
+09:22 https://en.wikipedia.org/wiki/Balsamorhiza_sagittata | Balsamorhiza sagittata - Wikipedia
+== 2026-04-19
+20:40 https://en.wikipedia.org/wiki/Masonry_oven | Masonry oven - Wikipedia
+20:43 https://en.wikipedia.org/wiki/Masonry_oven | Masonry oven - Wikipedia
+== 2026-04-21
+19:25 https://www.wordreference.com/es/translation.asp?tranword=permit%20set | permit set - English-Spanish Dictionary - WordReference.com
+== 2026-04-24
+21:12 https://basaltclimbing.fitness/schedule | Schedule — Basalt Climbing Gym
+== 2026-04-26
+21:10 https://en.wikipedia.org/wiki/Masonry_oven | Masonry oven - Wikipedia
+== 2026-04-28
+08:17 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2026-04-29
+17:50 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2026-05-03
+21:06 https://basaltclimbing.fitness/schedule | Schedule — Basalt Climbing Gym
+== 2026-05-05
+20:20 https://www.nps.gov/noca/index.htm | North Cascades National Park (U.S. National Park Service)
+20:23 https://www.nps.gov/noca/planyourvisit/conditions.htm | Current Conditions - North Cascades National Park (U.S. National Park Service)
+20:26 https://www.wta.org/go-hiking/hikes/blue-lake | Blue Lake — Washington Trails Association
+== 2026-05-09
+09:00 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2026-05-12
+19:40 https://stateparks.oregon.gov/index.cfm?do=park.profile&parkId=36 | Smith Rock State Park - Oregon State Parks
+19:44 https://www.mountainproject.com/area/105788989/smith-rock | Smith Rock Rock Climbing - Mountain Project
+== 2026-05-15
+19:50 https://wsdot.com/travel/real-time/mountainpasses/north-cascades | North Cascades Hwy | WSDOT
+19:53 https://www.rei.com/learn/expert-advice/traction-devices.html | How to Choose Traction Devices | REI Expert Advice
+== 2026-05-21
+18:05 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+20:10 https://forecast.weather.gov/MapClick.php?lat=48.714&lon=-121.131 | 7-Day Forecast for Latitude 48.71°N and Longitude 121.13°W (Elev. 1224 ft)
+20:13 https://wsdot.com/travel/real-time/mountainpasses/north-cascades | North Cascades Hwy | WSDOT
+20:14 https://www.recreation.gov/camping/campgrounds/234059 | Colonial Creek North Campground, North Cascades National Park - Recreation.gov
+20:16 https://en.wikipedia.org/wiki/Paella | Paella - Wikipedia
+== 2026-05-23
+06:15 https://wsdot.com/travel/real-time/mountainpasses/north-cascades | North Cascades Hwy | WSDOT
+21:00 https://en.wikipedia.org/wiki/Diablo_Lake | Diablo Lake - Wikipedia
+21:03 https://en.wikipedia.org/wiki/Rock_flour | Rock flour - Wikipedia
+== 2026-05-24
+19:50 https://en.wikipedia.org/wiki/Liberty_Bell_Mountain | Liberty Bell Mountain - Wikipedia
+19:53 https://www.wta.org/go-hiking/hikes/blue-lake | Blue Lake — Washington Trails Association
+== 2026-05-25
+08:00 https://www.nps.gov/noca/planyourvisit/conditions.htm | Current Conditions - North Cascades National Park (U.S. National Park Service)
+== 2026-05-30
+08:30 https://en.wikipedia.org/wiki/Masonry_oven | Masonry oven - Wikipedia
+08:31 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2026-06-02
+21:30 https://en.wikipedia.org/wiki/Masonry_oven | Masonry oven - Wikipedia
+== 2026-06-05
+20:10 https://stateparks.oregon.gov/index.cfm?do=park.profile&parkId=36 | Smith Rock State Park - Oregon State Parks
+20:12 https://forecast.weather.gov/MapClick.php?lat=44.0582&lon=-121.3153 | 7-Day Forecast for Latitude 44.06°N and Longitude 121.32°W (Elev. 3625 ft)
+== 2026-06-12
+18:00 https://www.kingarthurbaking.com/recipes/classic-sourdough-bread-recipe | Classic Sourdough Bread Recipe | King Arthur Baking
+== 2026-06-14
+11:30 https://en.wikipedia.org/wiki/Ericameria_nauseosa | Ericameria nauseosa - Wikipedia
+11:32 https://www.npsoregon.org/ | Native Plant Society of Oregon
+19:40 https://www.wta.org/go-hiking/hikes/snowgrass-flat | Snowgrass Flat — Washington Trails Association
+19:41 https://www.recreation.gov/ | Recreation.gov - Camping, Cabins, RVs, Permits, Passes & More
+== 2026-06-16
+21:05 https://basaltclimbing.fitness/schedule | Schedule — Basalt Climbing Gym
+== 2026-06-19
+07:47 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2026-06-21
+17:10 https://www.nps.gov/crla/planyourvisit/boat-tours.htm | Boat Tours - Crater Lake National Park (U.S. National Park Service)
+17:11 https://www.nps.gov/crla/planyourvisit/cleetwood-cove-trail.htm | Cleetwood Cove Trail - Crater Lake National Park (U.S. National Park Service)
+== 2026-06-26
+16:50 https://cedarandsalt.pizza/menu | Menu — Cedar & Salt Pizza
+== 2026-06-27
+10:20 https://www.portland.gov/parks/forest-park | Forest Park | Portland.gov
+10:23 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+== 2026-06-28
+07:40 https://forecast.weather.gov/MapClick.php?lat=45.5234&lon=-122.6762 | 7-Day Forecast for Latitude 45.52°N and Longitude 122.68°W (Elev. 52 ft)
+07:43 https://waterdata.usgs.gov/monitoring-location/14211720/ | USGS 14211720 WILLAMETTE RIVER AT PORTLAND, OR

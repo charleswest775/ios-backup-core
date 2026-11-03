@@ -1,0 +1,11 @@
+# Repeat visits to one URL, a title that changes, and a visit after the iOS 17 backup.
+
+== 2021-03-27
+23:40 https://www.timeanddate.com/time/change/uk/london | Daylight Saving Time 2021 in London
+== 2022-01-20
+16:10 https://en.wikipedia.org/wiki/Software_release_life_cycle | Software release life cycle - Wikipedia
+16:12 https://www.example.org/docs/releases | Release notes — Example
+== 2022-02-14
+09:05 https://www.example.org/docs/releases | Release notes (updated) — Example
+== 2024-06-01
+12:00 https://en.wikipedia.org/wiki/Software_release_life_cycle | Software release life cycle - Wikipedia

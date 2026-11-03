@@ -22,7 +22,7 @@ import sqlite3
 import sys
 from typing import Optional
 
-from ios_backup_core.backup import open_database
+from ios_backup_core.db import connect_readonly, get_database
 from ios_backup_core.schema import column_names, table_names
 from ios_backup_core.timestamps import apple_to_iso
 
@@ -128,12 +128,12 @@ class VoiceMemoExtractor:
             return {"voice_memos": [], "errors": []}
         domain, path, table = index
 
-        db_path = open_database(backup, path, domain)
+        db_path = get_database(backup, path, domain=domain)
         if not db_path:
             return {"voice_memos": [], "errors": []}
 
         try:
-            rows, folders = self._read_index(db_path, table)
+            rows, folders = self._read_index(db_path, table, backup)
         except Exception as e:
             print(f"[voice_memos] parse error: {e}", file=sys.stderr, flush=True)
             return {
@@ -161,11 +161,10 @@ class VoiceMemoExtractor:
         return {"voice_memos": memos, "errors": []}
 
     @staticmethod
-    def _read_index(db_path: str, table: str) -> tuple:
-        conn = sqlite3.connect(db_path)
+    def _read_index(db_path: str, table: str, backup) -> tuple:
+        conn = connect_readonly(db_path, backup)
         conn.row_factory = sqlite3.Row
         try:
-            conn.execute("PRAGMA query_only = TRUE")
             cols = column_names(conn, table)
             wanted = ("Z_PK", "ZDATE", "ZDURATION", "ZPATH", "ZEVICTIONDATE", "ZFOLDER") + _TITLE_COLUMNS
             select = ", ".join(c if c in cols else f"NULL AS {c}" for c in wanted)
@@ -196,11 +195,11 @@ class VoiceMemoExtractor:
         if not index:
             return None
         domain, path, table = index
-        db_path = open_database(backup, path, domain)
+        db_path = get_database(backup, path, domain=domain)
         if not db_path:
             return None
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             try:
                 row = conn.execute(f"SELECT ZPATH FROM {table} WHERE Z_PK = ?", (memo_id,)).fetchone()
             finally:
