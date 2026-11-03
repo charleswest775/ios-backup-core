@@ -1,0 +1,75 @@
+chat: cottonwood
+with: owen, kenji, priya
+service: iMessage
+name: Cottonwood crew 🌳
+
+# The Cottonwood Landing riverfront park team at Tanager. Starts the week Kenji joins.
+
+== 2025-03-05
+09:00 priya: Welcome Kenji! Making a chat for Cottonwood so we stop losing things in email
+09:02 kenji: Thank you! Very happy to be here
+09:03 owen: Welcome. First rule: nobody touches the river section but Maren
+09:03 me: That's not a rule
+09:04 owen: It's a rule
+09:04 kenji +laugh
+
+== 2025-03-21
+15:40 priya: Natalie loved the terrace concept. She wants a second option for the kayak launch on the south bank
+15:42 owen: Kenji can you sketch two options for Tuesday?
+15:45 kenji: Yes! Should I look at the flood elevations first?
+15:46 me: Yes, the 10 year and 100 year lines are in the base file, layer "FEMA"
+15:47 kenji +like
+
+== 2025-05-14
+08:20 kenji: The river is way higher than in the survey photos 😮
+08:21 me: Spring flow! That's why the terraces step down. Take photos of the high water line on the cottonwoods, it's super useful
+08:22 kenji: On it
+
+== 2025-09-10
+13:00 priya: DD schedule: draft set Oct 31, internal review Nov 7, board presentation Nov 18
+13:02 owen: Tight but ok
+13:03 me: I'll block my calendar for the planting plan
+13:03 kenji: I can take the boardwalk details
+13:04 priya +like
+
+== 2025-11-14
+22:10 kenji: Renders are done. Uploading to the server now. It's a big file, sorry
+22:11 me: Kenji it's 10pm, go home!!
+22:12 kenji: Going!! The cottonwoods look really good though
+22:13 me +love
+
+== 2025-11-18
+14:45 priya: The board approved DD unanimously. Thank you all. Truly a team effort
+14:46 owen: 🎉
+14:46 kenji: 🎉🎉🎉
+14:47 me: Celebration donuts tomorrow, I'm bringing them
+
+== 2026-01-12
+10:30 priya: Team, please congratulate Maren, our newest Associate 🎉
+10:31 owen: Well deserved. Now you have to come to the budget meetings
+10:32 kenji: Congratulations Maren!!
+10:32 me: Thank you!! Oh no, the budget meetings
+10:33 owen +laugh
+
+== 2026-03-19
+20:00 owen: Status check for tomorrow's submittal. What's left?
+20:05 kenji: Railing details need one more check, then I'm done
+20:06 me: Planting plans are done. I'm doing the specs now
+20:10 priya: I'm bringing dinner at 8:30. Thai or pizza?
+20:10 kenji: Pizza please 🍕
+20:11 owen: Pizza
+20:11 me: Pizza. Cedar & Salt, the mushroom one
+
+== 2026-03-20
+15:55 owen: Submitted to the city at 3:52pm. Thank you team
+15:56 priya: Proud of all of you. Take Monday off, all of you
+15:57 kenji: Really??
+15:57 priya: Really
+15:58 me +love
+
+== 2026-06-10
+11:00 priya: First round of permit comments are back. Only 14 comments. That's very good for a project this size
+11:02 owen: Mostly the railing heights and two tree species
+11:05 kenji: I'll take the railings
+11:06 me: Trees are mine. They want us to swap black cottonwood for a "cottonless" hybrid. On a restoration site 🙃
+11:07 owen +laugh

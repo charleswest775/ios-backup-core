@@ -1,0 +1,315 @@
+{
+ "database": "voicemail.db",
+ "ios": "17.3",
+ "build": "21D50",
+ "source": "public backup pub-hickman-17.3 (definitions only)",
+ "harvested": "2026-10-11",
+ "pragmas": {
+  "user_version": 0,
+  "page_size": 4096,
+  "journal_mode": "delete",
+  "auto_vacuum": 0,
+  "encoding": "UTF-8"
+ },
+ "objects": [
+  {
+   "type": "table",
+   "name": "_SqliteDatabaseProperties",
+   "table": "_SqliteDatabaseProperties",
+   "sql": "CREATE TABLE _SqliteDatabaseProperties (key TEXT, value TEXT, UNIQUE(key))"
+  },
+  {
+   "type": "table",
+   "name": "voicemail",
+   "table": "voicemail",
+   "sql": "CREATE TABLE voicemail (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, remote_uid INTEGER, date INTEGER, token TEXT, sender TEXT, callback_num TEXT, duration INTEGER, expiration INTEGER, trashed_date INTEGER, flags INTEGER, receiver TEXT, label TEXT, uuid TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "deleted",
+   "table": "deleted",
+   "sql": "CREATE TABLE deleted (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, remote_uid INTEGER, date INTEGER, token TEXT, sender TEXT, callback_num TEXT, duration INTEGER, expiration INTEGER, trashed_date INTEGER, flags INTEGER, receiver TEXT, label TEXT, uuid TEXT)"
+  },
+  {
+   "type": "table",
+   "name": "map",
+   "table": "map",
+   "sql": "CREATE TABLE map (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, account TEXT, label TEXT)"
+  },
+  {
+   "type": "index",
+   "name": "date_index",
+   "table": "voicemail",
+   "sql": "CREATE INDEX date_index on voicemail(date)"
+  },
+  {
+   "type": "index",
+   "name": "remote_uid_index",
+   "table": "voicemail",
+   "sql": "CREATE INDEX remote_uid_index on voicemail(remote_uid)"
+  }
+ ],
+ "columns": {
+  "_SqliteDatabaseProperties": [
+   {
+    "name": "key",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "value",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "voicemail": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "remote_uid",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "date",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "token",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sender",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "callback_num",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "duration",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "expiration",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "trashed_date",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "flags",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "receiver",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "label",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "uuid",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "deleted": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "remote_uid",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "date",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "token",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "sender",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "callback_num",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "duration",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "expiration",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "trashed_date",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "flags",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "receiver",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "label",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "uuid",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "map": [
+   {
+    "name": "ROWID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "account",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "label",
+    "type": "TEXT",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ]
+ },
+ "shape": {
+  "_SqliteDatabaseProperties": {
+   "key": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "value": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "map": {
+   "ROWID": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "account": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "label": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  }
+ }
+}

@@ -11,8 +11,23 @@ Changes:
 import gzip
 import sqlite3
 
+from ios_backup_core.db import connect_readonly, get_database
 from ios_backup_core.protobuf import extract_protobuf_strings
 from ios_backup_core.timestamps import apple_to_iso
+
+# Core Data numbers attribute columns per entity, and the numbering moves between
+# releases: iOS 15 keeps a note's creation date in ZCREATIONDATE3, while older
+# releases use ZCREATIONDATE1 or ZCREATIONDATE. A note row only has the note
+# entity's columns set, so COALESCE over whichever columns exist finds it.
+_NOTE_CREATED_COLUMNS = ("ZCREATIONDATE3", "ZCREATIONDATE2", "ZCREATIONDATE1", "ZCREATIONDATE")
+_NOTE_MODIFIED_COLUMNS = ("ZMODIFICATIONDATE1", "ZMODIFICATIONDATE")
+
+
+def _coalesce_present(columns: set, candidates: tuple) -> str:
+    present = [f"n.{c}" for c in candidates if c in columns]
+    if not present:
+        return "NULL"
+    return present[0] if len(present) == 1 else f"COALESCE({', '.join(present)})"
 
 
 class NoteExtractor:
@@ -23,43 +38,42 @@ class NoteExtractor:
     def list_notes(self, backup) -> dict:
         """List all notes with content."""
         # Try legacy notes.sqlite first (iOS < 9 / older path)
-        db_path = backup.get_file(self.NOTES_DB_PATH, domain="HomeDomain")
+        db_path = get_database(backup, self.NOTES_DB_PATH, domain="HomeDomain")
 
         notes = []
 
         if db_path:
-            notes = self._parse_legacy_notes(db_path)
+            notes = self._parse_legacy_notes(db_path, backup)
 
         if not notes:
             # Try the group container path for newer iOS via manifest scan.
             files = backup.list_files(path_like="%NoteStore.sqlite")
             for f in files:
-                extracted = backup.get_file(f["path"], domain=f["domain"])
+                extracted = get_database(backup, f["path"], domain=f["domain"])
                 if extracted:
-                    notes = self._parse_notestore(extracted)
+                    notes = self._parse_notestore(extracted, backup)
                     if notes:
                         break
 
         if not notes:
             # Encrypted backups: Manifest.db is encrypted so list_files() returns
             # nothing. Try the well-known iOS 11+ group container path directly.
-            notestore_path = backup.get_file(
+            notestore_path = get_database(
+                backup,
                 "NoteStore.sqlite",
                 domain="AppDomainGroup-group.com.apple.notes",
             )
             if notestore_path:
-                notes = self._parse_notestore(notestore_path)
+                notes = self._parse_notestore(notestore_path, backup)
 
         return {"notes": notes}
 
-    def _parse_legacy_notes(self, db_path: str) -> list:
+    def _parse_legacy_notes(self, db_path: str, backup=None) -> list:
         """Parse the older notes.sqlite format."""
         notes = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
-            conn.execute("PRAGMA synchronous = OFF")
             conn.execute("PRAGMA cache_size = -10000")
             conn.execute("PRAGMA temp_store = MEMORY")
 
@@ -97,29 +111,30 @@ class NoteExtractor:
 
         return notes
 
-    def _parse_notestore(self, db_path: str) -> list:
+    def _parse_notestore(self, db_path: str, backup=None) -> list:
         """Parse the newer NoteStore.sqlite format (iOS 11+)."""
         notes = []
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only = TRUE")
-            conn.execute("PRAGMA synchronous = OFF")
             conn.execute("PRAGMA cache_size = -10000")
             conn.execute("PRAGMA temp_store = MEMORY")
 
-            rows = conn.execute("""
+            columns = {r[1] for r in conn.execute("PRAGMA table_info(ZICCLOUDSYNCINGOBJECT)")}
+            created = _coalesce_present(columns, _NOTE_CREATED_COLUMNS)
+            modified = _coalesce_present(columns, _NOTE_MODIFIED_COLUMNS)
+            rows = conn.execute(f"""
                 SELECT
                     n.Z_PK,
                     n.ZTITLE1 AS title,
-                    n.ZCREATIONDATE AS created,
-                    n.ZMODIFICATIONDATE1 AS modified,
+                    {created} AS created,
+                    {modified} AS modified,
                     n.ZSNIPPET AS snippet,
                     nd.ZDATA AS body_data
                 FROM ZICCLOUDSYNCINGOBJECT n
                 LEFT JOIN ZICNOTEDATA nd ON nd.ZNOTE = n.Z_PK
                 WHERE n.ZTITLE1 IS NOT NULL
-                ORDER BY n.ZMODIFICATIONDATE1 DESC
+                ORDER BY modified DESC
             """).fetchall()
 
             for row in rows:

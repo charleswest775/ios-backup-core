@@ -1,0 +1,178 @@
+{
+ "database": "container",
+ "ios": "17.3",
+ "build": "21D50",
+ "source": "public backup pub-hickman-17.3 (definitions only)",
+ "harvested": "2026-10-10",
+ "manifest_plist_keys": [
+  "Applications",
+  "BackupKeyBag",
+  "Date",
+  "IsEncrypted",
+  "Lockdown",
+  "ManifestKey",
+  "SystemDomainsVersion",
+  "Version",
+  "WasPasscodeSet"
+ ],
+ "manifest_version": "10.0",
+ "system_domains_version": "24.0",
+ "lockdown_keys": [
+  "BuildVersion",
+  "DeviceName",
+  "ProductType",
+  "ProductVersion",
+  "SerialNumber",
+  "UniqueDeviceID",
+  "com.apple.Accessibility",
+  "com.apple.MobileDeviceCrashCopy",
+  "com.apple.TerminalFlashr",
+  "com.apple.mobile.data_sync",
+  "com.apple.mobile.iTunes.accessories",
+  "com.apple.mobile.wireless_lockdown"
+ ],
+ "manifest_key_class": 3,
+ "keybag": {
+  "classes": [
+   {
+    "CLAS": 19,
+    "WRAP": 3,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 18,
+    "WRAP": 2,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 17,
+    "WRAP": 2,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 11,
+    "WRAP": 3,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 10,
+    "WRAP": 3,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 9,
+    "WRAP": 3,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 8,
+    "WRAP": 2,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 7,
+    "WRAP": 2,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 6,
+    "WRAP": 2,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 5,
+    "WRAP": 3,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 4,
+    "WRAP": 2,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 3,
+    "WRAP": 2,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 2,
+    "WRAP": 2,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   },
+   {
+    "CLAS": 1,
+    "WRAP": 2,
+    "KTYP": 0,
+    "WPKY": "bytes[40]"
+   }
+  ],
+  "VERS": 5,
+  "TYPE": 1,
+  "UUID": "bytes[16]",
+  "HMCK": "bytes[40]",
+  "WRAP": 0,
+  "SALT": "bytes[20]",
+  "ITER": 10000,
+  "DPWT": 1,
+  "DPIC": 10000000,
+  "DPSL": "bytes[20]"
+ },
+ "info_plist_keys": [
+  "Applications",
+  "Build Version",
+  "Device Name",
+  "Devices Version",
+  "Display Name",
+  "GUID",
+  "ICCID",
+  "IMEI",
+  "IMEI 2",
+  "Installed Applications",
+  "Last Backup Date",
+  "MEID",
+  "Phone Number",
+  "Product Name",
+  "Product Type",
+  "Product Version",
+  "Serial Number",
+  "Target Identifier",
+  "Target Type",
+  "Unique Identifier",
+  "Windows OS Version",
+  "iTunes Files",
+  "iTunes Settings"
+ ],
+ "status_plist": {
+  "BackupState": "new",
+  "Date": "datetime",
+  "IsFullBackup": false,
+  "SnapshotState": "finished",
+  "UUID": "str",
+  "Version": "3.3"
+ },
+ "manifest_db_ddl": [
+  "CREATE TABLE Files (fileID TEXT PRIMARY KEY, domain TEXT, relativePath TEXT, flags INTEGER, file BLOB)",
+  "CREATE INDEX FilesDomainIdx ON Files(domain)",
+  "CREATE INDEX FilesRelativePathIdx ON Files(relativePath)",
+  "CREATE INDEX FilesFlagsIdx ON Files(flags)",
+  "CREATE TABLE Properties (key TEXT PRIMARY KEY, value BLOB)"
+ ],
+ "manifest_db_pragmas": {
+  "journal_mode": "wal",
+  "user_version": 2,
+  "page_size": 4096
+ }
+}

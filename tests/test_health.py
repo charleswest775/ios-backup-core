@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from backup_builder import BackupBuilder
+from backup_builder import BackupBuilder, read_only, snapshot
 from ios_backup_core.extractors.health import (
     HEALTH_DOMAIN,
     MAIN_DB_PATH,
@@ -197,6 +197,25 @@ class DailyMetricsTests(_HealthTestCase):
         self.assertEqual(result["errors"], [])
         self.assertEqual(result["daily"][0]["steps"], 1234)
         self.assertEqual((result["sleep"], result["workouts"]), ([], []))
+
+
+class ReadOnlyTests(_HealthTestCase):
+    def test_read_only_backup_is_read_without_changes(self):
+        def build(conn):
+            conn.executescript(FULL_SCHEMA)
+            w = _Writer(conn)
+            w.quantity(STEPS, ts(2024, 1, 1, 9), 6000, WATCH)
+            w.category(SLEEP, ts(2024, 1, 1, 23), ts(2024, 1, 2, 6), 3, WATCH)
+        self.builder.add_db(HEALTH_DOMAIN, SECURE_DB_PATH, build, wal_mode=True)
+        _add_sources_db(self.builder)
+        acc = self.builder.accessor()
+        before = snapshot(self.builder.dir)
+        with read_only(self.builder.dir):
+            result = self.extractor.get_summary(acc)
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["daily"][0]["steps"], 6000)
+        self.assertEqual(result["sleep"][0]["asleep_minutes"], 420)
+        self.assertEqual(snapshot(self.builder.dir), before)
 
 
 class LocalDayTests(_HealthTestCase):

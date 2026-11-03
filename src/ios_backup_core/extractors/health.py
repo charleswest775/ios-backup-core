@@ -33,7 +33,7 @@ import sqlite3
 import sys
 from typing import Optional
 
-from ios_backup_core.backup import open_database
+from ios_backup_core.db import connect_readonly, get_database
 from ios_backup_core.schema import column_names, table_names
 from ios_backup_core.timestamps import apple_to_iso
 
@@ -133,8 +133,8 @@ class HealthExtractor:
                   "daily": [], "sleep": [], "workouts": []}
         encrypted = getattr(backup, "encrypted", True)
 
-        db_path = open_database(backup, SECURE_DB_PATH, HEALTH_DOMAIN)
-        conn = self._connect(db_path) if db_path else None
+        db_path = get_database(backup, SECURE_DB_PATH, domain=HEALTH_DOMAIN)
+        conn = self._connect(db_path, backup) if db_path else None
         if conn is None:
             if not encrypted:
                 result["notice"] = UNENCRYPTED_HEALTH_NOTICE
@@ -169,26 +169,25 @@ class HealthExtractor:
     # ── Plumbing ─────────────────────────────────────────────────────────────
 
     @staticmethod
-    def _connect(db_path: str) -> Optional[sqlite3.Connection]:
+    def _connect(db_path: str, backup) -> Optional[sqlite3.Connection]:
         """Open the samples database, or None if it isn't one (e.g. a placeholder)."""
         try:
-            conn = sqlite3.connect(db_path)
-            conn.execute("PRAGMA query_only = TRUE")
+            conn = connect_readonly(db_path, backup)
             if "samples" not in table_names(conn):
                 conn.close()
                 return None
             return conn
-        except sqlite3.DatabaseError:
+        except sqlite3.Error:
             return None
 
     @staticmethod
     def _source_names(backup) -> dict:
         """Map data_provenances.source_id → the app or device name in healthdb.sqlite."""
-        path = open_database(backup, MAIN_DB_PATH, HEALTH_DOMAIN)
+        path = get_database(backup, MAIN_DB_PATH, domain=HEALTH_DOMAIN)
         if not path:
             return {}
         try:
-            conn = sqlite3.connect(path)
+            conn = connect_readonly(path, backup)
             try:
                 if "name" not in column_names(conn, "sources"):
                     return {}

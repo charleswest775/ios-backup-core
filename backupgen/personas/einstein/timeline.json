@@ -1,0 +1,2966 @@
+{
+ "about": "Documented events of Albert Einstein's life and his world, 1900–1909: the backbone the conversations are written from. Each entry lists the sources it was checked against. Dates are as they happened (before the +116-year shift). Compiled for this project in October 2026 from the Collected Papers of Albert Einstein chronology (Princeton University Press), AIP History, einstein-website.de, Wikipedia and other cited pages.",
+ "events": [
+  {
+   "category": "world",
+   "date": "1900-04-14",
+   "title": "Paris Exposition Universelle opens",
+   "detail": "The world's fair celebrating the century's achievements ran in Paris from 14 April to 12 November 1900.",
+   "place": "Paris",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Exposition_Universelle_(1900)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1900-07-27",
+   "end_date": "1900-08-09",
+   "date_note": "CPAE gives 27 July to ca. 9 August 1900.",
+   "title": "Summer holiday in Melchtal; tells his mother of marriage plans",
+   "detail": "Right after his exams Einstein spent about two weeks with his mother, sister and aunt at Melchtal and told his mother that he and Mileva Marić planned to marry. His parents opposed the match (keep this factual, not dramatized).",
+   "people": [
+    "Albert Einstein",
+    "Pauline Einstein",
+    "Maja Einstein",
+    "Mileva Marić"
+   ],
+   "place": "Melchtal, Switzerland",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1900-07-28",
+   "date_note": "Oral exam 27 July; diploma 28 July (CPAE chronology). Other sources give only 'July 1900'.",
+   "title": "ETH teaching diploma",
+   "detail": "Einstein passed the oral final examination on 27 July 1900 and on 28 July received his diploma from the Swiss Federal Polytechnic (ETH) as a specialist teacher in the mathematical direction, qualifying him to teach mathematics and physics in secondary schools. Mileva Marić, in the same program, did not pass that year.",
+   "people": [
+    "Albert Einstein",
+    "Mileva Marić"
+   ],
+   "place": "Zurich",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://history.aip.org/exhibits/einstein/chron.htm",
+    "https://einstein-website.de/en/einstein-biography/",
+    "https://en.wikipedia.org/wiki/Mileva_Mari%C4%87"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1900-09",
+   "date_note": "CPAE gives 'early Sep' 1900.",
+   "title": "Tours his father's power stations",
+   "detail": "In early September 1900 Einstein and his father Hermann visited Hermann's electrical power stations at Canneto and Isola della Scala in northern Italy, and also Venice.",
+   "people": [
+    "Albert Einstein",
+    "Hermann Einstein"
+   ],
+   "place": "Northern Italy",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://arxiv.org/pdf/1412.6981"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1900-09-23",
+   "title": "Asks Adolf Hurwitz for an assistant post",
+   "detail": "After inquiring in Zurich around 9 August about becoming assistant to the ETH mathematician Adolf Hurwitz, Einstein wrote to him on 23 and 26 September 1900. No position resulted; the ETH physics professors did not take him on.",
+   "people": [
+    "Albert Einstein",
+    "Adolf Hurwitz"
+   ],
+   "place": "Zurich / Milan",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://arxiv.org/pdf/1205.4335"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1900-12-14",
+   "title": "Planck presents the quantum hypothesis",
+   "detail": "At the German Physical Society in Berlin, Max Planck presented his derivation of the black-body radiation law, assuming energy is emitted only in multiples of an elementary unit; he had first proposed the radiation formula there on 19 October 1900.",
+   "place": "Berlin",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Max_Planck"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1900-12-16",
+   "date_note": "Printed paper: signed 13 Dec 1900, 'Eingegangen' (received) 16 Dec 1900. CPAE lists 13 Dec as the submission date.",
+   "title": "First paper (capillarity) received by Annalen der Physik",
+   "detail": "Einstein's first paper, 'Folgerungen aus den Capillaritätserscheinungen' (Conclusions Drawn from the Phenomena of Capillarity), is dated Zurich 13 December 1900 and was received by Annalen der Physik on 16 December 1900. It was published on 1 March 1901; Einstein later disowned its intermolecular-force model.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Zurich",
+   "sources": [
+    "https://archive.org/details/annalenderphysi199unkngoog",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "https://arxiv.org/pdf/1205.4335"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1901-01-22",
+   "title": "Death of Queen Victoria",
+   "detail": "Queen Victoria died at Osborne House on the Isle of Wight, aged 81.",
+   "place": "Isle of Wight, UK",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Death_and_state_funeral_of_Queen_Victoria"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-02-21",
+   "title": "Becomes a Swiss citizen",
+   "detail": "Einstein, stateless since renouncing his Württemberg (German) citizenship in January 1896, obtained Swiss citizenship (citizen of Zurich) on 21 February 1901. He kept it for life.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Zurich",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Jost_Winteler",
+    "https://einstein-website.de/en/einstein-biography/",
+    "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "https://hls-dhs-dss.ch/de/articles/028814/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-03-13",
+   "title": "Found unfit for regular Swiss military service",
+   "detail": "Einstein was classified for auxiliary military service on medical grounds; the Swiss authorities did not conscript him.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Zurich",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-03-19",
+   "date_note": "Letters dated 19 March and 3 April 1901 (CPAE Vol. 1 Docs. 92, 95, as cited by Weinstein).",
+   "title": "Letter to Wilhelm Ostwald asking for an assistantship",
+   "detail": "From Milan, Einstein sent the Leipzig physical chemist Wilhelm Ostwald a reprint of his capillarity paper and asked whether he could use a mathematical physicist as assistant; he followed up with a postcard on 3 April 1901. Ostwald did not take him on (in 1909 Ostwald would nominate him for a Nobel Prize).",
+   "people": [
+    "Albert Einstein",
+    "Wilhelm Ostwald"
+   ],
+   "place": "Milan (to Leipzig)",
+   "sources": [
+    "https://arxiv.org/pdf/1205.4335",
+    "https://en.wikipedia.org/wiki/Wilhelm_Ostwald",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-04-12",
+   "title": "Postcard to Heike Kamerlingh Onnes in Leiden",
+   "detail": "Einstein applied by postcard for an assistant post in Kamerlingh Onnes's Leiden laboratory, enclosing his capillarity reprint and a prepaid reply card. The reply card was never used and survives in the Kamerlingh Onnes papers.",
+   "people": [
+    "Albert Einstein",
+    "Heike Kamerlingh Onnes"
+   ],
+   "place": "Milan (to Leiden)",
+   "sources": [
+    "https://arxiv.org/pdf/1205.4335",
+    "https://arxiv.org/pdf/physics/0612159"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-04-13",
+   "date_note": "Single fetched source, which cites the letter as CPAE Vol. 1, Doc. 99 (13 April 1901).",
+   "title": "Hermann Einstein writes to Ostwald for his son",
+   "detail": "Without Albert's knowledge, his father Hermann wrote to Wilhelm Ostwald asking him to read Albert's paper and send him a few encouraging lines, and if possible an assistant post. No assistantship followed.",
+   "people": [
+    "Hermann Einstein",
+    "Wilhelm Ostwald",
+    "Albert Einstein"
+   ],
+   "place": "Milan (to Leipzig)",
+   "sources": [
+    "https://arxiv.org/pdf/1205.4335"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-04-14",
+   "title": "Thanks Marcel Grossmann for his father's recommendation",
+   "detail": "Einstein wrote to his ETH friend Marcel Grossmann thanking him and his father Jules Grossmann, who had recommended Einstein to Friedrich Haller, director of the Federal Office for Intellectual Property (the Patent Office) in Bern. In the same letter he blamed his ETH professor H. F. Weber for his failure to get an assistantship.",
+   "people": [
+    "Albert Einstein",
+    "Marcel Grossmann",
+    "Jules Grossmann",
+    "Friedrich Haller",
+    "Heinrich Friedrich Weber"
+   ],
+   "place": "Milan",
+   "sources": [
+    "https://einstein-website.de/en/patent-office/",
+    "https://arxiv.org/pdf/1205.4335",
+    "https://en.wikipedia.org/wiki/Marcel_Grossmann",
+    "https://en.wikipedia.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-05-05",
+   "date_note": "CPAE dates the departure from Milan and the Como meeting to 5 May 1901; einstein-website says 'beginning of May 1901'.",
+   "title": "Lake Como and the Splügen Pass with Mileva",
+   "detail": "Travelling from Milan to his new job in Winterthur, Einstein met Mileva Marić in Como and the two made a short spring excursion over the Splügen Pass into Switzerland.",
+   "people": [
+    "Albert Einstein",
+    "Mileva Marić"
+   ],
+   "place": "Como, Italy; Splügen Pass",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/winterthur/",
+    "https://en.wikipedia.org/wiki/Mileva_Mari%C4%87",
+    "https://physicstoday.aip.org/features/of-love-physics-and-other-passions-the-letters-of-albert-and-mileva-part-2"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-05-16",
+   "end_date": "1901-07-11",
+   "date_note": "CPAE and einstein-website give 16 May–11 July; Weinstein (arXiv) gives a 19 May start.",
+   "title": "Substitute teacher at the Technikum Winterthur",
+   "detail": "Einstein taught mathematics and descriptive geometry at the Winterthur technical school as a substitute for Professor Jakob Rebstein, who was doing military service, until 11 July 1901. He roomed at Äussere Schaffhauserstrasse 38 and visited Mileva in Zurich on weekends.",
+   "people": [
+    "Albert Einstein",
+    "Jakob Rebstein",
+    "Mileva Marić"
+   ],
+   "place": "Winterthur",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/winterthur/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-07-03",
+   "title": "Unsuccessful school applications (Burgdorf, Frauenfeld)",
+   "detail": "Einstein applied without success for a teaching post at the Technikum Burgdorf (3 July) and at the cantonal school in Frauenfeld (late July); the Frauenfeld post went to his friend Marcel Grossmann.",
+   "people": [
+    "Albert Einstein",
+    "Marcel Grossmann"
+   ],
+   "place": "Winterthur",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/winterthur/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-07-08",
+   "title": "Letter to 'Papa' Jost Winteler about teaching and Drude",
+   "detail": "Einstein wrote to his former Aarau host Jost Winteler that he enjoyed teaching far more than expected, and vented his anger at Paul Drude, editor of Annalen der Physik, who had dismissed his criticism of Drude's electron theory in mid-1901.",
+   "people": [
+    "Albert Einstein",
+    "Jost Winteler",
+    "Paul Drude"
+   ],
+   "place": "Winterthur",
+   "sources": [
+    "https://einstein-website.de/en/winterthur/",
+    "https://en.wikipedia.org/wiki/Jost_Winteler",
+    "https://en.wikipedia.org/wiki/Alfred_Kleiner"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-09-15",
+   "end_date": "1902-01",
+   "date_note": "CPAE: ca. 15 Sep 1901; Einstein's own letter to Grossmann gives 15 September as the start.",
+   "title": "Private tutor in Schaffhausen",
+   "detail": "Einstein began work at Dr. Jakob Nüesch's private boarding school in Schaffhausen, preparing a young Englishman, Louis Cahen, for the Matura; he quarreled with Nüesch over board and lodging and lived at three addresses. In Schaffhausen he befriended Conrad Habicht and played violin in local concerts; the post ended at the end of January 1902.",
+   "people": [
+    "Albert Einstein",
+    "Jakob Nüesch",
+    "Louis Cahen",
+    "Conrad Habicht"
+   ],
+   "place": "Schaffhausen",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/schaffhausen/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-11-23",
+   "title": "First doctoral dissertation submitted, then withdrawn",
+   "detail": "Einstein submitted a dissertation on molecular forces in gases to the University of Zurich (adviser Alfred Kleiner). He withdrew it in early 1902; the university refunded his fees on 1 February 1902.",
+   "people": [
+    "Albert Einstein",
+    "Alfred Kleiner"
+   ],
+   "place": "Schaffhausen / Zurich",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Alfred_Kleiner",
+    "https://einstein-website.de/en/schaffhausen/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1901-12-10",
+   "title": "First Nobel Prizes awarded",
+   "detail": "The first Nobel Prizes were presented in Stockholm on 10 December, the anniversary of Alfred Nobel's death; the physics prize went to Wilhelm Conrad Röntgen for X-rays.",
+   "place": "Stockholm",
+   "sources": [
+    "https://www.nobelprize.org/prizes/physics/1901/summary/",
+    "https://en.wikipedia.org/wiki/Nobel_Prize"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1901-12-12",
+   "title": "Marconi's transatlantic signal",
+   "detail": "Guglielmo Marconi reported receiving the Morse letter S, sent from Poldhu in Cornwall, at Signal Hill in St. John's, Newfoundland, about 3,500 km away.",
+   "place": "Signal Hill, Newfoundland",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Guglielmo_Marconi"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-12-18",
+   "title": "Applies to the Swiss Patent Office",
+   "detail": "After a vacancy was advertised in the Swiss Federal Gazette on 11 December 1901 and director Friedrich Haller personally urged him to apply, Einstein applied on 18 December 1901 for an engineer post at the Federal Office for Intellectual Property in Bern.",
+   "people": [
+    "Albert Einstein",
+    "Friedrich Haller"
+   ],
+   "place": "Schaffhausen (to Bern)",
+   "sources": [
+    "https://einstein-website.de/en/patent-office/",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/schaffhausen/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1901-12-19",
+   "title": "Explains his electrodynamics of moving bodies to Kleiner",
+   "detail": "Einstein told Mileva that he had spent an afternoon with Alfred Kleiner in Zurich explaining his ideas on the electrodynamics of moving bodies, and that Kleiner encouraged him to publish. Two days earlier he had written that he was working eagerly on such a paper.",
+   "people": [
+    "Albert Einstein",
+    "Alfred Kleiner",
+    "Mileva Marić"
+   ],
+   "place": "Zurich / Schaffhausen",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Alfred_Kleiner",
+    "https://einstein-website.de/en/schaffhausen/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1902",
+   "date_note": "Prize year 1902; presented at the annual December ceremony in Stockholm (exact ceremony date not separately verified).",
+   "title": "Lorentz and Zeeman share the Nobel Prize in Physics",
+   "detail": "Hendrik Antoon Lorentz and Pieter Zeeman shared the physics prize for their work on the influence of magnetism on radiation (the Zeeman effect). Lorentz's electron theory was central to Einstein's work.",
+   "place": "Stockholm",
+   "sources": [
+    "https://www.nobelprize.org/prizes/physics/1902/summary/",
+    "https://en.wikipedia.org/wiki/Hendrik_Lorentz"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1902",
+   "date_note": "Work spanned 1902–1903; no single date.",
+   "title": "Rutherford and Soddy: radioactivity as transmutation",
+   "detail": "Working at McGill University (1900–1903), Ernest Rutherford and Frederick Soddy showed that radioactivity involves the spontaneous disintegration of atoms into other elements.",
+   "place": "Montreal",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Ernest_Rutherford"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "category": "world",
+   "date": "1902-01-01",
+   "title": "Swiss Federal Railways absorb the North Eastern Railway",
+   "detail": "The state-owned Swiss Federal Railways (SBB), approved by referendum in 1898, founded as a company in 1902 and headquartered in Bern, added the Swiss North Eastern Railway (NOB) to its network on 1 January 1902.",
+   "place": "Switzerland",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Swiss_Federal_Railways"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1902-02-05",
+   "title": "Newspaper ad for private lessons",
+   "detail": "Einstein advertised in the Anzeiger für die Stadt Bern (No. 30, Wednesday 5 February 1902): private lessons in mathematics and physics for students and pupils, trial lessons free, at Gerechtigkeitsgasse 32, first floor. On 8 February he told Mileva he already had two pupils, an engineer and an architect, at 2 francs per man per lesson.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://www.helveticarchives.ch/detail.aspx?ID=1078303",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://einstein-website.de/en/akademie-olympia/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1902-02-11",
+   "date_note": "einstein-website gives occupancy from 4 Feb 1902 and registration on 11 Feb; CPAE gives registration 11 Feb.",
+   "title": "Settles in Bern, Gerechtigkeitsgasse 32",
+   "detail": "Having arrived in Bern in early February 1902 to await the Patent Office decision, Einstein rented a furnished room for 23 francs a month in the house of Anna Sievers at Gerechtigkeitsgasse 32 in the old town, registering with the police on 11 February.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern, Gerechtigkeitsgasse 32",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/einstein-in-bern",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1902-03",
+   "date_note": "Month approximate: Solovine recalled reading the ad during the Easter vacation of 1902 (Easter Sunday was 30 March 1902), so late March or early April. The exact day is not documented.",
+   "title": "Maurice Solovine answers the ad",
+   "detail": "Maurice Solovine, a Romanian philosophy student in Bern, answered the advertisement; their first conversation ran about two hours and after a few meetings Einstein said they should simply discuss physics and philosophy instead of having lessons. No paid tutoring resulted.",
+   "people": [
+    "Albert Einstein",
+    "Maurice Solovine"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://arxiv.org/pdf/1205.3904",
+    "https://en.wikipedia.org/wiki/Maurice_Solovine",
+    "https://einstein-website.de/en/akademie-olympia/",
+    "https://en.wikipedia.org/wiki/Olympia_Academy"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "category": "world",
+   "date": "1902-04-01",
+   "title": "Swiss Federal Palace parliament building handed over",
+   "detail": "The new central parliament building of the Federal Palace in Bern, built 1894–1902, was handed over in an official ceremony on 1 April 1902.",
+   "place": "Bern",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Federal_Palace_of_Switzerland"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1902-04-30",
+   "title": "Second paper received by Annalen der Physik",
+   "detail": "Annalen der Physik received Einstein's paper on the thermodynamic theory of potential differences between metals and dissociated salt solutions, an electrical method for studying molecular forces.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://de.wikisource.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1902-05-31",
+   "title": "Boer War ends",
+   "detail": "The Treaty of Vereeniging ended the Second Boer War between Britain and the two Boer republics.",
+   "place": "Vereeniging/Pretoria, South Africa",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Treaty_of_Vereeniging"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1902-06-07",
+   "title": "Moves to Thunstrasse 43a",
+   "detail": "Einstein moved across the Aare to a room with the Dosch family at Thunstrasse 43a in the Kirchenfeld district, registering on 7 June 1902.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern, Thunstrasse 43a",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1902-06-16",
+   "title": "Appointed Technical Expert, third class",
+   "detail": "The Swiss Federal Council appointed Einstein provisionally as Technical Expert third class at the Federal Office for Intellectual Property at an annual salary of 3,500 francs. He received the letter on 19 June; J. Heinrich Schenk was appointed at the same time.",
+   "people": [
+    "Albert Einstein",
+    "Friedrich Haller",
+    "J. Heinrich Schenk"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/patent-office/",
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1902-06-23",
+   "title": "First day at the Patent Office",
+   "detail": "On Monday 23 June 1902 Einstein began work as a technical expert (patent examiner) under director Friedrich Haller, in room 86 on the third floor of the federal telegraph building at the corner of Speichergasse and Genfergasse. Haller trained his examiners to approach every application critically.",
+   "people": [
+    "Albert Einstein",
+    "Friedrich Haller"
+   ],
+   "place": "Bern, Speichergasse/Genfergasse",
+   "sources": [
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/faq",
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/einstein-at-the-patent-office",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/patent-office/",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1902-06-26",
+   "title": "Paper on kinetic theory of thermal equilibrium received",
+   "detail": "Annalen der Physik received 'Kinetic Theory of Thermal Equilibrium and of the Second Law of Thermodynamics', the first of three statistical-physics papers (1902–1904).",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://de.wikisource.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1902-08-14",
+   "title": "Moves to Archivstrasse 8",
+   "detail": "Einstein took an attic room with the widow Bertha Hausmann-Louis at Archivstrasse 8 in Kirchenfeld, with a view of the Gurten and the Bernese Alps; he wrote to a friend that his landlady had a marvelous violin. He lived there until his marriage.",
+   "people": [
+    "Albert Einstein",
+    "Bertha Hausmann-Louis"
+   ],
+   "place": "Bern, Archivstrasse 8",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1902-10-10",
+   "title": "Death of his father, Hermann Einstein",
+   "detail": "Hermann Einstein died of heart failure in Milan, aged 55, after years of business worries.",
+   "people": [
+    "Hermann Einstein",
+    "Albert Einstein",
+    "Pauline Einstein"
+   ],
+   "place": "Milan",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Einstein_family",
+    "https://einstein-website.de/en/einstein-hermann-2/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1903",
+   "date_note": "Prize year 1903; presented at the annual December ceremony in Stockholm (exact ceremony date not separately verified).",
+   "title": "Becquerel and the Curies share the Nobel Prize in Physics",
+   "detail": "Henri Becquerel (half) and Pierre and Marie Curie (a quarter each) were honored for the discovery and study of radioactivity; Marie Curie was the first woman Nobel laureate.",
+   "place": "Stockholm",
+   "sources": [
+    "https://www.nobelprize.org/prizes/physics/1903/summary/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1903-01-06",
+   "title": "Marriage to Mileva Marić",
+   "detail": "Einstein and Mileva Marić married at the civil registry office in Bern; the only witnesses were Conrad Habicht and Maurice Solovine, and no family members attended. Both families had opposed the marriage.",
+   "people": [
+    "Albert Einstein",
+    "Mileva Marić",
+    "Conrad Habicht",
+    "Maurice Solovine"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Conrad_Habicht",
+    "https://einstein-website.de/en/patent-office/",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1903-01-10",
+   "title": "First married home, Tillierstrasse 18",
+   "detail": "The couple registered at Tillierstrasse 18 in Kirchenfeld. In a letter to Besso that month Einstein described a cozy married life and said he planned studies on molecular forces in gases and electron theory.",
+   "people": [
+    "Albert Einstein",
+    "Mileva Marić",
+    "Michele Besso"
+   ],
+   "place": "Bern, Tillierstrasse 18",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://history.aip.org/exhibits/einstein/essay-einstein-relativity.htm"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1903-01-26",
+   "title": "Paper on the foundations of thermodynamics received",
+   "detail": "Annalen der Physik received 'A Theory of the Foundations of Thermodynamics'.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://de.wikisource.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1903",
+   "date_note": "Sources disagree: CPAE chronology and einstein-website date the start to Easter 1903 (Solovine first, Habicht shortly after); Wikipedia and other accounts say 1902. Solovine and Habicht were already close enough to be wedding witnesses in January 1903.",
+   "title": "The 'Olympia Academy' is founded",
+   "detail": "Einstein, Maurice Solovine and Conrad Habicht formed a mock-grand study circle, usually meeting at Einstein's lodgings, with Einstein as president. They began with Karl Pearson's Grammar of Science and went on to Mach's Analysis of Sensations and Mechanics, Mill's System of Logic, Hume's Treatise of Human Nature, Spinoza's Ethics, Poincaré's Science and Hypothesis, Riemann, Helmholtz, Ampère, Clifford, Dedekind and Avenarius, plus literature such as Don Quixote.",
+   "people": [
+    "Albert Einstein",
+    "Maurice Solovine",
+    "Conrad Habicht"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Olympia_Academy",
+    "https://einstein-website.de/en/akademie-olympia/",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://en.wikipedia.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "category": "life",
+   "date": "1903-05-02",
+   "title": "Joins the Bern Society for Natural Sciences",
+   "detail": "Einstein became a member of the Naturforschende Gesellschaft Bern, introduced by his Patent Office colleague Josef Sauter; there he met Sauter's friend Paul Gruner, then a Privatdozent in physics.",
+   "people": [
+    "Albert Einstein",
+    "Josef Sauter",
+    "Paul Gruner"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Paul_Gruner",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://einstein-website.de/en/timeline/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1903-06-11",
+   "title": "May Coup in Serbia",
+   "detail": "Army officers assassinated King Alexander Obrenović and Queen Draga in Belgrade on the night of 10–11 June 1903 (28–29 May Old Style), bringing the Karađorđević dynasty to power. Mileva Marić's family was Serbian.",
+   "place": "Belgrade",
+   "sources": [
+    "https://en.wikipedia.org/wiki/May_Coup_(Serbia)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1903",
+   "date_note": "Year only.",
+   "title": "Pauline Einstein moves to Hechingen",
+   "detail": "After Hermann's death, Einstein's mother Pauline went to live with her sister Fanny and Fanny's husband Rudolf Einstein in Hechingen, Württemberg (their daughter Elsa later became Albert's second wife).",
+   "people": [
+    "Pauline Einstein",
+    "Fanny Einstein",
+    "Rudolf Einstein"
+   ],
+   "place": "Hechingen, Württemberg",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Einstein_family",
+    "https://einstein-website.de/en/einstein-pauline-2/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1903-10-29",
+   "end_date": "1905-05-15",
+   "date_note": "Official registration 29 Oct 1903 (CPAE; einstein-website). Weinstein (arXiv) says November 1903.",
+   "title": "Moves to Kramgasse 49",
+   "detail": "The Einsteins registered at Kramgasse 49 in Bern's old town, a two-room flat of about 55 square meters on the second floor (third floor in American counting) near the Zytglogge clock tower, closer to the office. They lived there until May 1905; the flat is now the Einstein-Haus museum.",
+   "people": [
+    "Albert Einstein",
+    "Mileva Marić"
+   ],
+   "place": "Bern, Kramgasse 49",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/faq",
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/einstein-in-bern",
+    "https://en.wikipedia.org/wiki/Einsteinhaus"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1903-12-05",
+   "title": "Lecture on electromagnetic waves",
+   "detail": "Einstein lectured to the Naturforschende Gesellschaft Bern on the theory of electromagnetic waves.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1903-12-17",
+   "title": "Wright brothers' first powered flight",
+   "detail": "The Wright Flyer made the first sustained, controlled flight of a powered heavier-than-air aircraft near Kitty Hawk, North Carolina.",
+   "place": "Kitty Hawk, North Carolina",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Wright_Flyer"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1904-02-08",
+   "title": "Russo-Japanese War begins",
+   "detail": "War broke out between Russia and Japan over Manchuria and Korea; Japan's destruction of the Russian Baltic Fleet at Tsushima in May 1905 was decisive.",
+   "place": "Manchuria / Korea / Pacific",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Russo-Japanese_War"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1904",
+   "date_note": "Exact start date uncertain: Bracco says the two were reunited in Bern in January 1904; Weinstein gives 4 March; other secondary accounts say 15 March 1904. Year is certain.",
+   "title": "Michele Besso joins the Patent Office",
+   "detail": "Einstein alerted his close friend Michele Besso to a vacancy for a second-class technical expert advertised at the end of 1903, and Besso joined the Bern Patent Office in early 1904. The two often walked home from the office together discussing physics.",
+   "people": [
+    "Michele Besso",
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://einstein-website.de/en/patent-office/",
+    "https://arxiv.org/pdf/1412.6981",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://en.wikipedia.org/wiki/Michele_Besso",
+    "https://history.aip.org/exhibits/einstein/early3_text.htm"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "category": "life",
+   "date": "1904-03-29",
+   "title": "Paper on the general molecular theory of heat received",
+   "detail": "Annalen der Physik received 'On the General Molecular Theory of Heat'.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://de.wikisource.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1904-05-14",
+   "title": "Birth of Hans Albert Einstein",
+   "detail": "Mileva gave birth to their son Hans Albert at Kramgasse 49. The next day Einstein wrote to Mileva's parents that a healthy boy had been born and that mother and child were well.",
+   "people": [
+    "Albert Einstein",
+    "Mileva Marić",
+    "Hans Albert Einstein",
+    "Miloš Marić",
+    "Marija Ružić-Marić"
+   ],
+   "place": "Bern, Kramgasse 49",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Hans_Albert_Einstein",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://einstein-website.de/en/einstein-hans-albert/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1904",
+   "date_note": "Year only.",
+   "title": "Conrad Habicht leaves Bern",
+   "detail": "Habicht, who had taken his doctorate at the University of Bern in 1903, left in 1904 to teach mathematics and physics at the Protestant school in Schiers (Graubünden). In August 1904 Einstein wrote to him repeatedly, urging him to come and visit.",
+   "people": [
+    "Conrad Habicht",
+    "Albert Einstein"
+   ],
+   "place": "Bern; Schiers",
+   "sources": [
+    "https://hls-dhs-dss.ch/de/articles/048666/",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://einstein-website.de/en/akademie-olympia/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1904-09-16",
+   "date_note": "CPAE gives 16 Sep 1904; einstein-website gives 20 Sep 1904; Wikipedia's Einstein article says 1903, which conflicts with both.",
+   "title": "Patent Office post made permanent",
+   "detail": "Einstein's provisional appointment was made permanent, with his salary raised from 3,500 to 3,900 francs a year. His superiors still felt he should not be promoted until he had fully mastered machine technology.",
+   "people": [
+    "Albert Einstein",
+    "Friedrich Haller"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://en.wikipedia.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1905-01-22",
+   "title": "Bloody Sunday in St Petersburg",
+   "detail": "Troops fired on workers led by Father Georgy Gapon marching to the Winter Palace with a petition to Tsar Nicholas II (9 January Old Style), starting the active phase of the 1905 Russian Revolution.",
+   "place": "St Petersburg",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Bloody_Sunday_(1905)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1905-02-24",
+   "title": "Simplon Tunnel breakthrough",
+   "detail": "The two headings of the Simplon rail tunnel between Brig (Switzerland) and Iselle (Italy) met; at about 19.8 km it became the world's longest railway tunnel.",
+   "place": "Simplon, Swiss-Italian border",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Simplon_Tunnel"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905-03",
+   "title": "Begins reviewing for the Beiblätter",
+   "detail": "In the first half of March Einstein began publishing short reviews of papers on heat theory in the Beiblätter zu den Annalen der Physik; 21 appeared by the end of 1905.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905-03-18",
+   "title": "Light-quantum (photoelectric) paper received",
+   "detail": "Einstein sent 'On a Heuristic Point of View Concerning the Production and Transformation of Light' on 17 March; Annalen der Physik received it on 18 March and published it on 9 June 1905. It proposed light quanta and explained the photoelectric effect, the work later cited for his 1921 Nobel Prize.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm",
+    "https://en.wikipedia.org/wiki/Annus_mirabilis_papers",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905-04-30",
+   "date_note": "AIP describes 30 April as the submission date, but CPAE calls it the completion date and Wikipedia (Alfred Kleiner article) gives 20 July 1905 as the submission date.",
+   "title": "Doctoral dissertation completed",
+   "detail": "Einstein completed 'A New Determination of Molecular Dimensions', dated 30 April 1905 and dedicated to his friend Marcel Grossmann.",
+   "people": [
+    "Albert Einstein",
+    "Marcel Grossmann"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905-05-11",
+   "title": "Brownian motion paper received",
+   "detail": "Annalen der Physik received 'On the Movement of Small Particles Suspended in Stationary Liquids Required by the Molecular-Kinetic Theory of Heat' on 11 May; it was published on 18 July 1905.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm",
+    "https://en.wikipedia.org/wiki/Annus_mirabilis_papers"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905-05-13",
+   "title": "Moves to Besenscheuerweg 28",
+   "detail": "The family registered at Besenscheuerweg 28 (today Tscharnerstrasse 28) in the Mattenhof district on the edge of town; the reason for the move is not documented.",
+   "people": [
+    "Albert Einstein",
+    "Mileva Marić",
+    "Hans Albert Einstein"
+   ],
+   "place": "Bern, Besenscheuerweg 28",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905-05",
+   "date_note": "Date inferred from Einstein's later recollection; no contemporary document fixes the day.",
+   "title": "Breakthrough on relativity",
+   "detail": "Einstein later recalled that he sent off the relativity paper five or six weeks after the key idea, a new analysis of time and simultaneity, came to him, which places the breakthrough in about mid-May 1905.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm",
+    "https://history.aip.org/exhibits/einstein/great1_text.htm"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "category": "life",
+   "date": "1905-05",
+   "date_note": "Undated letter; editors date it 18 or 25 May 1905 (CPAE Vol. 5, Doc. 27, as cited by Weinstein).",
+   "title": "Letter to Conrad Habicht announcing four papers",
+   "detail": "In a teasing letter Einstein scolded Habicht for not sending his thesis and promised him four works in return: the very revolutionary light-quanta paper, the determination of molecular sizes, the Brownian-motion paper, and a still-rough electrodynamics of moving bodies that modified the theory of space and time.",
+   "people": [
+    "Albert Einstein",
+    "Conrad Habicht"
+   ],
+   "place": "Bern (to Schiers)",
+   "sources": [
+    "https://arxiv.org/pdf/1205.3904",
+    "https://en.wikipedia.org/wiki/Conrad_Habicht"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1905-06-07",
+   "title": "Norway dissolves its union with Sweden",
+   "detail": "The Norwegian Storting declared the union with Sweden dissolved; a plebiscite on 13 August backed it, Sweden recognized Norwegian independence on 26 October, and Prince Carl of Denmark became King Haakon VII on 18 November 1905.",
+   "place": "Christiania (Oslo)",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Dissolution_of_the_union_between_Norway_and_Sweden"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905-06-30",
+   "title": "Special relativity paper received",
+   "detail": "Annalen der Physik received 'On the Electrodynamics of Moving Bodies' on 30 June; it was published on 26 September 1905. Its only acknowledgment thanks his friend and colleague Michele Besso for steadfast support and valuable suggestions.",
+   "people": [
+    "Albert Einstein",
+    "Michele Besso"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm",
+    "https://en.wikipedia.org/wiki/Annus_mirabilis_papers",
+    "https://en.wikipedia.org/wiki/Michele_Besso",
+    "https://history.aip.org/exhibits/einstein/essay-einstein-relativity.htm"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905-07-20",
+   "date_note": "Wikipedia gives 20 July 1905; einstein-website says he handed it in in April; AIP treats 30 April as the submission date.",
+   "title": "Dissertation submitted to the University of Zurich",
+   "detail": "Einstein formally submitted his dissertation; the reviewers were Alfred Kleiner and the mathematician Heinrich Burkhardt, both favorable. Einstein later joked that Kleiner returned it as too short and accepted it after he added one sentence.",
+   "people": [
+    "Albert Einstein",
+    "Alfred Kleiner",
+    "Heinrich Burkhardt"
+   ],
+   "place": "Bern / Zurich",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Alfred_Kleiner",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "category": "life",
+   "date": "1905-07-27",
+   "title": "Doctorate approved by Zurich faculty",
+   "detail": "The Philosophical Faculty II of the University of Zurich approved Einstein's petition for the doctorate unanimously; the degree was formally conferred on 15 January 1906.",
+   "people": [
+    "Albert Einstein",
+    "Alfred Kleiner"
+   ],
+   "place": "Zurich",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905-08-19",
+   "title": "Dissertation received by Annalen der Physik",
+   "detail": "A slightly revised version of the dissertation was received by Annalen der Physik on 19 August 1905 and published on 8 February 1906; it became one of Einstein's most-cited papers.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm",
+    "https://de.wikisource.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905",
+   "date_note": "Both sources say only 'late summer' 1905.",
+   "title": "Summer trip to Mileva's family in Serbia/Vojvodina",
+   "detail": "In late summer 1905 Einstein, Mileva and little Hans Albert visited Belgrade and spent time with Mileva's family in Novi Sad (Újvidék), then in Austria-Hungary.",
+   "people": [
+    "Albert Einstein",
+    "Mileva Marić",
+    "Hans Albert Einstein",
+    "Miloš Marić",
+    "Marija Ružić-Marić"
+   ],
+   "place": "Belgrade; Novi Sad",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905",
+   "date_note": "Undated; editors date it between 30 June and 22 September 1905 (CPAE Vol. 5, Doc. 28, as cited by Weinstein).",
+   "title": "Second letter to Habicht: the E=mc² idea",
+   "detail": "Writing to Habicht, Einstein described a consequence of relativity: mass is a direct measure of the energy in a body, so light carries mass. He found the idea amusing and contagious, joked that he could not know whether the Lord was laughing at him, and offered to help bring Habicht into the Patent Office.",
+   "people": [
+    "Albert Einstein",
+    "Conrad Habicht"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://history.aip.org/exhibits/einstein/great1_text.htm",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1905-09-05",
+   "title": "Treaty of Portsmouth ends the Russo-Japanese War",
+   "detail": "The peace treaty was signed at the Portsmouth Naval Shipyard after negotiations from 6 to 30 August 1905.",
+   "place": "Portsmouth, New Hampshire",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Treaty_of_Portsmouth",
+    "https://en.wikipedia.org/wiki/Russo-Japanese_War"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905-09-27",
+   "title": "E=mc² paper received",
+   "detail": "Annalen der Physik received 'Does the Inertia of a Body Depend upon Its Energy Content?' on 27 September; it was published on 21 November 1905. This three-page paper contains the result later written E = mc².",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm",
+    "https://en.wikipedia.org/wiki/Annus_mirabilis_papers",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1905-10",
+   "date_note": "Single source; no names recorded.",
+   "title": "Tutoring a student in electricity",
+   "detail": "In October–November 1905 Einstein earned a little extra money tutoring a student in electricity.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "category": "life",
+   "date": "1905-11",
+   "date_note": "Wikipedia says he studied in Lyon from November 1905; einstein-website says only that he left in 1905.",
+   "title": "Solovine leaves Bern for Lyon",
+   "detail": "Maurice Solovine left Bern in 1905 to continue his studies in Lyon, ending the regular Olympia Academy meetings; Einstein wrote to him in April 1906 that he had been seeing no one since Solovine left.",
+   "people": [
+    "Maurice Solovine",
+    "Albert Einstein"
+   ],
+   "place": "Bern; Lyon",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Maurice_Solovine",
+    "https://einstein-website.de/en/akademie-olympia/",
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "category": "life",
+   "date": "1905-12-19",
+   "title": "'On the Theory of Brownian Motion' received",
+   "detail": "Annalen der Physik received a second Brownian-motion paper extending the mathematical theory; it was published in February 1906.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1906-01-15",
+   "title": "PhD conferred",
+   "detail": "The University of Zurich formally conferred Einstein's doctorate. In January he also submitted a supplement correcting the dissertation.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Zurich",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1906-03-10",
+   "date_note": "Decision 10 March 1906 (CPAE; IGE FAQ); effective 1 April 1906 (CPAE; IGE; einstein-website).",
+   "title": "Promoted to Technical Expert, second class",
+   "detail": "With his new doctorate, and with Haller reporting that he now handled very different technical applications and was among the most respected experts of the office, Einstein was promoted to second class effective 1 April 1906, with his salary raised to 4,500 francs. By anecdote he asked what he should do with all that money.",
+   "people": [
+    "Albert Einstein",
+    "Friedrich Haller"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/faq",
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/einstein-at-the-patent-office",
+    "https://einstein-website.de/en/patent-office/",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1906-03-23",
+   "title": "Planck publicly takes up relativity",
+   "detail": "Max Planck presented 'The Principle of Relativity and the Fundamental Equations of Mechanics' to the German Physical Society in Berlin, the first public defense and extension of Einstein's theory. Planck also lectured on it in his Berlin colloquium and got his students interested.",
+   "people": [
+    "Max Planck",
+    "Albert Einstein"
+   ],
+   "place": "Berlin",
+   "sources": [
+    "https://de.wikisource.org/wiki/Das_Prinzip_der_Relativit%C3%A4t_und_die_Grundgleichungen_der_Mechanik",
+    "https://en.wikipedia.org/wiki/History_of_special_relativity",
+    "https://en.wikipedia.org/wiki/Max_Planck",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1906-04-18",
+   "title": "San Francisco earthquake",
+   "detail": "A great earthquake struck the northern California coast at 5:12 a.m.; it and the ensuing fires devastated San Francisco.",
+   "place": "San Francisco",
+   "sources": [
+    "https://en.wikipedia.org/wiki/1906_San_Francisco_earthquake"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1906-04-19",
+   "title": "Death of Pierre Curie",
+   "detail": "Pierre Curie was killed in a street accident in Paris when he slipped under a horse-drawn cart.",
+   "place": "Paris",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Pierre_Curie"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1906-04-27",
+   "end_date": "1909-10",
+   "date_note": "Move on Friday 27 April 1906 (einstein-website); registration 1 June 1906 (CPAE).",
+   "title": "Moves to Aegertenstrasse 53",
+   "detail": "With the higher salary the family moved to a larger apartment at Aegertenstrasse 53 in Kirchenfeld (registered 1 June 1906), their last home in Bern. Einstein wrote to Solovine that day that he had moved again and saw no one socially.",
+   "people": [
+    "Albert Einstein",
+    "Mileva Marić",
+    "Hans Albert Einstein",
+    "Maurice Solovine"
+   ],
+   "place": "Bern, Aegertenstrasse 53",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1906",
+   "title": "Further papers of 1906",
+   "detail": "Annalen der Physik received 'On the Theory of Light Production and Light Absorption' (13 March), 'The Principle of Conservation of Motion of the Center of Gravity and the Inertia of Energy' (17 May) and a method for measuring the transverse and longitudinal mass of the electron (4 August). Einstein also reviewed Planck's lectures on thermal radiation.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://de.wikisource.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1906-05-19",
+   "title": "Simplon Tunnel opens",
+   "detail": "King Victor Emmanuel III of Italy and Swiss Federal President Ludwig Forrer inaugurated the Simplon Tunnel at Brig.",
+   "place": "Brig, Switzerland",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Simplon_Tunnel"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1906-07-12",
+   "title": "Dreyfus exonerated",
+   "detail": "France's Court of Cassation annulled the 1899 verdict against Captain Alfred Dreyfus; he was reinstated in the army as a major the next day, ending the Dreyfus affair.",
+   "place": "Paris",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Dreyfus_affair"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1906-09-05",
+   "title": "Death of Ludwig Boltzmann",
+   "detail": "Ludwig Boltzmann, founder of statistical mechanics whose ideas shaped Einstein's early papers, died at Duino near Trieste.",
+   "place": "Duino (then Austria)",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Ludwig_Boltzmann"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1906-11-09",
+   "title": "Quantum theory of specific heat",
+   "detail": "Annalen der Physik received 'Planck's Theory of Radiation and the Theory of Specific Heat', which applied the quantum hypothesis to vibrations in solids. It was published in 1907.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://history.aip.org/exhibits/einstein/chron.htm",
+    "https://de.wikisource.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1907-03-23",
+   "title": "Lecture on Brownian motion in Bern",
+   "detail": "Einstein lectured to the Naturforschende Gesellschaft Bern on the nature of the movements of microscopically small particles suspended in liquids.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1907-05-14",
+   "title": "Paper on the inertia of energy",
+   "detail": "Annalen der Physik received 'On the Inertia of Energy Required by the Relativity Principle', in which Einstein first used the phrase 'equivalence of mass and energy'.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://de.wikisource.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1907-06-17",
+   "date_note": "The Forster remark comes from Seelig's biography (via Weinstein) and is anecdotal.",
+   "title": "First attempt to become Privatdozent in Bern",
+   "detail": "Einstein applied to the University of Bern to become a Privatdozent, submitting his doctorate, published papers and CV but no unpublished Habilitationsschrift as the rules required. On 28 October 1907 the decision was postponed until he submitted one; experimental physicist Aimé Forster reportedly said he could not understand the relativity paper.",
+   "people": [
+    "Albert Einstein",
+    "Paul Gruner",
+    "Aimé Forster"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1907-06-20",
+   "title": "Swiss National Bank opens for business",
+   "detail": "Founded under the National Bank Act of 6 October 1905, the Swiss National Bank began business on 20 June 1907.",
+   "place": "Bern / Zurich",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Swiss_National_Bank"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1907",
+   "date_note": "einstein-website (following Seelig) dates the visit to 1907; Weinstein says Laue asked to meet in summer 1906. Planck mentions Laue's pleasant meeting with Einstein in a letter of 9 Nov 1907.",
+   "title": "Max von Laue visits Einstein at the Patent Office",
+   "detail": "Planck's assistant Max Laue came to Bern by appointment and looked for Einstein at the Patent Office; at first he walked past the young man, not believing he could be the author of relativity. Laue later said the cigar Einstein gave him was so bad he dropped it off the Aare bridge.",
+   "people": [
+    "Max von Laue",
+    "Albert Einstein",
+    "Max Planck"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://einstein-website.de/en/patent-office/",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "category": "life",
+   "date": "1907-08-01",
+   "end_date": "1907-08-10",
+   "title": "Holiday in Lenk",
+   "detail": "Einstein vacationed with Mileva and Hans Albert in Lenk in the Bernese Oberland.",
+   "people": [
+    "Albert Einstein",
+    "Mileva Marić",
+    "Hans Albert Einstein"
+   ],
+   "place": "Lenk, canton of Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1907-08",
+   "title": "The Habicht brothers build the 'Maschinchen'",
+   "detail": "Conrad and Paul Habicht built a first prototype of Einstein's electrostatic voltage multiplier, meant to measure very small electrical charges; Einstein wrote in August 1907 that he was amazed at their speed. Einstein described it in Physikalische Zeitschrift (received 15 Feb 1908); the device was never a commercial success.",
+   "people": [
+    "Albert Einstein",
+    "Conrad Habicht",
+    "Paul Habicht"
+   ],
+   "place": "Schaffhausen / Bern",
+   "sources": [
+    "https://einstein-website.de/en/maschinchen/",
+    "https://hls-dhs-dss.ch/de/articles/048666/",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1907-09-25",
+   "title": "Agrees to write Stark's Jahrbuch review",
+   "detail": "Johannes Stark, editor of the Jahrbuch der Radioaktivität und Elektronik, asked Einstein in September 1907 for a review article on relativity; Einstein accepted on 25 September, noting that the library was closed during his free time. Stark thanked him on 4 October, and on 1 November Einstein reported the first part finished.",
+   "people": [
+    "Albert Einstein",
+    "Johannes Stark"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://arxiv.org/pdf/1208.5137",
+    "https://en.wikipedia.org/wiki/Johannes_Stark"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1907",
+   "date_note": "Year only.",
+   "title": "Marcel Grossmann becomes ETH professor",
+   "detail": "Grossmann was appointed full professor of descriptive geometry at the Zurich Polytechnic in 1907, succeeding Wilhelm Fiedler.",
+   "people": [
+    "Marcel Grossmann"
+   ],
+   "place": "Zurich",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Marcel_Grossmann",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1907-11",
+   "date_note": "Einstein himself dated it only to 1907 (1920s recollections). Historians place it in about November 1907, between his 1 Nov progress report to Stark and the paper's receipt on 4 Dec.",
+   "title": "The 'happiest thought'",
+   "detail": "While writing the Jahrbuch review at the Patent Office, Einstein realized that a person falling freely would not feel his own weight, so gravity and acceleration are equivalent. He later called it the happiest thought of his life; it began his path to general relativity.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern, Patent Office",
+   "sources": [
+    "https://arxiv.org/pdf/1208.5137",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/History_of_general_relativity",
+    "https://en.wikipedia.org/wiki/Equivalence_principle"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "category": "life",
+   "date": "1907-12-04",
+   "title": "Jahrbuch review received: the equivalence principle",
+   "detail": "The Jahrbuch received 'On the Relativity Principle and the Conclusions Drawn from It', in which Einstein first stated the equivalence principle and predicted gravitational time dilation and redshift, and the bending of light.",
+   "people": [
+    "Albert Einstein",
+    "Johannes Stark"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "https://de.wikisource.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1907-12-10",
+   "title": "Swiss Civil Code adopted",
+   "detail": "The Federal Assembly adopted the Swiss Civil Code on 10 December 1907; it took effect on 1 January 1912.",
+   "place": "Bern",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Swiss_Civil_Code"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1907-12-17",
+   "title": "Death of Lord Kelvin",
+   "detail": "The British physicist William Thomson, Lord Kelvin, died at Largs, Scotland.",
+   "place": "Largs, Scotland",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Lord_Kelvin"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1908",
+   "date_note": "Year only.",
+   "title": "Perrin confirms Einstein's Brownian-motion theory",
+   "detail": "Jean Perrin's experiments verified Einstein's 1905 predictions for Brownian motion, giving strong evidence that atoms and molecules exist.",
+   "place": "Paris",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Brownian_motion",
+    "https://hls-dhs-dss.ch/de/articles/028814/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1908",
+   "date_note": "Prize year 1908; presented at the annual December ceremony in Stockholm (exact ceremony date not separately verified).",
+   "title": "Rutherford wins the Nobel Prize in Chemistry",
+   "detail": "Ernest Rutherford was honored for his investigations into the disintegration of the elements and the chemistry of radioactive substances.",
+   "place": "Stockholm",
+   "sources": [
+    "https://www.nobelprize.org/prizes/chemistry/1908/summary/",
+    "https://en.wikipedia.org/wiki/Ernest_Rutherford"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1908-01",
+   "date_note": "CPAE chronology says early January 1908. Kleiner's 8 Feb letter praising his promptness and Einstein's 11 Feb letter to Gruner saying he had sent it to the dean could point to late January or early February.",
+   "title": "Submits a Habilitationsschrift",
+   "detail": "Einstein submitted a Habilitationsschrift to the University of Bern: 'Consequences for the Constitution of Radiation of the Energy Distribution Law of Black-Body Radiation'. Paul Gruner and Alfred Kleiner (letters of 28 Jan and 8 Feb 1908) encouraged the renewed attempt.",
+   "people": [
+    "Albert Einstein",
+    "Alfred Kleiner",
+    "Paul Gruner"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "category": "life",
+   "date": "1908-01-20",
+   "title": "Looks for a schoolteaching job",
+   "detail": "Still wanting more time for research, Einstein inquired about a post at the Zurich Kantonsschule (14 Dec 1907), asked Marcel Grossmann on 3 January 1908 how to apply to the Technikum Winterthur, and applied there on 20 January. The principal replied that a vacancy was unlikely soon.",
+   "people": [
+    "Albert Einstein",
+    "Marcel Grossmann"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1908-02-28",
+   "date_note": "CPAE says 'ca. Feb 28'; einstein-website says 28 February 1908.",
+   "title": "Becomes Privatdozent at the University of Bern",
+   "detail": "The Philosophical Faculty II approved the Privatdozentur on 24 February; Einstein gave his inaugural lecture, 'On the Limit of the Validity of Classical Thermodynamics', on 27 February and received the venia docendi for theoretical physics about 28 February 1908. He kept his full-time Patent Office job.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/patent-office/",
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1908-04",
+   "title": "Collaboration with Jakob Laub",
+   "detail": "Jakob Laub, a young Würzburg physicist who had written on 1 March 1908 that he was surprised Einstein had to sit in an office eight hours a day, came to Bern in April for a three-week collaboration. They co-wrote papers on the electromagnetic equations for moving bodies (received 2 May) and ponderomotive forces (13 May).",
+   "people": [
+    "Albert Einstein",
+    "Jakob Laub"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Jakob_Laub",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1908-04-21",
+   "date_note": "Course and dates from CPAE; audience and timing from Weinstein citing Seelig and Flückiger.",
+   "title": "First university lectures",
+   "detail": "In the summer semester Einstein taught a course on the molecular theory of heat. His audience was mainly his Patent Office friends Michele Besso, Lucien Chavan and colleague Heinrich Schenk; classes were reportedly held early in the morning before office hours.",
+   "people": [
+    "Albert Einstein",
+    "Michele Besso",
+    "Lucien Chavan",
+    "Heinrich Schenk"
+   ],
+   "place": "Bern, University",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1908-05-16",
+   "title": "Lab work in Fribourg",
+   "detail": "Einstein worked in Albert Gockel's laboratory at the University of Fribourg (again on 28 June), in connection with his electrostatic measuring device.",
+   "people": [
+    "Albert Einstein",
+    "Albert Gockel"
+   ],
+   "place": "Fribourg",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/maschinchen/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1908-06-30",
+   "title": "Tunguska explosion",
+   "detail": "A huge air burst, attributed to a meteoroid, flattened about 2,150 square kilometers of Siberian forest (17 June Old Style).",
+   "place": "Tunguska, Siberia",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Tunguska_event"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1908-07-05",
+   "title": "Swiss vote to ban absinthe",
+   "detail": "After the Lanfray murders, Swiss voters approved a ban on absinthe in a referendum on 5 July 1908; production and sale were prohibited from 1910 until 2005.",
+   "place": "Switzerland",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Absinthe"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1908-07-10",
+   "title": "Helium liquefied in Leiden",
+   "detail": "Heike Kamerlingh Onnes, to whom Einstein had applied for a job in 1901, liquefied helium for the first time.",
+   "place": "Leiden",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Liquid_helium",
+    "https://en.wikipedia.org/wiki/Heike_Kamerlingh_Onnes"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1908-09-21",
+   "title": "Minkowski's 'Space and Time' lecture",
+   "detail": "Hermann Minkowski, Einstein's former ETH mathematics teacher, gave his address 'Raum und Zeit' (Space and Time) to the 80th Assembly of German Natural Scientists and Physicians in Cologne, recasting special relativity as a four-dimensional spacetime geometry. Einstein and Laub had just dismissed Minkowski's formalism as overly learned, a view Einstein later reversed.",
+   "people": [
+    "Hermann Minkowski",
+    "Albert Einstein",
+    "Jakob Laub"
+   ],
+   "place": "Cologne, Germany",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Hermann_Minkowski",
+    "https://en.wikipedia.org/wiki/Spacetime",
+    "https://en.wikipedia.org/wiki/History_of_special_relativity"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1908-10-01",
+   "title": "Ford Model T goes on sale",
+   "detail": "Ford began production of the Model T on 1 October 1908; the first production car left the Detroit plant on 27 September.",
+   "place": "Detroit",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Ford_Model_T"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1908-10-05",
+   "title": "Bosnian annexation crisis",
+   "detail": "Austria-Hungary announced the annexation of Bosnia and Herzegovina, timed with Bulgaria's declaration of independence; Serbia mobilized in protest. This touched Mileva's Serbian family directly.",
+   "place": "Vienna / Sarajevo / Belgrade",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Bosnian_crisis"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1908-10-20",
+   "title": "Winter course on radiation theory",
+   "detail": "In the winter semester 1908/09 Einstein taught a course on the theory of radiation at Bern.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1908-12-28",
+   "title": "Messina earthquake",
+   "detail": "An earthquake and accompanying tsunami nearly destroyed Messina in Sicily and Reggio Calabria, killing around 120,000 people, the deadliest earthquake in European history.",
+   "place": "Messina, Sicily; Calabria",
+   "sources": [
+    "https://en.wikipedia.org/wiki/1908_Messina_earthquake"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1909",
+   "date_note": "Year only.",
+   "title": "Geiger–Marsden scattering experiment",
+   "detail": "At Manchester under Rutherford, Hans Geiger and Ernest Marsden found that some alpha particles bounce back from thin metal foil, evidence that led to the nuclear model of the atom (1911).",
+   "place": "Manchester",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Rutherford_scattering_experiments"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1909",
+   "date_note": "Prize year 1909; presented at the annual December ceremony in Stockholm (exact ceremony date not separately verified).",
+   "title": "Nobel Prizes to Ostwald and to Marconi and Braun",
+   "detail": "Wilhelm Ostwald won the chemistry prize for catalysis and chemical equilibria; Guglielmo Marconi and Ferdinand Braun shared the physics prize for wireless telegraphy.",
+   "place": "Stockholm",
+   "sources": [
+    "https://www.nobelprize.org/prizes/chemistry/1909/summary/",
+    "https://www.nobelprize.org/prizes/physics/1909/summary/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1909-01-12",
+   "title": "Death of Hermann Minkowski",
+   "detail": "Minkowski, Einstein's former ETH teacher who had recast relativity as spacetime geometry only months earlier, died of appendicitis in Göttingen, aged 44.",
+   "place": "Göttingen",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Hermann_Minkowski"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1909-02-11",
+   "title": "Lecture to the Zurich Physical Society",
+   "detail": "Einstein lectured on electrodynamics and the relativity principle to the Physikalische Gesellschaft Zürich. The lecture impressed Alfred Kleiner, who had earlier heard Einstein teach poorly in Bern, and on 23 February Kleiner recommended him for a new second chair of physics. Friedrich Adler, also under consideration, deferred to Einstein.",
+   "people": [
+    "Albert Einstein",
+    "Alfred Kleiner",
+    "Friedrich Adler"
+   ],
+   "place": "Zurich",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "https://en.wikipedia.org/wiki/Alfred_Kleiner",
+    "https://en.wikipedia.org/wiki/Friedrich_Adler_(politician)",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1909-05-07",
+   "title": "Appointed associate professor at the University of Zurich",
+   "detail": "The government council of the canton of Zurich appointed Einstein extraordinary (associate) professor of theoretical physics at 4,500 francs a year, effective 15 October 1909. A faculty report had included antisemitic remarks before concluding that he should not be disqualified for being Jewish.",
+   "people": [
+    "Albert Einstein",
+    "Alfred Kleiner"
+   ],
+   "place": "Zurich",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Alfred_Kleiner",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1909",
+   "date_note": "Year only; exact day not found.",
+   "title": "Maja Einstein earns her doctorate",
+   "detail": "Einstein's sister Maja, who had trained at the teachers' college in Aarau and then studied Romance languages and literature in Berlin, Bern and Paris, received her doctorate from the University of Bern with a dissertation on the Old French Chevalier au Cygne tradition.",
+   "people": [
+    "Maja Einstein"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Maja_Einstein",
+    "https://einstein-website.de/en/winteler-einstein-maria/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1909-07-06",
+   "date_note": "CPAE, einstein-website and Weinstein give 6 July 1909; the IGE FAQ gives 16 July 1909.",
+   "title": "Resigns from the Patent Office",
+   "detail": "Einstein asked the federal justice department to release him from the Patent Office effective 15 October 1909. On 12 July Haller reported that his departure was a loss to the office but that teaching and research were his true calling.",
+   "people": [
+    "Albert Einstein",
+    "Friedrich Haller"
+   ],
+   "place": "Bern",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/patent-office/",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/faq"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1909-07-09",
+   "title": "Honorary doctorate from the University of Geneva",
+   "detail": "At the celebrations of the 350th anniversary of the University of Geneva, founded by Calvin, Einstein received his first honorary doctorate. He had ignored the invitation until his friend Lucien Chavan persuaded him to go; he recalled having only a straw hat and his everyday suit for the procession.",
+   "people": [
+    "Albert Einstein",
+    "Lucien Chavan"
+   ],
+   "place": "Geneva",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://einstein-website.de/en/timeline/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "world",
+   "date": "1909-07-25",
+   "title": "Blériot flies across the English Channel",
+   "detail": "Louis Blériot took off near Calais at 4:41 a.m. and landed at Dover about 36 minutes later, the first airplane crossing of the Channel.",
+   "place": "Calais to Dover",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Louis_Bl%C3%A9riot"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1909-08-04",
+   "title": "Resigns Bern Privatdozentur; Engadine holiday",
+   "detail": "Einstein resigned his Privatdozent position at Bern and vacationed with Mileva and Hans Albert in the Upper Engadine in August.",
+   "people": [
+    "Albert Einstein",
+    "Mileva Marić",
+    "Hans Albert Einstein"
+   ],
+   "place": "Bern; Upper Engadine",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1909-09-21",
+   "title": "Salzburg lecture on radiation; meets Planck",
+   "detail": "At the 81st meeting of the Society of German Scientists and Physicians in Salzburg, Einstein gave 'On the Development of Our Views Concerning the Nature and Constitution of Radiation' (German: Über die Entwickelung unserer Anschauungen über das Wesen und die Konstitution der Strahlung), a talk on the nature of radiation that took his light-quantum hypothesis before the assembled German physicists. It was his first major scientific congress, and there he met Max Planck in person.",
+   "people": [
+    "Albert Einstein",
+    "Max Planck"
+   ],
+   "place": "Salzburg, Austria",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://de.wikisource.org/wiki/Albert_Einstein",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://history.aip.org/exhibits/einstein/early3_text.htm"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1909-10-02",
+   "date_note": "CPAE dates the nomination letter 2 Oct 1909; Wikipedia counts it as a nomination for the 1910 prize.",
+   "title": "Ostwald nominates Einstein for the Nobel Prize",
+   "detail": "Wilhelm Ostwald, who had not answered his job inquiry in 1901, nominated Einstein for the Nobel Prize in Physics, citing relativity.",
+   "people": [
+    "Wilhelm Ostwald",
+    "Albert Einstein"
+   ],
+   "place": "Leipzig",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Wilhelm_Ostwald"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "category": "life",
+   "date": "1909-10-15",
+   "title": "Leaves the Patent Office; move to Zurich",
+   "detail": "Einstein's last day at the Patent Office was 15 October 1909, when he assumed his Zurich duties. Winter semester began on 18 October, and on 22 October he registered the family's move from Bern to Moussonstrasse 12, Zurich.",
+   "people": [
+    "Albert Einstein",
+    "Mileva Marić",
+    "Hans Albert Einstein"
+   ],
+   "place": "Bern; Zurich, Moussonstrasse 12",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://einstein-website.de/en/patent-office/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "category": "life",
+   "date": "1909-12-11",
+   "title": "Inaugural lecture at the University of Zurich",
+   "detail": "Einstein gave his inaugural lecture, 'On the Role of Atomic Theory in Recent Physics'. On 2 December he had joined the Physikalische Gesellschaft Zürich.",
+   "people": [
+    "Albert Einstein"
+   ],
+   "place": "Zurich",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/timeline/"
+   ],
+   "confidence": "high"
+  }
+ ],
+ "avoid": [
+  {
+   "topic": "Lieserl, the daughter born before the marriage",
+   "date": "1902-01",
+   "facts": "Einstein and Marić's daughter, called Lieserl in their letters, was born around January 1902 in Novi Sad while Marić was with her parents. The CPAE chronology notes a registration of the child in September 1903; she may have had scarlet fever, and whether she died young or was adopted is unknown. Einstein apparently never saw her, and she is not mentioned in any letter after 1903.",
+   "why_sensitive": "A child whose fate is unknown, hidden at the time and known only since the letters surfaced in 1987. Any invented message would be pure speculation about a real infant's illness, adoption or death.",
+   "guidance": "Do not write messages about her. At most, mention in a historical note that the letters reveal her existence.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Mileva_Mari%C4%87",
+    "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://aip.brightspotcdn.com/PTO.v46.i1.74_1.online.pdf"
+   ]
+  },
+  {
+   "topic": "Mileva's failed exams, unplanned pregnancy and abandoned career",
+   "date": "1900–1901",
+   "facts": "Marić did not pass the ETH diploma exams in 1900 and, three months pregnant, failed again in 1901; she gave up her planned dissertation with H. F. Weber.",
+   "why_sensitive": "A private and painful episode for a real woman, and closely tied to the Lieserl pregnancy.",
+   "guidance": "State the facts neutrally if needed; do not invent her feelings, arguments or blame.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Mileva_Mari%C4%87"
+   ]
+  },
+  {
+   "topic": "Whether Mileva contributed to the 1905 papers",
+   "date": "1905",
+   "facts": "Historians disagree. Most find no solid evidence of significant scientific contribution; others read the student-era letters as showing collaboration.",
+   "why_sensitive": "A live scholarly controversy. Invented messages would manufacture evidence for one side.",
+   "guidance": "Do not invent texts in which Mileva works on, checks or co-writes the papers, or in which Einstein disowns her help.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Mileva_Mari%C4%87",
+    "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "https://history.aip.org/exhibits/einstein/early4_text.htm",
+    "https://aip.brightspotcdn.com/PTO.v46.i1.74_1.online.pdf"
+   ]
+  },
+  {
+   "topic": "The families' opposition to the marriage",
+   "date": "1900–1903",
+   "facts": "Einstein told his mother in summer 1900 that he planned to marry Marić; both families opposed the match, and no relatives attended the January 1903 wedding.",
+   "why_sensitive": "Real, private family conflict.",
+   "guidance": "Refer to it only in general terms. Do not script Pauline's or Hermann's insults or quarrels.",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://history.aip.org/exhibits/einstein/early4_text.htm"
+   ]
+  },
+  {
+   "topic": "Hermann Einstein's illness, debts and death",
+   "date": "1902-10-10",
+   "facts": "Hermann's businesses repeatedly failed; he died of heart failure in Milan on 10 Oct 1902, aged 55.",
+   "why_sensitive": "Bereavement and financial failure.",
+   "guidance": "Mark the death respectfully. Do not invent deathbed scenes or last words; popular accounts of a deathbed blessing were not verified here.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Einstein_family",
+    "https://einstein-website.de/en/einstein-hermann-2/",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ]
+  },
+  {
+   "topic": "The Winteler family tragedy",
+   "date": "1906-11-01",
+   "facts": "Julius Winteler, apparently severely mentally ill, shot and killed his mother Pauline Winteler and his brother-in-law Ernst Bandi and then himself. Einstein sent Jost Winteler a condolence letter on 3 Nov 1906.",
+   "why_sensitive": "A murder-suicide involving mental illness in a family Einstein loved; Anna Besso and Maja's future husband Paul were members of it.",
+   "guidance": "Do not dramatize it. If it must appear, a single respectful line of condolence is the most to include.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Jost_Winteler"
+   ]
+  },
+  {
+   "topic": "Suicides of Paul Drude (July 1906) and Ludwig Boltzmann (Sept 1906)",
+   "date": "1906",
+   "facts": "Drude, editor of Annalen der Physik, died by suicide on 5 July 1906; Boltzmann died by suicide at Duino on 5 Sept 1906.",
+   "why_sensitive": "Suicide.",
+   "guidance": "Mention the deaths factually as news; avoid method details and speculation about motives.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Paul_Drude",
+    "https://en.wikipedia.org/wiki/Ludwig_Boltzmann"
+   ]
+  },
+  {
+   "topic": "Antisemitism around Einstein's career",
+   "date": "1908–1909",
+   "facts": "In a January 1908 letter to Grossmann Einstein worried that his Jewish appearance and lack of Swiss German would count against him in a school job; the 1909 Zurich faculty report included antisemitic generalizations before recommending him.",
+   "why_sensitive": "Real prejudice against a Jewish scientist; easy to trivialize or sensationalize.",
+   "guidance": "Treat factually and briefly if at all. Do not invent antisemitic dialogue for real people.",
+   "sources": [
+    "https://arxiv.org/pdf/1205.3904"
+   ]
+  },
+  {
+   "topic": "Marie Winteler and later marital unhappiness",
+   "date": "1909–1910",
+   "facts": "In letters to Marie Winteler around 1909–1910 Einstein voiced regret about his marriage. The marriage later failed (separation 1914, divorce 1919).",
+   "why_sensitive": "Private emotional correspondence and foreshadowing of a breakup outside this period.",
+   "guidance": "Keep Albert and Mileva's relationship as documented for 1900–1909; no affairs, no foreshadowing of Elsa or the divorce.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "https://en.wikipedia.org/wiki/Mileva_Mari%C4%87"
+   ]
+  },
+  {
+   "topic": "Mileva's hip condition",
+   "date": "lifelong",
+   "facts": "Marić was born with a hip luxation and limped all her life.",
+   "why_sensitive": "A lifelong disability; dramatizing or joking about it would be demeaning.",
+   "guidance": "Do not make it a plot point or joke.",
+   "sources": [
+    "https://aip.brightspotcdn.com/PTO.v46.i1.74_1.online.pdf"
+   ]
+  },
+  {
+   "topic": "Later tragedies outside 1900–1909",
+   "date": "after 1909",
+   "facts": "Son Eduard (born 1910) developed schizophrenia; Friedrich Adler assassinated Austria's prime minister in 1916; Johannes Stark became a Nazi-era antisemitic opponent of Einstein.",
+   "why_sensitive": "Anachronistic foreshadowing would exploit real suffering and is outside the dataset's window.",
+   "guidance": "Do not reference or hint at these in 1900–1909 messages.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "https://en.wikipedia.org/wiki/Friedrich_Adler_(politician)",
+    "https://en.wikipedia.org/wiki/Johannes_Stark"
+   ]
+  }
+ ],
+ "texture": [
+  {
+   "item": "Pet names between Albert and Mileva",
+   "detail": "In their letters Albert called Mileva 'Doxerl' (rendered 'Dollie') and 'Miezchen' ('kitten'), both Swabian endearments; Mileva called him 'Johonsel' ('Johnnie'). In 1903–1904 letters he refers to her as 'Miza'.",
+   "sources": [
+    "https://aip.brightspotcdn.com/PTO.v46.i1.74_1.online.pdf",
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "The Olympia Academy's president",
+   "detail": "Einstein, the youngest of the three, was the Academy's president under a mock-aristocratic title, 'Albert Ritter von Steissbein' (roughly 'Sir Albert of Tailbone'). He still signed as 'Steissbein' on a 1911 postcard to Habicht.",
+   "sources": [
+    "https://einstein-website.de/en/akademie-olympia/",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://einstein-website.de/en/favorite-foods/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "Academy dinners",
+   "detail": "The meetings began with a deliberately frugal shared supper: a sausage (cervelat), a piece of Gruyère, fruit, a little honey and one or two cups of tea. Discussions often ran late into the night, sometimes until morning, and could spend a whole evening on a single page.",
+   "sources": [
+    "https://einstein-website.de/en/favorite-foods/",
+    "https://einstein-website.de/en/akademie-olympia/",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://en.wikipedia.org/wiki/Maurice_Solovine"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "The birthday caviar",
+   "detail": "Solovine recalled that he and Habicht once served Einstein caviar for his 14 March birthday; absorbed in explaining Galileo's principle of inertia, Einstein ate it all without noticing what it was.",
+   "sources": [
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "medium",
+   "note": "Single source (Solovine's memoir, via Weinstein); the year is not given."
+  },
+  {
+   "item": "The hard-boiled-eggs prank",
+   "detail": "When Solovine skipped a meeting at his own flat to attend a concert, he left his friends hard-boiled eggs and a Latin greeting. Einstein and Habicht ate them, turned his room upside down, filled it with smoke from Einstein's pipe and Habicht's cigar, and left a Latin note wishing him thick smoke.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Maurice_Solovine",
+    "https://einstein-website.de/en/akademie-olympia/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "Pipe and cigar",
+   "detail": "Einstein smoked a pipe and Habicht cigars at Academy meetings. Max Laue recalled that a cigar Einstein gave him in Bern was so bad that he dropped it into the Aare.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Maurice_Solovine",
+    "https://einstein-website.de/en/akademie-olympia/",
+    "https://einstein-website.de/en/patent-office/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "Violin",
+   "detail": "Einstein played violin throughout these years: music evenings in Winterthur (1901), a subscription concert with Habicht in Schaffhausen on 11 Dec 1901, and small violin performances at Academy meetings. Mozart was his favorite.",
+   "sources": [
+    "https://einstein-website.de/en/winterthur/",
+    "https://einstein-website.de/en/schaffhausen/",
+    "https://einstein-website.de/en/akademie-olympia/",
+    "https://en.wikipedia.org/wiki/Albert_Einstein"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "Patent Office salary",
+   "detail": "He started in 1902 at 3,500 francs a year, rose to 3,900 when his post became permanent (Sept 1904), and to 4,500 on promotion to second class (1 April 1906). Director Haller earned 8,000. His Zurich associate professorship in 1909 also paid 4,500 francs.",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/faq",
+    "https://einstein-website.de/en/patent-office/",
+    "https://en.wikipedia.org/wiki/Alfred_Kleiner"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "Earlier money",
+   "detail": "In Schaffhausen he earned 150 francs a month plus room and board, according to Mileva's letter. His first Bern room cost 23 francs a month. His first private pupils in February 1902 paid 2 francs each per lesson.",
+   "sources": [
+    "https://einstein-website.de/en/schaffhausen/",
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "His working day",
+   "detail": "He described a schedule of eight hours at the office, eight hours of 'Allotria' (fun) plus science, and eight hours of sleep, often cut short for manuscripts. He joked about his examiner's job as 'cobbler's work', and recalled that he slipped his private calculations into a desk drawer when footsteps approached.",
+   "sources": [
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/einstein-at-the-patent-office",
+    "https://einstein-website.de/en/patent-office/",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high",
+   "note": "The desk-drawer story comes from a 1930 biography (Reiser) quoted by Weinstein."
+  },
+  {
+   "item": "The office",
+   "detail": "From 1902 to 1907 the Patent Office occupied the upper floors of the federal Post and Telegraph building at Speichergasse/Genfergasse, where Einstein worked in room 86 on the third floor. From 1907 it was in the old post office building on the Bollwerk. Patent applications he probably examined include a humidity-controlled weather station and an electric typewriter.",
+   "sources": [
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/faq",
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/einstein-at-the-patent-office",
+    "https://einstein-website.de/en/patent-office/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "Kramgasse 49",
+   "detail": "This was a two-room flat of about 55 square meters on the second floor (European counting), reached by a steep narrow staircase, near the Zytglogge clock tower and the Zähringer fountain, with windows onto Kramgasse. The ground floor housed a brewery-restaurant, renamed Brasserie zum Gurten around the time they moved in. A colleague recalled Einstein hauling coal up himself. Today it is the Einstein-Haus museum.",
+   "sources": [
+    "https://einstein-website.de/en/bern-residences/",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://en.wikipedia.org/wiki/Einsteinhaus",
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/faq"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "All of Einstein's Bern addresses",
+   "detail": "Gerechtigkeitsgasse 32 (Feb–May 1902); Thunstrasse 43a (June–Aug 1902); Archivstrasse 8 (Aug 1902–Jan 1903); Tillierstrasse 18 (Jan–Oct 1903); Kramgasse 49 (Oct 1903–May 1905); Besenscheuerweg 28, now Tscharnerstrasse 28 (May 1905–Apr 1906); Aegertenstrasse 53 (Apr 1906–Oct 1909). Then Moussonstrasse 12, Zurich.",
+   "sources": [
+    "https://einstein-website.de/en/bern-residences/",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "Forgotten keys",
+   "detail": "His Archivstrasse landlady's daughter recalled that he kept forgetting his keys and woke the house at night, including when he came home with Mileva and their two witnesses on their wedding evening.",
+   "sources": [
+    "https://einstein-website.de/en/bern-residences/"
+   ],
+   "confidence": "medium",
+   "note": "Single source; a later recollection."
+  },
+  {
+   "item": "Café Bollwerk",
+   "detail": "The friends sometimes carried their discussions to the Café Bollwerk, a few steps from the Patent Office, as well as their rooms.",
+   "sources": [
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "medium",
+   "note": "Only one fetched source (Weinstein, drawing on Solovine)."
+  },
+  {
+   "item": "What Einstein looked and sounded like",
+   "detail": "Lucien Chavan noted that he was 1.76 m tall with broad shoulders and a slight stoop, a black moustache and dark brown eyes, a voice like a cello, and good French with a slight accent.",
+   "sources": [
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "medium",
+   "note": "Chavan's notebook via Seelig and Weinstein."
+  },
+  {
+   "item": "The 'Maschinchen'",
+   "detail": "Einstein affectionately called the electrostatic potential multiplier built by the Habicht brothers his 'Maschinchen' (little machine).",
+   "sources": [
+    "https://einstein-website.de/en/maschinchen/",
+    "https://hls-dhs-dss.ch/de/articles/048666/"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "Straw hat in Geneva",
+   "detail": "Einstein recalled that he arrived for the July 1909 Geneva honorary-degree procession with only a straw hat and an ordinary suit, and joked at the banquet that Calvin would have burned the guests for gluttony.",
+   "sources": [
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "medium",
+   "note": "Einstein's own later recollection to Seelig."
+  },
+  {
+   "item": "Laub's surprise",
+   "detail": "Jakob Laub was struck that the author of relativity still worked eight hours a day in an office, and called it a joke of history.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Jakob_Laub",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "confidence": "high"
+  },
+  {
+   "item": "The Bern Society for Natural Sciences",
+   "detail": "Einstein was a member of the Naturforschende Gesellschaft Bern from 2 May 1903 and lectured there (electromagnetic waves, Dec 1903; Brownian motion, Mar 1907). He also used the city and university libraries, which, as he complained to Stark, were closed during his free time.",
+   "sources": [
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/einstein-in-bern",
+    "https://arxiv.org/pdf/1208.5137"
+   ],
+   "confidence": "high"
+  }
+ ],
+ "people": [
+  {
+   "name": "Mileva Marić",
+   "born": "1875-12-19",
+   "died": "1948-08-04",
+   "relationship": "ETH classmate, partner, then wife from 6 Jan 1903 (divorced 1919)",
+   "where_1900s": "Zurich (to 1901); Novi Sad and Stein am Rhein (1901–02); Bern (1903–09); Zurich from Oct 1909",
+   "documented_interactions": [
+    "Only woman in Einstein's ETH section; did not pass the 1900 or 1901 diploma exams.",
+    "Lake Como and Splügen Pass trip with Einstein, May 1901.",
+    "Married Einstein in Bern, 6 Jan 1903; son Hans Albert born 14 May 1904.",
+    "Sometimes sat in on Olympia Academy discussions, listening without speaking (Solovine).",
+    "Late-summer 1905 visit with Albert and Hans Albert to her family in Novi Sad."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Mileva_Mari%C4%87",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://en.wikipedia.org/wiki/Olympia_Academy",
+    "https://einstein-website.de/en/akademie-olympia/",
+    "https://history.aip.org/exhibits/einstein/chron-1905.htm",
+    "https://aip.brightspotcdn.com/PTO.v46.i1.74_1.online.pdf"
+   ]
+  },
+  {
+   "name": "Michele Besso",
+   "born": "1873-05-25",
+   "died": "1955-03-15",
+   "relationship": "Closest friend; engineer; Patent Office colleague from 1904",
+   "where_1900s": "Milan (1899–Oct 1901); Trieste (from late 1901); Bern, Patent Office (from 1904)",
+   "documented_interactions": [
+    "Met Einstein in Zurich around 1896/97 at musical gatherings; introduced him to Ernst Mach's writings.",
+    "Joined the Bern Patent Office in 1904 after Einstein told him of the vacancy; they walked home together discussing physics.",
+    "Only person thanked in the 1905 relativity paper.",
+    "One of the few listeners at Einstein's first Bern university lectures (1908)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Michele_Besso",
+    "https://arxiv.org/pdf/1412.6981",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://einstein-website.de/en/patent-office/",
+    "https://history.aip.org/exhibits/einstein/early3_text.htm",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ]
+  },
+  {
+   "name": "Anna Besso-Winteler",
+   "born": "1872",
+   "died": "1944",
+   "relationship": "Wife of Michele Besso; eldest daughter of Jost Winteler; Einstein's 'sister' from his Aarau days",
+   "where_1900s": "Wife of Michele Besso (Milan, then Trieste, then Bern from 1904); her own movements are not separately documented in the sources checked",
+   "documented_interactions": [
+    "Met Michele Besso through Einstein in June 1897; their son Vero was born in 1898.",
+    "Part of the Winteler family that housed Einstein in Aarau (1895–96)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Jost_Winteler",
+    "https://arxiv.org/pdf/1412.6981",
+    "https://en.wikipedia.org/wiki/Michele_Besso"
+   ],
+   "note": "Few documented direct exchanges with Einstein in 1900–09; use sparingly."
+  },
+  {
+   "name": "Maurice Solovine",
+   "born": "1875-05-21",
+   "died": "1958-02-13",
+   "relationship": "Romanian philosophy student who answered the 1902 tutoring ad; co-founder of the Olympia Academy; wedding witness",
+   "where_1900s": "Bern (1902–1905); Lyon from Nov 1905; later Paris",
+   "documented_interactions": [
+    "Answered Einstein's ad in 1902; the lessons turned into free-ranging discussions.",
+    "Co-founded the Olympia Academy with Einstein and Habicht; recorded its frugal dinners and reading list.",
+    "Witness at Einstein's wedding, 6 Jan 1903.",
+    "Einstein wrote to him on 27 April 1906 (move to Aegertenstrasse; lonely since Solovine left) and floated a Patent Office job for him."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Maurice_Solovine",
+    "https://en.wikipedia.org/wiki/Olympia_Academy",
+    "https://einstein-website.de/en/akademie-olympia/",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://einstein-website.de/en/bern-residences/"
+   ]
+  },
+  {
+   "name": "Conrad Habicht",
+   "born": "1876-12-28",
+   "died": "1958-10-23",
+   "relationship": "Mathematician friend from Schaffhausen; Olympia Academy co-founder; wedding witness; violinist",
+   "where_1900s": "Schaffhausen (1901); Bern (to 1904, doctorate 1903); Schiers, Graubünden (teacher from 1904)",
+   "documented_interactions": [
+    "Befriended Einstein in Schaffhausen in 1901, where they played violin together in concerts.",
+    "Joined Solovine and Einstein in the Olympia Academy; gave Einstein the mock title of Academy president.",
+    "Witness at the 6 Jan 1903 wedding.",
+    "Recipient of the May 1905 letter announcing the four papers and of the 1905 letter on mass and energy.",
+    "With brother Paul built Einstein's 'Maschinchen' electrostatic device (1907–10)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Conrad_Habicht",
+    "https://hls-dhs-dss.ch/de/articles/048666/",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://einstein-website.de/en/schaffhausen/",
+    "https://einstein-website.de/en/akademie-olympia/",
+    "https://einstein-website.de/en/maschinchen/"
+   ]
+  },
+  {
+   "name": "Paul Habicht",
+   "born": "1884",
+   "died": "1948",
+   "relationship": "Conrad Habicht's younger brother; engineer/instrument maker",
+   "where_1900s": "Schaffhausen",
+   "documented_interactions": [
+    "Occasional Olympia Academy guest.",
+    "Built and refined Einstein's 'Maschinchen' with Conrad; reported problems with it in an Oct 1908 letter; later demonstrated it in Berlin (1911)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Olympia_Academy",
+    "https://einstein-website.de/en/akademie-olympia/",
+    "https://einstein-website.de/en/maschinchen/",
+    "https://hls-dhs-dss.ch/de/articles/048666/"
+   ]
+  },
+  {
+   "name": "Marcel Grossmann",
+   "born": "1878-04-09",
+   "died": "1936-09-07",
+   "relationship": "ETH classmate and lifelong friend; mathematician",
+   "where_1900s": "Zurich (ETH assistant 1900); Swiss secondary schools incl. Frauenfeld (from 1901); ETH professor from 1907",
+   "documented_interactions": [
+    "Lent Einstein his ETH lecture notes.",
+    "His father Jules recommended Einstein to Patent Office director Haller (Einstein's thanks, 14 Apr 1901).",
+    "Won the 1901 Frauenfeld teaching post Einstein also applied for.",
+    "Dedicatee of Einstein's 1905 dissertation.",
+    "Einstein asked his advice on 3 Jan 1908 about applying to the Technikum Winterthur."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Marcel_Grossmann",
+    "https://einstein-website.de/en/patent-office/",
+    "https://einstein-website.de/en/winterthur/",
+    "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "https://arxiv.org/pdf/1205.3904"
+   ]
+  },
+  {
+   "name": "Pauline Einstein (née Koch)",
+   "born": "1858-02-08",
+   "died": "1920-02-20",
+   "relationship": "Mother",
+   "where_1900s": "Milan (to 1902); Hechingen, Württemberg, with her sister Fanny from 1903",
+   "documented_interactions": [
+    "Holidays with Albert at Melchtal (1900) and Mettmenstetten (1901); he told her in 1900 that he planned to marry Mileva, which his parents opposed.",
+    "Pianist; started Albert on violin at about age five.",
+    "Moved to Hechingen in 1903 after Hermann's death."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Einstein_family",
+    "https://einstein-website.de/en/einstein-pauline-2/",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ]
+  },
+  {
+   "name": "Hermann Einstein",
+   "born": "1847-08-30",
+   "died": "1902-10-10",
+   "relationship": "Father; electrical-engineering entrepreneur",
+   "where_1900s": "Milan",
+   "documented_interactions": [
+    "Toured his Italian power stations with Albert in early Sep 1900.",
+    "Wrote to Wilhelm Ostwald on 13 Apr 1901, without Albert's knowledge, asking help for his son.",
+    "Died of heart failure in Milan, 10 Oct 1902."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Einstein_family",
+    "https://einstein-website.de/en/einstein-hermann-2/",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://arxiv.org/pdf/1205.4335"
+   ],
+   "note": "Usable as a contact only until Oct 1902."
+  },
+  {
+   "name": "Maja Einstein (Maria Winteler-Einstein)",
+   "born": "1881-11-18",
+   "died": "1951-06-25",
+   "relationship": "Younger sister",
+   "where_1900s": "Aarau teachers' college (1899–1902); then studies in Berlin, Bern and Paris; doctorate Bern 1909",
+   "documented_interactions": [
+    "Holidays with Albert at Melchtal (1900) and Christmas 1901 at Mettmenstetten.",
+    "Studied Romance languages and literature; doctorate from the University of Bern in 1909.",
+    "Married Paul Winteler on 23 Mar 1910 (just after this period)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Maja_Einstein",
+    "https://einstein-website.de/en/winteler-einstein-maria/",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ]
+  },
+  {
+   "name": "Hans Albert Einstein",
+   "born": "1904-05-14",
+   "died": "1973-07-26",
+   "relationship": "First son",
+   "where_1900s": "Bern (born at Kramgasse 49); Zurich from Oct 1909",
+   "documented_interactions": [
+    "Born 14 May 1904; travelled with his parents to Novi Sad (1905), Lenk (1907) and the Engadine (1909)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Hans_Albert_Einstein",
+    "https://einstein-website.de/en/einstein-hans-albert/",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ],
+   "note": "A small child in this period; appears in messages only as a subject, not a correspondent."
+  },
+  {
+   "name": "Friedrich Haller",
+   "born": "1844-10-12",
+   "died": "1936-01-11",
+   "relationship": "Founding director (1888–1921) of the Federal Office for Intellectual Property; Einstein's boss",
+   "where_1900s": "Bern",
+   "documented_interactions": [
+    "Wrote to Einstein in Dec 1901 urging him to apply; Einstein joined on 23 June 1902.",
+    "Strict, trained examiners to be critical; Einstein respected him.",
+    "Backed Einstein's 1906 promotion; on 12 Jul 1909 reported that his departure was a loss to the office."
+   ],
+   "sources": [
+    "https://hls-dhs-dss.ch/de/articles/031904/",
+    "https://einstein-website.de/en/patent-office/",
+    "https://www.ige.ch/en/about-us/the-history-of-the-ipi/einstein/einstein-at-the-patent-office",
+    "https://arxiv.org/pdf/1205.3904"
+   ]
+  },
+  {
+   "name": "Alfred Kleiner",
+   "born": "1849-04-24",
+   "died": "1916-07-03",
+   "relationship": "Physics professor, University of Zurich; Einstein's doctoral adviser and later sponsor",
+   "where_1900s": "Zurich",
+   "documented_interactions": [
+    "Discussed the electrodynamics of moving bodies with Einstein (Dec 1901).",
+    "Reviewed and approved the 1905 dissertation (submitted 20 Jul 1905).",
+    "Urged him in early 1908 to retry the Bern Habilitation.",
+    "After Einstein's 11 Feb 1909 Zurich lecture, recommended him for the new associate professorship (23 Feb 1909)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Alfred_Kleiner",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://arxiv.org/pdf/1205.3904"
+   ]
+  },
+  {
+   "name": "Max Planck",
+   "born": "1858-04-23",
+   "died": "1947-10-04",
+   "relationship": "Leading Berlin theorist; Annalen der Physik theory adviser/co-editor; early champion of relativity",
+   "where_1900s": "Berlin",
+   "documented_interactions": [
+    "Presented the first public defense of relativity to the German Physical Society, 23 Mar 1906.",
+    "Corresponded with Einstein (e.g. letter of 6 Jul 1907; 9 Nov 1907 mentions Laue's visit).",
+    "First met Einstein in person at the Salzburg meeting, Sep 1909."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Max_Planck",
+    "https://de.wikisource.org/wiki/Das_Prinzip_der_Relativit%C3%A4t_und_die_Grundgleichungen_der_Mechanik",
+    "https://en.wikipedia.org/wiki/Annalen_der_Physik",
+    "https://arxiv.org/pdf/1205.3904",
+    "https://en.wikipedia.org/wiki/History_of_special_relativity"
+   ]
+  },
+  {
+   "name": "Johannes Stark",
+   "born": "1874-04-15",
+   "died": "1957-06-21",
+   "relationship": "Editor of the Jahrbuch der Radioaktivität und Elektronik",
+   "where_1900s": "Göttingen (Privatdozent from 1900); Hanover technical university from 1906; Aachen from 1909",
+   "documented_interactions": [
+    "Asked Einstein in Sep 1907 for a review of relativity; Einstein accepted 25 Sep, Stark thanked him 4 Oct; the review was received 4 Dec 1907."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Johannes_Stark",
+    "https://arxiv.org/pdf/1208.5137",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ],
+   "note": "Later an antisemitic opponent of Einstein in the Nazi era; do not foreshadow this in 1900s messages."
+  },
+  {
+   "name": "Max von Laue (then Max Laue)",
+   "born": "1879-10-09",
+   "died": "1960-04-24",
+   "relationship": "Planck's assistant; early relativist",
+   "where_1900s": "Berlin",
+   "documented_interactions": [
+    "Visited Einstein at the Bern Patent Office (1906 or 1907); famously disliked the cigar Einstein offered him."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Max_von_Laue",
+    "https://einstein-website.de/en/patent-office/",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "note": "He was ennobled (von) only in 1913; in 1900s messages he is 'Laue'."
+  },
+  {
+   "name": "Jakob Laub",
+   "born": "1884-02-07",
+   "died": "1962-04-22",
+   "relationship": "Young Würzburg physicist; Einstein's first scientific collaborator",
+   "where_1900s": "Würzburg (doctorate under Wien, 1907); Bern (April 1908); Heidelberg (1909)",
+   "documented_interactions": [
+    "Wrote 1 Mar 1908 expressing surprise Einstein worked eight hours a day in an office.",
+    "Three-week collaboration in Bern, April 1908; joint papers received 2 and 13 May 1908.",
+    "Einstein wrote to him about the Zurich appointment (19 May 1909)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Jakob_Laub",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://arxiv.org/pdf/1205.3904"
+   ]
+  },
+  {
+   "name": "Wilhelm Wien",
+   "born": "1864-01-13",
+   "died": "1928-08-30",
+   "relationship": "Würzburg physicist; co-editor of Annalen der Physik from 1907 (experimental side)",
+   "where_1900s": "Würzburg",
+   "documented_interactions": [
+    "Edited Annalen der Physik with Planck after Drude's death; Jakob Laub's doctoral supervisor."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Wilhelm_Wien",
+    "https://en.wikipedia.org/wiki/Annalen_der_Physik",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "note": "No direct personal correspondence with Einstein in 1900–09 was confirmed in the sources checked; use only in his editorial role."
+  },
+  {
+   "name": "Paul Drude",
+   "born": "1863-07-12",
+   "died": "1906-07-05",
+   "relationship": "Editor of Annalen der Physik, 1900–1906",
+   "where_1900s": "Giessen; Berlin from 1905",
+   "documented_interactions": [
+    "In mid-1901 Einstein wrote to him criticizing his electron theory; Drude's dismissive reply angered Einstein (letter to Jost Winteler, 8 Jul 1901)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Paul_Drude",
+    "https://en.wikipedia.org/wiki/Annalen_der_Physik",
+    "https://en.wikipedia.org/wiki/Alfred_Kleiner",
+    "https://en.wikipedia.org/wiki/Jost_Winteler"
+   ],
+   "note": "Died by suicide in July 1906; mention only factually."
+  },
+  {
+   "name": "Lucien Chavan",
+   "born": "1868",
+   "died": "1942",
+   "relationship": "Friend; technical secretary at the Federal Post and Telegraph Administration; student of Einstein",
+   "where_1900s": "Bern",
+   "documented_interactions": [
+    "Took lessons from Einstein and attended his 1908 Bern university lectures, keeping detailed notebooks.",
+    "Occasional Olympia Academy guest; wrote a physical description of Einstein (height 1.76 m, black moustache, cello-like voice).",
+    "Persuaded Einstein to go to Geneva for the July 1909 honorary doctorate."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Olympia_Academy",
+    "https://einstein-website.de/en/akademie-olympia/",
+    "https://arxiv.org/pdf/1205.3904"
+   ]
+  },
+  {
+   "name": "Jost Winteler",
+   "born": "1846-11-21",
+   "died": "1929-02-23",
+   "relationship": "Einstein's former teacher and host in Aarau ('Papa')",
+   "where_1900s": "Aarau (taught at the cantonal school 1884–1909)",
+   "documented_interactions": [
+    "Received Einstein's 8 Jul 1901 letter about enjoying teaching and his quarrel with Drude; helped him look for work in 1901.",
+    "Einstein wrote him a condolence letter on 3 Nov 1906 (see sensitive topics) and a note on 7 Feb 1907."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Jost_Winteler",
+    "https://einstein-website.de/en/winterthur/"
+   ]
+  },
+  {
+   "name": "Pauline Winteler (née Eckart)",
+   "born": "1845-08-25",
+   "died": "1906-11-01",
+   "relationship": "Jost Winteler's wife ('Mama')",
+   "where_1900s": "Aarau",
+   "documented_interactions": [
+    "Treated Einstein as family in 1895–96; Einstein called her 'Mama'."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Jost_Winteler"
+   ],
+   "note": "Died in the 1 Nov 1906 family tragedy; see sensitive topics. Little documented 1900s contact."
+  },
+  {
+   "name": "Marie Winteler",
+   "born": "1877-04-24",
+   "died": "1957-09-24",
+   "relationship": "Einstein's first girlfriend (1895–97); Jost Winteler's daughter",
+   "where_1900s": "Switzerland (schoolteacher)",
+   "documented_interactions": [
+    "The relationship ended in 1897; letters from around 1909–10 are private and painful (see sensitive topics)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Jost_Winteler",
+    "https://en.wikipedia.org/wiki/Albert_Einstein"
+   ],
+   "note": "Not recommended as an active contact."
+  },
+  {
+   "name": "Paul Winteler",
+   "born": "1882",
+   "died": "1952",
+   "relationship": "Youngest Winteler son; married Maja Einstein on 23 Mar 1910",
+   "where_1900s": "Switzerland",
+   "documented_interactions": [
+    "Maja met him in Aarau; they married in 1910."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Jost_Winteler",
+    "https://en.wikipedia.org/wiki/Maja_Einstein"
+   ]
+  },
+  {
+   "name": "Paul Gruner",
+   "born": "1869-01-13",
+   "died": "1957-12-11",
+   "relationship": "Bern physicist (Privatdozent, then associate professor of theoretical physics from 1906)",
+   "where_1900s": "Bern",
+   "documented_interactions": [
+    "Met Einstein at the Bern Natural Science Society (1903); hosted discussions; supported his Privatdozent bid (1907–08); Einstein wrote him on 11 Feb 1908 about the new Habilitation."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Paul_Gruner",
+    "https://arxiv.org/pdf/1205.3904"
+   ]
+  },
+  {
+   "name": "Heinrich Friedrich Weber",
+   "born": "1843-11-07",
+   "died": "1912-05-24",
+   "relationship": "ETH physics professor; supervised Einstein's and Marić's diploma work",
+   "where_1900s": "Zurich",
+   "documented_interactions": [
+    "Einstein blamed Weber's poor recommendations for his failed assistantship search (letters of 27 Mar and 14 Apr 1901)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Heinrich_Friedrich_Weber",
+    "https://arxiv.org/pdf/1205.4335",
+    "https://en.wikipedia.org/wiki/Alfred_Kleiner",
+    "https://en.wikipedia.org/wiki/Mileva_Mari%C4%87"
+   ]
+  },
+  {
+   "name": "Adolf Hurwitz",
+   "born": "1859-03-26",
+   "died": "1919-11-18",
+   "relationship": "ETH mathematics professor",
+   "where_1900s": "Zurich",
+   "documented_interactions": [
+    "Einstein asked him about an assistant post in Aug–Sep 1900 (letters of 23 and 26 Sep 1900)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Adolf_Hurwitz",
+    "https://arxiv.org/pdf/1205.4335",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ]
+  },
+  {
+   "name": "Hermann Minkowski",
+   "born": "1864-06-22",
+   "died": "1909-01-12",
+   "relationship": "Einstein's former ETH mathematics teacher; creator of spacetime geometry",
+   "where_1900s": "Göttingen",
+   "documented_interactions": [
+    "Einstein named him among his excellent ETH teachers.",
+    "Gave the 'Space and Time' lecture in Cologne, 21 Sep 1908; Einstein and Laub at first found his formalism needlessly learned."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Hermann_Minkowski",
+    "https://en.wikipedia.org/wiki/Spacetime",
+    "https://arxiv.org/pdf/1205.4335",
+    "https://en.wikipedia.org/wiki/History_of_special_relativity"
+   ],
+   "note": "Died of appendicitis on 12 Jan 1909."
+  },
+  {
+   "name": "Wilhelm Ostwald",
+   "born": "1853-09-02",
+   "died": "1932-04-04",
+   "relationship": "Leipzig physical chemist",
+   "where_1900s": "Leipzig",
+   "documented_interactions": [
+    "Did not take Einstein on after his job inquiries of 19 Mar and 3 Apr 1901; whether he replied to Hermann Einstein's 13 Apr 1901 appeal is unknown.",
+    "Won the 1909 Nobel Prize in Chemistry and nominated Einstein for the physics prize (letter dated 2 Oct 1909)."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Wilhelm_Ostwald",
+    "https://arxiv.org/pdf/1205.4335",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf",
+    "https://www.nobelprize.org/prizes/chemistry/1909/summary/"
+   ]
+  },
+  {
+   "name": "Heike Kamerlingh Onnes",
+   "born": "1853-09-21",
+   "died": "1926-02-21",
+   "relationship": "Leiden low-temperature physicist",
+   "where_1900s": "Leiden",
+   "documented_interactions": [
+    "Received Einstein's 12 Apr 1901 postcard job application; the prepaid reply card was never used.",
+    "First liquefied helium, 10 Jul 1908."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Heike_Kamerlingh_Onnes",
+    "https://arxiv.org/pdf/physics/0612159",
+    "https://arxiv.org/pdf/1205.4335",
+    "https://en.wikipedia.org/wiki/Liquid_helium"
+   ]
+  },
+  {
+   "name": "Friedrich (Fritz) Adler",
+   "born": "1879-07-09",
+   "died": "1960-01-02",
+   "relationship": "ETH acquaintance; physicist, later socialist politician",
+   "where_1900s": "Munich and Zurich",
+   "documented_interactions": [
+    "Considered for the new Zurich theoretical-physics post in 1908–09 but deferred to Einstein and supported his appointment."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Friedrich_Adler_(politician)",
+    "https://arxiv.org/pdf/1205.3904"
+   ],
+   "note": "His 1916 assassination of Austria's prime minister lies outside this period; do not foreshadow."
+  },
+  {
+   "name": "Jakob Nüesch",
+   "born": "1845",
+   "died": "1915",
+   "relationship": "Owner of the private boarding school in Schaffhausen where Einstein tutored (Sep 1901–Jan 1902)",
+   "where_1900s": "Schaffhausen",
+   "documented_interactions": [
+    "Employed Einstein to prepare Louis Cahen for the Matura; they quarrelled over meals and money."
+   ],
+   "sources": [
+    "https://einstein-website.de/en/schaffhausen/",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ]
+  },
+  {
+   "name": "Miloš Marić",
+   "born": "1846",
+   "died": "1922",
+   "relationship": "Mileva's father",
+   "where_1900s": "Novi Sad (then Austria-Hungary)",
+   "documented_interactions": [
+    "Einstein wrote to Mileva's parents on 15 May 1904 announcing Hans Albert's birth.",
+    "The Einsteins visited Mileva's family in Novi Sad in late summer 1905."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Mileva_Mari%C4%87",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ]
+  },
+  {
+   "name": "Marija Ružić-Marić",
+   "born": "1847",
+   "died": "1935",
+   "relationship": "Mileva's mother",
+   "where_1900s": "Novi Sad (then Austria-Hungary)",
+   "documented_interactions": [
+    "Recipient, with her husband, of Einstein's 15 May 1904 birth announcement; family visit in 1905."
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Mileva_Mari%C4%87",
+    "https://einstein-website.de/en/bern-residences/",
+    "https://assets.press.princeton.edu/books/einstein11/chronology.pdf"
+   ]
+  }
+ ],
+ "research_notes": [
+  "Primary dating backbone: the official chronology from The Collected Papers of Albert Einstein, Vol. 11 (Princeton University Press PDF). For published papers its dates are the dates the journal received them.",
+  "The individual Einstein Papers Project page URLs (einsteinpapers.press.princeton.edu/vol*-doc/*) now redirect to a promotional page and could not be fetched, so they are not cited. Facts from CPAE letters are cited through sources that quote them (Weinstein's arXiv papers, einstein-website.de, AIP).",
+  "sort_date in einstein_events equals date when the day is known; otherwise it is an estimate for ordering only, and date_note explains the uncertainty.",
+  "People excluded: Philipp Frank (no documented contact with Einstein in 1900–1909 was found; their connection dates from his 1912 succession to Einstein's Prague chair); Elsa Einstein (no documented 1900–1909 interaction); Josef Sauter (well-documented Patent Office colleague but his death year could not be confirmed); Heinrich Schenk (death year not found). Lieserl is deliberately excluded (see sensitive_topics).",
+  "Floor numbering: Bern sources say Kramgasse 49 was on the second floor (European counting); American-style accounts say third floor.",
+  "Mileva's name is often spelled Maric in older English texts; the Serbian form is Marić."
+ ]
+}

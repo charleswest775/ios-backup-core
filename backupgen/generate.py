@@ -1,0 +1,232 @@
+"""Generate one backup snapshot of a persona, plus its answer key.
+
+Output layout:
+
+    <out>/<UDID>/          the backup folder (Manifest.db, Manifest.plist, Info.plist, Status.plist, xx/<fileID>)
+    <out>/expected.json    what a correct reader should extract
+
+The answer key comes from the persona pack, not from any reader, so tests that
+compare against it are independent of the code under test.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import random
+import tempfile
+from pathlib import Path
+from typing import Optional
+
+from backupgen import media
+from backupgen.container import BackupWriter, Device
+from backupgen.persona import Persona, load_persona
+from backupgen.sqlitegen import build
+from backupgen.writers import calls as calls_writer
+from backupgen.writers import contacts as contacts_writer
+from backupgen.writers import messages as messages_writer
+from backupgen.writers import notes as notes_writer
+from backupgen.writers import photos as photos_writer
+from backupgen.writers import safari as safari_writer
+from backupgen.writers import voicemail as voicemail_writer
+
+EXPECTED = "expected.json"
+
+# Every data type OpenExtract reads or is adding. The answer key lists the ones a backup doesn't hold
+# under "absent", with why, so readers can be checked for clean empty results as well as for content:
+# "none" means the phone has none; "encrypted_only" means Apple leaves it out of unencrypted backups.
+DATA_TYPES = ("messages", "contacts", "calls", "voicemail", "notes", "photos", "browser_history",
+              "calendar", "voice_memos", "health")
+ENCRYPTED_ONLY = {"calls", "browser_history", "health"}
+
+
+def default_seed(persona_id: str, snapshot_id: str, encrypted: bool) -> int:
+    digest = hashlib.sha256(f"{persona_id}/{snapshot_id}/{'enc' if encrypted else 'plain'}".encode()).digest()
+    return int.from_bytes(digest[:8], "big")
+
+
+def generate(
+    persona_id: str,
+    snapshot_id: str,
+    out_dir: Path,
+    *,
+    password: Optional[str] = None,
+    iterations: str = "fast",
+    seed: Optional[int] = None,
+    persona: Optional[Persona] = None,
+) -> Path:
+    """Write the backup for one snapshot into ``out_dir``. Returns the backup folder."""
+    persona = persona or load_persona(persona_id)
+    snapshot = persona.snapshots[snapshot_id]
+    seed = default_seed(persona.id, snapshot_id, password is not None) if seed is None else seed
+    rng = random.Random(seed)
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    device = Device(
+        name=persona.device_name,
+        product_type=snapshot.product_type,
+        product_name=snapshot.product_name,
+        ios=snapshot.ios,
+        build=snapshot.build,
+        phone_number=persona.owner.phones[0][1] if persona.owner.phones else "",
+    )
+    # The same phone keeps its UDID, serial and IMEI across snapshots and encryption settings.
+    identity = hashlib.sha256(f"{persona.id}/{snapshot.product_type}".encode()).digest()
+    device.fill_identifiers(random.Random(int.from_bytes(identity[:8], "big")))
+    writer = BackupWriter(out_dir, device, snapshot.backup_date, snapshot.container,
+                          password=password, iterations=iterations, seed=rng.getrandbits(64), host=snapshot.host)
+
+    with tempfile.TemporaryDirectory(prefix="backupgen-") as tmp:
+        tmp = Path(tmp)
+        written_messages: list = []
+        contact_rows: dict = {}
+
+        renderer = media.Renderer(persona, snapshot)
+
+        def fill_messages(db):
+            written_messages.extend(messages_writer.populate(db, persona, snapshot, rng, renderer))
+
+        def fill_contacts(db):
+            contact_rows.update(contacts_writer.populate(db, persona, snapshot, rng))
+
+        sms = build(tmp / "sms.db", snapshot.schema, "sms.db", fill_messages)
+        address_book = build(tmp / "AddressBook.sqlitedb", snapshot.schema, "AddressBook.sqlitedb", fill_contacts)
+        images = build(tmp / "AddressBookImages.sqlitedb", snapshot.schema, "AddressBookImages.sqlitedb", lambda db: None)
+        writer.add_file("HomeDomain", "Library/SMS/sms.db", sms)
+        for message in written_messages:
+            if message.attachment:
+                writer.add_file("MediaDomain", message.attachment[0], message.attachment[2])
+        writer.add_file("HomeDomain", "Library/AddressBook/AddressBook.sqlitedb", address_book)
+        writer.add_file("HomeDomain", "Library/AddressBook/AddressBookImages.sqlitedb", images)
+
+        written = {"messages": written_messages}
+        if persona.calls is not None or persona.voicemails is not None:
+            # The rng draws happen either way, so encrypting a backup doesn't change its other contents.
+            calls: list = []
+            history = build(tmp / "CallHistory.storedata", snapshot.schema, "CallHistory.storedata",
+                            lambda db: calls.extend(calls_writer.populate(db, persona, snapshot, rng)))
+            if password is not None:
+                writer.add_file("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata", history)
+                written["calls"] = calls
+        if persona.voicemails is not None:
+            voicemails: list = []
+            database = build(tmp / "voicemail.db", snapshot.schema, "voicemail.db",
+                             lambda db: voicemails.extend(voicemail_writer.populate(db, persona, snapshot, rng)))
+            writer.add_file("HomeDomain", "Library/Voicemail/voicemail.db", database)
+            for v in voicemails:
+                writer.add_file("HomeDomain", f"Library/Voicemail/{v.rowid}.amr", voicemail_writer.silent_amr(v.duration))
+            written["voicemail"] = voicemails
+        if persona.notes is not None:
+            notes: list = []
+            store = build(tmp / "NoteStore.sqlite", snapshot.schema, "NoteStore.sqlite",
+                          lambda db: notes.extend(notes_writer.populate(db, persona, snapshot, rng)))
+            writer.add_file("AppDomainGroup-group.com.apple.notes", "NoteStore.sqlite", store)
+            written["notes"] = notes
+        if persona.visits is not None:
+            visits: list = []
+            history = build(tmp / "History.db", snapshot.schema, "History.db",
+                            lambda db: visits.extend(safari_writer.populate(db, persona, snapshot, rng)))
+            if password is not None:
+                writer.add_file("HomeDomain", "Library/Safari/History.db", history)
+                written["browser_history"] = visits
+        if persona.photos is not None:
+            photos: list = []
+            library = build(tmp / "Photos.sqlite", snapshot.schema, "Photos.sqlite",
+                            lambda db: photos.extend(photos_writer.populate(db, persona, snapshot, rng, renderer)))
+            writer.add_file("CameraRollDomain", "Media/PhotoData/Photos.sqlite", library)
+            for photo in photos:
+                writer.add_file("CameraRollDomain", photo.relative_path, photo.data)
+            written["photos"] = photos
+
+    backup_dir = writer.finalize()
+
+    expected = answer_key(persona, snapshot_id, device, password, written)
+    (out_dir / EXPECTED).write_text(json.dumps(expected, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    return backup_dir
+
+
+def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Optional[str], written: dict) -> dict:
+    snapshot = persona.snapshots[snapshot_id]
+    cards = contacts_writer.visible_contacts(persona, snapshot)
+    chats = {chat.id: chat for chat in persona.chats}
+    conversations: dict[str, dict] = {}
+    messages = written["messages"]
+    for w in messages:
+        chat = chats[w.chat_id]
+        conv = conversations.setdefault(w.chat_id, {
+            "chat": chat.id,
+            "chat_identifier": w.chat_identifier,
+            "service": chat.service,
+            "is_group": chat.is_group,
+            "name": chat.name if chat.is_group else "",
+            "participants": [persona.contacts[p].handle for p in chat.participants],
+            "message_count": 0,
+        })
+        conv["message_count"] += 1
+        conv["last_message_date"] = w.date.isoformat()
+    present = {kind for kind, records in written.items() if records}
+    if cards:
+        present.add("contacts")
+    on_phone = {"calls": bool(persona.calls or persona.voicemails), "browser_history": bool(persona.visits)}
+    left_out = {t for t in ENCRYPTED_ONLY if password is None and on_phone.get(t)}
+    return {
+        "persona": persona.id,
+        "snapshot": snapshot_id,
+        "ios": snapshot.ios,
+        "build": snapshot.build,
+        "product_type": snapshot.product_type,
+        "udid": device.udid,
+        "backup_date": snapshot.backup_date.isoformat(),
+        "encrypted": password is not None,
+        "password": password,
+        "contacts": [
+            {
+                "first": c.first, "last": c.last, "organization": c.organization,
+                "phones": [number for _, number in c.phones], "emails": [address for _, address in c.emails],
+                "is_owner": c is persona.owner,
+            }
+            for c in cards
+        ],
+        "conversations": sorted(conversations.values(), key=lambda c: c["chat_identifier"]),
+        "messages": [
+            {
+                "guid": w.guid, "chat_identifier": w.chat_identifier, "date": w.date.isoformat(),
+                "is_from_me": w.is_from_me, "sender_handle": w.sender_handle, "text": w.text, "is_reaction": w.is_reaction,
+                "attachment": {"name": w.attachment[1], "bytes": len(w.attachment[2])} if w.attachment else None,
+            }
+            for w in messages
+        ],
+        "calls": [
+            {
+                "date": c.date.isoformat(), "address": c.address, "contact": calls_writer.contact_name(cards, c.address),
+                "outgoing": c.outgoing, "answered": c.duration > 0, "duration": c.duration, "service": c.service,
+            }
+            for c in written.get("calls", [])
+        ],
+        "voicemails": [
+            {
+                "rowid": v.rowid, "date": v.date.isoformat(), "sender": v.sender,
+                "contact": calls_writer.contact_name(cards, v.sender), "duration": v.duration, "transcript": v.transcript,
+            }
+            for v in written.get("voicemail", [])
+        ],
+        "notes": [
+            {
+                "title": n.title, "text": n.text, "folder": n.folder, "created": n.created.isoformat(),
+                "modified": n.modified.isoformat(), "pinned": n.pinned,
+            }
+            for n in written.get("notes", [])
+        ],
+        "browser_history": [
+            {"date": v.date.isoformat(), "url": v.url, "title": v.title} for v in written.get("browser_history", [])
+        ],
+        "photos": [
+            {
+                "id": p.id, "filename": p.filename, "date": p.date.isoformat(), "width": p.width, "height": p.height,
+                "favorite": p.favorite, "trashed": p.trashed, "lat": p.lat, "lon": p.lon, "albums": p.albums,
+            }
+            for p in written.get("photos", [])
+        ],
+        "absent": {t: "encrypted_only" if t in left_out else "none" for t in DATA_TYPES if t not in present},
+    }

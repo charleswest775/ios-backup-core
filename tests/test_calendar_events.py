@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from backup_builder import BackupBuilder
+from backup_builder import BackupBuilder, read_only, snapshot
 from ios_backup_core.extractors.calendar_events import (
     CALENDAR_DB_PATH,
     CALENDAR_DOMAIN,
@@ -186,6 +186,16 @@ class CalendarTests(unittest.TestCase):
         self.builder.add_db(CALENDAR_DOMAIN, CALENDAR_DB_PATH, build, wal)
         result = self.extractor.list_events(self.builder.accessor())
         self.assertEqual([e["title"] for e in result["events"]], ["Added just before backup", "Old"])
+
+    def test_read_only_backup_is_read_without_changes(self):
+        self.builder.add_db(CALENDAR_DOMAIN, CALENDAR_DB_PATH, _full_calendar, wal_mode=True)
+        acc = self.builder.accessor()
+        before = snapshot(self.builder.dir)
+        with read_only(self.builder.dir):
+            result = self.extractor.list_events(acc)
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(len(result["events"]), 5)
+        self.assertEqual(snapshot(self.builder.dir), before)
 
     def test_missing_database(self):
         result = self.extractor.list_events(self.builder.accessor())

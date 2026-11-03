@@ -7,7 +7,7 @@ import unittest
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from backup_builder import BackupBuilder
+from backup_builder import BackupBuilder, read_only, snapshot
 from ios_backup_core.extractors.voice_memos import VoiceMemoExtractor
 
 APP_GROUP = "AppDomainGroup-group.com.apple.VoiceMemos.shared"
@@ -129,6 +129,23 @@ class VoiceMemoTests(unittest.TestCase):
         titles = [m["title"] for m in
                   self.extractor.list_voice_memos(self.builder.accessor())["voice_memos"]]
         self.assertEqual(titles, ["Recorded just before backup", "Old"])
+
+    def test_read_only_backup_is_read_without_changes(self):
+        def build(conn):
+            _cloud_schema(conn)
+            _insert(conn, 1, T0, 1, "old.m4a", title="Old")
+            _insert(conn, 2, T0 + 60, 1, "new.m4a", title="Newer")
+
+        self.builder.add_db(APP_GROUP, INDEX_PATH, build, wal_mode=True)
+        self.builder.add_bytes(APP_GROUP, "Recordings/new.m4a", b"AUDIO")
+        acc = self.builder.accessor()
+        before = snapshot(self.builder.dir)
+        with read_only(self.builder.dir):
+            memos = self.extractor.list_voice_memos(acc)["voice_memos"]
+            audio = self.extractor.get_audio_file(acc, 2)
+        self.assertEqual([m["title"] for m in memos], ["Newer", "Old"])
+        self.assertIsNotNone(audio)
+        self.assertEqual(snapshot(self.builder.dir), before)
 
     def test_no_voice_memos(self):
         result = self.extractor.list_voice_memos(self.builder.accessor())

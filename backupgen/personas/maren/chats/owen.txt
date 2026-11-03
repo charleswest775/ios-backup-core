@@ -1,0 +1,70 @@
+chat: owen
+with: owen
+service: iMessage
+
+# Owen Castellanos, senior landscape architect at Tanager. Dry humor, cargo bike, two kids.
+
+== 2024-07-17
+08:10 owen: Running 10 late to Linden, kid #2 lost a shoe. Start the workshop without me
+08:11 me: No problem. I have 40 crayons and a dream
+
+== 2024-10-11
+17:50 owen: Found it. L-201, the slide hill. Spot elevations don't match the contours on the north side. About 8 inches off
+17:52 me: Ugh. That's my fault, I moved the slide and didn't regrade
+17:53 owen: It's what checks are for. Fix it Monday. Go home
+17:53 me +love
+
+== 2024-10-31
+16:35 owen: Saw the submittal email. Nice work on Linden. That set is clean
+16:36 me: Thank you for catching the hill!
+16:36 owen: The hill would have been a lake. A small, sad lake
+
+== 2025-01-29
+14:20 owen: Natalie wants a site walk at Cottonwood Friday at 9. Boots, it's muddy. Bring the soil probe
+14:22 me: On it. I'll pick up coffee
+14:22 owen +like
+
+== 2025-02-21
+21:00 owen: Boards are printed for the open house. 6 of them. Bea is a hero
+21:02 me: I'll be there at 9 to set up. Bringing the sticky dots for the voting board
+21:03 owen: Nothing says democracy like sticky dots
+
+== 2025-02-22
+13:30 owen: Count from the dot board: kayak launch is the clear winner. Then shade. Then "dogs allowed in the water"
+13:31 me: Junie approves of that last one
+13:31 owen +laugh
+
+== 2025-06-25
+10:15 owen: How's Linden? Ray said you found an old foundation under the asphalt
+10:18 me: Yep! Probably an old portable classroom. Ray's crew is pulling it out today, only half a day lost
+10:19 owen: Old schoolyards are like that. Every one has a surprise
+
+== 2025-08-29
+17:15 owen: Congrats on substantial completion. Priya's buying lunch Tuesday
+17:16 me: Thank you!! I can't believe it's real
+
+== 2025-11-17
+18:30 owen: Final run-through tomorrow at 8? You take terraces and planting, I'll take the boardwalk and the budget
+18:32 me: Yes. I'm nervous about the funding question
+18:33 owen: If they ask, say "phased". Then look confident
+18:33 me +laugh
+
+== 2025-11-18
+15:00 owen: That went great. You were great. The terrace section drawing sold it
+15:01 me: Thank you Owen. Couldn't have done it without your budget magic
+15:02 owen: Budget magic is just spreadsheets and coffee
+
+== 2026-03-12
+19:40 owen: Permit set status: 112 sheets, 9 left to check. We're ok for the 20th
+19:42 me: I'll finish the planting details tomorrow. Kenji's doing the boardwalk railings
+19:43 owen +like
+
+== 2026-03-20
+16:05 owen: Submitted. Go home. Sleep. Don't open your laptop this weekend
+16:06 me: Not even a little?
+16:06 owen: Not even a little
+
+== 2026-06-20
+14:30 owen: Brought the kids to the Linden picnic. They didn't want to leave the frog pond. You made a good place
+14:32 me: That's the nicest thing anyone has said to me this year
+14:32 owen +love

@@ -27,7 +27,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-from ios_backup_core.backup import open_database
+from ios_backup_core.db import connect_readonly, get_database
 from ios_backup_core.schema import column_names, table_names
 
 CALENDAR_DB_PATH = "Library/Calendar/Calendar.sqlitedb"
@@ -123,14 +123,13 @@ class CalendarExtractor:
         ``calendars`` includes an ``event_count`` per calendar, counted after
         birthday events are left out.
         """
-        db_path = open_database(backup, CALENDAR_DB_PATH, CALENDAR_DOMAIN)
+        db_path = get_database(backup, CALENDAR_DB_PATH, domain=CALENDAR_DOMAIN)
         if not db_path:
             return {"events": [], "calendars": [], "errors": []}
         try:
-            conn = sqlite3.connect(db_path)
+            conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
             try:
-                conn.execute("PRAGMA query_only = TRUE")
                 calendars = self._read_calendars(conn)
                 events = self._read_events(conn)
             finally:
