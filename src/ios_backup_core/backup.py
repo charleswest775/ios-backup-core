@@ -23,10 +23,13 @@ from typing import Optional, Protocol, runtime_checkable
 from ios_backup_core.db import connect_readonly
 
 # iphone_backup_decrypt is a soft dependency — only needed for encrypted backups.
+# Its pycryptodome raises OSError, not ImportError, when it can't load one of its
+# native libraries (e.g. Windows' Smart App Control blocking an unsigned DLL);
+# that must not stop unencrypted backups from opening.
 try:
     from iphone_backup_decrypt import EncryptedBackup  # type: ignore[import]
     _HAS_DECRYPT = True
-except ImportError:
+except (ImportError, OSError):
     _HAS_DECRYPT = False
 
 
