@@ -1,0 +1,315 @@
+chat: hiking
+with: leah, sam, nadia, tom, theo
+service: iMessage
+name: Switchbacks & Snacks 🥾
+
+# The hiking group. Nadia plans, Sam drives, Tom photographs and runs late, Leah heckles.
+
+== 2024-07-02
+19:04 nadia: Rainier check-in! Cougar Rock is confirmed for Fri Aug 16 and Sat Aug 17, two sites next to each other (B-loop)
+19:04 nadia: https://www.recreation.gov/camping/campgrounds/232466
+19:06 sam: Nadia you absolute legend
+19:06 leah +emphasize
+19:08 tom: I'm in. Bringing the big lens for marmots
+19:10 me: Theo and I are in! Sorting out June this week
+19:11 theo: I volunteer for breakfast both mornings
+
+== 2024-07-15
+20:15 nadia: Spreadsheet for food and gear is up, please fill in your row by Friday 🙏
+20:15 nadia: https://docs.example.com/spreadsheets/rainier-2024
+20:22 sam: I can take 5 in my car plus gear if we use the roof box
+20:23 tom: I'll drive up from Vancouver and meet you at camp. I'll be late, as is tradition
+20:23 leah +laugh
+20:24 me: We'll save you a burrito
+
+== 2024-07-28
+12:40 nadia: Wildflower update from the park page: lupine and paintbrush are going at Paradise, avalanche lilies mostly done
+12:41 nadia: https://www.nps.gov/mora/planyourvisit/conditions.htm
+12:45 me: Peak meadow timing, I'm going to lose my mind
+12:46 leah: Maren is going to name every plant and we are going to let her
+12:46 me +love
+12:47 theo: She does it on our walks around the block too
+
+== 2024-08-12
+18:30 sam: Forecast for Paradise this weekend: sunny Sat, 30% showers Sunday afternoon
+18:30 sam: https://forecast.weather.gov/MapClick.php?lat=46.7865&lon=-121.7353
+18:33 nadia: Sunrise at Reflection Lakes Sunday then, before the showers?
+18:34 tom: YES. Sunrise. 5:30 am. I'll make coffee
+18:34 leah: Tom has never once been on time for anything before 9am
+18:35 tom: Character growth
+18:35 me +laugh
+
+== 2024-08-15
+21:00 nadia: Final list:
+21:00 nadia: Sam drives Maren, Theo, Leah + me, leaving Sam's at 3pm sharp. Tom meets us at camp. Bring layers, headlamp, bug spray, 2L water min for Skyline
+21:02 sam: 3pm sharp means 3:15
+21:02 nadia: 3pm SHARP Samuel
+21:03 sam +laugh
+
+== 2024-08-16
+15:08 me: We're all in the car. Even Leah
+15:09 leah: I was in the car first actually
+16:55 tom: Leaving Vancouver now
+16:56 nadia: Tom we left 2 hours ago from FURTHER AWAY
+16:58 tom: I had to clean my sensor
+17:40 sam: Stopped in Morton for gas and ice cream
+19:22 me: At camp! Site is perfect, there's a creek you can hear from the tent
+20:48 tom: Here. Who has the burritos
+
+== 2024-08-17
+09:05 nadia: Trailhead parking at Paradise is filling fast, Tom where are you
+09:06 tom: Already up here. I was up at 5. Character growth
+09:07 leah +emphasize
+12:30 tom [photo:rainier-13]
+12:31 tom: Panorama Point lunch spot
+12:31 me +love
+12:33 sam: Marmot stole Theo's cracker
+12:33 theo: He looked me in the eye
+14:50 me [photo:rainier-15]
+14:51 me: Paintbrush everywhere on the way down. My legs are jelly
+
+== 2024-08-18
+05:52 tom: Reflection Lakes. Glass. Pink. Go outside right now people
+06:10 tom [photo:rainier-17]
+06:11 nadia: I am in my sleeping bag and I regret everything
+06:11 leah +laugh
+19:15 me: Home and showered. Thank you all, best weekend of the summer
+19:17 sam: Car smells like a campfire and Theo's burritos. 10/10
+19:18 nadia: Same time next year 🏔
+
+== 2024-08-20
+21:30 tom: Full album from the weekend: https://photos.example.org/tombecker/rainier-2024
+21:34 me: TOM. These are incredible
+21:35 leah: The one of Nadia asleep in the car is my new phone background
+21:35 nadia +dislike
+
+== 2024-09-14
+10:15 sam: Anyone up for Forest Park tomorrow? Wildwood from Lower Macleay, easy 6 miles
+10:20 me: Yes! June too?
+10:21 sam: June obviously
+10:30 nadia: I'm at a book sale all day 😩
+10:42 leah: I'm in if we get pastries after
+
+== 2024-10-05
+17:30 me: Gorge day with Theo and Leah. Wahkeena is so green right now
+17:31 me [photo:gorge-05]
+17:35 tom: Great light on that one
+17:40 nadia: Jealous. Doing laundry
+
+== 2024-11-23
+11:20 nadia: Holiday cookie swap at my place Dec 14, 3pm. Bring 2 dozen of one thing
+11:22 theo: Gingerbread with orange zest
+11:23 sam: Store-bought. With love
+11:23 nadia: Sam no
+11:24 sam +laugh
+
+== 2024-12-02
+19:40 me: Hood snowshoe weekend Jan 18-19? Theo and I found a cabin in Government Camp that sleeps 6
+19:44 leah: YES
+19:47 sam: In! I've never snowshoed. Is it just walking but sad
+19:48 me: It's walking but happy
+19:50 nadia: Can't, it's my cousin's wedding weekend 😭
+19:58 tom: Shooting a wedding that weekend too. Maybe it's the same wedding
+19:59 nadia: It would be very funny if it's the same wedding
+20:01 me: Ok cabin is booked for 4. Snowshoe rentals at Talus, I'll send the link
+
+== 2025-01-13
+18:20 me: Hood forecast looks like fresh snow Thu, clear Sat and Sun 🙌
+18:20 me: https://forecast.weather.gov/MapClick.php?lat=45.3311&lon=-121.7113
+18:22 sam: Do I need chains
+18:23 theo: Carry them. You won't need them but carry them
+18:23 sam: Sno-park permit too?
+18:24 me: Yes, a day pass or the season one. Hang it on the mirror
+
+== 2025-01-18
+11:45 me [photo:hood-01]
+11:46 me: Trillium Lake this morning. Hood showed up for us
+11:52 nadia: I'm at a wedding in a barn and you're in a postcard
+11:55 tom: Very nice composition Maren
+11:55 me +love
+
+== 2025-01-19
+13:10 leah: Hot chocolate in the lodge. Sam fell over twice and is fine
+13:11 sam: Snowshoeing is walking but sad AND cold
+13:11 sam: Kidding. I loved it
+13:12 me [photo:hood-07]
+13:12 me: Timberline Lodge under all that snow
+
+== 2025-03-29
+10:05 nadia: Dog Mountain permits! I got 6 for Saturday Apr 26 🌼
+10:05 nadia: https://www.recreation.gov/ticket/facility/10093847
+10:10 me: Balsamroot season. I'm in
+10:12 tom: In. I will be on time. Mark it
+10:12 leah: Doubt
+10:15 theo: I'm out, nursery run for the new yard that day
+10:15 sam: I'll drive
+
+== 2025-04-09
+19:00 me: Moving Saturday! Movers come at 8, but if anyone wants to carry plants and lamps at 10 there's pizza after
+19:02 sam: I'll be there with the big car
+19:03 tom: I can come at 10:30
+19:03 leah: 10:30 Tom time is 11:15
+19:04 tom +laugh
+19:06 nadia: I'll bring a housewarming plant and a label maker
+
+== 2025-04-12
+17:20 me: Thank you thank you thank you. Everything's in and the couch survived
+17:22 nadia: Label maker is on your counter. Use it wisely
+17:25 sam: June ran 40 laps of the yard. She's never leaving
+
+== 2025-04-26
+13:30 tom: Top of Dog Mountain, entire hillside is yellow
+13:31 nadia: The wind up here!!! Hold onto your hats
+13:45 me: Best balsamroot I've ever seen. And the lupine is starting
+16:00 leah: Pub after? I need fries
+
+== 2025-05-27
+08:15 me: Olympic recap for the people who stayed home 🌲
+08:15 me [photo:olympic-14]
+08:16 me: Hall of Mosses. The moss had moss
+08:20 nadia: Bucket list
+08:21 sam: Did you see elk
+08:21 me: A whole herd by the Hoh visitor center! One sneezed on the car
+08:22 leah: On my window. I have it on video
+08:30 me [photo:olympic-05]
+08:30 me: And Hurricane Ridge on Saturday, still snow on the Olympics
+
+== 2025-06-10
+07:02 nadia: Crater Lake boat tour reservations are open for September. I'm online now, how many seats?
+07:03 me: Me, Theo, Leah, + Callum maybe?
+07:05 leah: Callum is in!
+07:06 sam: Me
+07:08 tom: I'm in Iceland that week for work 😭
+07:08 me +dislike
+07:12 nadia: Got 6 seats on the Wizard Island tour Sat Sep 20, 12:45pm. And 2 sites at Mazama
+07:13 nadia: https://www.nps.gov/crla/planyourvisit/boat-tours.htm
+07:13 leah +emphasize
+07:14 sam: Nadia for president of everything
+
+== 2025-08-14
+19:40 me [photo:yellowstone-39]
+19:41 me: Mammoth Hot Springs. It looks like a wedding cake made of rocks
+19:45 tom: The terraces!! Great texture
+19:47 sam: Did you see a bear
+19:48 me: One, far away, eating something in a meadow. And 400 bison
+19:49 theo: The bison in Lamar Valley walked past the car so close I could hear them chewing
+
+== 2025-09-17
+20:30 nadia: Crater Lake final plan:
+20:30 nadia: Leave Portland 6am Sat. Cleetwood Cove trail down to the dock by 12:15, it's steep! Boat 12:45, ~3 hrs on Wizard Island. Camp Mazama Sat. Rim Drive Sunday, home by dinner
+20:32 sam: Driving Leah, Callum and Nadia. Maren and Theo in theirs?
+20:33 me: Yes, and we're bringing the big cooler
+20:35 leah: Is it true the water is 55 degrees
+20:35 theo: Callum and I are jumping
+20:36 nadia +question
+
+== 2025-09-20
+12:30 leah: Theo and Callum jumped off the rocks by the dock. Theo screamed
+12:31 theo: It was a manly yell
+12:31 sam +laugh
+14:40 me [photo:craterlake-02]
+14:41 me: Wizard Island from the rim this morning. We're out there now
+18:55 nadia [photo:craterlake-12]
+18:56 nadia: Hiking out of Cleetwood. 700 feet straight up. Never again (until next time)
+
+== 2025-09-21
+11:40 sam: Phantom Ship overlook. It's so small from up here
+11:42 me [photo:craterlake-15]
+16:05 tom: Back from Iceland and very jealous. That blue!!
+16:10 me: You'd have loved it, the blue doesn't look real
+
+== 2025-10-18
+09:00 leah: Larch Mountain at sunset tomorrow? Five peaks on a clear day
+09:02 me: In
+09:04 sam: In, can drive
+09:10 tom: In and actually free for once
+09:11 nadia: Only if we bring hot cider
+09:12 theo: I'll make the cider
+
+== 2025-10-19
+18:05 tom: St. Helens, Rainier, Adams, Hood, Jefferson. All five. Pink sky
+18:06 me +love
+18:08 nadia: The cider was perfect Theo
+
+== 2025-12-06
+16:30 nadia: Cookie swap Dec 13, my place, 3pm, same rules
+16:31 sam: I'm baking this year
+16:31 nadia +question
+16:32 sam: From a box. With love
+16:33 leah +laugh
+
+== 2026-01-09
+07:01 nadia: North Cascades booked! Colonial Creek, Memorial Day weekend, 2 sites (48 and 50), Sat and Sun nights
+07:02 nadia: https://www.recreation.gov/camping/campgrounds/234059
+07:05 me: NADIA
+07:06 theo: Diablo Lake!!
+07:08 tom: I'm putting it in my calendar in red
+07:10 sam: That's a 6am Friday booking window, how are you awake
+07:11 nadia: Spite and coffee
+07:11 leah +laugh
+
+== 2026-02-17
+19:00 me: Joshua Tree with Rosa and Ivy was amazing. Here's a tree that looks like it's waving at you
+19:00 me [photo:joshuatree-05]
+19:05 tom: Great silhouette. I shot there years ago, those trees are so strange
+19:07 nadia: How was the climbing?
+19:08 me: Theo did his first outdoor climb! On a very easy route. We cried
+
+== 2026-04-18
+09:30 sam: Catherine Creek wildflower walk tomorrow? Easy, dogs on leash, balsamroot should be out
+09:31 me: June and I are in
+09:35 leah: Callum and I are in
+09:40 nadia: In!
+09:45 tom: Can't, editing all weekend. Take pictures. With your phones. Badly
+
+== 2026-05-15
+20:00 nadia: North Cascades plan:
+20:00 nadia: Fri May 22 drive to Seattle, stay at Hana's (Maren's friend, thank you Hana!). Sat early drive up 20 to Diablo Lake overlook, set up camp. Sun Washington Pass + Blue Lake trail (snow, bring microspikes). Mon home
+20:02 sam: Driving Leah, Callum, Nadia again
+20:03 tom: Meeting you at Hana's Friday night. ON TIME
+20:03 leah: Screenshotting that
+20:04 me: Highway 20 is open for the season, I checked
+20:04 me: https://wsdot.com/travel/real-time/mountainpasses/north-cascades
+20:06 theo: Microspikes are in the bin labeled MICROSPIKES
+
+== 2026-05-23
+11:15 tom [photo:northcascades-01]
+11:16 tom: Diablo Lake. That's the real color. I didn't touch it
+11:18 nadia: It looks like a sports drink
+11:18 tom +laugh
+19:30 me: Camp is set, Theo's making paella on the camp stove (?)
+19:31 sam: It's very good paella
+
+== 2026-05-24
+10:40 me [photo:northcascades-09]
+10:41 me: Washington Pass overlook, Liberty Bell in the clouds
+14:20 leah: Blue Lake was frozen solid. Callum tried to skip a rock on it
+14:22 sam: It did not skip
+14:22 me +laugh
+20:10 tom [photo:northcascades-02]
+20:11 tom: Colonial Creek, last light on the lake
+20:12 nadia: Framing this one
+
+== 2026-05-25
+18:40 me: Home! June is pretending she didn't miss us
+18:42 nadia: Home. Every year I say this was the best one and every year it's true
+18:43 sam: Dropped everyone off. Found 3 granola bars and a sock under the seats
+18:43 sam: The sock is Tom's
+18:44 tom: That's a very nice sock, I've been looking for it
+18:44 leah +laugh
+
+== 2026-06-14
+19:20 nadia: Summer brainstorm! Ideas so far: Goat Rocks in August, Mount Adams huckleberries in September, Enchantments lottery (no luck, again)
+19:23 me: Goat Rocks! I've wanted to go for years
+19:25 sam: Goat Rocks yes, but I'm not carrying Tom's tripod
+19:26 tom: The tripod carries itself
+19:26 theo: The tripod does not carry itself
+19:30 leah: Callum says he's in for anything with a lake
+19:31 nadia: Spreadsheet coming. Fill in your row 🙏
+19:31 me +love
+
+== 2026-06-27
+10:15 sam: Forest Park loop tomorrow morning before it gets hot? 8am at Lower Macleay
+10:17 me: June and I are in. Theo's firing the bread oven so he'll be bribing us after
+10:18 leah: Say less
+10:20 nadia: In. Bringing the peaches

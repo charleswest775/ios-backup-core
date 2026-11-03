@@ -1,0 +1,50 @@
+chat: bev
+with: bev
+service: iMessage
+
+# Bev Sorensen, next door at the duplex from April 2025. Retired, gardens, has a cat called Biscuit.
+
+== 2025-04-13
+16:00 bev: Hi Maren, it's Bev from next door. Here's my number in case you ever need anything. The recycling goes out Wednesday night
+16:05 me: Thank you Bev! And thank you for the lemon bars, they're already gone
+16:06 bev: I'll make more. Theo looked like he needed them
+
+== 2025-05-22
+18:30 me: Hi Bev! We're away Sat to Mon. Would you mind watering the new plants by the porch if it doesn't rain? Hose is by the shed
+18:35 bev: Of course dear. It's Portland, it'll rain. But I'll check
+18:36 me +love
+
+== 2025-06-05
+07:50 bev: Slugs got to your hostas. I put copper rings around them. Hope that's alright
+07:55 me: Bev you're a hero. Those hostas came with the house and I was ready to give up on them
+07:56 bev: Never give up on a hosta
+
+== 2025-08-08
+19:00 me: Leaving for Montana tomorrow early. Maya (the dog sitter) will be in and out with June. Just so you're not worried if you see a stranger!
+19:02 bev: Thanks for telling me. I'll wave. Have a wonderful trip
+
+== 2025-08-27
+17:20 bev: My dahlias are going crazy. Leaving a bunch on your porch
+17:30 me: They're gorgeous!! Thank you. They're on the kitchen table
+17:30 bev +love
+
+== 2025-12-23
+14:00 bev: Your dad is out in the rain looking at the shed. Should I bring him an umbrella?
+14:02 me: Ha! He's fine, he loves rain. He's a surveyor, he's seen worse
+14:03 bev: I left a plate of krumkake on your porch for your mom. Norwegian, like her I bet
+14:05 me: Swedish, but she'll absolutely love them
+
+== 2026-02-12
+20:00 me: Away Fri to Mon again! Maya will be here with June
+20:01 bev: Enjoy the desert. I'm jealous, it's been raining for 11 days
+
+== 2026-05-16
+10:00 me: Bev, I need a secret favor. Can I hide a pallet of bricks behind your garage until June 3? It's for Theo's birthday
+10:05 bev: Oh how fun! Yes. What are you building?
+10:06 me: A little bread oven
+10:07 bev: He'll cry. I'll keep it covered with a tarp
+
+== 2026-06-04
+08:30 bev: I could smell woodsmoke from the oven this morning. Tell Theo I'll trade lemon bars for the first loaf
+08:35 me: He says you're first in line. He has to cure it for a week first, very small fires
+08:35 bev +love

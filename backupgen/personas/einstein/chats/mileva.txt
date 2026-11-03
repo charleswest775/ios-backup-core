@@ -1,0 +1,316 @@
+chat: mileva
+with: mileva
+service: iMessage
+
+# Mileva Marić. Pet names from their letters: he called her "Doxerl" (Dollie), she called him "Johonzel" (Johnnie).
+# Deliberately left out (see timeline.json "avoid"): Lieserl, Mileva's exams and pregnancy, the debate over her part in
+# the 1905 papers, the families' opposition, and later unhappiness in the marriage.
+
+== 1900-07-28
+17:40 me: Diploma in hand, Dollie. Specialist teacher, mathematical direction. Officially qualified to bore schoolboys.
+17:52 mileva: Congratulations, Johnnie! Now go and celebrate with someone who isn't me, I have to pack.
+17:53 me: Melchtal tomorrow with Mama, Maja and my aunt. Mountains, rain, piano. I'll write every day.
+17:54 mileva +love
+
+== 1900-08-02
+21:15 me: Melchtal report: the valley is lovely, the weather is Swiss, and I've read Kirchhoff twice.
+21:31 mileva: Only twice? You must be on holiday.
+
+== 1900-09-06
+19:05 me: Touring Papa's power stations at Canneto and Isola della Scala. Dynamos humming everywhere. Then Venice!
+19:20 mileva: Send me a picture of Venice that isn't a dynamo.
+
+== 1900-09-23
+16:30 me: Wrote to Professor Hurwitz asking about an assistant post.
+16:42 mileva: Good. He likes you more than Weber does.
+16:43 me +laugh
+
+== 1900-12-16
+11:10 me: The Annalen der Physik has my capillarity paper! My first real publication.
+11:12 mileva: Our Johnnie is a published physicist. Frame it.
+11:13 mileva: Who's going to read it?
+11:15 me: Boltzmann, I hope. Or at least the typesetter.
+
+== 1901-01-22
+20:40 mileva: Queen Victoria has died. Sixty-three years on the throne.
+20:46 me: The whole of Europe will be in black tomorrow.
+
+== 1901-02-21
+12:05 me: As of today I am a Swiss citizen. Five years without a country, and now this one has me.
+12:09 mileva: Welcome to the Confederation, Herr Einstein.
+12:09 mileva +love
+
+== 1901-03-13
+15:20 me: The army has looked at me and decided it can manage without me. Auxiliary service only, on medical grounds.
+15:26 mileva: Switzerland is safe from your marching.
+
+== 1901-03-19
+18:00 me: Wrote to Ostwald in Leipzig asking for an assistantship. Enclosed my paper.
+18:03 mileva: And if he says no?
+18:05 me: Then I write to the next one. At this rate every physicist between the North Sea and Sicily will have a letter from me.
+
+== 1901-04-12
+10:30 me: Postcard sent to Kamerlingh Onnes in Leiden.
+10:31 mileva: Leiden! You'd freeze.
+10:33 me: Cold laboratories keep a man humble.
+
+== 1901-05-03
+22:10 me: I leave Milan on the 5th for the Winterthur job. Meet me in Como on the way?
+22:14 mileva: Yes!
+22:14 me +love
+
+== 1901-05-06
+19:45 me: The Splügen in the snow, by sleigh. I don't think I'll ever forget today, Dollie.
+19:50 mileva: Nor I.
+
+== 1901-05-16
+18:20 me: First day as a substitute teacher at the Technikum in Winterthur. I'm enjoying the teaching far more than I expected.
+18:35 mileva: The students are lucky. Are you being strict?
+18:37 me: Very. I made them laugh only twice.
+
+== 1901-09-15
+17:00 me: Settled in Schaffhausen as a private tutor. 150 francs a month, plus room and board.
+17:12 mileva: Room and board! You'll get fat.
+
+== 1901-11-23
+14:15 me: Handed my dissertation on molecular forces to Kleiner today.
+14:20 mileva: Doctor Einstein, almost.
+
+== 1901-12-10
+21:30 mileva: Röntgen has the first Nobel Prize in physics.
+21:38 me: Well deserved. Now everyone wants a photograph of their bones.
+
+== 1901-12-18
+19:00 me: Applied to the Patent Office in Bern. Grossmann's father put in a word with the director.
+19:02 mileva: Fingers crossed, Johnnie.
+
+== 1901-12-19
+22:05 me: Spent the whole afternoon with Kleiner explaining my ideas on the electrodynamics of moving bodies. He says I should publish.
+22:10 mileva: Then publish!
+
+== 1902-02-05
+09:30 me: My advertisement is in the Anzeiger: private lessons in mathematics and physics. Trial lesson free.
+09:40 mileva: How much after the free one?
+09:41 me: Two francs a lesson.
+
+== 1902-02-11
+20:15 me: Registered in Bern. My room on Gerechtigkeitsgasse costs 23 francs a month.
+
+== 1902-03-29
+22:40 me: A Romanian philosophy student called Solovine answered the ad. We argued about physics for two hours and forgot to have a lesson.
+22:44 mileva: So no two francs, then.
+22:45 me +laugh
+
+== 1902-06-16
+18:10 me: It's official! Technical Expert, third class, at the Federal Patent Office. 3,500 francs a year.
+18:11 mileva: Johnnie!!!
+18:11 mileva +love
+18:14 me: I start on the 23rd. Proper job, proper salary.
+
+== 1902-10-11
+08:30 me: Papa died in Milan yesterday. I'm with Mama and Maja.
+08:41 mileva: I'm so sorry, Johnnie. I'm thinking of you all.
+
+== 1902-12-20
+21:00 me: The registry office on 6 January. Solovine and Habicht will be our witnesses.
+21:05 mileva +love
+
+== 1903-01-06
+23:50 me: Don't laugh. I've forgotten the key. We'll have to ring for the landlady.
+23:51 mileva: On our wedding night!
+23:51 mileva +laugh
+
+== 1903-01-10
+12:00 mileva: Tillierstrasse 18 is home. I've put your violin where you can't trip over it.
+
+== 1903-10-29
+13:30 me: Signed for Kramgasse 49, near the clock tower. Two rooms on the second floor and very steep stairs.
+13:34 mileva: We'll be fit at least.
+
+== 1903-12-05
+17:30 me: Giving my talk on electromagnetic waves to the Natural Science Society tonight.
+17:32 mileva: Speak slowly. They're Bernese.
+
+== 1903-12-10
+19:20 mileva: Becquerel and both Curies have the Nobel Prize in physics. A woman, Johnnie!
+19:24 me: Madame Curie has earned it twice over.
+
+== 1904-01-10
+20:15 me: Read in the paper that two American brothers flew a powered machine in December. Twelve seconds.
+20:19 mileva: Twelve seconds is a start.
+
+== 1904-09-16
+16:45 me: Haller has made my post permanent. 3,900 francs!
+16:47 mileva: Hans Albert says thank you, Herr Direktor.
+16:47 me +laugh
+
+== 1905-01-12
+23:30 mileva: It's half past eleven. Is the light paper finished or just you?
+23:35 me: Both, nearly.
+
+== 1905-02-26
+19:00 me: They've broken through the Simplon. Besso is beside himself.
+
+== 1905-03-14
+19:30 mileva: Happy birthday, Johnnie. Twenty-six, and the paper almost finished.
+19:31 me +love
+
+== 1905-03-17
+18:20 me: Posted the light-quanta paper to the Annalen.
+18:24 mileva: The one you've been muttering about for weeks?
+18:25 me: That one. It will either be very right or very wrong.
+
+== 1905-04-30
+22:30 me: Finished the dissertation: a new determination of molecular dimensions. Dedicated to Grossmann.
+22:32 mileva: He'll be pleased. Come to bed, the molecules will keep.
+
+== 1905-05-11
+12:15 me: Brownian motion paper is off to the Annalen. If it's right, you can count atoms with a microscope.
+12:20 mileva: Then we can finally stop arguing about whether they exist.
+
+== 1905-05-12
+08:05 mileva: Movers come tomorrow for Besenscheuerweg. Please don't bring any more books home today.
+08:06 me: Not even one?
+08:06 mileva: Not even one.
+
+# Breakthrough: Einstein recalled the key idea came five or six weeks before he sent the paper (30 June), so about mid-May.
+
+== 1905-05-17
+19:40 me: Walked home with Besso and talked it all through. I think it's solved. It was the concept of time all along.
+19:44 mileva: Time? What's wrong with time?
+19:46 me: Clocks that are synchronized for one observer aren't synchronized for another. I'll explain tonight.
+
+== 1905-05-25
+21:30 me: Wrote to Habicht and promised him four papers. He'll think I've gone mad.
+21:33 mileva: You have, but productively.
+
+== 1905-06-03
+22:45 me: I'll be late again. The electrodynamics paper.
+22:46 mileva: You said that every night this week.
+22:48 me: Five more weeks of this at most. I'm writing it as fast as I can think it.
+
+== 1905-06-09
+12:00 me: The light-quanta paper is out in the Annalen today.
+12:05 mileva: Has anyone thrown anything at you yet?
+12:06 me: Not yet. Give them time.
+
+== 1905-06-20
+20:30 mileva: Hans Albert said "Papa" while you were at the Office.
+20:31 me +love
+20:32 me: Tell him I'll be home before the moon.
+
+== 1905-06-30
+12:30 me: The electrodynamics paper is with the Annalen. Thirty pages and not a single reference.
+12:33 mileva: Except Besso.
+12:33 me: Except Besso, quite right.
+
+== 1905-07-18
+11:30 me: Brownian paper published today.
+
+== 1905-07-27
+15:10 me: The faculty in Zurich has approved the dissertation.
+15:12 mileva +love
+
+# Late summer 1905 (sources give no exact date): Belgrade and Mileva's family in Novi Sad.
+
+== 1905-08-28
+07:15 me: Train to Novi Sad is at 7:40. Do you have Hans Albert's hat?
+07:16 mileva: I have his hat, your hat and the tickets. Do you have your feet?
+
+== 1905-08-30
+22:00 me: Novi Sad is lovely in the evening. Hans Albert has made friends with every dog in the street.
+22:05 mileva: And every dog has made friends with his biscuits.
+
+== 1905-09-26
+12:00 me: The electrodynamics paper is printed. My clocks are out in the world.
+12:02 mileva: May they keep good time.
+12:02 me +laugh
+
+== 1905-09-27
+11:30 me: Sent a little follow-up to the electrodynamics paper. If it's right, a body's mass measures its energy content.
+11:36 mileva: Little?
+11:37 me: Three pages. Little.
+
+== 1905-10-14
+21:00 me: Tutoring a student in electricity this evening, then home.
+21:03 mileva: Two francs?
+21:03 me +laugh
+
+== 1905-11-21
+12:10 me: The mass-energy paper is out. Three pages, and I think it's the most surprising thing I've written.
+12:15 mileva: Read it to me tonight.
+
+== 1905-12-19
+10:20 me: Second Brownian-motion paper is off to the Annalen.
+
+== 1906-01-15
+16:00 me: Dr. Einstein, if you please.
+16:01 mileva: Dr. Einstein, please buy bread on the way home.
+16:01 me +laugh
+
+== 1906-03-10
+17:20 me: Promoted to Technical Expert, second class, from 1 April. 4,500 francs!
+17:25 mileva: We're rich!
+
+== 1906-04-19
+19:10 mileva: Pierre Curie was killed in a street accident in Paris today. A horse-drawn wagon.
+19:15 me: Terrible. Poor Marie.
+
+== 1906-04-27
+21:00 mileva: Last box in at Aegertenstrasse. We have a view!
+
+== 1907-08-01
+20:30 me: Lenk is perfect. Hans Albert has found a stream and plans to stay forever.
+
+== 1907-08-14
+18:00 me: The Habicht brothers have already built a working Maschinchen. I can hardly believe how fast they are.
+
+# The "happiest thought": Einstein dated it only to 1907; historians place it around November 1907.
+
+== 1907-11-12
+18:45 me: Had the happiest thought of my life at my desk today.
+18:46 mileva: Tell me.
+18:49 me: A man falling from a roof doesn't feel his own weight. Gravity and acceleration might be the same thing.
+18:52 mileva: And you thought of this instead of reading patents?
+18:53 me: Between two patents.
+
+== 1907-12-10
+19:30 me: The new Civil Code was passed today. One law for the whole country.
+
+== 1908-02-28
+16:10 me: Privatdozent at the University of Bern! Lectures start after Easter.
+16:12 mileva: How many students?
+16:13 me: Ask me in April.
+
+== 1908-04-21
+08:20 me: First lecture done before the office opened. Audience: Besso, Chavan and Schenk from the Office.
+08:24 mileva: So the Patent Office now has excellent molecular theory.
+08:24 me +laugh
+
+== 1908-07-05
+21:00 me: The voters have banned absinthe.
+21:03 mileva: Will Bern survive?
+21:04 me: Bern survives everything.
+
+== 1909-05-07
+13:00 me: Associate professor of theoretical physics at the University of Zurich, from October!
+13:01 mileva: Zurich! Where we met.
+13:01 mileva +love
+
+== 1909-07-09
+11:30 me: Geneva. Everyone is in robes and I'm in my straw hat and everyday suit.
+11:34 mileva: Chavan did tell you to read the invitation.
+11:35 me +laugh
+
+== 1909-09-21
+22:30 me: Gave the radiation talk in Salzburg and finally met Planck in person. He was very kind.
+22:35 mileva: Did he agree with you?
+22:36 me: About relativity, yes. About light quanta, not yet.
+
+== 1909-10-15
+18:00 me: Last day at the Patent Office. Seven years. Said goodbye to Besso and the others.
+18:05 mileva: Zurich tomorrow, Professor.
+
+== 1909-12-11
+20:15 me: Inaugural lecture done: the role of atomic theory in recent physics.
+20:18 mileva: Professor Einstein. It suits you.

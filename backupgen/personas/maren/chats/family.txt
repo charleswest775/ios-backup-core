@@ -1,0 +1,143 @@
+chat: family
+with: mom, dad, erik
+service: iMessage
+name: Lindqvists 🏔
+
+# Family group: Mom and Dad in Missoula, Erik in Boise.
+
+== 2024-07-19
+07:30 erik: Happy birthday Dad!! 🎂☕ Sending you a bag of the new Ethiopian
+07:45 me: Happy birthday Dad!! Calling you at lunch
+08:10 dad: Thank you kids. Deck stain arrives today. Best present.
+08:11 erik +laugh
+
+== 2024-08-31
+10:20 dad: Found this. Maren age 6 at Glacier.
+10:20 dad: Already a hiker.
+10:25 me: The hat!!!
+10:26 erik: Why am I crying in the background of this picture
+10:27 mom: You dropped your ice cream on the trail.
+10:27 erik +laugh
+
+== 2024-10-22
+07:05 erik: Happy birthday big sis 🎂 You're officially old
+07:06 me: You're right behind me, buddy
+07:10 dad: Happy birthday Maren. 32 is a fine age. Love, Dad
+07:10 me +love
+
+== 2024-11-28
+12:00 mom: Happy Thanksgiving to my scattered family! 🦃
+12:02 erik: Happy Thanksgiving from Jess's parents' house. There are 4 pies
+12:05 me: Happy Thanksgiving from Bend! There are 4 dozen tamales
+12:08 dad: There are 2 of us and a turkey for 10.
+12:09 erik +laugh
+
+== 2024-12-04
+07:00 mom: Happy birthday Erik!! 🎂 29!
+07:05 me: Happy birthday little brother!! June recorded you a song
+07:06 me: https://www.example.com/v/june-howls-happy-birthday
+07:15 erik: This is the best thing I've ever received
+07:20 dad: Happy birthday son. Proud of you.
+07:21 erik +love
+
+== 2024-12-18
+18:30 mom: Christmas plan: Maren and Theo land Saturday 3:55. Erik and Jess drive Sunday. Christmas Eve dinner at 5. Grandma comes at 4
+18:35 erik: We'll be there by lunch Sunday
+18:36 me: Can't wait!!
+18:40 dad: I'm buying a bigger puzzle.
+
+== 2024-12-26
+10:00 erik: Ok who ate the last piece of lefse
+10:01 dad: I have no idea what you're talking about.
+10:01 mom: Greg.
+10:02 me +laugh
+
+== 2025-03-30
+07:00 erik: Happy birthday Mom 🎂🌷
+07:05 me: Happy birthday Mom!! 🎂
+07:20 mom: Thank you my darlings. 63!
+07:22 dad: Still the prettiest piano teacher in Montana.
+07:23 me +love
+
+== 2025-04-13
+11:00 me: First morning at the new place! Here's June on her porch
+11:05 dad: Nice porch. Check the railing is secure.
+11:06 erik: Dad's first question is always about structural integrity
+11:06 me +laugh
+11:08 mom: It's beautiful honey.
+
+== 2025-07-19
+07:30 me: Happy birthday Dad!! 🎂
+07:32 erik: Happy birthday Dad! The new coffee is in the mail
+08:00 dad: Thank you kids. 67. Deck is still holding up.
+08:01 me +laugh
+
+== 2025-08-10
+19:30 me: Day 1 in Yellowstone! Bison walked right past our car
+19:35 dad: Remember they can run 35 mph. Stay in the car.
+19:36 me: We stayed in the car, Dad
+19:37 erik: Did you see a bear
+19:38 me: Not yet!!
+
+== 2025-08-13
+08:15 me [photo:yellowstone-29]
+08:15 me: Lamar Valley at 6am. Bison everywhere. A guy with a big scope let us see a wolf
+08:20 erik: A WOLF
+08:22 dad: That's the Serengeti of North America. Great picture.
+08:25 mom: Please stay far away from the wolf.
+08:26 me: It was 2 miles away Mom
+08:26 mom +like
+
+== 2025-11-27
+11:00 mom: Happy Thanksgiving! Erik and Jess, have a safe drive to Portland!
+11:05 erik: We're here already! Theo has made 3 kinds of bread
+11:10 dad: Save me a roll.
+11:12 me: Saving you a roll Dad
+
+== 2025-12-04
+07:00 mom: Happy 30th birthday Erik!! 🎂🎉
+07:05 me: 30!!! Welcome to the club
+07:15 erik: I feel the same. My back hurts a little
+07:20 dad: That's not 30, that's the roasting. Happy birthday son.
+07:21 erik +laugh
+
+== 2025-12-20
+17:00 mom: Packing for Portland! Is it going to rain?
+17:05 me: Yes
+17:05 me: It's Portland
+17:06 erik +laugh
+17:10 dad: I'll bring the big umbrella.
+
+== 2025-12-25
+09:00 erik: Merry Christmas from Boise 🎄 Jess's family has made 3 pans of cinnamon rolls
+09:05 me: Merry Christmas from Portland! Dad is out in the rain looking at our shed
+09:06 dad: It's a good shed.
+09:06 erik +laugh
+
+== 2026-01-12
+10:50 me: Family announcement: I got promoted to Associate!
+10:51 erik: LET'S GOOO
+10:55 dad: Proud of you Maren. Very well deserved.
+10:56 mom: We're so proud! 🎉🎉
+10:56 me +love
+
+== 2026-03-28
+19:30 erik: Family announcement: Jess said yes 💍
+19:30 erik: Sunrise on the Boise River this morning
+19:31 me: AHHHH ERIK
+19:32 mom: Oh my goodness!!! Congratulations!!!
+19:35 dad: Welcome to the family Jess. Well done son.
+19:36 erik +love
+
+== 2026-03-30
+07:05 erik: Happy birthday Mom!! You get a daughter-in-law for your birthday
+07:10 me: Happy birthday Mom 🎂🌷
+07:30 mom: Best birthday present ever. 64!
+
+== 2026-06-13
+15:00 erik: Wedding date is set! Sept 19, 2027, outside Boise by the river
+15:02 me: Put me on flowers!!
+15:03 mom: I'm already looking at dresses
+15:05 dad: I'll start working on my speech.
+15:06 erik: Dad please keep it under 20 minutes
+15:06 me +laugh

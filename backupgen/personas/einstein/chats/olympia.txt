@@ -1,0 +1,109 @@
+chat: olympia
+with: solovine, habicht
+service: iMessage
+name: Olympia Academy
+
+# The study circle of Einstein, Maurice Solovine and Conrad Habicht. Sources date its start to 1902 or to Easter 1903;
+# the three were close friends by January 1903 (both were wedding witnesses). Supper was a sausage, Gruyère, fruit,
+# honey and tea. The caviar and hard-boiled-egg stories are from Solovine's recollections; their exact dates are unknown.
+
+== 1902-04-12
+19:30 solovine: Tonight at Albert's? I've finished the first chapters of Pearson's Grammar of Science.
+19:34 habicht: I'll bring the sausage.
+19:35 me: I'll bring the tea. And the questions.
+
+== 1902-04-19
+23:55 habicht: It's nearly midnight and we've only reached chapter three.
+23:56 me: That's because chapter three is wrong.
+23:56 solovine +laugh
+
+== 1902-05-10
+18:20 me: Next book: Mach's Mechanics. He has no patience for absolute space, and neither do I.
+18:31 solovine: Agreed. Absolute space has never once been observed.
+
+== 1902-06-24
+20:15 me: Patent Office, day two. My colleagues are serious men. I've stopped humming.
+20:20 habicht: Hum at the Academy instead.
+
+== 1902-11-29
+21:40 solovine: Hume's Treatise next week. He'll ruin cause and effect for you, Albert.
+21:45 me: Good. I never trusted them.
+
+== 1902-12-11
+20:05 habicht: Lorentz and Zeeman have the Nobel Prize in physics.
+20:12 me: For the splitting of spectral lines in a magnetic field. Lorentz deserves a dozen.
+
+== 1903-01-07
+10:00 me: Thank you both for standing with us yesterday. And for not mentioning the key.
+10:03 habicht: We will mention the key for the rest of your life.
+10:03 solovine +laugh
+
+== 1903-01-31
+19:00 me: The Academy has decided I'm its president. I accept, as Albert Ritter von Steissbein.
+19:01 solovine: Sir Albert of Tailbone. It suits you.
+19:02 habicht: All hail Steissbein.
+
+== 1903-03-14
+23:10 solovine: Did you enjoy your birthday supper, Mr President?
+23:11 me: Very much. Was there anything special in it?
+23:12 habicht: It was caviar, Albert. You ate all of it while explaining Galileo's principle of inertia.
+23:13 me: Then I've learned my lesson: caviar is wasted on me.
+23:13 solovine +laugh
+
+== 1903-04-18
+18:00 solovine: Poincaré's Science and Hypothesis. We need a whole week for it.
+18:05 me: We need a whole month. It's the best book I've read this year.
+18:06 habicht +like
+
+== 1903-06-20
+22:30 habicht: Spinoza tonight or Don Quixote?
+22:31 me: Don Quixote. Tilting at windmills is excellent preparation for physics.
+
+== 1903-09-26
+20:00 solovine: I'm not coming tonight. There's a concert. Hard-boiled eggs on the table for you both, with my apologies.
+23:45 habicht: We ate the eggs. Your room is now upside down and full of smoke. Steissbein says good night.
+23:46 solovine: You are both barbarians.
+23:46 me +laugh
+
+== 1903-12-18
+21:00 me: Café Bollwerk after the Office tomorrow? Mill's Logic is too long for one evening.
+21:05 solovine: The Bollwerk, then. Bring your pipe.
+21:06 habicht: I'll bring cigars.
+21:06 me: Habicht's cigars are why we sit by the door.
+
+== 1904-01-09
+19:45 habicht: Did you read that the American brothers flew a machine with an engine?
+19:50 me: Twelve seconds. Pearson would say we need more observations.
+
+== 1904-02-10
+08:30 solovine: Japan has attacked the Russian fleet at Port Arthur. It's war.
+08:40 me: Another war. I gave up my German citizenship partly to stay out of uniforms.
+
+# Habicht left Bern in 1904; exact month unknown.
+
+== 1904-08-20
+18:30 habicht: My last Academy evening in Bern for a while. A teaching post awaits.
+18:31 me: The Academy will hold your chair. And your sausage.
+18:32 solovine +love
+
+== 1905-03-14
+21:00 solovine: Happy birthday, Mr President. Twenty-six!
+21:05 me: Thank you. I'm about to send the Annalen a paper you'll both enjoy.
+
+
+== 1905-06-10
+20:00 solovine: Read your light-quanta paper. I understood the first page and admired the rest.
+20:05 me: That's the right ratio.
+20:06 habicht: I understood the title.
+20:06 me +laugh
+
+== 1905-09-28
+21:00 solovine: Besso says you have a new paper where clocks disagree. Explain it at supper on Saturday?
+21:05 me: Bring an extra cervelat. It'll take a while.
+
+# Solovine left Bern for Lyon in November 1905.
+== 1905-11-15
+20:00 solovine: I'm off to Lyon. The Academy is now a correspondence course.
+20:05 me: An academy of two in different cities is still an academy.
+20:06 habicht: Three. Don't forget me in exile.
+20:06 solovine +love

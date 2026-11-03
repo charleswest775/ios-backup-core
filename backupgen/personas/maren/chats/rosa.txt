@@ -1,0 +1,100 @@
+chat: rosa
+with: rosa
+service: iMessage
+
+# Rosa Delgado, climbing friend from February 2025. They swap Spanish and English practice:
+# Maren writes in learner Spanish, Rosa answers and corrects gently.
+
+== 2025-02-09
+18:30 rosa: Hi! It's Rosa from the gym, the one who fell off the purple V2 eight times 😅
+18:35 me: Hi Rosa!! You were so close on the last try. Tuesday nights are the best crowd if you want to come
+18:36 rosa: Tuesday it is. And if you're serious about Spanish, I'm serious about you explaining why nobody here owns an umbrella
+18:37 me: Deal. It's a point of pride. We all own four rain jackets instead
+18:37 rosa +laugh
+
+== 2025-02-11
+21:40 me: Hola Rosa. Gracias para la escalada hoy. Fue muy divertido
+21:45 rosa: ¡Muy bien! Solo una cosa: "gracias POR la escalada". Por, not para. Same for "thanks for everything": gracias por todo
+21:46 me: Por. Por. Por. Gracias por todo 🙏
+21:46 rosa +love
+
+== 2025-02-18
+20:10 rosa: Question. Why does everyone here say "the coast" like it's one place
+20:12 me: Because it kind of is? You drive west for 90 minutes and then there's the ocean and everyone's wearing a fleece
+20:13 rosa: In Albuquerque we say "the mountains" and we mean the one right there
+20:13 me +laugh
+
+== 2025-03-04
+21:30 me: Hoy yo escalé un V4. Estoy muy orgullosa. Mis brazos están muertos
+21:35 rosa: ¡Perfecto! Even "mis brazos están muertos" is perfect. Felicidades 🎉
+21:36 me: I learned that one from Theo's mom
+
+== 2025-03-25
+12:20 rosa: My team just found out I can read Spanish building codes from Mexico and now I'm "the international person" 🙃
+12:22 me: Congrats on your new title
+12:22 rosa: It comes with zero raise and a lot of PDFs
+
+== 2025-04-14
+19:00 rosa: How's the new house? ¿Cómo está la casa nueva?
+19:10 me: La casa es muy bonita. Hay un jardín grande y Juniper corre todo el día. Los vecinos son simpáticos
+19:12 rosa: 👏👏 Perfecto otra vez. You're getting good
+19:13 me: Bev (the neighbor) gave us lemon bars. In Spanish: ¿barras de limón?
+19:14 rosa: Close enough. Nobody will judge you over lemon bars
+
+== 2025-06-03
+22:00 rosa: Leading update: I led my first 5.9 at the gym tonight with Jonah belaying!!
+22:01 me: ROSA!!! I'm so sorry I missed it, it was Theo's birthday
+22:02 rosa: Jonah filmed it. I'll show you Tuesday. My legs were shaking the whole time
+22:02 me +love
+
+== 2025-08-17
+11:30 me: Back from Yellowstone! Vimos bisontes, un lobo muy lejos, y muchos géiseres
+11:35 rosa: ¡Qué maravilla! Did you say "lobo" without looking it up?
+11:36 me: ...I looked it up
+11:36 rosa +laugh
+
+== 2025-10-14
+20:30 rosa: Ok I have a proposal. Joshua Tree, Presidents' Day weekend. I climbed there a lot from Albuquerque. Winter is the best season. You, Theo, me, Ivy?
+20:32 me: YES. Theo has been wanting to try outdoor climbing
+20:33 rosa: Hidden Valley has a ton of easy stuff. I'll make a list
+20:35 me: Campsite opens for booking 6 months out I think, so like mid August? We're past it
+20:36 rosa: Jumbo Rocks still has spots for that weekend, I just checked. Book it now before anyone else does
+20:40 me: Booked!! Fri and Sat night, site 112
+20:41 rosa: 🌵🌵🌵
+20:41 me +love
+
+== 2025-12-02
+19:00 me: Hoy aprendí la palabra "albañil" en el trabajo. Un señor estaba poniendo piedras en el muro del parque
+19:05 rosa: ¡Excelente! Albañil is the perfect word. My dad was one for 30 years
+19:06 me: Then I learned it from the best people
+
+== 2026-01-27
+21:20 rosa: Weather check for Joshua Tree: highs 65, lows 34. Bring the warm sleeping bag
+21:22 me: Theo already bought a new puffy. He's very excited
+21:22 rosa: Tell him I picked out three easy routes in Hidden Valley. Nothing scary. Mostly
+21:23 me: "Mostly" is doing a lot of work there
+
+== 2026-02-13
+20:00 rosa: Stars tonight. I forgot how many there are out here
+20:01 me: I can see the Milky Way from inside the tent
+
+== 2026-02-17
+10:00 rosa: Gracias por el fin de semana. Por, not para 😉
+10:02 me: Gracias POR todo. Por el desierto, por las rocas, por enseñarle a Theo
+10:03 rosa: Theo was a natural. He didn't even look down
+10:04 me: He looked down once. He said "oh no" very quietly
+10:04 rosa +laugh
+10:05 rosa [photo:joshuatree-09]
+10:05 rosa: Keys View. My favorite from the whole trip
+
+== 2026-04-21
+19:30 me: Pregunta: ¿cómo se dice "permit set" en español? Like for building permits
+19:35 rosa: Juego de planos para el permiso. Or just "los planos". Engineers just say "el set" honestly
+19:36 me: Spanglish wins again
+19:36 rosa +laugh
+
+== 2026-06-16
+21:00 rosa: Gym tomorrow? There's a new orange route Jonah says is "spicy"
+21:02 me: Sí, mañana. Llevo a Theo también, quiere escalar más después de Joshua Tree
+21:03 rosa: ¡Perfecto! Your Spanish is so good now. Seriously
+21:03 me +love

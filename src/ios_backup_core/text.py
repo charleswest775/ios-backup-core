@@ -179,16 +179,19 @@ def parse_attributed_body(data: bytes) -> tuple[str, str]:
         # bplist00 data that couldn't be parsed shouldn't be raw-decoded (produces garbage)
         return "", "text"
 
-    # 2. TypedStream via pytypedstream
+    # 2. TypedStream via pytypedstream.
+    # Structured parse runs first. A raw fragment scan (e.g. "Maps" inside
+    # "Meet at Maps at 5") used to drop real text. Fall back to the scan only
+    # when the structured body is missing or empty after stripping U+FFFC.
     try:
-        raw = data.decode('utf-8', errors='replace')
+        archived = _parse_typedstream_pytypedstream(data)
+        if archived is not None and archived.replace("\ufffc", "").strip():
+            return archived, "text"
+
+        raw = data.decode("utf-8", errors="replace")
         for fragment, msg_type in _BALLOON_TYPE_MAP:
             if fragment in raw:
                 return "", msg_type
-
-        archived = _parse_typedstream_pytypedstream(data)
-        if archived is not None:
-            return archived, "text"
     except Exception:
         pass
 
@@ -257,13 +260,17 @@ def clean_message_text(text: str) -> str:
 
     # Strip object replacement / replacement characters and trim
     text = text.replace('\ufffc', '').replace('\ufffd', '').strip()
+    before = text
     text = _RE_KIMMSG.sub('', text)
     text = _RE_UUID.sub('', text)
     text = _RE_MEDIA_FILE.sub('', text)
 
-    # Remove junk wrapper quotes, spaces, or newlines left from stripping
-    text = _RE_JUNK_START.sub('', text)
-    text = _RE_JUNK_END.sub('', text)
+    # Remove junk wrapper quotes left from stripping identifiers. Only when
+    # something was stripped: otherwise a message that simply starts or ends
+    # with a quotation mark (He said "yes") would lose it.
+    if text != before:
+        text = _RE_JUNK_START.sub('', text)
+        text = _RE_JUNK_END.sub('', text)
     text = text.strip()
 
     # Strip TypedStream string-length prefix artifact from raw text column.
