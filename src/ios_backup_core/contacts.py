@@ -28,6 +28,13 @@ def normalize_phone(phone: str) -> str:
     return digits
 
 
+def normalize_label(label: str | None) -> str | None:
+    """Normalize a label identifying nature of phone/email (work, home, mobile...)"""
+    if label is None:
+        return None
+    return label.removeprefix("_$!<").removesuffix(">!$_")
+
+
 # Most national numbering plans outside North America have 9-digit subscriber
 # numbers (FR, ES, PT, BE, ...), so the "last 10 digits" rule above can't match
 # "+33 6 12 34 56 78" against "06 12 34 56 78". As a last resort we compare the
@@ -240,21 +247,23 @@ class ContactResolver:
                 first = person["First"] or ""
                 last = person["Last"] or ""
 
-                phones = [
-                    row["value"]
-                    for row in conn.execute(
-                        "SELECT value FROM ABMultiValue WHERE record_id = ? AND property = 3",
+                phone_data = conn.execute("""SELECT mv.value as value, l.value AS label
+                            FROM ABMultiValue mv
+                            LEFT JOIN ABMultiValueLabel l ON l.ROWID = mv.label
+                            WHERE mv.record_id = ? AND mv.property = 3""",
                         (pid,)
                     ).fetchall()
-                ]
+                phones = [row["value"] for row in phone_data]
+                phone_details = [normalize_label(row["label"]) for row in phone_data]
 
-                emails = [
-                    row["value"]
-                    for row in conn.execute(
-                        "SELECT value FROM ABMultiValue WHERE record_id = ? AND property = 4",
+                email_data = conn.execute("""SELECT mv.value as value, l.value AS label
+                            FROM ABMultiValue mv
+                            LEFT JOIN ABMultiValueLabel l ON l.ROWID = mv.label
+                            WHERE mv.record_id = ? AND mv.property = 4""",
                         (pid,)
                     ).fetchall()
-                ]
+                emails = [row["value"] for row in email_data]
+                email_details = [normalize_label(row["label"]) for row in email_data]
 
                 contact_list.append({
                     "id": pid,
@@ -263,7 +272,9 @@ class ContactResolver:
                     "display_name": f"{first} {last}".strip() or person["Organization"] or "Unknown",
                     "organization": person["Organization"],
                     "phones": phones,
+                    "phone_details" : phone_details,
                     "emails": emails,
+                    "email_details": email_details,
                     "note": person["Note"],
                 })
 
