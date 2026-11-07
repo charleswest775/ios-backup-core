@@ -650,3 +650,9 @@ class BackupReader:
         if chat_id is not None:
             return extractor.get_messages(self._accessor, chat_id, contacts, **kwargs)
         return extractor.list_conversations(self._accessor, contacts)
+
+    def podcasts(self):
+        """List podcast subscriptions."""
+        from ios_backup_core.extractors.podcasts import PodcastExtractor
+        extractor = PodcastExtractor()
+        return extractor.list_podcasts(self._accessor)
