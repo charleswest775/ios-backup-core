@@ -12,6 +12,7 @@ Changes:
   - Backup parameter typed as BackupAccessor protocol
 """
 
+import plistlib
 import re
 import sqlite3
 from typing import Optional
@@ -30,6 +31,63 @@ from ios_backup_core.timestamps import apple_to_iso, iso_to_apple
 # Group chats have identifiers like "chat644566139839284925". Match the whole thing:
 # a 1:1 chat with an email handle such as chatham@example.com isn't a group.
 _GROUP_CHAT_IDENTIFIER = re.compile(r"chat\d+", re.IGNORECASE)
+
+# Group changes sms.db records as a row with no text, by (item_type,
+# group_action_type): the message_type we give it, then its words when we know
+# who did it and when we don't. Apple doesn't document these values; they
+# match imessage-exporter's reading of Messages (imessage-database
+# GroupAction). item_type 2 (conversation renamed) is handled on its own, and
+# anything not listed keeps its old type ("system", or "location" for
+# item_type 3) so callers can say they don't know what it was.
+_GROUP_EVENTS = {
+    (1, 0): ("group_member_added", "{actor} added {other} to the conversation",
+             "{other} was added to the conversation"),
+    (1, 1): ("group_member_removed", "{actor} removed {other} from the conversation",
+             "{other} was removed from the conversation"),
+    (3, 0): ("group_member_left", "{actor} left the conversation",
+             "Someone left the conversation"),
+    (3, 1): ("group_photo_changed", "{actor} changed the group photo",
+             "The group photo was changed"),
+    (3, 2): ("group_photo_removed", "{actor} removed the group photo",
+             "The group photo was removed"),
+}
+
+
+def _summary_info(blob) -> dict:
+    """message_summary_info as a dict ({} when missing or unreadable)."""
+    if not blob:
+        return {}
+    try:
+        info = plistlib.loads(bytes(blob))
+    except Exception:
+        return {}
+    return info if isinstance(info, dict) else {}
+
+
+def _group_event(item_type: int, action: int, actor: str, other: str,
+                 title: str, unattributed: bool) -> Optional[tuple[str, str]]:
+    """(message_type, words) for a group change, or None if we can't name it.
+
+    ``actor`` is who did it ("You", a contact name or handle, "" if sms.db
+    doesn't say). ``unattributed`` is Messages' own flag for a change it
+    doesn't credit to anyone; it never applies to someone leaving.
+    """
+    if item_type == 2:
+        if title:
+            event = ("group_renamed", '{actor} named the conversation "{title}"',
+                     'The conversation was named "{title}"')
+        else:
+            event = ("group_name_removed", "{actor} removed the conversation name",
+                     "The conversation name was removed")
+    else:
+        event = _GROUP_EVENTS.get((item_type, action))
+        if event is None:
+            return None
+    message_type, named, unnamed = event
+    if message_type == "group_member_left":
+        unattributed = False
+    words = unnamed if unattributed or not actor else named
+    return message_type, words.format(actor=actor, other=other or "someone", title=title)
 
 
 class MessageExtractor:
@@ -181,6 +239,12 @@ class MessageExtractor:
             has_share_status      = schema['has_share_status']
             has_share_direction   = schema['has_share_direction']
             has_uncanonicalized   = schema['has_uncanonicalized']
+            has_group_action_type = schema['has_group_action_type']
+            has_other_handle      = schema['has_other_handle']
+            has_group_title       = schema['has_group_title']
+            has_error             = schema['has_error']
+            has_summary_info      = schema['has_summary_info']
+            has_date_retracted    = schema['has_date_retracted']
 
             select_parts = [
                 'm.ROWID AS message_id',
@@ -189,6 +253,7 @@ class MessageExtractor:
                 'm.is_from_me',
                 'm.cache_has_attachments',
                 'm.associated_message_type',
+                'm.handle_id AS handle_rowid',
                 'h.id AS handle_id_str',
             ]
             if has_attributed_body:   select_parts.append('m.attributedBody')
@@ -199,6 +264,15 @@ class MessageExtractor:
             if has_share_status:      select_parts.append('m.share_status')
             if has_share_direction:   select_parts.append('m.share_direction')
             if has_uncanonicalized:   select_parts.append('h.uncanonicalized_id')
+            if has_group_action_type: select_parts.append('m.group_action_type')
+            if has_other_handle:      select_parts += ['m.other_handle', 'oh.id AS other_handle_id_str']
+            if has_other_handle and has_uncanonicalized:
+                select_parts.append('oh.uncanonicalized_id AS other_uncanonicalized_id')
+            if has_group_title:       select_parts.append('m.group_title')
+            if has_error:             select_parts.append('m.error')
+            if has_summary_info:      select_parts.append('m.message_summary_info')
+            if has_date_retracted:    select_parts.append('m.date_retracted')
+            other_handle_join = "LEFT JOIN handle oh ON oh.ROWID = m.other_handle" if has_other_handle else ""
 
             date_clauses = []
             date_params: list = [chat_id]
@@ -218,6 +292,7 @@ class MessageExtractor:
                 SELECT {', '.join(select_parts)}
                 FROM message m
                 LEFT JOIN handle h ON h.ROWID = m.handle_id
+                {other_handle_join}
                 WHERE m.ROWID IN (
                     SELECT DISTINCT cmj.message_id
                     FROM chat_message_join cmj
@@ -275,13 +350,18 @@ class MessageExtractor:
             if chat_handle_row:
                 chat_contact_name = resolve_contact(chat_handle_row[0], contacts) or chat_handle_row[0]
 
+            def handle_name(handle_str, uncanonicalized):
+                """Contact name for a handle, else the handle itself ("" if none)."""
+                return (
+                    (resolve_contact(handle_str, contacts) if handle_str else "")
+                    or (resolve_contact(uncanonicalized, contacts) if uncanonicalized else "")
+                    or handle_str
+                    or ""
+                )
+
             for row in rows:
                 handle = row["handle_id_str"] or ""
-                sender_name = resolve_contact(handle, contacts) if handle else ""
-                if not sender_name and has_uncanonicalized and row["uncanonicalized_id"]:
-                    sender_name = resolve_contact(row["uncanonicalized_id"], contacts)
-                if not sender_name:
-                    sender_name = handle
+                sender_name = handle_name(handle, row["uncanonicalized_id"] if has_uncanonicalized else None)
                 if not sender_name:
                     sender_name = chat_contact_name
 
@@ -290,6 +370,30 @@ class MessageExtractor:
                 item_type   = (row["item_type"]      or 0)  if has_item_type     else 0
                 share_status    = (row["share_status"]    or 0) if has_share_status    else 0
                 share_direction = (row["share_direction"] or 0) if has_share_direction else 0
+                summary_info = _summary_info(row["message_summary_info"]) if has_summary_info else {}
+
+                group_event = None
+                if item_type in (1, 2, 3) and has_group_action_type and has_other_handle and has_group_title:
+                    # Who did it: only the row's own handle, never the chat's
+                    # first member, so nobody is credited with what they didn't do.
+                    actor = "You" if row["is_from_me"] else (handle_name(
+                        handle, row["uncanonicalized_id"] if has_uncanonicalized else None))
+                    action = row["group_action_type"] or 0
+                    other_rowid = row["other_handle"] or 0
+                    # item_type 1 names who was added or removed in other_handle.
+                    # When it's the sender's own handle Messages means something
+                    # else (a changed phone number), so leave that unnamed.
+                    if item_type != 1 or (other_rowid and other_rowid != row["handle_rowid"]):
+                        group_event = _group_event(
+                            item_type, action, actor,
+                            other=handle_name(
+                                row["other_handle_id_str"],
+                                row["other_uncanonicalized_id"] if has_uncanonicalized else None,
+                            ),
+                            title=(row["group_title"] or "").strip(),
+                            unattributed=bool(summary_info.get("uat")),
+                        )
+                event_text = None
 
                 msg_text = row["text"]
                 if bundle_type == "location":
@@ -298,17 +402,31 @@ class MessageExtractor:
                     msg_type = bundle_type
                 elif is_audio:
                     msg_type = "audio"
-                elif item_type in (3, 4):
-                    if item_type == 4 and share_direction == 0 and share_status == 1:
+                elif item_type == 4:
+                    if share_direction == 0 and share_status == 1:
                         msg_type = "location_stopped_by_me"
-                    elif item_type == 4 and share_direction == 0:
+                    elif share_direction == 0:
                         msg_type = "location_started_by_me"
-                    elif item_type == 4 and share_direction == 1 and share_status == 1:
+                    elif share_direction == 1 and share_status == 1:
                         msg_type = "location_stopped_by_them"
-                    elif item_type == 4 and share_direction == 1:
+                    elif share_direction == 1:
                         msg_type = "location_started_by_them"
                     else:
                         msg_type = "location"
+                elif group_event:
+                    msg_type, event_text = group_event
+                    # Messages marks a group change that didn't go through
+                    # with an error code in the low 32 bits.
+                    if has_error and (row["error"] or 0) & 0xFFFFFFFF:
+                        event_text += " (failed)"
+                elif item_type == 3:
+                    # Other item_type 3 rows keep the type they always had.
+                    msg_type = "location"
+                elif item_type == 6:
+                    # A FaceTime call or SharePlay session in the conversation.
+                    # conversationAVMode 0 is SharePlay without a call.
+                    msg_type = "facetime"
+                    event_text = "SharePlay session" if summary_info.get("conversationAVMode") == 0 else "FaceTime call"
                 else:
                     msg_type = "text"
 
@@ -355,6 +473,16 @@ class MessageExtractor:
                     msg_type = "attachment" if real_attachments else "system"
                     msg_text = ""
 
+                # Unsending (iOS 16+) leaves the row with no text and lists the
+                # retracted parts under "rp" in message_summary_info.
+                # date_retracted is checked too, though real backups leave it 0.
+                if msg_type == "system" and not msg_text and (
+                    summary_info.get("rp")
+                    or (has_date_retracted and row["date_retracted"])
+                ):
+                    msg_type = "unsent"
+                    event_text = f"{'You' if row['is_from_me'] else sender_name or 'Someone'} unsent a message"
+
                 link_preview = None
                 if msg_type == "link" and has_payload_data and row["payload_data"]:
                     link_preview = parse_link_payload(row["payload_data"]) or None
@@ -363,6 +491,10 @@ class MessageExtractor:
                     "message_id": row["message_id"],
                     "text": msg_text,
                     "message_type": msg_type,
+                    # What happened, in words, for a group change, an unsent
+                    # message or a FaceTime call (e.g. "Karin added Theo to
+                    # the conversation"); None for everything else.
+                    "event_text": event_text,
                     "link_preview": link_preview,
                     "date": apple_to_iso(row["date"]),
                     "is_from_me": bool(row["is_from_me"]),

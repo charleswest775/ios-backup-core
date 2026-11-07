@@ -28,6 +28,12 @@ def detect_message_schema(conn: sqlite3.Connection) -> dict:
         has_share_status      — 'share_status' column present (location sharing)
         has_share_direction   — 'share_direction' column present (location sharing)
         has_uncanonicalized   — 'uncanonicalized_id' in handle table (iOS 13+)
+        has_group_action_type — 'group_action_type' column present (group changes)
+        has_other_handle      — 'other_handle' column present (who was added/removed)
+        has_group_title       — 'group_title' column present (conversation renamed)
+        has_error             — 'error' column present
+        has_summary_info      — 'message_summary_info' column present (unsent, edits)
+        has_date_retracted    — 'date_retracted' column present (iOS 16+)
         uses_nanoseconds      — timestamps stored as nanoseconds (iOS 14+)
     """
     msg_cols = {r[1] for r in conn.execute("PRAGMA table_info(message)").fetchall()}
@@ -41,6 +47,12 @@ def detect_message_schema(conn: sqlite3.Connection) -> dict:
         'has_share_status':      'share_status'       in msg_cols,
         'has_share_direction':   'share_direction'    in msg_cols,
         'has_uncanonicalized':   'uncanonicalized_id' in handle_cols,
+        'has_group_action_type': 'group_action_type'  in msg_cols,
+        'has_other_handle':      'other_handle'       in msg_cols,
+        'has_group_title':       'group_title'        in msg_cols,
+        'has_error':             'error'              in msg_cols,
+        'has_summary_info':      'message_summary_info' in msg_cols,
+        'has_date_retracted':    'date_retracted'     in msg_cols,
         'uses_nanoseconds':      db_uses_nanoseconds(conn),
     }
 

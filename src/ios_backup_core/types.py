@@ -23,6 +23,7 @@ class Message:
     link_preview: Optional[dict] = None
     is_reaction: bool = False
     chat_id: Optional[int] = None
+    event_text: Optional[str] = None  # e.g. "Karin added Theo to the conversation"
 
 
 @dataclass
