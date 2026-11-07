@@ -21,6 +21,8 @@ from pathlib import Path
 from typing import Optional, Protocol, runtime_checkable
 
 from ios_backup_core.db import connect_readonly
+from ios_backup_core.legacy_crypto import LegacyEncryptedBackup
+from ios_backup_core.mbdb import MbdbError, build_files_db
 
 # iphone_backup_decrypt is a soft dependency — only needed for encrypted backups.
 # Its pycryptodome raises OSError, not ImportError, when it can't load one of its
@@ -31,6 +33,24 @@ try:
     _HAS_DECRYPT = True
 except (ImportError, OSError):
     _HAS_DECRYPT = False
+
+MANIFEST_DB = "Manifest.db"
+# The file list of backups made by iOS 9 and earlier (see ios_backup_core.mbdb).
+MANIFEST_MBDB = "Manifest.mbdb"
+
+DAMAGED_MBDB_MESSAGE = (
+    "This backup was made by iOS 9 or earlier, and its list of files "
+    "(Manifest.mbdb) is damaged or incomplete, so it can't be opened."
+)
+
+
+def manifest_format(backup_dir: str) -> Optional[str]:
+    """How a backup folder lists its files: "db" (iOS 10 and later), "mbdb" (iOS 9 and earlier), or None."""
+    if os.path.exists(os.path.join(backup_dir, MANIFEST_DB)):
+        return "db"
+    if os.path.exists(os.path.join(backup_dir, MANIFEST_MBDB)):
+        return "mbdb"
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -157,12 +177,26 @@ class LocalBackupAccessor:
             # Unencrypted: look up file hash in Manifest.db
             file_hash = self._lookup_file_hash(relative_path, domain)
             if file_hash:
-                source = os.path.join(self._backup_dir, file_hash[:2], file_hash)
-                if os.path.exists(source):
+                source = self.locate_file(file_hash)
+                if source:
                     self._file_cache[cache_key] = source
                     return source
 
         self._file_cache[cache_key] = None
+        return None
+
+    def locate_file(self, file_hash: str) -> Optional[str]:
+        """Where an unencrypted backup keeps the file stored under *file_hash*, or None.
+
+        iOS 10 and later keep it at <hash[:2]>/<hash>; iOS 9 and earlier
+        (Manifest.mbdb backups) at <hash>, directly in the backup folder.
+        """
+        for source in (
+            os.path.join(self._backup_dir, file_hash[:2], file_hash),
+            os.path.join(self._backup_dir, file_hash),
+        ):
+            if os.path.isfile(source):
+                return source
         return None
 
     def get_database(self, relative_path: str, domain: str = "HomeDomain") -> Optional[str]:
@@ -215,11 +249,10 @@ class LocalBackupAccessor:
                 )
                 return []
 
-        manifest = self._get_manifest_db()
-        if not manifest:
-            return []
-
         try:
+            manifest = self._get_manifest_db()
+            if not manifest:
+                return []
             conn = connect_readonly(manifest, self)
             query = "SELECT fileID, domain, relativePath FROM Files WHERE 1=1"
             params = []
@@ -240,6 +273,20 @@ class LocalBackupAccessor:
         except Exception:
             return []
 
+    def check_manifest(self) -> None:
+        """Read the backup's list of files now, so a damaged one fails at open, not on first use.
+
+        Only a backup made by iOS 9 or earlier has work to do here: its
+        Manifest.mbdb is turned into a database. Raises ValueError, with a
+        message for people, if that can't be read.
+        """
+        if self._encrypted:
+            return
+        try:
+            self._get_manifest_db()
+        except (MbdbError, OSError) as e:
+            raise ValueError(DAMAGED_MBDB_MESSAGE) from e
+
     def cleanup(self) -> None:
         """Remove the temporary directory used for extracted files."""
         if os.path.exists(self._temp_dir):
@@ -254,11 +301,22 @@ class LocalBackupAccessor:
     # -- Internal helpers ----------------------------------------------------
 
     def _get_manifest_db(self) -> Optional[str]:
+        """Path to the backup's file list as a Manifest.db-shaped SQLite database.
+
+        For a backup made by iOS 9 or earlier that is a database built in the
+        temp dir from its Manifest.mbdb (raises MbdbError if that can't be read).
+        """
         if self._manifest_db_path and os.path.exists(self._manifest_db_path):
             return self._manifest_db_path
-        manifest_path = os.path.join(self._backup_dir, "Manifest.db")
+        manifest_path = os.path.join(self._backup_dir, MANIFEST_DB)
         if not os.path.exists(manifest_path):
-            return None
+            mbdb_path = os.path.join(self._backup_dir, MANIFEST_MBDB)
+            if not os.path.exists(mbdb_path):
+                return None
+            built = os.path.join(self._temp_dir, MANIFEST_DB)
+            build_files_db(mbdb_path, built)
+            self._manifest_db_path = built
+            return built
         wal_path = manifest_path + "-wal"
         if os.path.isfile(wal_path) and os.path.getsize(wal_path) > 0:
             # Finder left changes in the WAL (an interrupted backup, say).
@@ -286,10 +344,10 @@ class LocalBackupAccessor:
     def _get_manifest_conn(self) -> Optional[sqlite3.Connection]:
         if self._manifest_conn is not None:
             return self._manifest_conn
-        manifest = self._get_manifest_db()
-        if not manifest:
-            return None
         try:
+            manifest = self._get_manifest_db()
+            if not manifest:
+                return None
             conn = connect_readonly(manifest, self)
             conn.execute("PRAGMA cache_size = -10000")
             conn.execute("PRAGMA temp_store = MEMORY")
@@ -341,9 +399,14 @@ def _temp_name(domain: str, relative_path: str) -> str:
 # ---------------------------------------------------------------------------
 
 def _read_backup_info(backup_dir: str) -> Optional[dict]:
-    """Read metadata from a backup directory. Returns None if not a valid backup."""
-    manifest_db = os.path.join(backup_dir, "Manifest.db")
-    if not os.path.exists(manifest_db):
+    """Read metadata from a backup directory. Returns None if not a valid backup.
+
+    A backup is a folder with a Manifest.db, or with a Manifest.mbdb for one
+    made by iOS 9 or earlier; ``manifest_format`` says which ("db" or "mbdb").
+    Info.plist and Manifest.plist have the same keys in both.
+    """
+    fmt = manifest_format(backup_dir)
+    if fmt is None:
         return None
 
     info_plist = os.path.join(backup_dir, "Info.plist")
@@ -394,6 +457,7 @@ def _read_backup_info(backup_dir: str) -> Optional[dict]:
 
     info["encrypted"] = encrypted
     info["backup_dir"] = backup_dir
+    info["manifest_format"] = fmt
     return info
 
 
@@ -403,11 +467,18 @@ def open_local_backup(
 ) -> "LocalBackupAccessor":
     """Open an on-disk backup and return a LocalBackupAccessor.
 
+    A backup made by iOS 9 or earlier (Manifest.mbdb) is decrypted by
+    ios_backup_core.legacy_crypto, since iphone-backup-decrypt reads only the
+    encryption of iOS 10.2 and later.
+
     Raises:
         ValueError — backup_dir does not contain a valid backup, or
-                     decryption fails.
+                     decryption fails (wrong password included), or the
+                     Manifest.mbdb of a backup made by iOS 9 or earlier is
+                     damaged.
         RuntimeError — encrypted backup requested but iphone-backup-decrypt
-                       is not installed.
+                       (or, for iOS 9 and earlier, pycryptodome) can't be
+                       loaded.
     """
     info = _read_backup_info(backup_dir)
     if not info:
@@ -416,11 +487,34 @@ def open_local_backup(
     encrypted = info["encrypted"]
     decrypted_backup = None
 
+    if info["manifest_format"] == "mbdb" and not encrypted:
+        accessor = LocalBackupAccessor(
+            backup_dir=backup_dir,
+            udid=info.get("udid", os.path.basename(backup_dir)),
+            info=info,
+            encrypted=False,
+        )
+        try:
+            accessor.check_manifest()
+        except ValueError:
+            accessor.cleanup()
+            raise
+        return accessor
+
     if encrypted:
         if not password:
             raise ValueError(
                 "Backup is encrypted. Provide a password or use "
                 "LocalBackupAccessor directly with an EncryptedBackup instance."
+            )
+        if info["manifest_format"] == "mbdb":
+            decrypted_backup = _open_legacy_encrypted(backup_dir, password)
+            return LocalBackupAccessor(
+                backup_dir=backup_dir,
+                udid=info.get("udid", os.path.basename(backup_dir)),
+                info=info,
+                encrypted=True,
+                decrypted_backup=decrypted_backup,
             )
         if not _HAS_DECRYPT:
             raise RuntimeError(
@@ -445,6 +539,18 @@ def open_local_backup(
         encrypted=encrypted,
         decrypted_backup=decrypted_backup,
     )
+
+
+def _open_legacy_encrypted(backup_dir: str, password: str) -> LegacyEncryptedBackup:
+    """Unlock an encrypted backup made by iOS 9 or earlier, with open_local_backup's errors."""
+    try:
+        return LegacyEncryptedBackup(backup_directory=backup_dir, passphrase=password)
+    except MbdbError as e:
+        raise ValueError(DAMAGED_MBDB_MESSAGE) from e
+    except RuntimeError:
+        raise
+    except Exception as e:
+        raise ValueError(f"Failed to decrypt backup: {e}") from e
 
 
 # ---------------------------------------------------------------------------

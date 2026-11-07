@@ -22,6 +22,14 @@ from ios_backup_core.timestamps import APPLE_EPOCH_OFFSET, apple_to_iso
 
 
 _CALL_TYPE_FACETIME_VIDEO = 8
+_CALL_TYPE_FACETIME_AUDIO = 16
+
+# call_history.db (iOS 7 and earlier) keeps a call's kind in a bit field:
+# bit 0 set = outgoing, 4 = phone call, 16 = FaceTime. It doesn't say whether a
+# FaceTime call was video or audio, so those are just "FaceTime".
+_LEGACY_FLAG_OUTGOING = 1
+_LEGACY_FLAG_FACETIME = 16
+_LEGACY_FACETIME_PROVIDER = "legacy.facetime"
 
 
 def _clean_text(value) -> str:
@@ -121,7 +129,12 @@ class CallExtractor:
         try:
             cursor.execute("PRAGMA table_info(ZCALLRECORD)")
             columns = [info[1] for info in cursor.fetchall()]
-            service_col = "ZSERVICE_PROVIDER" if "ZSERVICE_PROVIDER" in columns else "NULL"
+            # iOS 8 and 9 have no ZSERVICE_PROVIDER; ZCALLTYPE 8 or 16 marks a FaceTime call.
+            service_col = (
+                "ZSERVICE_PROVIDER" if "ZSERVICE_PROVIDER" in columns
+                else f"CASE WHEN ZCALLTYPE IN ({_CALL_TYPE_FACETIME_VIDEO}, {_CALL_TYPE_FACETIME_AUDIO}) "
+                     "THEN 'com.apple.FaceTime' END"
+            )
             video_col = "ZIS_VIDEO" if "ZIS_VIDEO" in columns else "NULL"
             name_col = "ZNAME" if "ZNAME" in columns else "NULL"
             rows = cursor.execute(f"""
@@ -134,11 +147,21 @@ class CallExtractor:
                 FROM ZCALLRECORD ORDER BY ZDATE DESC
             """).fetchall()
         except sqlite3.Error:
+            # call_history.db, before iOS 8: its dates are Unix seconds, not
+            # Apple's, and it doesn't say whether a call was answered (``read``
+            # is whether a missed call was seen), so that comes from duration.
             try:
-                rows = cursor.execute("""
-                    SELECT ROWID AS Z_PK, address, NULL AS name, date, duration,
-                           flags AS call_type, read AS answered,
-                           NULL AS originated, NULL AS service_provider, NULL AS is_video
+                cursor.execute("PRAGMA table_info(call)")
+                columns = [info[1] for info in cursor.fetchall()]
+                name_col = "name" if "name" in columns else "NULL"
+                rows = cursor.execute(f"""
+                    SELECT ROWID AS Z_PK, address, {name_col} AS name,
+                           date - {APPLE_EPOCH_OFFSET} AS date, duration,
+                           flags AS call_type, NULL AS answered,
+                           (flags & {_LEGACY_FLAG_OUTGOING}) AS originated,
+                           CASE WHEN flags & {_LEGACY_FLAG_FACETIME}
+                                THEN '{_LEGACY_FACETIME_PROVIDER}' END AS service_provider,
+                           NULL AS is_video
                     FROM call ORDER BY date DESC
                 """).fetchall()
             except sqlite3.Error:
@@ -298,7 +321,9 @@ class CallExtractor:
 
             provider = row["service_provider"]
             app_name = "Phone"
-            if provider:
+            if provider == _LEGACY_FACETIME_PROVIDER:
+                app_name = "FaceTime"
+            elif provider:
                 p_lower = provider.lower()
                 if "facetime" in p_lower:
                     # Older schemas have ZIS_VIDEO; otherwise ZCALLTYPE says it

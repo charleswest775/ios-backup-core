@@ -8,6 +8,7 @@ histories with sourced timelines.
 
     python -m backupgen list
     python -m backupgen generate einstein --snapshot ios15 --out build/
+    python -m backupgen legacy --ios 9.3.5 --out build/
     python -m backupgen harvest --sqlite sms.db --ios 26.5 --build 23F77 --source "iOS Simulator"
 """
 
