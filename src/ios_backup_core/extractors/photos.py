@@ -174,7 +174,7 @@ class PhotoExtractor:
         latitude, longitude = _location(_column(row, "ZLATITUDE"), _column(row, "ZLONGITUDE"))
 
         return {
-            "uuid": row["ZUUID"] or "",
+            "uuid": _column(row, "ZUUID") or "",
             "filename": filename,
             "file_hash": file_hash,
             "kind": kind,
@@ -298,6 +298,7 @@ class PhotoExtractor:
             # (omitted — callers use backup.get_file with the ZDIRECTORY/ZFILENAME path)
 
             assets = asset_table(conn)
+            columns = {col[1] for col in conn.execute(f"PRAGMA table_info('{assets}')")}
             base_query = f"SELECT * FROM {assets}"
             params: list = []
 
@@ -308,11 +309,8 @@ class PhotoExtractor:
                     f"WHERE j.{albums_col} = ?"
                 )
                 params.append(int(album_id))
-            else:
-                try:
-                    base_query += " WHERE ZTRASHEDSTATE = 0"
-                except Exception:
-                    pass
+            elif "ZTRASHEDSTATE" in columns:  # iOS 8 and later; iOS 7 has no Recently Deleted
+                base_query += " WHERE ZTRASHEDSTATE = 0"
 
             base_query += " ORDER BY ZDATECREATED DESC"
 

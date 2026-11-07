@@ -18,7 +18,7 @@ from typing import Optional
 
 from ios_backup_core.contacts import resolve_contact
 from ios_backup_core.db import connect_readonly, get_database
-from ios_backup_core.schema import detect_message_schema
+from ios_backup_core.schema import detect_message_schema, is_legacy_sms_db
 from ios_backup_core.text import (
     _type_from_bundle_id,
     parse_attributed_body,
@@ -26,6 +26,11 @@ from ios_backup_core.text import (
     clean_message_text,
 )
 from ios_backup_core.timestamps import apple_to_iso, iso_to_apple
+
+# What list_conversations says for an sms.db from iOS 5 or earlier.
+LEGACY_SMS_DB_MESSAGE = (
+    "Messages from iOS 5 and earlier use an older format that can't be read yet."
+)
 
 # Group chats have identifiers like "chat644566139839284925". Match the whole thing:
 # a 1:1 chat with an email handle such as chatham@example.com isn't a group.
@@ -60,6 +65,12 @@ class MessageExtractor:
             self._connections[db_path] = conn
         return self._connections[db_path]
 
+    def _schema(self, db_path: str, conn: sqlite3.Connection) -> dict:
+        """sms.db's optional columns (see detect_message_schema), read once per database."""
+        if db_path not in self._pragma_cache:
+            self._pragma_cache[db_path] = detect_message_schema(conn)
+        return self._pragma_cache[db_path]
+
     def list_conversations(self, backup, contacts: dict) -> dict:
         """List all conversations with preview info."""
         db_path = self._get_sms_db(backup)
@@ -67,9 +78,13 @@ class MessageExtractor:
             return {"conversations": [], "error": "sms.db not found"}
 
         conn = self._get_conn(db_path, backup)
+        if is_legacy_sms_db(conn):
+            return {"conversations": [], "error": LEGACY_SMS_DB_MESSAGE, "empty_reason": "unsupported_format"}
+        schema = self._schema(db_path, conn)
+        display_name_col = "c.display_name" if schema["has_chat_display_name"] else "NULL"
         conversations = []
         try:
-            rows = conn.execute("""
+            rows = conn.execute(f"""
                 WITH ranked_msgs AS (
                     SELECT
                         cmj.chat_id,
@@ -92,7 +107,7 @@ class MessageExtractor:
                 SELECT
                     c.ROWID          AS chat_id,
                     c.chat_identifier,
-                    c.display_name,
+                    {display_name_col} AS display_name,
                     c.service_name,
                     mc.message_count,
                     lm.date          AS last_message_date,
@@ -169,9 +184,7 @@ class MessageExtractor:
         messages = []
 
         try:
-            if db_path not in self._pragma_cache:
-                self._pragma_cache[db_path] = detect_message_schema(conn)
-            schema = self._pragma_cache[db_path]
+            schema = self._schema(db_path, conn)
 
             has_attributed_body   = schema['has_attributed_body']
             has_payload_data      = schema['has_payload_data']
@@ -188,7 +201,8 @@ class MessageExtractor:
                 'm.date',
                 'm.is_from_me',
                 'm.cache_has_attachments',
-                'm.associated_message_type',
+                ('m.associated_message_type' if schema['has_associated_type']
+                 else 'NULL AS associated_message_type'),
                 'h.id AS handle_id_str',
             ]
             if has_attributed_body:   select_parts.append('m.attributedBody')
@@ -235,6 +249,8 @@ class MessageExtractor:
                 row["message_id"] for row in rows if bool(row["cache_has_attachments"])
             ]
             attachments_by_msg: dict[int, list] = {}
+            transfer_name_col = "a.transfer_name" if schema['has_transfer_name'] else "NULL"
+            total_bytes_col = "a.total_bytes" if schema['has_total_bytes'] else "NULL"
             if attachment_ids_needed:
                 placeholders = ','.join('?' * len(attachment_ids_needed))
                 for att in conn.execute(f"""
@@ -243,8 +259,8 @@ class MessageExtractor:
                         a.ROWID AS attachment_id,
                         a.filename,
                         a.mime_type,
-                        a.transfer_name,
-                        a.total_bytes
+                        {transfer_name_col} AS transfer_name,
+                        {total_bytes_col} AS total_bytes
                     FROM attachment a
                     JOIN message_attachment_join maj ON maj.attachment_id = a.ROWID
                     WHERE maj.message_id IN ({placeholders})
@@ -414,10 +430,11 @@ class MessageExtractor:
             return {"results": []}
 
         conn = self._get_conn(db_path, backup)
+        if is_legacy_sms_db(conn):
+            return {"results": [], "query": query}
 
         # Detect nanosecond timestamps for date conversion
-        if db_path not in self._pragma_cache:
-            self._pragma_cache[db_path] = detect_message_schema(conn)
+        self._schema(db_path, conn)
 
         results = []
         try:

@@ -24,6 +24,11 @@ def main(argv=None) -> int:
                      help="PBKDF2 rounds: 'real' matches iOS (10M, slow to open), 'fast' for tests")
     gen.add_argument("--seed", type=int)
 
+    legacy = sub.add_parser("legacy", help="write a small backup the way iOS 9 and earlier did (Manifest.mbdb)")
+    legacy.add_argument("--ios", default="9.3.5", help="6.x to 9.x (default 9.3.5)")
+    legacy.add_argument("--out", type=Path, required=True)
+    legacy.add_argument("--password", help="encrypt it with this password (the iOS 9-and-earlier keybag)")
+
     report = sub.add_parser("report", help="print a persona pack's review document (Markdown)")
     report.add_argument("persona")
 
@@ -57,6 +62,12 @@ def main(argv=None) -> int:
             backup = generate(persona.id, snapshot_id, out, password=args.password,
                               iterations=args.iterations, seed=args.seed, persona=persona)
             print(backup)
+        return 0
+
+    if args.command == "legacy":
+        from backupgen.legacy import generate_legacy
+
+        print(generate_legacy(args.out, ios=args.ios, password=args.password))
         return 0
 
     if args.command == "report":

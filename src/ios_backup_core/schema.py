@@ -28,10 +28,18 @@ def detect_message_schema(conn: sqlite3.Connection) -> dict:
         has_share_status      — 'share_status' column present (location sharing)
         has_share_direction   — 'share_direction' column present (location sharing)
         has_uncanonicalized   — 'uncanonicalized_id' in handle table (iOS 13+)
+        has_associated_type   — 'associated_message_type' column present
+                                (tapbacks; iOS 10+)
+        has_chat_display_name — 'display_name' in chat table (named group
+                                chats; not in the oldest sms.db files)
+        has_transfer_name     — 'transfer_name' in attachment table (likewise)
+        has_total_bytes       — 'total_bytes' in attachment table (likewise)
         uses_nanoseconds      — timestamps stored as nanoseconds (iOS 14+)
     """
     msg_cols = {r[1] for r in conn.execute("PRAGMA table_info(message)").fetchall()}
     handle_cols = {r[1] for r in conn.execute("PRAGMA table_info(handle)").fetchall()}
+    chat_cols = {r[1] for r in conn.execute("PRAGMA table_info(chat)").fetchall()}
+    attachment_cols = {r[1] for r in conn.execute("PRAGMA table_info(attachment)").fetchall()}
     return {
         'has_attributed_body':   'attributedBody'     in msg_cols,
         'has_payload_data':      'payload_data'       in msg_cols,
@@ -41,8 +49,25 @@ def detect_message_schema(conn: sqlite3.Connection) -> dict:
         'has_share_status':      'share_status'       in msg_cols,
         'has_share_direction':   'share_direction'    in msg_cols,
         'has_uncanonicalized':   'uncanonicalized_id' in handle_cols,
+        'has_associated_type':   'associated_message_type' in msg_cols,
+        'has_chat_display_name': 'display_name'       in chat_cols,
+        'has_transfer_name':     'transfer_name'      in attachment_cols,
+        'has_total_bytes':       'total_bytes'        in attachment_cols,
         'uses_nanoseconds':      db_uses_nanoseconds(conn),
     }
+
+
+def is_legacy_sms_db(conn: sqlite3.Connection) -> bool:
+    """True for an sms.db from iOS 5 or earlier, which has no chat_message_join.
+
+    iOS 6 rebuilt sms.db around chats and handles (the schema iOS still
+    uses); before that, messages hung off msg_group, which this library
+    doesn't read.
+    """
+    tables = {r[0] for r in conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table'"
+    ).fetchall()}
+    return "chat_message_join" not in tables
 
 
 def detect_call_schema(conn: sqlite3.Connection) -> dict:
