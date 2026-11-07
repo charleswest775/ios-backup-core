@@ -14,6 +14,7 @@ import plistlib
 import sqlite3
 import sys
 import tempfile
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -156,7 +157,8 @@ def messages(request):
         extractor = MessageExtractor()
         try:
             result = extractor.get_messages(_FakeBackup(sms_path), chat_id=1, contacts=CONTACTS, limit=100)
-            columns = {r[1] for r in sqlite3.connect(sms_path).execute("PRAGMA table_info(message)")}
+            with closing(sqlite3.connect(sms_path)) as conn:
+                columns = {r[1] for r in conn.execute("PRAGMA table_info(message)")}
         finally:
             for conn in extractor._connections.values():
                 conn.close()
