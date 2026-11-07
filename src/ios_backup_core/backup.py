@@ -638,3 +638,9 @@ class BackupReader:
         extractor = VoicemailExtractor()
         contacts = self.contacts()
         return extractor.list_voicemails(self._accessor, contacts)
+
+    def podcasts(self):
+        """List podcast subscriptions."""
+        from ios_backup_core.extractors.podcasts import PodcastExtractor
+        extractor = PodcastExtractor()
+        return extractor.list_podcasts(self._accessor)
