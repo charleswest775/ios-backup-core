@@ -17,6 +17,10 @@ LegacyEncryptedBackup offers the two methods of
 ``iphone_backup_decrypt.EncryptedBackup`` this library and OpenExtract use,
 ``extract_file`` and ``manifest_db_cursor``, so it slots in as a
 LocalBackupAccessor's ``decrypted_backup``.
+
+iOS 10.0 and 10.1 sit in between: Manifest.db, encrypted as later, but the
+older keybag. For those, passphrase_key_without_dpsl derives the key and
+iphone-backup-decrypt does the rest.
 """
 
 from __future__ import annotations
@@ -105,8 +109,8 @@ class LegacyKeybag:
             self.class_keys[current[b"CLAS"]] = current
         self._keys: dict = {}
 
-    def unlock(self, passphrase: str) -> None:
-        """Unwrap the class keys. Raises IncorrectPassphraseError if *passphrase* is wrong."""
+    def passphrase_key(self, passphrase: str) -> bytes:
+        """The key that wraps the class keys. Raises ValueError if the keybag is damaged."""
         salt, iterations = self.attrs.get(b"SALT"), self.attrs.get(b"ITER")
         if not isinstance(salt, bytes) or not isinstance(iterations, int) or not 0 < iterations <= _MAX_ITERATIONS:
             raise ValueError("the backup's keybag is damaged")
@@ -114,7 +118,11 @@ class LegacyKeybag:
         dpsl, dpic = self.attrs.get(b"DPSL"), self.attrs.get(b"DPIC")
         if isinstance(dpsl, bytes) and isinstance(dpic, int) and 0 < dpic <= 20_000_000:
             secret = hashlib.pbkdf2_hmac("sha256", secret, dpsl, dpic, 32)
-        passcode_key = hashlib.pbkdf2_hmac("sha1", secret, salt, iterations, 32)
+        return hashlib.pbkdf2_hmac("sha1", secret, salt, iterations, 32)
+
+    def unlock(self, passphrase: str) -> None:
+        """Unwrap the class keys. Raises IncorrectPassphraseError if *passphrase* is wrong."""
+        passcode_key = self.passphrase_key(passphrase)
         keys = {}
         for clas, entry in self.class_keys.items():
             wrapped = entry.get(b"WPKY")
@@ -136,6 +144,32 @@ class LegacyKeybag:
         (clas,) = struct.unpack("<l", encryption_key[:4])
         class_key = self._keys.get(clas)
         return aes_unwrap(class_key, encryption_key[4:]) if class_key else None
+
+
+def passphrase_key_without_dpsl(backup_directory: str, passphrase: str) -> Optional[bytes]:
+    """For a backup made by iOS 10.0 or 10.1, the key for iphone-backup-decrypt's ``passphrase_key``.
+
+    Those backups list their files in an encrypted Manifest.db, as later ones
+    do, but their keybag has no DPSL/DPIC yet. iphone-backup-decrypt always
+    runs that round and fails with KeyError: b'DPSL' (b'DPIC' from 0.11), so
+    the key is derived here from SALT/ITER alone and handed over in place of
+    the password.
+
+    Returns None when the keybag has DPSL (iOS 10.2 and later) or Manifest.plist
+    can't be read, so iphone-backup-decrypt takes the password as usual. Raises
+    ValueError if a keybag without DPSL is damaged.
+    """
+    try:
+        with open(os.path.join(backup_directory, "Manifest.plist"), "rb") as f:
+            blob = plistlib.load(f).get("BackupKeyBag")
+    except Exception:
+        return None
+    if not isinstance(blob, bytes):
+        return None
+    keybag = LegacyKeybag(blob)
+    if b"DPSL" in keybag.attrs:
+        return None
+    return keybag.passphrase_key(passphrase)
 
 
 class LegacyEncryptedBackup:

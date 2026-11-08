@@ -2,6 +2,14 @@
 
     python -m backupgen legacy --ios 9.3.5 --out build/
     python -m backupgen legacy --ios 6.1.6 --password test --out build/
+    python -m backupgen legacy --ios 10.1.1 --password test --out build/
+
+iOS 10.0 and 10.1 sit in between: Manifest.db (encrypted with ManifestKey)
+and files at ``<fileID[:2]>/<fileID>``, as later, but the older keybag, with
+no DPSL/DPIC; iOS 10.2 added those. Their databases are the iOS 9 ones plus
+what iOS 10 added to sms.db (associated_message_type and the rest of the
+tapback and effect columns) and CallHistory.storedata (ZSERVICE_PROVIDER, for
+CallKit).
 
 The rest of backupgen fills table definitions harvested from real iOS 13+
 backups. No iOS 6-9 backup has been harvested, so the databases here come
@@ -37,9 +45,18 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Optional
 
+from backupgen.container import mbfile_record
 from backupgen.crypto import aes_wrap, encrypt_cbc
 
 MBDB_HEADER = b"mbdb\x05\x00"
+# The Files table as in every Manifest.db (see schemas/ios-*/container.json).
+MANIFEST_DB_DDL = """
+    CREATE TABLE Files (fileID TEXT PRIMARY KEY, domain TEXT, relativePath TEXT, flags INTEGER, file BLOB);
+    CREATE INDEX FilesDomainIdx ON Files(domain);
+    CREATE INDEX FilesRelativePathIdx ON Files(relativePath);
+    CREATE INDEX FilesFlagsIdx ON Files(flags);
+    CREATE TABLE Properties (key TEXT PRIMARY KEY, value BLOB);
+"""
 FILE_MODE = 0o100644
 DIR_MODE = 0o40755
 MOBILE_UID = 501
@@ -50,6 +67,7 @@ _DEVICES = {
     7: ("iPhone6,2", "iPhone 5s", "7.1.2", "11D257"),
     8: ("iPhone7,2", "iPhone 6", "8.4.1", "12H321"),
     9: ("iPhone7,2", "iPhone 6", "9.3.5", "13G36"),
+    10: ("iPhone9,3", "iPhone 7", "10.1.1", "14B100"),
 }
 
 
@@ -135,7 +153,7 @@ def legacy_expected(ios: str) -> dict:
         })
     return {
         "ios": ios,
-        "manifest_format": "mbdb",
+        "manifest_format": "db" if major >= 10 else "mbdb",
         "contacts": sorted(" ".join(p for p in (first, last) if p) or org
                            for first, last, org, _, _ in CONTACTS),
         "conversations": conversations,
@@ -189,6 +207,12 @@ def _sms_db(major: int) -> bytes:
     if major >= 8:
         msg_extra += (", is_audio_message INTEGER DEFAULT 0, is_played INTEGER DEFAULT 0,"
                       " date_played INTEGER, attributedBody BLOB")
+    if major >= 10:
+        msg_extra += (", associated_message_guid TEXT, associated_message_type INTEGER DEFAULT 0,"
+                      " balloon_bundle_id TEXT, payload_data BLOB, expressive_send_style_id TEXT,"
+                      " associated_message_range_location INTEGER DEFAULT 0,"
+                      " associated_message_range_length INTEGER DEFAULT 0,"
+                      " time_expressive_send_played INTEGER DEFAULT 0, message_summary_info BLOB")
     script = f"""
         CREATE TABLE _SqliteDatabaseProperties (key TEXT, value TEXT, UNIQUE(key));
         CREATE TABLE handle (ROWID INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, id TEXT NOT NULL,
@@ -325,25 +349,30 @@ def _call_history_db() -> bytes:
     return _sqlite_bytes(script, rows)
 
 
-def _call_history_storedata() -> bytes:
-    """CallHistory.storedata, iOS 8 and 9: Core Data, Apple dates, no ZSERVICE_PROVIDER yet."""
-    script = """
+def _call_history_storedata(major: int) -> bytes:
+    """CallHistory.storedata, iOS 8 and later: Core Data, Apple dates; ZSERVICE_PROVIDER from iOS 10."""
+    provider_column = ", ZSERVICE_PROVIDER VARCHAR" if major >= 10 else ""
+    script = f"""
         CREATE TABLE ZCALLRECORD (Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER,
             ZANSWERED INTEGER, ZCALLTYPE INTEGER, ZDISCONNECTED_CAUSE INTEGER, ZFACE_TIME_DATA INTEGER,
             ZNUMBER_AVAILABILITY INTEGER, ZORIGINATED INTEGER, ZREAD INTEGER, ZDATE TIMESTAMP,
             ZDURATION FLOAT, ZADDRESS VARCHAR, ZDEVICE_ID VARCHAR, ZISO_COUNTRY_CODE VARCHAR,
-            ZNAME VARCHAR, ZUNIQUE_ID VARCHAR);
+            ZNAME VARCHAR, ZUNIQUE_ID VARCHAR{provider_column});
         CREATE TABLE Z_PRIMARYKEY (Z_ENT INTEGER PRIMARY KEY, Z_NAME VARCHAR, Z_SUPER INTEGER, Z_MAX INTEGER);
         CREATE TABLE Z_METADATA (Z_VERSION INTEGER PRIMARY KEY, Z_UUID VARCHAR(255), Z_PLIST BLOB);
         INSERT INTO Z_PRIMARYKEY VALUES (1, 'CallRecord', 0, 4);
     """
-    rows = [
-        ("INSERT INTO ZCALLRECORD (Z_PK, Z_ENT, Z_OPT, ZANSWERED, ZCALLTYPE, ZORIGINATED, ZREAD, ZDATE,"
-         " ZDURATION, ZADDRESS, ZISO_COUNTRY_CODE, ZNAME, ZUNIQUE_ID) VALUES (?, 1, 1, ?, ?, ?, 1, ?, ?, ?, ?, '', ?)",
-         (pk, int(bool(duration) and not outgoing), 8 if facetime else 1, int(outgoing), _cocoa(when),
-          float(duration), address.encode("utf-8"), "gb", str(uuid.UUID(int=pk)).upper()))
-        for pk, (address, when, duration, outgoing, facetime) in enumerate(CALLS, 1)
-    ]
+    rows: list = []
+    for pk, (address, when, duration, outgoing, facetime) in enumerate(CALLS, 1):
+        cols = ["Z_PK", "Z_ENT", "Z_OPT", "ZANSWERED", "ZCALLTYPE", "ZORIGINATED", "ZREAD", "ZDATE", "ZDURATION",
+                "ZADDRESS", "ZISO_COUNTRY_CODE", "ZNAME", "ZUNIQUE_ID"]
+        vals = [pk, 1, 1, int(bool(duration) and not outgoing), 8 if facetime else 1, int(outgoing), 1,
+                _cocoa(when), float(duration), address.encode("utf-8"), "gb", "", str(uuid.UUID(int=pk)).upper()]
+        if major >= 10:
+            cols.append("ZSERVICE_PROVIDER")
+            vals.append("com.apple.FaceTime" if facetime else "com.apple.Telephony")
+        rows.append((f"INSERT INTO ZCALLRECORD ({', '.join(cols)}) VALUES ({', '.join('?' * len(cols))})",
+                     tuple(vals)))
     return _sqlite_bytes(script, rows)
 
 
@@ -443,7 +472,7 @@ def mbdb_record(domain: str, relative_path: str, *, mode: int, inode: int, size:
 
 
 class _LegacyKeybag:
-    """A keybag as iOS 9 and earlier wrote it: class keys wrapped with PBKDF2-SHA1(password, SALT, ITER) only."""
+    """A keybag as iOS 10.1 and earlier wrote it: class keys wrapped with PBKDF2-SHA1(password, SALT, ITER) only."""
 
     def __init__(self, rng: random.Random, password: Optional[str]):
         self.salt = rng.randbytes(20)
@@ -478,8 +507,13 @@ class LegacyBackupWriter:
     device_name: str = "Sam's iPhone"
 
     def __post_init__(self):
+        version = tuple(int(part) for part in self.ios.split(".")[:2])
+        if version >= (10, 2):
+            raise ValueError(f"iOS {self.ios} backups have DPSL in their keybag; backupgen.generate writes those")
         self.rng = random.Random(self.seed)
-        self.major = int(self.ios.split(".")[0])
+        self.major = version[0]
+        # iOS 10.0 and 10.1: Manifest.db, still with the older keybag.
+        self.manifest_db = self.major >= 10
         self.product_type, self.product_name, _, self.build = _DEVICES.get(self.major, _DEVICES[9])
         self.udid = "".join(self.rng.choice("0123456789abcdef") for _ in range(40))
         self._entries: dict = {}
@@ -496,6 +530,22 @@ class LegacyBackupWriter:
         backup_dir = Path(self.out_dir) / self.udid
         backup_dir.mkdir(parents=True, exist_ok=False)
         keybag = _LegacyKeybag(self.rng, self.password)
+        manifest_key = None
+        if self.manifest_db:
+            manifest_key = self._write_manifest_db(backup_dir, keybag)
+        else:
+            self._write_mbdb(backup_dir, keybag)
+        self._write_plists(backup_dir, keybag, manifest_key)
+        return backup_dir
+
+    def _stored(self, keybag: _LegacyKeybag, data: bytes, pclass: int) -> tuple:
+        """The bytes to store for a file, and its wrapped key (None when the backup isn't encrypted)."""
+        if self.password is None:
+            return data, None
+        key = self.rng.randbytes(32)
+        return encrypt_cbc(key, data), keybag.wrap_key(pclass, key)
+
+    def _write_mbdb(self, backup_dir: Path, keybag: _LegacyKeybag) -> None:
         stamp = int(self.backup_date.timestamp())
         inode = 200_000
         records = [MBDB_HEADER]
@@ -503,22 +553,46 @@ class LegacyBackupWriter:
             inode += 1
             wrapped = digest = b""
             if mode == FILE_MODE:
-                stored = data
-                if self.password is not None:
-                    key = self.rng.randbytes(32)
-                    stored = encrypt_cbc(key, data)
-                    wrapped = keybag.wrap_key(pclass, key)
+                stored, wrapped = self._stored(keybag, data, pclass)
                 digest = hashlib.sha1(stored).digest()
                 # Flat: <fileID>, no <fileID[:2]> folder.
                 (backup_dir / file_id(domain, relative_path)).write_bytes(stored)
             records.append(mbdb_record(domain, relative_path, mode=mode, inode=inode, size=len(data), stamp=stamp,
-                                       data_hash=digest, encryption_key=wrapped, protection_class=pclass,
+                                       data_hash=digest, encryption_key=wrapped or b"", protection_class=pclass,
                                        properties=properties))
         (backup_dir / "Manifest.mbdb").write_bytes(b"".join(records))
-        self._write_plists(backup_dir, keybag)
-        return backup_dir
 
-    def _write_plists(self, backup_dir: Path, keybag: _LegacyKeybag) -> None:
+    def _write_manifest_db(self, backup_dir: Path, keybag: _LegacyKeybag) -> Optional[bytes]:
+        """iOS 10.0 and 10.1: Manifest.db and <fileID[:2]>/<fileID>. Returns the wrapped ManifestKey, if encrypted."""
+        stamp = int(self.backup_date.timestamp())
+        inode = 200_000
+        manifest_db = backup_dir / "Manifest.db"
+        conn = sqlite3.connect(manifest_db)
+        conn.executescript(MANIFEST_DB_DDL)
+        for (domain, relative_path), (mode, data, pclass, _) in sorted(self._entries.items()):
+            inode += 1
+            fid = file_id(domain, relative_path)
+            wrapped = digest = None
+            if mode == FILE_MODE:
+                stored, wrapped = self._stored(keybag, data, pclass)
+                if wrapped is not None:
+                    digest = hashlib.sha1(stored).digest()
+                target = backup_dir / fid[:2] / fid
+                target.parent.mkdir(exist_ok=True)
+                target.write_bytes(stored)
+            record = mbfile_record(relative_path, mode=mode, size=len(data), protection_class=pclass, inode=inode,
+                                   stamp=stamp, wrapped_key=wrapped, digest=digest)
+            conn.execute("INSERT INTO Files (fileID, domain, relativePath, flags, file) VALUES (?, ?, ?, ?, ?)",
+                         (fid, domain, relative_path, 1 if mode == FILE_MODE else 2, record))
+        conn.commit()
+        conn.close()
+        if self.password is None:
+            return None
+        key = self.rng.randbytes(32)
+        manifest_db.write_bytes(encrypt_cbc(key, manifest_db.read_bytes()))
+        return keybag.wrap_key(3, key)
+
+    def _write_plists(self, backup_dir: Path, keybag: _LegacyKeybag, manifest_key: Optional[bytes]) -> None:
         when = self.backup_date.astimezone(timezone.utc).replace(tzinfo=None)  # plists store UTC
         serial = "SYN" + "".join(self.rng.choice("0123456789ABCDEFGHJKLMNPQRSTUVWXYZ") for _ in range(9))
         lockdown = {"BuildVersion": self.build, "DeviceName": self.device_name, "ProductType": self.product_type,
@@ -526,8 +600,11 @@ class LegacyBackupWriter:
         manifest = {
             "Applications": {}, "BackupKeyBag": keybag.blob, "Date": when,
             "IsEncrypted": self.password is not None, "Lockdown": lockdown,
-            "SystemDomainsVersion": f"{self.major + 11}.0", "Version": "9.1", "WasPasscodeSet": True,
+            "SystemDomainsVersion": f"{self.major + 11}.0", "Version": "10.0" if self.manifest_db else "9.1",
+            "WasPasscodeSet": True,
         }
+        if manifest_key is not None:
+            manifest["ManifestKey"] = manifest_key
         info = {
             "Build Version": self.build, "Device Name": self.device_name, "Display Name": self.device_name,
             "GUID": "".join(self.rng.choice("0123456789ABCDEF") for _ in range(32)),
@@ -539,7 +616,8 @@ class LegacyBackupWriter:
             "iTunes Files": {}, "iTunes Settings": {}, "iTunes Version": "12.5.1",
         }
         status = {"BackupState": "new", "Date": when, "IsFullBackup": False, "SnapshotState": "finished",
-                  "UUID": str(uuid.UUID(bytes=self.rng.randbytes(16))).upper(), "Version": "2.4"}
+                  "UUID": str(uuid.UUID(bytes=self.rng.randbytes(16))).upper(),
+                  "Version": "3.0" if self.manifest_db else "2.4"}
         for name, payload, fmt in (("Manifest.plist", manifest, plistlib.FMT_BINARY),
                                    ("Info.plist", info, plistlib.FMT_XML),
                                    ("Status.plist", status, plistlib.FMT_BINARY)):
@@ -547,7 +625,7 @@ class LegacyBackupWriter:
 
 
 def generate_legacy(out_dir: Path, *, ios: str = "9.3.5", password: Optional[str] = None, seed: int = 0) -> Path:
-    """Write the legacy backup for *ios* (6.x to 9.x) into *out_dir*, plus expected.json. Returns the backup folder."""
+    """Write the legacy backup for *ios* (6.x to 10.1) into *out_dir*, plus expected.json. Returns the backup folder."""
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     writer = LegacyBackupWriter(out_dir, ios=ios, password=password, seed=seed)
@@ -555,7 +633,7 @@ def generate_legacy(out_dir: Path, *, ios: str = "9.3.5", password: Optional[str
     writer.add_file("HomeDomain", "Library/SMS/sms.db", _sms_db(major))
     writer.add_file("HomeDomain", "Library/AddressBook/AddressBook.sqlitedb", _address_book())
     if major >= 8:
-        writer.add_file("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata", _call_history_storedata())
+        writer.add_file("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata", _call_history_storedata(major))
     else:
         writer.add_file("WirelessDomain", "Library/CallHistory/call_history.db", _call_history_db())
     writer.add_file("CameraRollDomain", "Media/PhotoData/Photos.sqlite", _photos_sqlite(major))
