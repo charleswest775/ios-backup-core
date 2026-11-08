@@ -1,6 +1,8 @@
 """Tests for ios_backup_core.legacy_crypto: the encryption of backups made by iOS 9 and earlier."""
 
+import hashlib
 import os
+import plistlib
 import random
 import struct
 import sys
@@ -11,13 +13,14 @@ ROOT = os.path.join(os.path.dirname(__file__), "..")
 sys.path.insert(0, os.path.join(ROOT, "src"))
 sys.path.insert(0, ROOT)
 
-from backupgen.crypto import aes_wrap, encrypt_cbc  # noqa: E402
+from backupgen.crypto import Keybag, aes_wrap, encrypt_cbc  # noqa: E402
 from backupgen.legacy import _LegacyKeybag  # noqa: E402
 from ios_backup_core.legacy_crypto import (  # noqa: E402
     IncorrectPassphraseError,
     LegacyEncryptedBackup,
     LegacyKeybag,
     aes_unwrap,
+    passphrase_key_without_dpsl,
 )
 
 KEK = bytes.fromhex("000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F")
@@ -45,6 +48,18 @@ def test_keybag_unlocks_with_the_password_only():
     file_key = os.urandom(32)
     assert keybag.unwrap_file_key(keybag_out.wrap_key(3, file_key)) == file_key
     assert keybag.unwrap_file_key(struct.pack("<l", 99) + aes_wrap(KEK, file_key)) is None
+
+
+def test_only_a_keybag_without_dpsl_gets_a_key_derived(tmp_path):
+    # iOS 10.0 and 10.1: Manifest.db, but this older keybag.
+    assert passphrase_key_without_dpsl(str(tmp_path), "secret") is None  # no Manifest.plist
+    old = _LegacyKeybag(random.Random(3), "secret")
+    (tmp_path / "Manifest.plist").write_bytes(plistlib.dumps({"BackupKeyBag": old.blob}))
+    assert passphrase_key_without_dpsl(str(tmp_path), "secret") == \
+        hashlib.pbkdf2_hmac("sha1", b"secret", old.salt, old.iter, 32)
+    modern = Keybag(random.Random(3), {"classes": [{"CLAS": 3, "WRAP": 3}]}, "secret")
+    (tmp_path / "Manifest.plist").write_bytes(plistlib.dumps({"BackupKeyBag": modern.blob}))
+    assert passphrase_key_without_dpsl(str(tmp_path), "secret") is None
 
 
 def test_a_keybag_with_absurd_iterations_is_refused():

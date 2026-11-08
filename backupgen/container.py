@@ -58,6 +58,36 @@ def load_container_shape(version: str) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def mbfile_record(relative_path: str, *, mode: int, size: int, protection_class: int, inode: int, stamp: int,
+                  wrapped_key: Optional[bytes] = None, digest: Optional[bytes] = None) -> bytes:
+    """A Manifest.db row's ``file`` column: an NSKeyedArchiver ``MBFile``."""
+    top = {
+        "LastModified": stamp,
+        "Flags": 0,
+        "GroupID": MOBILE_UID,
+        "LastStatusChange": stamp,
+        "RelativePath": plistlib.UID(2),
+        "Birth": stamp,
+        "Size": size,
+        "InodeNumber": inode,
+        "Mode": mode,
+        "UserID": MOBILE_UID,
+        "ProtectionClass": protection_class,
+    }
+    objects: list = ["$null", top, relative_path]
+    if digest is not None:
+        top["Digest"] = plistlib.UID(len(objects))
+        objects.append(digest)
+    if wrapped_key is not None:
+        top["EncryptionKey"] = plistlib.UID(len(objects))
+        objects.append({"NS.data": wrapped_key, "$class": plistlib.UID(len(objects) + 1)})
+        objects.append({"$classname": "NSMutableData", "$classes": ["NSMutableData", "NSData", "NSObject"]})
+    top["$class"] = plistlib.UID(len(objects))
+    objects.append({"$classname": "MBFile", "$classes": ["MBFile", "NSObject"]})
+    archive = {"$version": 100000, "$archiver": "NSKeyedArchiver", "$top": {"root": plistlib.UID(1)}, "$objects": objects}
+    return plistlib.dumps(archive, fmt=plistlib.FMT_BINARY, sort_keys=False)
+
+
 @dataclass
 class Device:
     """Identity of the backed-up phone. Identifiers are obviously synthetic (serials start with SYN)."""
@@ -146,31 +176,9 @@ class BackupWriter:
     # ── records ──────────────────────────────────────────────────────────────
 
     def _mbfile(self, entry: _Entry, inode: int, stamp: int, wrapped_key: Optional[bytes], digest: Optional[bytes]) -> bytes:
-        top = {
-            "LastModified": stamp,
-            "Flags": 0,
-            "GroupID": MOBILE_UID,
-            "LastStatusChange": stamp,
-            "RelativePath": plistlib.UID(2),
-            "Birth": stamp,
-            "Size": len(entry.data),
-            "InodeNumber": inode,
-            "Mode": entry.mode,
-            "UserID": MOBILE_UID,
-            "ProtectionClass": entry.protection_class,
-        }
-        objects: list = ["$null", top, entry.relative_path]
-        if digest is not None:
-            top["Digest"] = plistlib.UID(len(objects))
-            objects.append(digest)
-        if wrapped_key is not None:
-            top["EncryptionKey"] = plistlib.UID(len(objects))
-            objects.append({"NS.data": wrapped_key, "$class": plistlib.UID(len(objects) + 1)})
-            objects.append({"$classname": "NSMutableData", "$classes": ["NSMutableData", "NSData", "NSObject"]})
-        top["$class"] = plistlib.UID(len(objects))
-        objects.append({"$classname": "MBFile", "$classes": ["MBFile", "NSObject"]})
-        archive = {"$version": 100000, "$archiver": "NSKeyedArchiver", "$top": {"root": plistlib.UID(1)}, "$objects": objects}
-        return plistlib.dumps(archive, fmt=plistlib.FMT_BINARY, sort_keys=False)
+        return mbfile_record(entry.relative_path, mode=entry.mode, size=len(entry.data),
+                             protection_class=entry.protection_class, inode=inode, stamp=stamp,
+                             wrapped_key=wrapped_key, digest=digest)
 
     # ── writing ──────────────────────────────────────────────────────────────
 

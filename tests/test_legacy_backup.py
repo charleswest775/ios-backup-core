@@ -8,12 +8,19 @@ layouts: its iOS 6 sms.db has no associated_message_type, chat.display_name or
 attachment.transfer_name; call history is call_history.db (Unix dates, a flags
 field) before iOS 8; Photos.sqlite has no ZTRASHEDSTATE before iOS 8; notes are
 HTML in notes.sqlite before iOS 9.
+
+iOS 10.0 and 10.1 backups use Manifest.db but still the older keybag, without
+DPSL/DPIC (openextract issue #107: "Failed to decrypt backup: b'DPSL'"). Their
+key is derived by legacy_crypto and handed to iphone-backup-decrypt.
 """
 
 import json
 import os
+import plistlib
 import sqlite3
+import struct
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pytest
@@ -22,7 +29,9 @@ ROOT = os.path.join(os.path.dirname(__file__), "..")
 sys.path.insert(0, os.path.join(ROOT, "src"))
 sys.path.insert(0, ROOT)
 
+from backupgen.container import BackupWriter, Device  # noqa: E402
 from backupgen.legacy import generate_legacy  # noqa: E402
+from ios_backup_core import backup as backup_module  # noqa: E402
 from ios_backup_core.backup import (  # noqa: E402
     DAMAGED_MBDB_MESSAGE,
     BackupReader,
@@ -34,11 +43,14 @@ from ios_backup_core.backup import (  # noqa: E402
 from ios_backup_core.contacts import ContactResolver  # noqa: E402
 from ios_backup_core.extractors.messages import MessageExtractor  # noqa: E402
 from ios_backup_core.extractors.photos import PhotoExtractor  # noqa: E402
+from ios_backup_core.legacy_crypto import LegacyKeybag  # noqa: E402
 
 PASSWORD = "test"
-# (iOS version, password): every release unencrypted, the oldest and newest encrypted.
+# (iOS version, password): every release unencrypted, the oldest and newest encrypted,
+# and iOS 10.1 (Manifest.db with the older keybag) both ways.
 BACKUPS = [("6.1.6", None), ("7.1.2", None), ("8.4.1", None), ("9.3.5", None),
-           ("6.1.6", PASSWORD), ("9.3.5", PASSWORD)]
+           ("6.1.6", PASSWORD), ("9.3.5", PASSWORD), ("10.1.1", None), ("10.1.1", PASSWORD)]
+SMS_DB_ID = "3d0d7e5fb2ce288813306e4d4636395e047a3d28"
 
 
 @pytest.fixture(scope="module", params=BACKUPS, ids=lambda b: f"{b[0]}-{'encrypted' if b[1] else 'plain'}")
@@ -55,18 +67,19 @@ def legacy(request, tmp_path_factory):
 def test_backup_info_comes_from_the_same_plists(legacy):
     backup_dir, expected, reader = legacy
     info = reader._accessor.info
-    assert info["manifest_format"] == "mbdb"
+    assert info["manifest_format"] == expected["manifest_format"]
     assert info["product_version"] == expected["ios"]
     assert info["device_name"] == "Sam's iPhone"
     assert info["encrypted"] is reader._accessor.encrypted
     assert info["udid"].lower() == backup_dir.name
     assert info["last_backup"].startswith("2016-09-10T18:30:00")
-    assert manifest_format(str(backup_dir)) == "mbdb"
+    assert manifest_format(str(backup_dir)) == expected["manifest_format"]
 
 
-def test_files_are_found_flat_in_the_folder(legacy):
-    backup_dir, _, reader = legacy
-    stored = backup_dir / "3d0d7e5fb2ce288813306e4d4636395e047a3d28"
+def test_files_are_found_where_the_backup_keeps_them(legacy):
+    backup_dir, expected, reader = legacy
+    flat = expected["manifest_format"] == "mbdb"
+    stored = backup_dir / SMS_DB_ID if flat else backup_dir / SMS_DB_ID[:2] / SMS_DB_ID
     path = reader._accessor.get_file("Library/SMS/sms.db")
     if reader._accessor.encrypted:
         assert Path(path).read_bytes()[:16] == b"SQLite format 3\x00"
@@ -74,10 +87,11 @@ def test_files_are_found_flat_in_the_folder(legacy):
     else:
         assert path == str(stored)
     assert reader._accessor.get_file("Library/Nope.db") is None
-    assert not any(p.is_dir() for p in backup_dir.iterdir())
+    if flat:
+        assert not any(p.is_dir() for p in backup_dir.iterdir())
 
 
-def test_list_files_reads_the_mbdb(legacy):
+def test_list_files_reads_the_manifest(legacy):
     _, expected, reader = legacy
     dcim = reader._accessor.list_files(domain="CameraRollDomain", path_like="Media/DCIM/%")
     files = {f["path"] for f in dcim}
@@ -191,6 +205,64 @@ def test_an_encrypted_legacy_backup_needs_the_right_password(tmp_path):
     accessor = open_local_backup(str(backup_dir), password=PASSWORD)
     assert accessor.encrypted
     accessor.cleanup()
+
+
+def test_an_encrypted_ios10_backup_needs_the_right_password(tmp_path):
+    backup_dir = generate_legacy(tmp_path, ios="10.1.1", password=PASSWORD)
+    manifest = plistlib.loads((backup_dir / "Manifest.plist").read_bytes())
+    assert b"DPSL" not in LegacyKeybag(manifest["BackupKeyBag"]).attrs
+    assert "ManifestKey" in manifest
+    assert (backup_dir / "Manifest.db").read_bytes()[:16] != b"SQLite format 3\x00"
+    info = _read_backup_info(str(backup_dir))
+    assert (info["encrypted"], info["manifest_format"]) == (True, "db")
+    with pytest.raises(ValueError, match="encrypted"):
+        open_local_backup(str(backup_dir))
+    # The same words as for a wrong password on any other encrypted backup.
+    with pytest.raises(ValueError, match=r"^Failed to decrypt backup: Failed to decrypt keys: incorrect passphrase\?$"):
+        open_local_backup(str(backup_dir), password="wrong")
+    accessor = open_local_backup(str(backup_dir), password=PASSWORD)
+    assert type(accessor._decrypted_backup).__name__ == "EncryptedBackup"
+    assert len(accessor.list_files(domain="CameraRollDomain", path_like="Media/DCIM/%")) == 3
+    accessor.cleanup()
+
+
+def test_only_a_keybag_without_dpsl_gets_its_key_derived_here(tmp_path, monkeypatch):
+    """A keybag with DPSL (iOS 10.2 and later) still goes to iphone-backup-decrypt with the password."""
+    calls = []
+    real = backup_module.EncryptedBackup
+
+    def recording(**kwargs):
+        calls.append(sorted(kwargs))
+        return real(**kwargs)
+
+    monkeypatch.setattr(backup_module, "EncryptedBackup", recording)
+    ios10 = generate_legacy(tmp_path / "ios10", ios="10.1.1", password=PASSWORD)
+    device = Device(name="Test iPhone", product_type="iPhone12,1", product_name="iPhone 11",
+                    ios="15.3.1", build="19D52", phone_number="+44 7700 900001")
+    writer = BackupWriter(tmp_path / "ios15", device, datetime(2022, 3, 2, tzinfo=timezone.utc), "15.3.1",
+                          password=PASSWORD, seed=1)
+    writer.add_file("HomeDomain", "Library/SMS/sms.db", b"x" * 100)
+    ios15 = writer.finalize()
+    for backup_dir in (ios10, ios15):
+        open_local_backup(str(backup_dir), password=PASSWORD).cleanup()
+    assert calls == [["backup_directory", "passphrase_key"], ["backup_directory", "passphrase"]]
+
+
+def test_a_damaged_ios10_keybag_says_so(tmp_path):
+    backup_dir = generate_legacy(tmp_path, ios="10.1.1", password=PASSWORD)
+    path = backup_dir / "Manifest.plist"
+    manifest = plistlib.loads(path.read_bytes())
+    blob = manifest["BackupKeyBag"]
+    at = blob.index(b"ITER") + 8
+    manifest["BackupKeyBag"] = blob[:at] + struct.pack(">L", 4_000_000_000) + blob[at + 4:]
+    path.write_bytes(plistlib.dumps(manifest, fmt=plistlib.FMT_BINARY))
+    with pytest.raises(ValueError, match="keybag is damaged"):
+        open_local_backup(str(backup_dir), password=PASSWORD)
+
+
+def test_backupgen_leaves_ios_10_2_and_later_to_generate(tmp_path):
+    with pytest.raises(ValueError, match="DPSL"):
+        generate_legacy(tmp_path, ios="10.2")
 
 
 def test_a_damaged_mbdb_in_an_encrypted_backup_says_so(tmp_path):

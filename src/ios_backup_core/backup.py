@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Optional, Protocol, runtime_checkable
 
 from ios_backup_core.db import connect_readonly
-from ios_backup_core.legacy_crypto import LegacyEncryptedBackup
+from ios_backup_core.legacy_crypto import LegacyEncryptedBackup, passphrase_key_without_dpsl
 from ios_backup_core.mbdb import MbdbError, build_files_db
 
 # iphone_backup_decrypt is a soft dependency — only needed for encrypted backups.
@@ -469,7 +469,9 @@ def open_local_backup(
 
     A backup made by iOS 9 or earlier (Manifest.mbdb) is decrypted by
     ios_backup_core.legacy_crypto, since iphone-backup-decrypt reads only the
-    encryption of iOS 10.2 and later.
+    encryption of iOS 10.2 and later. For one made by iOS 10.0 or 10.1,
+    legacy_crypto derives the key from the password and iphone-backup-decrypt
+    decrypts with it.
 
     Raises:
         ValueError — backup_dir does not contain a valid backup, or
@@ -522,10 +524,19 @@ def open_local_backup(
                 "Run: pip install iphone-backup-decrypt"
             )
         try:
-            decrypted_backup = EncryptedBackup(
-                backup_directory=backup_dir,
-                passphrase=password,
-            )
+            # iOS 10.0 and 10.1 keybags predate the DPSL round iphone-backup-decrypt
+            # always runs, so their key is derived here instead.
+            passphrase_key = passphrase_key_without_dpsl(backup_dir, password)
+            if passphrase_key is None:
+                decrypted_backup = EncryptedBackup(
+                    backup_directory=backup_dir,
+                    passphrase=password,
+                )
+            else:
+                decrypted_backup = EncryptedBackup(
+                    backup_directory=backup_dir,
+                    passphrase_key=passphrase_key,
+                )
             # Validate passphrase early
             with decrypted_backup.manifest_db_cursor() as cur:
                 cur.execute("SELECT COUNT(*) FROM Files")
