@@ -18,8 +18,11 @@ the published layouts of those releases. They model what changed (sms.db had
 no associated_message_type before iOS 10, and the oldest had no
 chat.display_name, attachment.transfer_name or attributedBody either; call
 history before iOS 8 is call_history.db with Unix dates; notes before iOS 9 are
-HTML in notes.sqlite), not every column of the real files, and which release
-dropped which sms.db column is approximate.
+HTML in notes.sqlite; iOS 6's Photos.sqlite declares ZGENERICASSET.ZUUID as a
+BLOB, as a published schema dump from iOS 6.1.3 shows, where iOS 7 and later
+declare it VARCHAR, so iOS 6 assets get their UUID as 16 raw bytes), not every
+column of the real files, and which release dropped which sms.db column is
+approximate.
 
 Every backup holds the same small, fictional history: three contacts, three
 conversations (one with a photo attachment), four calls, three photos in an
@@ -167,8 +170,9 @@ def legacy_expected(ios: str) -> dict:
         ],
         "photos": [
             {"filename": name, "relative_path": f"Media/DCIM/100APPLE/{name}", "date_created": when.isoformat(),
-             "latitude": loc[0] if loc else None, "longitude": loc[1] if loc else None, "album": album}
-            for name, when, loc, album in PHOTOS
+             "latitude": loc[0] if loc else None, "longitude": loc[1] if loc else None, "album": album,
+             "uuid": str(uuid.UUID(int=pk)).upper()}
+            for pk, (name, when, loc, album) in enumerate(PHOTOS, 1)
         ],
         "notes": [
             {"title": title, "created": created.isoformat(), "modified": modified.isoformat()}
@@ -376,15 +380,22 @@ def _call_history_storedata(major: int) -> bytes:
     return _sqlite_bytes(script, rows)
 
 
+def _asset_uuid(pk: int, major: int):
+    """An asset's ZUUID: 16 raw bytes on iOS 6 (a BLOB column there), the uppercase string later."""
+    asset_uuid = uuid.UUID(int=pk)
+    return asset_uuid.bytes if major < 7 else str(asset_uuid).upper()
+
+
 def _photos_sqlite(major: int) -> bytes:
     asset_extra = ", ZFAVORITE INTEGER, ZHIDDEN INTEGER, ZTRASHEDSTATE INTEGER, ZTRASHEDDATE TIMESTAMP" \
         if major >= 8 else ""
+    uuid_type = "BLOB" if major < 7 else "VARCHAR"
     script = f"""
         CREATE TABLE Z_PRIMARYKEY (Z_ENT INTEGER PRIMARY KEY, Z_NAME VARCHAR, Z_SUPER INTEGER, Z_MAX INTEGER);
         CREATE TABLE ZGENERICASSET (Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER,
             ZCOMPLETE INTEGER, ZHEIGHT INTEGER, ZKIND INTEGER, ZORIENTATION INTEGER, ZWIDTH INTEGER,
             ZDATECREATED TIMESTAMP, ZMODIFICATIONDATE TIMESTAMP, ZDURATION FLOAT, ZLATITUDE FLOAT,
-            ZLONGITUDE FLOAT, ZDIRECTORY VARCHAR, ZFILENAME VARCHAR, ZUUID VARCHAR{asset_extra});
+            ZLONGITUDE FLOAT, ZDIRECTORY VARCHAR, ZFILENAME VARCHAR, ZUUID {uuid_type}{asset_extra});
         CREATE TABLE ZGENERICALBUM (Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZKIND INTEGER,
             ZTITLE VARCHAR, ZUUID VARCHAR);
         CREATE TABLE Z_8ASSETS (Z_8ALBUMS INTEGER, Z_9ASSETS INTEGER, Z_FOK_9ASSETS INTEGER,
@@ -398,7 +409,7 @@ def _photos_sqlite(major: int) -> bytes:
                 "ZFILENAME", "ZUUID"]
         lat, lon = loc if loc else (-180.0, -180.0)
         vals = [pk, 9, 1, 1, 48, 0, 1, 64, _cocoa(when), _cocoa(when), 0.0, lat, lon, "DCIM/100APPLE", name,
-                str(uuid.UUID(int=pk)).upper()]
+                _asset_uuid(pk, major)]
         if major >= 8:
             cols += ["ZFAVORITE", "ZHIDDEN", "ZTRASHEDSTATE"]
             vals += [0, 0, 0]
