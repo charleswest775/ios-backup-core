@@ -11,12 +11,18 @@ concurrency:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20  # Windows runs the suite several times slower
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest]
         python-version: ['3.10', '3.11', '3.12']
+        include:
+          # Windows is OpenExtract's second platform; it decodes text as cp1252
+          # by default and won't delete a file that is still open.
+          - os: windows-latest
+            python-version: '3.12'
     steps:
       - name: Checkout
         uses: actions/checkout@v5

@@ -123,6 +123,20 @@ class MessageExtractor:
             self._connections[db_path] = conn
         return self._connections[db_path]
 
+    def close(self) -> None:
+        """Close the cached database connections and forget what was read from them.
+
+        Windows can't delete a file that is still open, so call this before
+        removing a temp folder that holds an sms.db this extractor has read.
+        The extractor stays usable: the next call opens a new connection.
+        """
+        connections = list(self._connections.values())
+        self._connections.clear()
+        self._count_cache.clear()
+        self._pragma_cache.clear()
+        for conn in connections:
+            conn.close()
+
     def _schema(self, db_path: str, conn: sqlite3.Connection) -> dict:
         """sms.db's optional columns (see detect_message_schema), read once per database."""
         if db_path not in self._pragma_cache:

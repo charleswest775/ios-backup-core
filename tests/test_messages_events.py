@@ -121,7 +121,7 @@ ROWS = {
 
 
 def _build_sms_db(path: str, version: str, rows: dict) -> None:
-    schema = json.loads((SCHEMAS / version / "sms.db.json").read_text())
+    schema = json.loads((SCHEMAS / version / "sms.db.json").read_text(encoding="utf-8"))
     conn = sqlite3.connect(path)
     for obj in schema["objects"]:
         if obj["type"] == "table" and obj["name"] in TABLES:
@@ -160,8 +160,7 @@ def messages(request):
             with closing(sqlite3.connect(sms_path)) as conn:
                 columns = {r[1] for r in conn.execute("PRAGMA table_info(message)")}
         finally:
-            for conn in extractor._connections.values():
-                conn.close()
+            extractor.close()
         assert "error" not in result
         yield {m["message_id"]: m for m in result["messages"]}, columns
 
@@ -205,8 +204,7 @@ def test_contact_found_by_uncanonicalized_id():
         try:
             msg = extractor.get_messages(_FakeBackup(sms_path), chat_id=1, contacts=contacts)["messages"][0]
         finally:
-            for c in extractor._connections.values():
-                c.close()
+            extractor.close()
     assert msg["event_text"] == "+15550001111 added Theo B to the conversation"
 
 

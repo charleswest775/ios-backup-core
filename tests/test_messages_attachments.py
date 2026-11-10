@@ -5,6 +5,8 @@ import sys
 import os
 import tempfile
 
+import pytest
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from ios_backup_core.extractors.messages import MessageExtractor
@@ -153,7 +155,7 @@ class TestAttachmentClassification:
         self.backup = _FakeBackup(self.sms_path)
 
     def teardown_method(self):
-        self.extractor._connections.clear()
+        self.extractor.close()  # Windows can't delete sms.db while it is open
         self._tmpdir.cleanup()
 
     def _by_id(self):
@@ -191,3 +193,13 @@ class TestAttachmentClassification:
         msg = self._by_id()[40]
         assert msg["message_type"] == "system"
         assert msg["has_attachments"] is False
+
+    def test_close_releases_sms_db_and_the_extractor_still_works(self):
+        self._by_id()
+        (conn,) = self.extractor._connections.values()
+        self.extractor.close()
+        with pytest.raises(sqlite3.ProgrammingError):  # closed
+            conn.execute("SELECT 1")
+        os.replace(self.sms_path, self.sms_path + ".moved")  # Windows refuses this for an open file
+        os.replace(self.sms_path + ".moved", self.sms_path)
+        assert self._by_id()[10]["message_type"] == "attachment"
