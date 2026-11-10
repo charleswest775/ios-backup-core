@@ -1,0 +1,603 @@
+{
+ "database": "LID.sqlite",
+ "ios": "17.3",
+ "build": "21D50",
+ "source": "public backup pub-hickman-17.3 (definitions only)",
+ "harvested": "2026-11-10",
+ "pragmas": {
+  "user_version": 0,
+  "page_size": 4096,
+  "journal_mode": "wal",
+  "auto_vacuum": 2,
+  "encoding": "UTF-8"
+ },
+ "objects": [
+  {
+   "type": "table",
+   "name": "ZWALIDPROPERTIES",
+   "table": "ZWALIDPROPERTIES",
+   "sql": "CREATE TABLE ZWALIDPROPERTIES ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZDISPLAYNAME VARCHAR, ZLID VARCHAR , ZUSERNAME VARCHAR)"
+  },
+  {
+   "type": "table",
+   "name": "ZWALIDTHREADPROPERTIES",
+   "table": "ZWALIDTHREADPROPERTIES",
+   "sql": "CREATE TABLE ZWALIDTHREADPROPERTIES ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZISSHAREDPHONENUMBER INTEGER, ZTHREADJID VARCHAR )"
+  },
+  {
+   "type": "table",
+   "name": "ZWAPHONENUMBERLIDPAIR",
+   "table": "ZWAPHONENUMBERLIDPAIR",
+   "sql": "CREATE TABLE ZWAPHONENUMBERLIDPAIR ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZTIMESTAMP TIMESTAMP, ZLID VARCHAR, ZPHONENUMBER VARCHAR )"
+  },
+  {
+   "type": "table",
+   "name": "ZWASINTEROPINTEGRATORPROPERTIES",
+   "table": "ZWASINTEROPINTEGRATORPROPERTIES",
+   "sql": "CREATE TABLE ZWASINTEROPINTEGRATORPROPERTIES ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZID INTEGER, ZOPTIN INTEGER, ZSTATUS INTEGER, ZICONDIRECTPATH VARCHAR, ZNAME VARCHAR, ZADDITIONAL BLOB , ZUSERIDTYPE INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "Z_METADATA",
+   "table": "Z_METADATA",
+   "sql": "CREATE TABLE Z_METADATA (Z_VERSION INTEGER PRIMARY KEY, Z_UUID VARCHAR(255), Z_PLIST BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "Z_MODELCACHE",
+   "table": "Z_MODELCACHE",
+   "sql": "CREATE TABLE Z_MODELCACHE (Z_CONTENT BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "ZWAZACCOUNT",
+   "table": "ZWAZACCOUNT",
+   "sql": "CREATE TABLE ZWAZACCOUNT ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZCURRENTPHONENUMBERSHARINGSTATE INTEGER, ZSTATE INTEGER, ZCREATEDAT TIMESTAMP, ZDISPLAYNAME VARCHAR, ZIDENTIFIER VARCHAR, ZPHONENUMBER VARCHAR, ZUSERNAME VARCHAR, ZADDITIONALDATA BLOB )"
+  },
+  {
+   "type": "table",
+   "name": "Z_PRIMARYKEY",
+   "table": "Z_PRIMARYKEY",
+   "sql": "CREATE TABLE Z_PRIMARYKEY (Z_ENT INTEGER PRIMARY KEY, Z_NAME VARCHAR, Z_SUPER INTEGER, Z_MAX INTEGER)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WALIDThreadProperties_byThreadJID",
+   "table": "ZWALIDTHREADPROPERTIES",
+   "sql": "CREATE INDEX Z_WALIDThreadProperties_byThreadJID ON ZWALIDTHREADPROPERTIES (ZTHREADJID COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAPhoneNumberLIDPair_byLidIndex",
+   "table": "ZWAPHONENUMBERLIDPAIR",
+   "sql": "CREATE INDEX Z_WAPhoneNumberLIDPair_byLidIndex ON ZWAPHONENUMBERLIDPAIR (ZLID COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAPhoneNumberLIDPair_byPhoneNumberIndex",
+   "table": "ZWAPHONENUMBERLIDPAIR",
+   "sql": "CREATE INDEX Z_WAPhoneNumberLIDPair_byPhoneNumberIndex ON ZWAPHONENUMBERLIDPAIR (ZPHONENUMBER COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WALIDProperties_byLid",
+   "table": "ZWALIDPROPERTIES",
+   "sql": "CREATE INDEX Z_WALIDProperties_byLid ON ZWALIDPROPERTIES (ZLID COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WALIDProperties_byUsername",
+   "table": "ZWALIDPROPERTIES",
+   "sql": "CREATE INDEX Z_WALIDProperties_byUsername ON ZWALIDPROPERTIES (ZUSERNAME COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WASInteropIntegratorProperties_byID",
+   "table": "ZWASINTEROPINTEGRATORPROPERTIES",
+   "sql": "CREATE INDEX Z_WASInteropIntegratorProperties_byID ON ZWASINTEROPINTEGRATORPROPERTIES (ZID COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WASInteropIntegratorProperties_byStatus",
+   "table": "ZWASINTEROPINTEGRATORPROPERTIES",
+   "sql": "CREATE INDEX Z_WASInteropIntegratorProperties_byStatus ON ZWASINTEROPINTEGRATORPROPERTIES (ZSTATUS COLLATE BINARY ASC, ZOPTIN COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WASInteropIntegratorProperties_UNIQUE_id",
+   "table": "ZWASINTEROPINTEGRATORPROPERTIES",
+   "sql": "CREATE UNIQUE INDEX Z_WASInteropIntegratorProperties_UNIQUE_id ON ZWASINTEROPINTEGRATORPROPERTIES (ZID COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAZAccount_byIdentifier",
+   "table": "ZWAZACCOUNT",
+   "sql": "CREATE INDEX Z_WAZAccount_byIdentifier ON ZWAZACCOUNT (ZIDENTIFIER COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAZAccount_byPhoneNumber",
+   "table": "ZWAZACCOUNT",
+   "sql": "CREATE INDEX Z_WAZAccount_byPhoneNumber ON ZWAZACCOUNT (ZPHONENUMBER COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAZAccount_byUsername",
+   "table": "ZWAZACCOUNT",
+   "sql": "CREATE INDEX Z_WAZAccount_byUsername ON ZWAZACCOUNT (ZUSERNAME COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAZAccount_UNIQUE_identifier",
+   "table": "ZWAZACCOUNT",
+   "sql": "CREATE UNIQUE INDEX Z_WAZAccount_UNIQUE_identifier ON ZWAZACCOUNT (ZIDENTIFIER COLLATE BINARY ASC)"
+  }
+ ],
+ "columns": {
+  "ZWALIDPROPERTIES": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDISPLAYNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLID",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZUSERNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ZWALIDTHREADPROPERTIES": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZISSHAREDPHONENUMBER",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTHREADJID",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ZWAPHONENUMBERLIDPAIR": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZTIMESTAMP",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLID",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPHONENUMBER",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ZWASINTEROPINTEGRATORPROPERTIES": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZID",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZOPTIN",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSTATUS",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZICONDIRECTPATH",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZADDITIONAL",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZUSERIDTYPE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_METADATA": [
+   {
+    "name": "Z_VERSION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_UUID",
+    "type": "VARCHAR(255)",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_PLIST",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_MODELCACHE": [
+   {
+    "name": "Z_CONTENT",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "ZWAZACCOUNT": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCURRENTPHONENUMBERSHARINGSTATE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSTATE",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZCREATEDAT",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDISPLAYNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZIDENTIFIER",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPHONENUMBER",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZUSERNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZADDITIONALDATA",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_PRIMARYKEY": [
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_NAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_SUPER",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_MAX",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ]
+ },
+ "shape": {
+  "ZWAPHONENUMBERLIDPAIR": {
+   "Z_PK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_OPT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZTIMESTAMP": {
+    "null_rate": 0.0,
+    "types": [
+     "real"
+    ]
+   },
+   "ZLID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ZPHONENUMBER": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   }
+  },
+  "Z_METADATA": {
+   "Z_VERSION": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_UUID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Z_PLIST": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   }
+  },
+  "Z_MODELCACHE": {
+   "Z_CONTENT": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   }
+  },
+  "Z_PRIMARYKEY": {
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_NAME": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Z_SUPER": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_MAX": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  }
+ },
+ "entities": [
+  {
+   "Z_ENT": 1,
+   "Z_NAME": "WALIDProperties",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 2,
+   "Z_NAME": "WALIDThreadProperties",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 3,
+   "Z_NAME": "WAPhoneNumberLIDPair",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 4,
+   "Z_NAME": "WASInteropIntegratorProperties",
+   "Z_SUPER": 0
+  },
+  {
+   "Z_ENT": 5,
+   "Z_NAME": "WAZAccount",
+   "Z_SUPER": 0
+  }
+ ]
+}
