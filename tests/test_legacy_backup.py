@@ -20,6 +20,7 @@ import plistlib
 import sqlite3
 import struct
 import sys
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -42,7 +43,7 @@ from ios_backup_core.backup import (  # noqa: E402
 )
 from ios_backup_core.contacts import ContactResolver  # noqa: E402
 from ios_backup_core.extractors.messages import MessageExtractor  # noqa: E402
-from ios_backup_core.extractors.photos import PhotoExtractor  # noqa: E402
+from ios_backup_core.extractors.photos import PhotoExtractor, uuid_text  # noqa: E402
 from ios_backup_core.legacy_crypto import LegacyKeybag  # noqa: E402
 
 PASSWORD = "test"
@@ -160,9 +161,12 @@ def test_photos(legacy):
     extractor = PhotoExtractor()
     result = extractor.list_photos(reader._accessor)
     assert "error" not in result
+    # iOS 6 keeps ZUUID as 16 raw bytes; the result must still be plain JSON (OE-26 to OE-28).
+    json.dumps(result)
     got = {p["filename"]: p for p in result["photos"]}
     for want in expected["photos"]:
         photo = got[want["filename"]]
+        assert photo["uuid"] == want["uuid"]
         assert photo["date_created"] == want["date_created"]
         assert photo["latitude"] == want["latitude"]
         assert photo["relative_path"] == want["relative_path"]
@@ -173,6 +177,17 @@ def test_photos(legacy):
     holiday = extractor.list_photos(reader._accessor, album_id=albums["Holiday"]["id"])
     assert {p["filename"] for p in holiday["photos"]} == {p["filename"] for p in expected["photos"]
                                                           if p["album"] == "Holiday"}
+
+
+@pytest.mark.parametrize("value, text", [
+    (uuid.UUID(int=7).bytes, "00000000-0000-0000-0000-000000000007"),
+    (b"6F2C1E0A-1B2C-4D5E-8F90-A1B2C3D4E5F6", "6F2C1E0A-1B2C-4D5E-8F90-A1B2C3D4E5F6"),
+    (b"\xff\x00\x01", "FF0001"),
+    ("6F2C1E0A-1B2C-4D5E-8F90-A1B2C3D4E5F6", "6F2C1E0A-1B2C-4D5E-8F90-A1B2C3D4E5F6"),
+    (None, None),
+])
+def test_a_uuid_column_comes_back_as_text(value, text):
+    assert uuid_text(value) == text
 
 
 def test_notes(legacy):

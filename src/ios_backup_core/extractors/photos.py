@@ -14,6 +14,7 @@ import os
 import re
 import sqlite3
 import sys
+import uuid
 from typing import Optional
 
 from ios_backup_core.db import connect_readonly, get_database
@@ -84,6 +85,26 @@ def _location(latitude, longitude) -> tuple:
     if _NO_LOCATION in (latitude, longitude):
         return None, None
     return latitude, longitude
+
+
+def uuid_text(value) -> Optional[str]:
+    """A UUID column as the uppercase string iOS 7 and later store, whatever its storage class.
+
+    iOS 6's Photos.sqlite declares ZGENERICASSET.ZUUID as a BLOB (iOS 7 made it
+    VARCHAR), and sqlite3 hands a BLOB over as bytes, which a JSON result can't
+    hold: OpenExtract's engine exited on it (in-app reports OE-26 to OE-28).
+    16 bytes are the UUID itself. Other bytes are taken as UTF-8 text when they
+    are that, else given as hex, so the result never carries raw bytes.
+    """
+    if not isinstance(value, (bytes, bytearray, memoryview)):
+        return value
+    raw = bytes(value)
+    if len(raw) == 16:
+        return str(uuid.UUID(bytes=raw)).upper()
+    try:
+        return raw.decode("utf-8").rstrip("\x00")
+    except UnicodeDecodeError:
+        return raw.hex().upper()
 
 
 def _build_dcim_path(directory: str, filename: str) -> str:
@@ -174,7 +195,7 @@ class PhotoExtractor:
         latitude, longitude = _location(_column(row, "ZLATITUDE"), _column(row, "ZLONGITUDE"))
 
         return {
-            "uuid": _column(row, "ZUUID") or "",
+            "uuid": uuid_text(_column(row, "ZUUID")) or "",
             "filename": filename,
             "file_hash": file_hash,
             "kind": kind,
@@ -186,7 +207,7 @@ class PhotoExtractor:
             "favorite": bool(_column(row, "ZFAVORITE")),
             "hidden": bool(_column(row, "ZHIDDEN")),
             "has_adjustments": bool(_column(row, "ZHASADJUSTMENTS")),
-            "burst_uuid": _column(row, "ZAVALANCHEUUID", "ZBURSTUUID"),
+            "burst_uuid": uuid_text(_column(row, "ZAVALANCHEUUID", "ZBURSTUUID")),
             "latitude": latitude,
             "longitude": longitude,
             "album_ids": album_ids,
