@@ -84,6 +84,11 @@ class SchemaDatabase:
         self.conn = sqlite3.connect(self.path)
         self.conn.execute(f"PRAGMA page_size = {schema['pragmas']['page_size']}")
         self.conn.execute(f"PRAGMA auto_vacuum = {schema['pragmas']['auto_vacuum']}")
+        # Each CREATE commits on its own. On Windows every commit is a real disk
+        # flush plus a new journal file for the virus scanner, which made a
+        # Photos.sqlite take 20 s to build. Neither setting changes the file.
+        self.conn.execute("PRAGMA journal_mode = MEMORY")
+        self.conn.execute("PRAGMA synchronous = OFF")
         self._create_tables()
 
     def _create_tables(self) -> None:
