@@ -121,7 +121,7 @@ ROWS = {
 
 
 def _build_sms_db(path: str, version: str, rows: dict) -> None:
-    schema = json.loads((SCHEMAS / version / "sms.db.json").read_text())
+    schema = json.loads((SCHEMAS / version / "sms.db.json").read_text(encoding="utf-8"))
     conn = sqlite3.connect(path)
     for obj in schema["objects"]:
         if obj["type"] == "table" and obj["name"] in TABLES:

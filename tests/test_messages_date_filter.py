@@ -78,7 +78,7 @@ class TestGetMessagesDateFilter:
         self.backup = _FakeBackup(sms_path)
 
     def teardown_method(self):
-        self.extractor._connections.clear()
+        self.extractor.close()  # Windows can't delete sms.db while it is open
         self._tmpdir.cleanup()
 
     def _page(self, offset=0, limit=5, chat_id=CHAT, **dates):

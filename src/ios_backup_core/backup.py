@@ -609,9 +609,12 @@ class BackupReader:
         from ios_backup_core.extractors.messages import MessageExtractor
         extractor = MessageExtractor()
         contacts = self.contacts()
-        if chat_id is not None:
-            return extractor.get_messages(self._accessor, chat_id, contacts, **kwargs)
-        return extractor.list_conversations(self._accessor, contacts)
+        try:
+            if chat_id is not None:
+                return extractor.get_messages(self._accessor, chat_id, contacts, **kwargs)
+            return extractor.list_conversations(self._accessor, contacts)
+        finally:
+            extractor.close()  # so cleanup() can delete a decrypted sms.db on Windows
 
     def calls(self, **kwargs):
         """List call history records."""

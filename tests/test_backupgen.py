@@ -155,7 +155,7 @@ def test_snapshots_only_hold_what_existed_by_their_date(tmp_path):
     counts = {}
     for snapshot in ("ios15", "ios17", "ios26"):
         generate("testpersona", snapshot, tmp_path / snapshot)
-        counts[snapshot] = json.loads((tmp_path / snapshot / EXPECTED).read_text())
+        counts[snapshot] = json.loads((tmp_path / snapshot / EXPECTED).read_text(encoding="utf-8"))
     assert len(counts["ios15"]["messages"]) < len(counts["ios17"]["messages"]) < len(counts["ios26"]["messages"])
     assert all(m["date"] <= counts["ios15"]["backup_date"] for m in counts["ios15"]["messages"])
     assert len(counts["ios15"]["contacts"]) < len(counts["ios17"]["contacts"])  # Casey was added in 2023
@@ -163,7 +163,7 @@ def test_snapshots_only_hold_what_existed_by_their_date(tmp_path):
 
 def test_answer_key_lists_absent_data_types(tmp_path):
     generate("einstein", "ios15", tmp_path)
-    expected = json.loads((tmp_path / EXPECTED).read_text())
+    expected = json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))
     assert expected["absent"] == {t: "none" for t in ("calls", "voicemail", "notes", "photos", "browser_history",
                                                       "calendar", "voice_memos", "health")}
 
@@ -296,7 +296,7 @@ def test_photos_fall_back_to_the_original_when_the_rendition_changed(tmp_path, m
 
 def test_unencrypted_backups_leave_out_call_history(tmp_path):
     backup_dir = generate("testpersona", "ios26", tmp_path)
-    expected = json.loads((tmp_path / EXPECTED).read_text())
+    expected = json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))
     assert expected["calls"] == [] and expected["absent"]["calls"] == "encrypted_only"
     assert expected["browser_history"] == [] and expected["absent"]["browser_history"] == "encrypted_only"
     assert len(expected["voicemails"]) == 3
@@ -309,7 +309,7 @@ def test_unencrypted_backups_leave_out_call_history(tmp_path):
 def test_encrypting_changes_only_what_apple_leaves_out(tmp_path):
     generate("testpersona", "ios26", tmp_path / "plain", seed=7)
     generate("testpersona", "ios26", tmp_path / "enc", password="pw", seed=7)
-    plain, enc = (json.loads((tmp_path / d / EXPECTED).read_text()) for d in ("plain", "enc"))
+    plain, enc = (json.loads((tmp_path / d / EXPECTED).read_text(encoding="utf-8")) for d in ("plain", "enc"))
     for key in ("contacts", "conversations", "voicemails", "notes", "photos"):
         assert plain[key] == enc[key], key
 
@@ -347,7 +347,7 @@ def test_generation_is_deterministic(tmp_path):
 
 def test_daylight_saving_follows_the_persona_time_zone(tmp_path):
     generate("testpersona", "ios15", tmp_path)
-    expected = json.loads((tmp_path / EXPECTED).read_text())
+    expected = json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))
     before = next(m for m in expected["messages"] if m["text"] == "Clocks go forward tonight 🕐")
     after = next(m for m in expected["messages"] if m["text"].startswith("Lost an hour"))
     assert before["date"].endswith("+00:00")  # 23:50 GMT
@@ -360,10 +360,10 @@ def test_daylight_saving_follows_the_persona_time_zone(tmp_path):
 def _pack(tmp_path, chat_text):
     folder = tmp_path / "packs" / "p"
     (folder / "chats").mkdir(parents=True)
-    source = json.loads((SCHEMAS_DIR.parent / "personas" / "testpersona" / "persona.json").read_text())
+    source = json.loads((SCHEMAS_DIR.parent / "personas" / "testpersona" / "persona.json").read_text(encoding="utf-8"))
     source["id"] = "p"
-    (folder / "persona.json").write_text(json.dumps(source))
-    (folder / "chats" / "c.txt").write_text(chat_text)
+    (folder / "persona.json").write_text(json.dumps(source), encoding="utf-8")
+    (folder / "chats" / "c.txt").write_text(chat_text, encoding="utf-8")
     return folder.parent
 
 
