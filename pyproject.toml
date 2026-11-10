@@ -15,7 +15,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff", "pillow"]  # pillow: backupgen draws and labels photos
+dev = [
+    "pytest",
+    "ruff",
+    "pillow",  # backupgen draws and labels photos
+    "tzdata; sys_platform == 'win32'",  # backupgen's persona time zones: Windows has no zoneinfo database
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
