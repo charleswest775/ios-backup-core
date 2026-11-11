@@ -17,9 +17,11 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 from ios_backup_core.backup import open_local_backup
 from ios_backup_core.extractors.calls import CallExtractor
 from ios_backup_core.extractors.voicemail import VoicemailExtractor
+from ios_backup_core.extractors.whatsapp import WhatsAppExtractor
 
 CALL_DB = "Library/CallHistoryDB/CallHistory.storedata"
 VOICEMAIL_DB = "Library/Voicemail/voicemail.db"
+WHATSAPP_DB = "ChatStorage.sqlite"
 
 
 class _FakeBackup:
@@ -152,6 +154,51 @@ class TestVoicemailEmptyStates:
         assert len(result["voicemails"]) == 1
         assert "empty_reason" not in result
         assert "error" not in result
+
+
+def _whatsapp_db(path, rows=()):
+    """The fewest columns WhatsApp's ChatStorage needs: every optional table and column is missing."""
+    conn = sqlite3.connect(path)
+    conn.executescript(
+        "CREATE TABLE ZWACHATSESSION (Z_PK INTEGER PRIMARY KEY, ZCONTACTJID VARCHAR);"
+        "CREATE TABLE ZWAMESSAGE (Z_PK INTEGER PRIMARY KEY, ZCHATSESSION INTEGER, "
+        "ZMESSAGETYPE INTEGER, ZMESSAGEDATE TIMESTAMP, ZTEXT VARCHAR);"
+    )
+    for i, text in enumerate(rows, start=1):
+        conn.execute("INSERT INTO ZWACHATSESSION VALUES (?, ?)", (i, f"1202555010{i}@s.whatsapp.net"))
+        conn.execute("INSERT INTO ZWAMESSAGE VALUES (?, ?, 0, ?, ?)", (i, i, 700000000.0 + i, text))
+    conn.commit()
+    conn.close()
+    return str(path)
+
+
+def _list_whatsapp(backup):
+    return WhatsAppExtractor().list_conversations(backup, {})
+
+
+class TestWhatsAppEmptyStates:
+    def test_missing_whatsapp_is_not_an_error(self):
+        result = _list_whatsapp(_FakeBackup())
+        assert result == {"conversations": [], "empty_reason": "not_in_backup"}
+
+    def test_whatsapp_without_chats(self, tmp_path):
+        backup = _FakeBackup({WHATSAPP_DB: _whatsapp_db(tmp_path / "ChatStorage.sqlite")})
+        assert _list_whatsapp(backup) == {"conversations": [], "empty_reason": "no_records"}
+
+    def test_listed_but_unreadable_whatsapp_is_an_error(self):
+        result = _list_whatsapp(_FakeBackup(encrypted=True, unreadable=[WHATSAPP_DB]))
+        assert result["conversations"] == []
+        assert "empty_reason" not in result
+        assert "could not be read" in result["error"]
+
+    def test_chats_present_have_no_empty_reason(self, tmp_path):
+        db = _whatsapp_db(tmp_path / "ChatStorage.sqlite", rows=["hello", "again"])
+        backup = _FakeBackup({WHATSAPP_DB: db})
+        result = _list_whatsapp(backup)
+        assert len(result["conversations"]) == 2
+        assert "empty_reason" not in result and "error" not in result
+        page = WhatsAppExtractor().get_messages(backup, 1, {})
+        assert [m["text"] for m in page["messages"]] == ["hello"]
 
 
 def _write_unencrypted_backup(backup_dir, files):

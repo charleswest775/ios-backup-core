@@ -641,3 +641,12 @@ class BackupReader:
         extractor = VoicemailExtractor()
         contacts = self.contacts()
         return extractor.list_voicemails(self._accessor, contacts)
+
+    def whatsapp(self, chat_id: Optional[int] = None, **kwargs):
+        """List WhatsApp chats or get messages from one (same shapes as messages())."""
+        from ios_backup_core.extractors.whatsapp import WhatsAppExtractor
+        extractor = WhatsAppExtractor()
+        contacts = self.contacts()
+        if chat_id is not None:
+            return extractor.get_messages(self._accessor, chat_id, contacts, **kwargs)
+        return extractor.list_conversations(self._accessor, contacts)

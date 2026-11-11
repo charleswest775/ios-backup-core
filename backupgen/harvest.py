@@ -39,6 +39,11 @@ DATABASES = {
     "healthdb.sqlite": ("HealthDomain", "Health/healthdb.sqlite"),
     "healthdb_secure.sqlite": ("HealthDomain", "Health/healthdb_secure.sqlite"),
     "CloudRecordings.db": ("MediaDomain", "Media/Recordings/CloudRecordings.db"),
+    # WhatsApp: the schema follows the app's version, not iOS. ContactsV2 is gone and LID
+    # arrives around WhatsApp 2.23, so a backup has one or the other or both.
+    "ChatStorage.sqlite": ("AppDomainGroup-group.net.whatsapp.WhatsApp.shared", "ChatStorage.sqlite"),
+    "ContactsV2.sqlite": ("AppDomainGroup-group.net.whatsapp.WhatsApp.shared", "ContactsV2.sqlite"),
+    "LID.sqlite": ("AppDomainGroup-group.net.whatsapp.WhatsApp.shared", "LID.sqlite"),
 }
 # Tables SQLite creates for a virtual table itself: FTS3/4/5, then R-tree (Photos' location index).
 _SHADOW_SUFFIXES = ("content", "segments", "segdir", "docsize", "stat", "data", "idx", "config", "node", "parent", "rowid")

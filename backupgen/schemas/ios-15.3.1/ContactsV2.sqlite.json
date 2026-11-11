@@ -1,0 +1,499 @@
+{
+ "database": "ContactsV2.sqlite",
+ "ios": "15.3.1",
+ "build": "19D52",
+ "source": "public backup pub-hickman-15.3.1 (definitions only)",
+ "harvested": "2026-11-10",
+ "pragmas": {
+  "user_version": 0,
+  "page_size": 4096,
+  "journal_mode": "wal",
+  "auto_vacuum": 2,
+  "encoding": "UTF-8"
+ },
+ "objects": [
+  {
+   "type": "table",
+   "name": "ZWAADDRESSBOOKCONTACT",
+   "table": "ZWAADDRESSBOOKCONTACT",
+   "sql": "CREATE TABLE ZWAADDRESSBOOKCONTACT ( Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZDISAPPEARINGMODEDURATION INTEGER, ZPHONESTATUS INTEGER, ZSECTIONSORT INTEGER, ZSORT INTEGER, ZSPOTLIGHTSTATUS INTEGER, ZABOUTTIMESTAMP TIMESTAMP, ZDISAPPEARINGMODETIMESTAMP TIMESTAMP, ZABOUTTEXT VARCHAR, ZFULLNAME VARCHAR, ZGIVENNAME VARCHAR, ZHIGHLIGHTEDNAME VARCHAR, ZIDENTIFIER VARCHAR, ZLOCALIZEDPHONENUMBER VARCHAR, ZPHONENUMBER VARCHAR, ZPHONENUMBERLABEL VARCHAR, ZSEARCHTOKENLIST VARCHAR, ZSECTIONTITLE VARCHAR, ZWHATSAPPID VARCHAR, ZDEVICELIST BLOB )"
+  },
+  {
+   "type": "table",
+   "name": "Z_PRIMARYKEY",
+   "table": "Z_PRIMARYKEY",
+   "sql": "CREATE TABLE Z_PRIMARYKEY (Z_ENT INTEGER PRIMARY KEY, Z_NAME VARCHAR, Z_SUPER INTEGER, Z_MAX INTEGER)"
+  },
+  {
+   "type": "table",
+   "name": "Z_METADATA",
+   "table": "Z_METADATA",
+   "sql": "CREATE TABLE Z_METADATA (Z_VERSION INTEGER PRIMARY KEY, Z_UUID VARCHAR(255), Z_PLIST BLOB)"
+  },
+  {
+   "type": "table",
+   "name": "Z_MODELCACHE",
+   "table": "Z_MODELCACHE",
+   "sql": "CREATE TABLE Z_MODELCACHE (Z_CONTENT BLOB)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAAddressBookContact_byIdentifierIndex",
+   "table": "ZWAADDRESSBOOKCONTACT",
+   "sql": "CREATE INDEX Z_WAAddressBookContact_byIdentifierIndex ON ZWAADDRESSBOOKCONTACT (ZIDENTIFIER COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAAddressBookContact_byPhoneNumberIndex",
+   "table": "ZWAADDRESSBOOKCONTACT",
+   "sql": "CREATE INDEX Z_WAAddressBookContact_byPhoneNumberIndex ON ZWAADDRESSBOOKCONTACT (ZPHONENUMBER COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAAddressBookContact_byPhoneStatusIndex",
+   "table": "ZWAADDRESSBOOKCONTACT",
+   "sql": "CREATE INDEX Z_WAAddressBookContact_byPhoneStatusIndex ON ZWAADDRESSBOOKCONTACT (ZPHONESTATUS COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAAddressBookContact_bySectionTitleIndex",
+   "table": "ZWAADDRESSBOOKCONTACT",
+   "sql": "CREATE INDEX Z_WAAddressBookContact_bySectionTitleIndex ON ZWAADDRESSBOOKCONTACT (ZSECTIONTITLE COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAAddressBookContact_bySortIndex",
+   "table": "ZWAADDRESSBOOKCONTACT",
+   "sql": "CREATE INDEX Z_WAAddressBookContact_bySortIndex ON ZWAADDRESSBOOKCONTACT (ZSORT COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAAddressBookContact_bySpotlightStatusIndex",
+   "table": "ZWAADDRESSBOOKCONTACT",
+   "sql": "CREATE INDEX Z_WAAddressBookContact_bySpotlightStatusIndex ON ZWAADDRESSBOOKCONTACT (ZSPOTLIGHTSTATUS COLLATE BINARY ASC)"
+  },
+  {
+   "type": "index",
+   "name": "Z_WAAddressBookContact_byWhatsAppIDIndex",
+   "table": "ZWAADDRESSBOOKCONTACT",
+   "sql": "CREATE INDEX Z_WAAddressBookContact_byWhatsAppIDIndex ON ZWAADDRESSBOOKCONTACT (ZWHATSAPPID COLLATE BINARY ASC)"
+  }
+ ],
+ "columns": {
+  "ZWAADDRESSBOOKCONTACT": [
+   {
+    "name": "Z_PK",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_OPT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDISAPPEARINGMODEDURATION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPHONESTATUS",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSECTIONSORT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSORT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSPOTLIGHTSTATUS",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZABOUTTIMESTAMP",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDISAPPEARINGMODETIMESTAMP",
+    "type": "TIMESTAMP",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZABOUTTEXT",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZFULLNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZGIVENNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZHIGHLIGHTEDNAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZIDENTIFIER",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZLOCALIZEDPHONENUMBER",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPHONENUMBER",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZPHONENUMBERLABEL",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSEARCHTOKENLIST",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZSECTIONTITLE",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZWHATSAPPID",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "ZDEVICELIST",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_PRIMARYKEY": [
+   {
+    "name": "Z_ENT",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_NAME",
+    "type": "VARCHAR",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_SUPER",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_MAX",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_METADATA": [
+   {
+    "name": "Z_VERSION",
+    "type": "INTEGER",
+    "notnull": false,
+    "default": null,
+    "pk": 1
+   },
+   {
+    "name": "Z_UUID",
+    "type": "VARCHAR(255)",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   },
+   {
+    "name": "Z_PLIST",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ],
+  "Z_MODELCACHE": [
+   {
+    "name": "Z_CONTENT",
+    "type": "BLOB",
+    "notnull": false,
+    "default": null,
+    "pk": 0
+   }
+  ]
+ },
+ "shape": {
+  "ZWAADDRESSBOOKCONTACT": {
+   "Z_PK": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_OPT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZDISAPPEARINGMODEDURATION": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZPHONESTATUS": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZSECTIONSORT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZSORT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZSPOTLIGHTSTATUS": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZABOUTTIMESTAMP": {
+    "null_rate": 0.889,
+    "types": [
+     "integer"
+    ]
+   },
+   "ZDISAPPEARINGMODETIMESTAMP": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZABOUTTEXT": {
+    "null_rate": 0.889,
+    "types": [
+     "text"
+    ]
+   },
+   "ZFULLNAME": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ZGIVENNAME": {
+    "null_rate": 0.111,
+    "types": [
+     "text"
+    ]
+   },
+   "ZHIGHLIGHTEDNAME": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ZIDENTIFIER": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ZLOCALIZEDPHONENUMBER": {
+    "null_rate": 1.0,
+    "types": []
+   },
+   "ZPHONENUMBER": {
+    "null_rate": 0.333,
+    "types": [
+     "text"
+    ]
+   },
+   "ZPHONENUMBERLABEL": {
+    "null_rate": 0.333,
+    "types": [
+     "text"
+    ]
+   },
+   "ZSEARCHTOKENLIST": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ZSECTIONTITLE": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "ZWHATSAPPID": {
+    "null_rate": 0.333,
+    "types": [
+     "text"
+    ]
+   },
+   "ZDEVICELIST": {
+    "null_rate": 1.0,
+    "types": []
+   }
+  },
+  "Z_PRIMARYKEY": {
+   "Z_ENT": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_NAME": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Z_SUPER": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_MAX": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   }
+  },
+  "Z_METADATA": {
+   "Z_VERSION": {
+    "null_rate": 0.0,
+    "types": [
+     "integer"
+    ]
+   },
+   "Z_UUID": {
+    "null_rate": 0.0,
+    "types": [
+     "text"
+    ]
+   },
+   "Z_PLIST": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "bplist"
+    ]
+   }
+  },
+  "Z_MODELCACHE": {
+   "Z_CONTENT": {
+    "null_rate": 0.0,
+    "types": [
+     "blob"
+    ],
+    "blob_kinds": [
+     "other"
+    ]
+   }
+  }
+ },
+ "entities": [
+  {
+   "Z_ENT": 1,
+   "Z_NAME": "WAAddressBookContact",
+   "Z_SUPER": 0
+  }
+ ]
+}

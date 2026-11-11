@@ -33,6 +33,7 @@ from ios_backup_core.extractors.messages import MessageExtractor  # noqa: E402
 from ios_backup_core.extractors.notes import NoteExtractor  # noqa: E402
 from ios_backup_core.extractors.photos import PhotoExtractor  # noqa: E402
 from ios_backup_core.extractors.voicemail import VoicemailExtractor  # noqa: E402
+from ios_backup_core.extractors.whatsapp import WhatsAppExtractor  # noqa: E402
 
 TEST_DB = "Library/Test/test.db"
 
@@ -82,6 +83,7 @@ def _read_everything(backup_dir: Path) -> dict:
         "voicemails": VoicemailExtractor().list_voicemails(accessor, lookup),
         "calls": CallExtractor().list_calls(accessor, lookup),
         "browser_history": BrowserHistoryExtractor().list_browser_history(accessor),
+        "whatsapp": WhatsAppExtractor().list_conversations(accessor, lookup),
     }
 
 
@@ -107,6 +109,7 @@ def test_a_read_only_backup_reads_in_full(tmp_path):
     assert len(data["photos"]["photos"]) == len([p for p in expected["photos"] if not p["trashed"]])
     assert len(data["notes"]["notes"]) == len(expected["notes"])
     assert len(data["voicemails"]["voicemails"]) == len(expected["voicemails"])
+    assert data["whatsapp"] == {"conversations": [], "empty_reason": "not_in_backup"}
 
 
 def test_reading_leaves_the_backup_unchanged(tmp_path):
