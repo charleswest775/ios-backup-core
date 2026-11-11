@@ -1,0 +1,12 @@
+chat: status
+type: status
+with: hana, claire
+
+# Status updates: WhatsApp keeps them with the chats, but they aren't conversations, so a
+# reader should leave them out.
+
+== 2025-10-11
+08:10 hana: Larches are turning up at Maple Pass 🍂
+
+== 2026-04-04
+17:30 claire: First wild strawberries on the roof!

@@ -1,0 +1,24 @@
+chat: casita
+with: dani
+
+# Dani Reyes, host of the casita in the town of Joshua Tree where Maren, Theo, Rosa and Ivy
+# spend Sunday night (15 Feb 2026). Not in Maren's contacts: WhatsApp only. The casita and its
+# host are invented; the pin is on a road in town, not at any real address.
+
+== 2026-02-09
+10:00 notice: encrypted
+10:00 dani: Hi Maren, this is Dani, your host at Casita del Sol for Feb 15. Welcome! Everything you need is here
+10:01 dani [document:Casita del Sol house guide.pdf]
+10:01* dani [location:34.1271,-116.3133 Casita del Sol]
+10:15 me: Thank you! We'll be coming from Jumbo Rocks on Sunday afternoon, probably around 4
+10:17 dani: Perfect. Check-in is any time after 3. The key is in the lockbox by the front door
+10:18 me +👍
+
+== 2026-02-15
+09:00* dani: The lockbox code is the last four digits of your phone number. Wi-Fi details are on the fridge. Enjoy the stars ✨
+16:20 me: We're here! It's lovely. The hammock is already taken by Ivy
+16:30 dani +😄
+
+== 2026-02-16
+10:45 me: Heading out now. Thank you, Dani! Key is back in the lockbox
+10:50 dani: Thanks for being great guests. Safe flight home 🌵

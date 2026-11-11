@@ -1,0 +1,18 @@
+chat: hana
+with: hana
+
+# Hana Yoshida, grad-school friend in Seattle. She hosts the hiking group on the Friday night
+# before the North Cascades trip (22 May 2026).
+
+== 2025-10-22
+19:30 notice: encrypted
+19:30 hana [call:video 18m05s]
+19:50 hana: So good to see your face. Happy birthday again 🎈
+19:52 me: Thanks for calling! Can't wait for May
+
+== 2026-05-22
+17:45 hana: Text me when you're close, parking on our block is weird
+19:40 me [live-location:47.6185,-122.3238]
+19:41 hana: I can see you! Ten minutes out
+20:02 me [call:voice 1m10s]
+20:05 hana: Coming down 👋

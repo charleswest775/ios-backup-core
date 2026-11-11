@@ -142,6 +142,23 @@ Frame Shop.
 - **Jun 3** Theo's birthday. **Jun 20** Linden's first-birthday picnic.
 - **Sun 28 Jun, 21:10** backup.
 
+## WhatsApp
+
+Maren uses WhatsApp alongside Messages for a few people (`whatsapp/`): her grad-school group
+"MLA '18 🌿" (Hana, Claire, Leah; Hana made it in July 2024), Lucía (who gets WhatsApp in
+November 2024 so she can send voice messages instead of typing, and calls on it), Hana one to
+one (a birthday video call, a live location on the way to her place in May 2026), Jess's
+wedding-planning group "Erik & Jess 💍" (from 2 Apr 2026, with Erik, Mom and Jess's sister
+Paula; a newer group, so WhatsApp addresses its members by LID), the casita host in Joshua
+Tree (Feb 2026), and a broadcast list, "Portland friends", for the Linden ribbon cutting
+invitation. Hana and Claire also post a couple of status updates, which aren't chats.
+
+Two people there aren't in her contacts: **Dani Reyes** (+1 760 555 0150, host of the invented
+"Casita del Sol" in the town of Joshua Tree) and **Paula Moreno** (+1 208 555 0151, Jess's
+sister in Boise). Everyone else uses their address-book number, so their WhatsApp chats join
+their texts and calls. Voice messages are silent placeholders; one of Claire's photos (March
+2025) is no longer on the phone, only its thumbnail.
+
 ## Photo references
 
 Trip photos appear in chats as `[photo:<slug>-<nn>]`. Each one is scenery (no people), and the
