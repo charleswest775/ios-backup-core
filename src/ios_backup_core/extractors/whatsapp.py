@@ -715,6 +715,7 @@ class WhatsAppExtractor:
         session_type = row["ZSESSIONTYPE"]
         _, server = _split_jid(jid)
         partner_name = _clean_name(row["ZPARTNERNAME"])
+        handle = ""
         if server == "g.us" or session_type == 1:
             chat_type, name = "group", partner_name or "WhatsApp group"
         elif server == "newsletter":
@@ -731,7 +732,9 @@ class WhatsAppExtractor:
                 name = usable_partner or "Unknown contact"
             else:
                 name = person["name"]
-        return {"chat_id": row["Z_PK"], "jid": jid, "type": chat_type, "name": name}
+            if person is not None and person["handle"].startswith("+"):
+                handle = person["handle"]
+        return {"chat_id": row["Z_PK"], "jid": jid, "type": chat_type, "name": name, "handle": handle}
 
     def _sender(self, row, chat: dict, ctx: _Context, contacts: dict, cache: dict) -> dict:
         """``{"name", "handle", "jid"}`` of an incoming message's author."""
@@ -1182,8 +1185,10 @@ class WhatsAppExtractor:
         """List WhatsApp chats that have messages, newest first.
 
         Keys match MessageExtractor.list_conversations, plus ``chat_jid``,
-        ``chat_type`` ("individual", "group", "broadcast" or "channel") and
-        ``archived``. Status updates are not chats and are left out.
+        ``handle`` (the other person's number as "+digits" in a one-to-one chat,
+        LIDs mapped through LID.sqlite; "" for groups, lists, channels and LIDs
+        nothing maps), ``chat_type`` ("individual", "group", "broadcast" or
+        "channel") and ``archived``. Status updates are not chats and are left out.
 
         When there are none, ``conversations`` is empty and ``empty_reason`` is
         ``"not_in_backup"`` (WhatsApp isn't in this backup) or ``"no_records"``.
@@ -1237,6 +1242,7 @@ class WhatsAppExtractor:
                     "last_message_preview": preview[:100],
                     "is_group": chat["type"] == "group",
                     "chat_jid": chat["jid"],
+                    "handle": chat["handle"],
                     "chat_type": chat["type"],
                     "archived": bool(chat_row["ZARCHIVED"]),
                 })

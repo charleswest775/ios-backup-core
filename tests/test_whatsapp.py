@@ -319,6 +319,22 @@ class TestConversations:
         assert (convs[5]["display_name"], convs[5]["chat_type"], convs[5]["archived"]) == ("Family list", "broadcast", True)
         assert convs[7]["display_name"] == "Unknown contact"
 
+    def test_handle_is_the_other_persons_number(self, store):
+        convs = {c["chat_id"]: c for c in WhatsAppExtractor().list_conversations(store.backup, CONTACTS)["conversations"]}
+        assert convs[1]["handle"] == "+" + RILEY
+        assert convs[2]["handle"] == convs[5]["handle"] == ""  # a group or a list is nobody's number
+        assert convs[7]["handle"] == ""  # a LID nothing maps to a number
+
+    def test_handle_of_a_chat_kept_under_a_lid(self, tmp_path):
+        version = next(v for v in VERSIONS if has_schema(v, "LID.sqlite"))
+        store = Store(tmp_path, version)
+        conn = sqlite3.connect(store.files[(SHARED_DOMAIN, "ChatStorage.sqlite")])
+        conn.execute("UPDATE ZWACHATSESSION SET ZCONTACTJID = ? WHERE Z_PK = 7", (f"{CASEY_LID}@lid",))
+        conn.commit()
+        conn.close()
+        convs = {c["chat_id"]: c for c in WhatsAppExtractor().list_conversations(store.backup, CONTACTS)["conversations"]}
+        assert convs[7]["handle"] == "+" + CASEY
+
     def test_preview_comes_from_the_last_message_by_arrival(self, store):
         convs = {c["chat_id"]: c for c in WhatsAppExtractor().list_conversations(store.backup, CONTACTS)["conversations"]}
         assert convs[1]["last_message_preview"] == "last words 100% _done_"
