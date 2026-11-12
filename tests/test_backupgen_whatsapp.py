@@ -252,8 +252,10 @@ with: jordan
 18:00 me [call:video unanswered]
 18:02* jordan: Sorry, in a meeting. Tomorrow?
 18:03 jordan [location:51.5007,-0.1246 Westminster Bridge]
+18:03 me > jordan: See you there
 18:04 jordan [document:Agenda.pdf]
 18:05 jordan [deleted]
+18:06 me > jordan: Looks good
 """
 _GROUP = """chat: club
 type: group
@@ -316,6 +318,30 @@ def test_each_layout_reads_back(tmp_path, pack, snapshot, schema, side_files, ca
     assert {"Jordan Test", "Riley Sample"} <= names
     if snapshot != "ios15":  # the 2022 backup is from before Alex wrote
         assert "Alex Visitor" in names
+
+
+def test_replies_to_a_location_and_a_document(tmp_path, pack):
+    gen = _generate("testpersona", "ios26", tmp_path / "out", pack=load_persona("testpersona", root=pack))
+    replies = {m["text"]: m["quoted"] for m in gen.wa["messages"] if m["quoted"]}
+    assert (replies["See you there"]["kind"], replies["See you there"]["text"]) == ("shared_location", "")
+    # WhatsApp shows a quoted document by its file name; the deleted message after it is skipped.
+    assert (replies["Looks good"]["kind"], replies["Looks good"]["text"]) == ("document", "Agenda.pdf")
+    check_against_answer_key(gen)
+
+
+@pytest.mark.parametrize("kind, number, place", [("location", 5, "Westminster Bridge"), ("live_location", 18, "")])
+def test_a_quoted_location_is_copied_as_waproto_lays_it_out(kind, number, place):
+    from ios_backup_core.protobuf import parse_fields, sub_message
+
+    target = SimpleNamespace(stanza="3EB0AA", msg=SimpleNamespace(sender="me", kind=kind, lat=51.5007, lon=-0.1246,
+                                                                  place=place, text=""))
+    meta = parse_fields(writer._Writer.quote_meta(None, SimpleNamespace(quoted=target), ""))
+    message = sub_message(meta, 19)
+    assert [n for n, _, _ in message] == [number], "5 locationMessage, 18 liveLocationMessage"
+    copy = sub_message(message, number)
+    assert [(n, w) for n, w, _ in copy[:2]] == [(1, 1), (2, 1)], "degrees as fixed64 doubles"
+    assert [struct.unpack("<d", v)[0] for _, _, v in copy[:2]] == [51.5007, -0.1246]
+    assert copy[2:] == ([(3, 2, place.encode())] if place else []), "LocationMessage.name is 3 (5 is its url)"
 
 
 def test_a_backup_from_before_the_first_chat_has_no_whatsapp(tmp_path, pack):

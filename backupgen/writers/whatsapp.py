@@ -20,7 +20,9 @@ WhatsApp extractor in ios-backup-core for the details):
 - System notices are type 10 (event 2: the encryption notice) and type 6 (event 12: group
   created; event 2: someone was added), addressed (ZTOJID) to the owner.
 - A reply is a text message with a media row whose ZMETADATA (protobuf) names the quoted
-  message: 5 its stanza id, 6 its sender (left out when it's the owner's), 19 a copy.
+  message: 5 its stanza id, 6 its sender (left out when it's the owner's), 19 a copy laid out
+  as WAProto's Message (1 text, 3 image, 5 location, 7 document, 8 audio, 18 live location).
+  WhatsApp shows a quoted document by its file name.
 - Reactions are not rows. They sit in ZWAMESSAGEINFO.ZRECEIPTINFO of the message they react
   to: field 7.1 others' ({2 JID, 3 emoji, 4 ms since 1970}), 7.2 the owner's ({2 emoji, 3 ms}).
 - Calls are type 59 rows from WhatsApp 2.24 on, ZMETADATA 87.1 = {1 video, 2 outcome, 3
@@ -161,13 +163,17 @@ def _varint(n: int) -> bytes:
 
 
 def pb(*fields) -> bytes:
-    """Encode ``(number, value)`` pairs: ints as varints, str/bytes length-delimited, lists as nested messages."""
+    """Encode ``(number, value)`` pairs: ints as varints, floats as doubles, str/bytes length-delimited,
+    lists as nested messages."""
     out = bytearray()
     for number, value in fields:
         if isinstance(value, bool):
             value = int(value)
         if isinstance(value, int):
             out += _varint(number << 3) + _varint(value)
+            continue
+        if isinstance(value, float):
+            out += _varint(number << 3 | 1) + struct.pack("<d", value)
             continue
         if isinstance(value, str):
             value = value.encode("utf-8")
@@ -548,8 +554,10 @@ class _Writer:
             content = [(8, [(2, "audio/ogg; codecs=opus"), (6, True)])]
         elif m.kind == "document":
             content = [(7, [(2, "application/pdf"), (8, m.document)])]
-        else:  # a location
-            content = [(5, [(5, m.place)] if m.place else [])]
+        elif m.kind == "live_location":  # LiveLocationMessage: 1/2 degrees
+            content = [(18, [(1, float(m.lat)), (2, float(m.lon))])]
+        else:  # LocationMessage: 1/2 degrees, 3 name
+            content = [(5, [(1, float(m.lat)), (2, float(m.lon))] + ([(3, m.place)] if m.place else []))]
         fields.append((19, content))
         return pb(*fields)
 
@@ -607,8 +615,9 @@ class _Writer:
             if row.quoted is not None:
                 media_columns = {"ZMETADATA": self.quote_meta(row, chat_jid)}
                 target = row.quoted.written
+                quoted_text = row.quoted.msg.document if row.quoted.msg.kind == "document" else target.text
                 written.quoted = {"sort": row.quoted.sort, "sender_handle": target.sender_handle,
-                                  "is_from_me": target.is_from_me, "text": target.text, "kind": target.kind}
+                                  "is_from_me": target.is_from_me, "text": quoted_text, "kind": target.kind}
         elif m.kind == "photo":
             values["ZMESSAGETYPE"] = IMAGE
             path = self.media_path(chat_jid, "jpg")
