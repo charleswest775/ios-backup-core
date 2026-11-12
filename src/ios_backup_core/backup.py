@@ -652,7 +652,23 @@ class BackupReader:
         return extractor.list_conversations(self._accessor, contacts)
 
     def podcasts(self):
-        """List podcast subscriptions."""
+        """List the shows in the Apple Podcasts library (followed or not)."""
         from ios_backup_core.extractors.podcasts import PodcastExtractor
         extractor = PodcastExtractor()
         return extractor.list_podcasts(self._accessor)
+
+    def podcast_episodes(
+        self,
+        podcast_id: Optional[int] = None,
+        listened_only: bool = False,
+        include_descriptions: bool = False,
+    ):
+        """List podcast episodes with listening history (all shows, or one)."""
+        from ios_backup_core.extractors.podcasts import PodcastExtractor
+        extractor = PodcastExtractor()
+        return extractor.list_episodes(
+            self._accessor,
+            podcast_id=podcast_id,
+            listened_only=listened_only,
+            include_descriptions=include_descriptions,
+        )
