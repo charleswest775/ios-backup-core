@@ -13,7 +13,7 @@ Extracted and consolidated from [OpenExtract](https://github.com/openextract/ope
 - **Protobuf wire-format walker** — extracts strings from Notes gzip+proto blobs
 - **BackupAccessor protocol** — pluggable backup source; ships with `LocalBackupAccessor` for on-disk backups (encrypted via iphone-backup-decrypt, or unencrypted)
 - **Old backups (iOS 9 and earlier)** — reads `Manifest.mbdb` and the flat file layout iTunes used before iOS 10, decrypts their older keybag, and reads the iOS 6–9 database layouts (sms.db, call_history.db, notes.sqlite). Encrypted iOS 10.0 and 10.1 backups (Manifest.db, but that older keybag) open too
-- **Extractors** for Messages, Calls, Notes, Browser History (Safari + Firefox), Voicemail, Photos, WhatsApp
+- **Extractors** for Messages, Calls, Notes, Browser History (Safari + Firefox), Voicemail, Photos, WhatsApp, Podcasts (the shows you follow, as OPML for another podcast app, and your listening history; episode audio is never in an iPhone backup)
 
 ## Install
 
@@ -37,6 +37,16 @@ contacts = reader.contacts()
 messages = reader.messages(chat_id=1)
 calls = reader.calls()
 notes = reader.notes()
+podcasts = reader.podcasts()
+history = reader.podcast_episodes(listened_only=True)
+```
+
+To hand the shows you follow to another podcast app:
+
+```python
+from ios_backup_core.extractors.podcasts import podcasts_to_opml
+
+opml = podcasts_to_opml(reader.podcasts()["podcasts"], title="My podcasts")
 ```
 
 ## License
