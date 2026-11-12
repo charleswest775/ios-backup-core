@@ -215,6 +215,22 @@ def test_text_stored_as_bytes_is_decoded(tmp_path):
     assert ep["title"] == "Épisode" and ep["podcast_title"] == "Café Radio"
 
 
+def test_invalid_utf8_text_does_not_fail_the_library(library):
+    conn = sqlite3.connect(library)
+    # A 4-byte sequence cut in half, and a UTF-8-encoded lone surrogate.
+    conn.execute("UPDATE ZMTPODCAST SET ZITEMDESCRIPTION = CAST(X'4869F09F' AS TEXT) WHERE Z_PK = 1")
+    conn.execute("UPDATE ZMTPODCAST SET ZTITLE = CAST(X'4170EDA0BD' AS TEXT) WHERE Z_PK = 2")
+    conn.execute("UPDATE ZMTEPISODE SET ZTITLE = CAST(X'45702033EDA0BD' AS TEXT) WHERE Z_PK = 10")
+    conn.commit()
+    conn.close()
+    shows = PodcastExtractor().list_podcasts(_backup(library))
+    assert "error" not in shows and len(shows["podcasts"]) == 3
+    assert shows["podcasts"][0]["description"].startswith("Hi")
+    episodes = PodcastExtractor().list_episodes(_backup(library))
+    assert "error" not in episodes and len(episodes["episodes"]) == 4
+    assert {e["id"]: e for e in episodes["episodes"]}[10]["title"].startswith("Ep 3")
+
+
 # ---------------------------------------------------------------------------
 # Episodes
 # ---------------------------------------------------------------------------

@@ -149,6 +149,9 @@ class PodcastExtractor:
         except sqlite3.Error as e:
             return None, {result_key: [], "error": f"{_NOT_READABLE} ({e})"}
         conn.row_factory = sqlite3.Row
+        # Titles and descriptions come from publishers' feeds: one value that
+        # isn't valid UTF-8 must not fail the whole library.
+        conn.text_factory = lambda raw: raw.decode("utf-8", "replace")
         return conn, None
 
     # ------------------------------------------------------------------
