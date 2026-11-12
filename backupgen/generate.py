@@ -29,6 +29,7 @@ from backupgen.writers import notes as notes_writer
 from backupgen.writers import photos as photos_writer
 from backupgen.writers import safari as safari_writer
 from backupgen.writers import voicemail as voicemail_writer
+from backupgen.writers import whatsapp as whatsapp_writer
 
 EXPECTED = "expected.json"
 
@@ -36,7 +37,7 @@ EXPECTED = "expected.json"
 # under "absent", with why, so readers can be checked for clean empty results as well as for content:
 # "none" means the phone has none; "encrypted_only" means Apple leaves it out of unencrypted backups.
 DATA_TYPES = ("messages", "contacts", "calls", "voicemail", "notes", "photos", "browser_history",
-              "calendar", "voice_memos", "health")
+              "calendar", "voice_memos", "health", "whatsapp")
 ENCRYPTED_ONLY = {"calls", "browser_history", "health"}
 
 
@@ -138,15 +139,23 @@ def generate(
             for photo in photos:
                 writer.add_file("CameraRollDomain", photo.relative_path, photo.data)
             written["photos"] = photos
+        whatsapp = None
+        if persona.whatsapp is not None:
+            # Last, so adding WhatsApp to a pack leaves the rest of its backups as they were.
+            whatsapp = whatsapp_writer.write(tmp, persona, snapshot, rng, renderer)
+            for (domain, path), data in whatsapp.files.items():
+                writer.add_file(domain, path, data)
+            written["whatsapp"] = whatsapp.messages
 
     backup_dir = writer.finalize()
 
-    expected = answer_key(persona, snapshot_id, device, password, written)
+    expected = answer_key(persona, snapshot_id, device, password, written, whatsapp)
     (out_dir / EXPECTED).write_text(json.dumps(expected, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return backup_dir
 
 
-def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Optional[str], written: dict) -> dict:
+def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Optional[str], written: dict,
+               whatsapp: Optional[whatsapp_writer.Store] = None) -> dict:
     snapshot = persona.snapshots[snapshot_id]
     cards = contacts_writer.visible_contacts(persona, snapshot)
     chats = {chat.id: chat for chat in persona.chats}
@@ -228,5 +237,7 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
             }
             for p in written.get("photos", [])
         ],
+        # Chats in arrival order (each message's "sort"); see writers/whatsapp.py. None when the phone has no WhatsApp.
+        "whatsapp": whatsapp_writer.answer_key(whatsapp) if whatsapp and whatsapp.messages else None,
         "absent": {t: "encrypted_only" if t in left_out else "none" for t in DATA_TYPES if t not in present},
     }

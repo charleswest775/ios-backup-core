@@ -1,0 +1,12 @@
+# What people call themselves on WhatsApp. Contacts keep their address-book number;
+# the two at the end aren't in Maren's contacts, so WhatsApp only knows them by number and name.
+lucia - Lucía 🌵
+hana - Hana Y.
+claire - Claire
+leah - Leah B
+jess - Jess ✨
+erik - Erik L.
+mom - Karin
+# Not in the address book. 555 numbers in the fictional range.
+dani +1 760 555 0150 Dani Reyes
+paula +1 208 555 0151 Paula Moreno

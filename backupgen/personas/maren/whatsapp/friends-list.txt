@@ -1,0 +1,13 @@
+chat: friends-list
+type: broadcast
+with: leah, sam, nadia, tom, ivy, rosa, jonah, bev
+name: Portland friends
+
+# A broadcast list: each friend gets the message as if Maren had written to them alone.
+# Used to invite people to the Linden Elementary ribbon cutting (Sat 6 Sep 2025).
+
+== 2025-08-30
+10:00 me: Hi! The Linden Elementary schoolyard I've been working on for over a year opens next Saturday, Sept 6, at 10. The kids cut the ribbon, then there's a picnic. Come if you can! 🌳
+
+== 2025-09-05
+18:00 me: Tomorrow at 10! Bring a blanket. The hill with the slide is open to grown-ups too 😄

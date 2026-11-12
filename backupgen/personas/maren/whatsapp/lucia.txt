@@ -1,0 +1,34 @@
+chat: lucia
+with: lucia
+
+# Lucía Navarro, Theo's mom in Bend. Her sister set up WhatsApp for her in November 2024 so she
+# could send voice messages instead of typing; she keeps texting Maren too (chats/lucia.txt).
+# The voice messages are silent placeholders.
+
+== 2024-11-24
+10:15 notice: encrypted
+10:15 lucia [voice:24s]
+10:22 me: ¡Hola Lucía! Theo me dijo que ahora tienes WhatsApp 😄 Sí, llevamos el pastel de calabaza
+10:24 lucia: Sí, mi hermana me lo instaló. Así te mando audios, escribo muy lento
+10:24 me +😂
+
+== 2025-09-21
+20:40 me [photo:craterlake-05] Crater Lake ayer. ¡El agua es increíblemente azul!
+20:52 lucia +❤️
+20:53 lucia: ¡Qué belleza! Fui con el papá de Theo hace muchos años. Hacía un frío...
+20:55 lucia [voice:41s]
+
+== 2025-11-26
+17:30 lucia [call:video 6m40s]
+17:38 lucia: Ya salí de Bend. Llego como a las 8 si no hay nieve en el paso
+17:40 me > lucia: Maneja con cuidado. Te guardamos cena 🍲
+17:41 lucia +🙏
+
+== 2026-06-06
+11:05 me [photo:portland-19] Las rosas del parque Washington. Pensé en ti
+11:05 me [photo:portland-20]
+11:30 lucia [call:voice missed]
+11:42 me: Perdón, estaba en el jardín de rosas y no escuché el teléfono. ¿Te llamo en la noche?
+11:43 lucia [voice:18s]
+11:44 me +👍
+19:00 me [call:voice 22m15s]

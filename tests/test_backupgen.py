@@ -165,7 +165,8 @@ def test_answer_key_lists_absent_data_types(tmp_path):
     generate("einstein", "ios15", tmp_path)
     expected = json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))
     assert expected["absent"] == {t: "none" for t in ("calls", "voicemail", "notes", "photos", "browser_history",
-                                                      "calendar", "voice_memos", "health")}
+                                                      "calendar", "voice_memos", "health", "whatsapp")}
+    assert expected["whatsapp"] is None
 
 
 @pytest.mark.parametrize("snapshot", ["ios15", "ios17", "ios26"])

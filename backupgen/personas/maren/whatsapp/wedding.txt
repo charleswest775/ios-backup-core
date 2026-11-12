@@ -1,0 +1,42 @@
+chat: wedding
+type: group
+with: jess, erik, mom, paula
+name: Erik & Jess 💍
+created_by: jess
+addressing: lid
+
+# Erik and Jess get engaged on 28 March 2026; Jess starts a planning group a few days later.
+# Paula is Jess's sister, not in Maren's contacts. A newer group, so WhatsApp addresses its
+# members by LID rather than phone number.
+
+== 2026-04-02
+20:00 notice: encrypted
+20:00 notice: created
+20:00 notice: added me
+20:00 notice: added erik
+20:00 notice: added mom
+20:00 notice: added paula
+20:01 jess: Hi everyone! A group for wedding planning, so nothing gets lost in five different threads 💍
+20:02 jess: The date is set: September 19, 2027 🎉
+20:03 mom +❤️
+20:03 paula +🎉
+20:05 erik: Jess made a spreadsheet. I'm not allowed to touch it
+20:06 paula > erik: Smart woman
+20:10 me: So happy for you two! And yes, I'm doing the flowers. I already have a list
+20:11 jess > me: Native and a little wild, please! Anything yellow
+20:12 me +👍
+
+== 2026-04-20
+19:00 jess [document:Venue shortlist.pdf]
+19:01 jess: Three places by the Boise River. Number two is my favorite
+19:20 mom: Number two has that big cottonwood! Perfect for photos
+19:25 paula [deleted]
+19:26 paula: Sorry, wrong photo 🙈 Number two gets my vote too
+19:40 erik: Two it is then
+19:41 jess +😂
+
+== 2026-06-14
+12:05 me: Started the flower list: rubber rabbitbrush for yellow, asters, blanket flower, goldenrod and dried sagebrush. Mom's helping me grow some in pots
+12:20 mom > me: I already bought the pots 🌼
+12:21 jess: This is perfect. Crying a little
+12:21 erik +❤️

@@ -2,8 +2,8 @@
 
 Shows the conceit and time shift, the sourced timeline, the topics kept out, the contacts, every
 conversation with both its real and on-device dates, and the calls, voicemails, notes, Safari
-history and photos (with each photo's licence and credit), so a reviewer can check facts and
-tone without reading JSON.
+history, photos (with each photo's licence and credit) and WhatsApp chats, so a reviewer can
+check facts and tone without reading JSON.
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ def render(persona: Persona) -> str:
     w(f"| Licence | {persona.licence} |")
     total = sum(len(c.messages) for c in persona.chats)
     extras = [(persona.calls, "calls"), (persona.voicemails, "voicemails"), (persona.notes, "notes"),
-              (persona.visits, "Safari visits"), (persona.photos, "photos")]
+              (persona.visits, "Safari visits"), (persona.photos, "photos"), (persona.whatsapp, "WhatsApp chats")]
     more = "".join(f", {len(items)} {label}" for items, label in extras if items is not None)
     w(f"| Size | {len(persona.contacts) + 1} contacts, {len(persona.chats)} conversations, {total} messages{more} |\n")
 
@@ -103,6 +103,7 @@ def render(persona: Persona) -> str:
     _notes(persona, w)
     _visits(persona, w)
     _photos(persona, w)
+    _whatsapp(persona, w)
     return "\n".join(out) + "\n"
 
 
@@ -165,3 +166,51 @@ def _photos(persona: Persona, w) -> None:
         source = f"[{p.licence or 'source'}]({p.source})" if p.source else (p.licence or "placeholder")
         w(f"| {p.id}{flags} | {p.real_time:%Y-%m-%d %H:%M} | {p.place} | {', '.join(p.albums)} | {source} | {p.credit} |")
     w("")
+
+
+def _whatsapp(persona: Persona, w) -> None:
+    if persona.whatsapp is None:
+        return
+    w("## WhatsApp\n")
+    outsiders = [p for p in persona.whatsapp_people.values() if p.contact is None]
+    if outsiders:
+        w("Not in the address book: " + ", ".join(f"{p.push_name} ({p.number})" for p in outsiders) + "\n")
+
+    def who(sender: str) -> str:
+        if sender == "me":
+            return persona.owner.first
+        person = persona.whatsapp_people[sender]
+        return person.contact.first if person.contact else person.push_name
+
+    for chat in persona.whatsapp:
+        people = ", ".join(who(p) for p in chat.participants)
+        w(f"### {chat.name or people}\n")
+        w(f"*WhatsApp {chat.type}{' with ' + people if chat.type != 'individual' else ''}. "
+          f"{len(chat.messages)} lines. File: `whatsapp/{chat.id}.txt`*\n")
+        day = None
+        for m in chat.messages:
+            if m.real_time.date() != day:
+                day = m.real_time.date()
+                w(f"\n**{day:%A %d %B %Y}** (on device: {_device_date(persona, m.real_time)})\n")
+            star = " ★" if m.starred else ""
+            if m.kind == "notice":
+                if m.notice == "encrypted":
+                    text = "end-to-end encryption notice"
+                elif m.notice == "created":
+                    text = f"{who(chat.creator)} created the group"
+                else:
+                    text = f"{who(m.member)} was added"
+                w(f"- {m.real_time:%H:%M} *{text}*")
+            elif m.kind == "reaction":
+                w(f"- {m.real_time:%H:%M} *{who(m.sender)} reacted {m.reaction}*")
+            elif m.kind == "text":
+                reply = f" *(replying to {who(m.reply_to)})*" if m.reply_to else ""
+                w(f"- {m.real_time:%H:%M} **{who(m.sender)}:**{reply} {m.text}{star}")
+            else:
+                call = f"{'video' if m.video else 'voice'} call, {_minutes(m.duration) if m.outcome == 'answered' else m.outcome}"
+                detail = {"photo": f"photo {m.photo}", "voice": f"voice message, {m.duration}s",
+                          "document": f"document {m.document}", "location": f"location {m.place}",
+                          "live_location": "live location", "deleted": "deleted for everyone", "call": call}[m.kind]
+                caption = f" {m.text}" if m.text else ""
+                w(f"- {m.real_time:%H:%M} **{who(m.sender)}:** *[{detail}]*{caption}{star}")
+        w("")
