@@ -10,6 +10,7 @@ writes into the user's backup.
 import hashlib
 import json
 import os
+import shutil
 import sqlite3
 import sys
 from contextlib import contextmanager
@@ -221,3 +222,136 @@ def test_windows_paths_make_valid_sqlite_uris(monkeypatch, path, uri):
     monkeypatch.setattr(db.os, "path", ntpath)
     monkeypatch.setattr(db.os, "sep", "\\")
     assert db._file_uri(path) == uri
+
+
+# ── Files that go away while the backup is open (OE-77) ─────────────────────
+#
+# OE-77: the home screen read voicemail.db, then the Voicemail list couldn't
+# open it ("unable to open database file"). One way that happens is a file
+# found earlier going away: a temp-folder cleaner removing the copies, or the
+# drive with the backup going to sleep. A path that has gone is looked up
+# again, and the voicemail list tries again before giving up.
+
+VOICEMAIL_DB = "Library/Voicemail/voicemail.db"
+
+
+def _wal_voicemail_db(tmp_path: Path) -> tuple:
+    """voicemail.db as a phone leaves it: two voicemails in the file, a third
+    only in its -wal. Returns (main, wal) bytes."""
+    path = tmp_path / "vm-build" / "voicemail.db"
+    path.parent.mkdir()
+    conn = sqlite3.connect(path)
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute(
+        "CREATE TABLE voicemail (ROWID INTEGER PRIMARY KEY AUTOINCREMENT, remote_uid INTEGER, "
+        "date INTEGER, token TEXT, sender TEXT, callback_num TEXT, duration INTEGER, "
+        "expiration INTEGER, trashed_date INTEGER, flags INTEGER, receiver TEXT, "
+        "label TEXT, uuid TEXT)"
+    )
+    conn.execute("CREATE INDEX date_index on voicemail(date)")
+    insert = ("INSERT INTO voicemail (remote_uid, date, token, sender, duration, trashed_date, flags) "
+              "VALUES (?, ?, 'Complete', ?, ?, 0, 3)")
+    conn.execute(insert, (101, 1_700_000_000, "+15550000001", 30))
+    conn.execute(insert, (102, 1_700_100_000, "+15550000002", 45))
+    conn.commit()
+    conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+    conn.execute("PRAGMA wal_autocheckpoint=0")
+    conn.execute(insert, (103, 1_700_200_000, "+15550000003", 60))
+    conn.commit()
+    main, wal = path.read_bytes(), Path(f"{path}-wal").read_bytes()
+    conn.close()
+    assert wal, "the third voicemail should be in the WAL"
+    return main, wal
+
+
+def _voicemail_backup(tmp_path: Path, password=None) -> Path:
+    main, wal = _wal_voicemail_db(tmp_path)
+    return _backup_with(tmp_path, {VOICEMAIL_DB: main, VOICEMAIL_DB + "-wal": wal}, password=password)
+
+
+def _senders(result: dict) -> list:
+    assert "error" not in result, result.get("error")
+    return [v["phone_number"] for v in result["voicemails"]]
+
+
+ALL_THREE = ["+15550000003", "+15550000002", "+15550000001"]
+
+
+def test_a_copy_gone_from_the_temp_dir_is_made_again(tmp_path):
+    main, wal = _wal_database(tmp_path)
+    accessor = open_local_backup(str(_backup_with(tmp_path, {TEST_DB: main, TEST_DB + "-wal": wal})))
+    first = accessor.get_database(TEST_DB)
+    shutil.rmtree(accessor._temp_dir)
+    again = accessor.get_database(TEST_DB)
+    assert os.path.isfile(again) and os.path.isfile(again + "-wal")
+    assert again != first
+    assert _rows(accessor) == [1, 2]
+
+
+def test_a_decrypted_file_gone_from_the_temp_dir_is_decrypted_again(tmp_path):
+    main, wal = _wal_database(tmp_path)
+    backup_dir = _backup_with(tmp_path, {TEST_DB: main, TEST_DB + "-wal": wal}, password="pw")
+    accessor = open_local_backup(str(backup_dir), password="pw")
+    assert _rows(accessor) == [1, 2]
+    shutil.rmtree(accessor._temp_dir)
+    assert os.path.isfile(accessor.get_file(TEST_DB))
+    assert _rows(accessor) == [1, 2]
+
+
+@pytest.mark.parametrize("password", [None, "pw"])
+def test_voicemail_still_lists_after_the_temp_dir_is_emptied(tmp_path, password):
+    """The OE-77 sequence: voicemail.db is read once (the home screen's numbers),
+    the temp copies go, and the Voicemail list is opened."""
+    accessor = open_local_backup(str(_voicemail_backup(tmp_path, password)), password=password)
+    extractor = VoicemailExtractor()
+    assert _senders(extractor.list_voicemails(accessor, {})) == ALL_THREE
+    shutil.rmtree(accessor._temp_dir)
+    assert _senders(extractor.list_voicemails(accessor, {})) == ALL_THREE
+
+
+def test_voicemail_falls_back_to_the_file_without_its_wal(tmp_path, monkeypatch):
+    """If even a fresh copy with its -wal can't be read, the backup's own file
+    is: the voicemails saved before the last checkpoint still show."""
+    accessor = open_local_backup(str(_voicemail_backup(tmp_path)))
+    real_read = VoicemailExtractor._read_rows
+
+    def read(db_path, backup, ignore_wal):
+        if not ignore_wal:
+            raise sqlite3.OperationalError("unable to open database file")
+        return real_read(db_path, backup, ignore_wal)
+
+    monkeypatch.setattr(VoicemailExtractor, "_read_rows", staticmethod(read))
+    assert _senders(VoicemailExtractor().list_voicemails(accessor, {})) == ALL_THREE[1:]
+
+
+def test_voicemail_gone_from_the_backup_says_so_for_people(tmp_path):
+    """The backup's files went away after voicemail.db was found (a drive
+    unplugged): a sentence for people, not SQLite's "unable to open database file"."""
+    main, _ = _wal_voicemail_db(tmp_path)
+    accessor = open_local_backup(str(_backup_with(tmp_path, {VOICEMAIL_DB: main})))
+    os.remove(accessor.get_database(VOICEMAIL_DB))
+    result = VoicemailExtractor().list_voicemails(accessor, {})
+    assert result["voicemails"] == []
+    assert "empty_reason" not in result
+    assert result["error"].startswith("Voicemail is in this backup but could not be read.")
+
+
+def test_voicemail_that_cant_be_opened_says_so_for_people(tmp_path):
+    """voicemail.db is there but SQLite can't open it: say what to check, and
+    keep SQLite's reason for reports."""
+    main, _ = _wal_voicemail_db(tmp_path)
+    backup_dir = _backup_with(tmp_path, {VOICEMAIL_DB: main})
+    accessor = open_local_backup(str(backup_dir))
+    db_path = Path(accessor.get_database(VOICEMAIL_DB))
+    if os.name == "nt" or os.geteuid() == 0:
+        pytest.skip("file permissions aren't enforced for this user")
+    db_path.chmod(0)
+    try:
+        result = VoicemailExtractor().list_voicemails(accessor, {})
+    finally:
+        db_path.chmod(0o644)
+    assert result["voicemails"] == []
+    assert "empty_reason" not in result
+    assert result["error"].startswith("Voicemail is in this backup but couldn't be opened.")
+    assert "still connected" in result["error"]
+    assert result["error"].endswith("(unable to open database file)")
