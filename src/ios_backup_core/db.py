@@ -30,14 +30,15 @@ def get_database(backup, relative_path: str, domain: str = "HomeDomain") -> Opti
     return db_path
 
 
-def connect_readonly(db_path: str, backup=None) -> sqlite3.Connection:
+def connect_readonly(db_path: str, backup=None, ignore_wal: bool = False) -> sqlite3.Connection:
     """Open a SQLite database for reading, without writing to it or beside it.
 
     A file inside the backup folder (``backup.backup_dir``) is opened
     "immutable": SQLite then takes no locks and never creates -wal, -shm or
     -journal files. Elsewhere (a file decrypted or copied into the temp dir),
     a non-empty -wal beside the database is merged by opening it "mode=ro",
-    which creates its -shm there.
+    which creates its -shm there. ``ignore_wal`` opens it immutable anyway:
+    a last try that reads the database as of its last checkpoint.
 
     Raises sqlite3.Error if the file can't be read as a database.
     """
@@ -45,7 +46,8 @@ def connect_readonly(db_path: str, backup=None) -> sqlite3.Connection:
     uris = [f"{uri}?mode=ro&immutable=1"]
     wal_path = db_path + "-wal"
     in_backup = _is_within(db_path, getattr(backup, "backup_dir", None))
-    if not in_backup and os.path.isfile(wal_path) and os.path.getsize(wal_path) > 0:
+    if (not ignore_wal and not in_backup
+            and os.path.isfile(wal_path) and os.path.getsize(wal_path) > 0):
         uris.insert(0, f"{uri}?mode=ro")
     error: Optional[sqlite3.Error] = None
     for candidate in uris:

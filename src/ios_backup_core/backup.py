@@ -152,12 +152,20 @@ class LocalBackupAccessor:
         cache_key = f"{domain}:{relative_path}"
         if cache_key in self._file_cache:
             cached = self._file_cache[cache_key]
-            return cached if cached else None
+            if not cached:
+                return None
+            if os.path.exists(cached):
+                return cached
+            # Found before, gone now: a temp copy removed by a cleaner, or the
+            # drive holding the backup unplugged. Look it up again instead of
+            # handing out a path that can't be opened.
+            del self._file_cache[cache_key]
 
         output_path = os.path.join(self._temp_dir, _temp_name(domain, relative_path))
 
         if self._encrypted and self._decrypted_backup:
             try:
+                self._ensure_temp_dir()
                 self._decrypted_backup.extract_file(
                     relative_path=relative_path,
                     domain_like=domain,
@@ -215,6 +223,10 @@ class LocalBackupAccessor:
         if not wal_path or wal_path == db_path + "-wal" or os.path.getsize(wal_path) == 0:
             return db_path
         cache_key = f"db:{domain}:{relative_path}"
+        copy = self._file_cache.get(cache_key)
+        if copy and not (os.path.isfile(copy) and os.path.isfile(copy + "-wal")):
+            # The copy went from the temp dir since it was made: copy again.
+            del self._file_cache[cache_key]
         if cache_key not in self._file_cache:
             name = os.path.basename(relative_path) or "database"
             self._file_cache[cache_key] = self._copy_with_wal(db_path, wal_path, name)
@@ -300,6 +312,14 @@ class LocalBackupAccessor:
 
     # -- Internal helpers ----------------------------------------------------
 
+    def _ensure_temp_dir(self) -> None:
+        """Make the temp dir again if something removed it while the backup was open.
+
+        Temp-folder cleaners can do that, and copies made before it are then
+        gone too (get_file and get_database notice and make them again).
+        """
+        os.makedirs(self._temp_dir, exist_ok=True)
+
     def _get_manifest_db(self) -> Optional[str]:
         """Path to the backup's file list as a Manifest.db-shaped SQLite database.
 
@@ -314,6 +334,7 @@ class LocalBackupAccessor:
             if not os.path.exists(mbdb_path):
                 return None
             built = os.path.join(self._temp_dir, MANIFEST_DB)
+            self._ensure_temp_dir()
             build_files_db(mbdb_path, built)
             self._manifest_db_path = built
             return built
@@ -327,9 +348,11 @@ class LocalBackupAccessor:
 
     def _copy_with_wal(self, db_path: str, wal_path: str, name: str) -> Optional[str]:
         """Copy a database and its WAL into the temp dir as <name> and <name>-wal."""
-        dest_dir = tempfile.mkdtemp(prefix="db_", dir=self._temp_dir)
-        dest = os.path.join(dest_dir, name)
+        dest_dir = None
         try:
+            self._ensure_temp_dir()
+            dest_dir = tempfile.mkdtemp(prefix="db_", dir=self._temp_dir)
+            dest = os.path.join(dest_dir, name)
             shutil.copyfile(db_path, dest)
             shutil.copyfile(wal_path, dest + "-wal")
         except OSError as e:
@@ -337,7 +360,8 @@ class LocalBackupAccessor:
                 f"[backup] could not copy {name} to read its WAL, reading it without: {e}",
                 file=sys.stderr, flush=True,
             )
-            shutil.rmtree(dest_dir, ignore_errors=True)
+            if dest_dir:
+                shutil.rmtree(dest_dir, ignore_errors=True)
             return None
         return dest
 
