@@ -13,7 +13,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from ios_backup_core.extractors.photos import FAVORITES, HIDDEN, PhotoExtractor
+from ios_backup_core.extractors.photos import FAVORITES, HIDDEN, LIBRARY, PhotoExtractor
 
 ROOT, PROJECTS_ROOT, FOLDER, USER, SHARED, PROGRESS = 3999, 3998, 4000, 2, 1505, 3571
 
@@ -86,10 +86,11 @@ def test_favorites_and_hidden_follow_all_photos(tmp_path):
     backup = _library(tmp_path, [(10, ROOT, None, None, None, 0)], ASSETS)
     smart = [(a["id"], a["title"], a["asset_count"], a["kind"]) for a in _albums(backup)[:3]]
     assert smart == [
-        ("__all__", "All Photos", 4, "smart"),
+        ("__all__", "All Photos", 2, "smart"),
         (FAVORITES, "Favorites", 1, "smart"),
         (HIDDEN, "Hidden", 2, "smart"),
     ]
+    assert LIBRARY not in [a["id"] for a in _albums(backup)]
 
 
 def test_favorites_lists_favorites_that_arent_hidden_or_deleted(tmp_path):
@@ -102,11 +103,25 @@ def test_hidden_lists_hidden_photos_that_arent_deleted(tmp_path):
     assert sorted(_uuids(backup, HIDDEN)) == ["A-2", "A-3"]
 
 
-def test_all_photos_still_lists_hidden_photos(tmp_path):
-    # Nothing a person might save moves out of All Photos: Save all keeps every photo.
+def test_all_photos_leaves_out_hidden_photos(tmp_path):
+    # As on the iPhone: hidden photos are only under Hidden.
     backup = _library(tmp_path, [], ASSETS)
-    assert sorted(_uuids(backup, None)) == ["A-1", "A-2", "A-3", "A-5"]
-    assert sorted(_uuids(backup, "__all__")) == ["A-1", "A-2", "A-3", "A-5"]
+    assert sorted(_uuids(backup, None)) == ["A-1", "A-5"]
+    assert sorted(_uuids(backup, "__all__")) == ["A-1", "A-5"]
+
+
+def test_library_lists_every_photo_with_the_hidden_ones(tmp_path):
+    # For saving a complete copy: everything outside Recently Deleted.
+    backup = _library(tmp_path, [], ASSETS)
+    assert sorted(_uuids(backup, LIBRARY)) == ["A-1", "A-2", "A-3", "A-5"]
+    assert PhotoExtractor().list_photos(backup, album_id=LIBRARY)["total"] == 4
+
+
+def test_hidden_null_counts_as_not_hidden(tmp_path):
+    # Older libraries can leave ZHIDDEN empty; those photos belong in All Photos.
+    backup = _library(tmp_path, [], [(1, 0, None, 0), (2, 0, 1, 0)])
+    assert _uuids(backup, None) == ["A-1"]
+    assert _uuids(backup, HIDDEN) == ["A-2"]
 
 
 def test_no_favorites_or_hidden_without_their_columns(tmp_path):
