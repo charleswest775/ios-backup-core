@@ -44,6 +44,9 @@ _INTERNAL_ALBUM_KINDS = {3571, 3572, 3573, 3998, 3999}
 ALL_PHOTOS = "__all__"
 FAVORITES = "__favorites__"
 HIDDEN = "__hidden__"
+# list_photos also accepts this one, which list_albums doesn't offer: every photo outside
+# Recently Deleted, hidden ones too, for saving a complete copy of the library.
+LIBRARY = "__library__"
 
 PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".png", ".heic", ".heif", ".gif", ".tiff", ".bmp"}
 VIDEO_EXTENSIONS = {".mov", ".mp4", ".m4v", ".avi"}
@@ -147,20 +150,23 @@ def _table_columns(conn: sqlite3.Connection, table: str) -> set:
 
 
 def smart_album_where(columns: set, album_id: Optional[str]) -> Optional[str]:
-    """The asset-table condition for All Photos, Favorites or Hidden; None for the backup's own albums.
+    """The asset-table condition for All Photos, Favorites, Hidden or LIBRARY; None for the backup's own albums.
 
-    ``columns`` are the asset table's columns. None of the three lists Recently
-    Deleted (ZTRASHEDSTATE, iOS 8 and later). Favorites leaves out hidden photos, as
-    the Photos app does. A library with no ZFAVORITE or ZHIDDEN column lists nothing
-    for that one.
+    ``columns`` are the asset table's columns. None of them lists Recently Deleted
+    (ZTRASHEDSTATE, iOS 8 and later). All Photos and Favorites leave out hidden
+    photos, as the Photos app does; they're under Hidden, and LIBRARY lists them with
+    everything else. A library with no ZFAVORITE or ZHIDDEN column lists nothing for
+    that one.
     """
     live = "ZTRASHEDSTATE = 0" if "ZTRASHEDSTATE" in columns else "1 = 1"
-    if not album_id or album_id == ALL_PHOTOS:
+    not_hidden = " AND COALESCE(ZHIDDEN, 0) = 0" if "ZHIDDEN" in columns else ""
+    if album_id == LIBRARY:
         return live
+    if not album_id or album_id == ALL_PHOTOS:
+        return f"{live}{not_hidden}"
     if album_id == FAVORITES:
         if "ZFAVORITE" not in columns:
             return "0 = 1"
-        not_hidden = " AND COALESCE(ZHIDDEN, 0) = 0" if "ZHIDDEN" in columns else ""
         return f"{live} AND ZFAVORITE = 1{not_hidden}"
     if album_id == HIDDEN:
         return f"{live} AND ZHIDDEN = 1" if "ZHIDDEN" in columns else "0 = 1"
@@ -410,6 +416,8 @@ class PhotoExtractor:
     ) -> dict:
         """List photo assets with rich metadata (no binary data).
 
+        ``album_id`` is an id from list_albums, or LIBRARY for every photo with the
+        hidden ones; None lists All Photos, which leaves hidden photos out.
         Returns metadata dicts; callers use backup.get_file() to read pixels.
         """
         conn = self._open_photos_db(backup)
