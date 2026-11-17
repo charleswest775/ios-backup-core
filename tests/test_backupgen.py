@@ -181,9 +181,10 @@ def test_calls_and_voicemails_read_back(tmp_path, snapshot):
         (c["address"], c["date"], c["duration"], "outgoing" if c["outgoing"] else "incoming") for c in expected["calls"]
     )
     voicemails = VoicemailExtractor().list_voicemails(accessor, contacts)["voicemails"]
-    assert sorted((v["phone_number"], v["date_received"], v["duration"]) for v in voicemails) == sorted(
-        (v["sender"], v["date"], v["duration"]) for v in expected["voicemails"]
+    assert sorted((v["phone_number"], v["date_received"], v["duration"], v["transcript"]) for v in voicemails) == sorted(
+        (v["sender"], v["date"], v["duration"], v["transcript"]) for v in expected["voicemails"]
     )
+    assert all(v["transcript"] for v in voicemails)
     for v in expected["voicemails"]:
         audio = Path(VoicemailExtractor().get_audio_path(accessor, v["rowid"])).read_bytes()
         assert audio.startswith(b"#!AMR\n") and len(audio) == 6 + 32 * 50 * v["duration"]

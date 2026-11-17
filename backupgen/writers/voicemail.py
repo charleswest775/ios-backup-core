@@ -1,4 +1,4 @@
-"""Voicemail: Library/Voicemail/voicemail.db plus one <ROWID>.amr per message.
+"""Voicemail: Library/Voicemail/voicemail.db plus <ROWID>.amr and <ROWID>.transcript per message.
 
 voicemail.db is a plain (rollback-journal) SQLite database. Dates are Unix seconds,
 ``sender`` and ``callback_num`` hold the caller's number, ``receiver`` the owner's,
@@ -6,11 +6,18 @@ and ``flags`` bit 0 marks a message as listened to.
 
 The audio is silent AMR-NB of the right length. Spoken audio needs a text-to-speech
 voice whose output may be redistributed, which macOS's built-in voices may not.
+
+The transcript is an NSKeyedArchiver archive of a VMVoicemailTranscript, encoded as
+VisualVoicemail.framework's ``encodeWithCoder:`` does it (iOS 18.2): the whole text,
+an overall confidence and rating, and one VMVoicemailTranscriptSegment per word with
+its own confidence, time and place in the text.
 """
 
 from __future__ import annotations
 
+import plistlib
 import random
+import re
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -36,6 +43,53 @@ class WrittenVoicemail:
 
 def silent_amr(seconds: int) -> bytes:
     return b"#!AMR\n" + _AMR_FRAME * (50 * seconds)
+
+
+def transcript_archive(text: str, seconds: int) -> bytes:
+    """A ``<ROWID>.transcript`` file holding ``text``, its words spread evenly over ``seconds``.
+
+    Confidence is fixed rather than drawn, so adding transcripts doesn't move the
+    random draws that the rest of a backup's contents come from.
+    """
+    objects: list = ["$null"]
+
+    def add(value) -> plistlib.UID:
+        objects.append(value)
+        return plistlib.UID(len(objects) - 1)
+
+    def classes(*names: str) -> plistlib.UID:
+        return add({"$classname": names[0], "$classes": [*names, "NSObject"]})
+
+    words = list(re.finditer(r"\S+", text))
+    step = seconds / max(len(words), 1)
+    root = add({})  # filled in below, so the root keeps UID 1 as NSKeyedArchiver writes it
+    segments = []
+    for n, word in enumerate(words):
+        segments.append({
+            "confidence": 0.9, "confidenceRating": 3, "duration": round(step * 0.8, 3),
+            "substring": word.group(), "substringRange": (word.start(), len(word.group())),
+            "timestamp": round(step * n, 3),
+        })
+    segment_class = classes("VMVoicemailTranscriptSegment") if segments else None
+    value_class = classes("NSValue") if segments else None
+    segment_uids = []
+    for segment in segments:
+        location, length = segment.pop("substringRange")
+        substring = add(segment.pop("substring"))
+        value = add({"NS.rangeval.location": location, "NS.rangeval.length": length, "NS.special": 4,
+                     "$class": value_class})
+        segment_uids.append(add({**segment, "substring": substring, "substringRange": value,
+                                 "$class": segment_class}))
+    array = add({"NS.objects": segment_uids, "$class": classes("NSArray")})
+    objects[root.data] = {
+        "confidence": 0.9 if words else 0.0,
+        "confidenceRating": 3 if words else 0,
+        "segments": array,
+        "transcriptionString": add(text),
+        "$class": classes("VMVoicemailTranscript"),
+    }
+    archive = {"$version": 100000, "$archiver": "NSKeyedArchiver", "$top": {"root": root}, "$objects": objects}
+    return plistlib.dumps(archive, fmt=plistlib.FMT_BINARY, sort_keys=False)
 
 
 def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: random.Random) -> list[WrittenVoicemail]:

@@ -28,9 +28,21 @@ Checked against an iOS 27.2 iPhone's Phone app (2026-11-16), voicemail by voicem
 ``flags`` 0x1 marks a voicemail as listened to. The phone counted more deleted
 voicemails than its backup held: whatever the rest are, they aren't in the
 backup to be read.
+
+Transcripts
+-----------
+A voicemail's transcript is a file of its own beside its audio,
+``<ROWID>.transcript``, not a column of voicemail.db: none of the iOS 13 to 17
+voicemail.db schemas we hold has one. The file is an NSKeyedArchiver archive of
+Apple's ``VMVoicemailTranscript``, whose ``transcriptionString`` is the text the
+Phone app shows; ``confidence``, ``confidenceRating`` and per-word ``segments``
+sit beside it. That's how VisualVoicemail.framework encodes the class
+(``encodeWithCoder:``, iOS 18.2), and iLEAPP's voicemail artifact reads the same
+file and key. A voicemail the phone never transcribed has no file.
 """
 
 import os
+import plistlib
 import re
 import sqlite3
 import sys
@@ -44,6 +56,9 @@ FOLDERS = ("voicemail", "spam", "deleted")
 _HEARD = 0x1
 _DELETED = 0x8
 _SPAM = 0x80
+
+# A transcript file is a few kilobytes; anything far bigger isn't one.
+_TRANSCRIPT_MAX_BYTES = 4 * 1024 * 1024
 
 _ACCOUNT_STORE = re.compile(r"^Library/Voicemail/(A-[0-9A-Za-z-]+)/voicemail\.db$")
 # A voicemail's id: its ROWID in the main store, or "<account folder>.<ROWID>".
@@ -94,6 +109,7 @@ class VoicemailExtractor:
             counts[row["folder"]] += 1
             if row["folder"] == "deleted" and not include_deleted:
                 continue
+            transcript = row["transcript"] or read_transcript(backup, row["transcript_file"])
             sender = row["sender"] or ""
             date_ts = int(row["date"]) if row["date"] else 0
             voicemails.append({
@@ -105,7 +121,7 @@ class VoicemailExtractor:
                 ),
                 "duration": row["duration"],
                 "is_read": bool(row["flags"] & _HEARD),
-                "transcript": row["transcript"],
+                "transcript": transcript,
                 "folder": row["folder"],
             })
 
@@ -120,9 +136,13 @@ class VoicemailExtractor:
 
         Returns ``{"rows": [...]}``, ``{"rows": [], "empty_reason": "not_in_backup"}``
         or ``{"rows": [], "error": ...}``. Each row has ``id``, ``sender``,
-        ``date`` (Unix seconds), ``duration``, ``flags``, ``transcript`` and ``folder``.
-        For readers that count or list voicemails (calls, statistics), so they
-        agree with the Voicemail list.
+        ``date`` (Unix seconds), ``duration``, ``flags``, ``folder``,
+        ``transcript_file`` (the path of its ``.transcript`` in the backup, or
+        None) and ``transcript`` (voicemail.db's own column, empty on every
+        schema seen so far). The transcript file isn't read here, so readers that
+        only count voicemails (calls, statistics) don't open hundreds of files;
+        ``read_transcript`` reads one. For readers that count or list
+        voicemails, so they agree with the Voicemail list.
         """
         stores = []
         main = get_database(backup, self.VOICEMAIL_DB_PATH, domain="HomeDomain")
@@ -150,7 +170,8 @@ class VoicemailExtractor:
             return {"rows": [], "error": f"{_NOT_OPENED} ({error})"}
 
         audio = _audio_files(backup)
-        rows = [_pick(copies, audio) for copies in _match_across_stores(read)]
+        transcripts = _transcript_files(backup)
+        rows = [_pick(copies, audio, transcripts) for copies in _match_across_stores(read)]
         rows.sort(key=lambda r: r["date"] or 0, reverse=True)
         return {"rows": rows}
 
@@ -223,6 +244,60 @@ class VoicemailExtractor:
         return None
 
 
+def read_transcript(backup, relative_path) -> str:
+    """The text of a voicemail's ``.transcript`` file, or "" when there's none to read.
+
+    A file that's missing, damaged or holds no text gives "", so one bad
+    transcript never stops the list.
+    """
+    if not relative_path:
+        return ""
+    try:
+        path = backup.get_file(relative_path, domain="HomeDomain")
+        if not path or os.path.getsize(path) > _TRANSCRIPT_MAX_BYTES:
+            return ""
+        with open(path, "rb") as f:
+            return transcript_text(f.read())
+    except Exception:
+        return ""
+
+
+def transcript_text(data: bytes) -> str:
+    """``transcriptionString`` from the bytes of a ``.transcript`` file, or "".
+
+    The file is an NSKeyedArchiver archive whose root is a VMVoicemailTranscript.
+    A plain plist with the key at the top is read too.
+    """
+    try:
+        plist = plistlib.loads(data)
+    except Exception:
+        return ""
+    if not isinstance(plist, dict):
+        return ""
+    if plist.get("$archiver") != "NSKeyedArchiver":
+        text = plist.get("transcriptionString")
+        return text.strip() if isinstance(text, str) else ""
+
+    objects = plist.get("$objects")
+    if not isinstance(objects, list):
+        return ""
+
+    def resolve(value):
+        if isinstance(value, plistlib.UID):
+            # Index 0 is "$null", the archive's nil.
+            return objects[value.data] if 0 < value.data < len(objects) else None
+        return value
+
+    top = plist.get("$top")
+    root = resolve(top.get("root")) if isinstance(top, dict) else None
+    if not isinstance(root, dict):
+        return ""
+    text = resolve(root.get("transcriptionString"))
+    if isinstance(text, dict):  # an NSMutableString is archived as an object
+        text = resolve(text.get("NS.string"))
+    return text.strip() if isinstance(text, str) else ""
+
+
 def folder_of(flags, trashed_date) -> str:
     """The Phone app's list for a voicemail row: "voicemail", "spam" or "deleted"."""
     flags = flags or 0
@@ -255,8 +330,16 @@ def _account_stores(backup) -> list:
 
 
 def _audio_files(backup) -> set:
+    return _files_like(backup, "Library/Voicemail/%.amr")
+
+
+def _transcript_files(backup) -> set:
+    return _files_like(backup, "Library/Voicemail/%.transcript")
+
+
+def _files_like(backup, pattern: str) -> set:
     try:
-        return {e["path"] for e in backup.list_files(domain="HomeDomain", path_like="Library/Voicemail/%.amr")}
+        return {e["path"] for e in backup.list_files(domain="HomeDomain", path_like=pattern)}
     except Exception:
         return set()
 
@@ -284,16 +367,20 @@ def _match_across_stores(stores: list) -> list:
     return groups
 
 
-def _pick(copies: list, audio: set) -> dict:
+def _pick(copies: list, audio: set, transcripts: set = frozenset()) -> dict:
     """One row for a voicemail from its copies: the first whose audio is in the backup.
 
     It's deleted if any copy is, so a deletion recorded in one store counts.
+    Its transcript is the chosen copy's, or else any other copy's.
     """
-    def has_audio(row):
+    def beside(row, extension):
         folder = f"Library/Voicemail/{row['_store']}" if row["_store"] else "Library/Voicemail"
-        return f"{folder}/{row['ROWID']}.amr" in audio
+        return f"{folder}/{row['ROWID']}.{extension}"
 
-    row = next((r for r in copies if has_audio(r)), copies[0])
+    row = next((r for r in copies if beside(r, "amr") in audio), copies[0])
+    transcript_file = next(
+        (beside(r, "transcript") for r in [row, *copies] if beside(r, "transcript") in transcripts), None
+    )
     folders = {folder_of(r["flags"], r["trashed_date"]) for r in copies}
     folder = next(f for f in ("deleted", "spam", "voicemail") if f in folders)
     return {
@@ -303,6 +390,7 @@ def _pick(copies: list, audio: set) -> dict:
         "duration": row["duration"],
         "flags": row["flags"] or 0,
         "transcript": next((r["transcript"] for r in copies if r["transcript"]), ""),
+        "transcript_file": transcript_file,
         "folder": folder,
     }
 

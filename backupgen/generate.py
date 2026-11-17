@@ -117,6 +117,9 @@ def generate(
             writer.add_file("HomeDomain", "Library/Voicemail/voicemail.db", database)
             for v in voicemails:
                 writer.add_file("HomeDomain", f"Library/Voicemail/{v.rowid}.amr", voicemail_writer.silent_amr(v.duration))
+                if v.transcript:
+                    writer.add_file("HomeDomain", f"Library/Voicemail/{v.rowid}.transcript",
+                                    voicemail_writer.transcript_archive(v.transcript, v.duration))
             written["voicemail"] = voicemails
         if persona.notes is not None:
             notes: list = []
