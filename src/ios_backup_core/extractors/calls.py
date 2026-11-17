@@ -232,21 +232,17 @@ class CallExtractor:
         return rows_out
 
     def _read_voicemails_as_calls(self, backup, contacts: dict) -> list:
-        """Read voicemail.db and return each entry as a synthetic call record."""
-        db_path = get_database(backup, "Library/Voicemail/voicemail.db", domain="HomeDomain")
-        if not db_path:
-            return []
+        """Return each voicemail that isn't deleted as a synthetic call record.
+
+        The voicemails are the Voicemail list's, from every store (see
+        extractors/voicemail.py), so a voicemail kept in two stores is one call.
+        """
+        from ios_backup_core.extractors.voicemail import VoicemailExtractor
 
         rows_out = []
         try:
-            conn = connect_readonly(db_path, backup)
-            conn.row_factory = sqlite3.Row
-            rows = conn.execute("""
-                SELECT ROWID, sender, date, duration
-                FROM voicemail
-                WHERE (trashed_date = 0 OR trashed_date IS NULL)
-            """).fetchall()
-            conn.close()
+            result = VoicemailExtractor().voicemail_rows(backup)
+            rows = [r for r in result.get("rows", []) if r["folder"] != "deleted"]
 
             for row in rows:
                 sender = _clean_text(row["sender"])
@@ -258,7 +254,7 @@ class CallExtractor:
                 rows_out.append({
                     "_unix_ts": unix_ts,
                     "_apple_ts": unix_ts - APPLE_EPOCH_OFFSET,
-                    "call_id": f"vm_{row['ROWID']}",
+                    "call_id": f"vm_{row['id']}",
                     "address": sender,
                     "contact_name": contact_name,
                     "date": iso_date,

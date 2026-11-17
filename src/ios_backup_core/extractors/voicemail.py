@@ -5,15 +5,49 @@ Extracted from openextract/python/voicemail.py:VoicemailExtractor.
 Changes:
   - export_voicemails() removed — UI concern
   - get_audio() kept (returns file path, not base64 — caller reads the bytes)
+
+Where an iPhone keeps voicemail
+-------------------------------
+``Library/Voicemail/voicemail.db``, with each message's audio beside it as
+``<ROWID>.amr``. Newer iPhones also keep a store per account,
+``Library/Voicemail/A-<UUID>/voicemail.db``, with its own audio. Its rows
+mostly repeat the main store's, under other ROWIDs and other remote_uids, so a
+voicemail is matched across stores by its date, length and caller and listed once.
+
+Which list a voicemail is in on the phone
+-----------------------------------------
+Checked against an iOS 27.2 iPhone's Phone app (2026-11-16), voicemail by voicemail:
+
+- ``deleted``: ``flags`` has 0x8. Every row with a ``trashed_date`` has it too,
+  and older deleted ones can have 0x8 without a ``trashed_date``.
+- ``spam``: ``flags`` has 0x80 and isn't deleted. The phone's Spam list held
+  exactly these.
+- ``voicemail``: everything else, including old voicemails the carrier no
+  longer has (``remote_uid`` 0, ``flags`` 0x40).
+
+``flags`` 0x1 marks a voicemail as listened to. The phone counted more deleted
+voicemails than its backup held: whatever the rest are, they aren't in the
+backup to be read.
 """
 
 import os
+import re
 import sqlite3
 import sys
 from datetime import datetime, timezone
 
 from ios_backup_core.contacts import resolve_contact
 from ios_backup_core.db import connect_readonly, get_database
+
+FOLDERS = ("voicemail", "spam", "deleted")
+
+_HEARD = 0x1
+_DELETED = 0x8
+_SPAM = 0x80
+
+_ACCOUNT_STORE = re.compile(r"^Library/Voicemail/(A-[0-9A-Za-z-]+)/voicemail\.db$")
+# A voicemail's id: its ROWID in the main store, or "<account folder>.<ROWID>".
+_ID = re.compile(r"^(?:(A-[0-9A-Za-z-]+)\.)?(\d+)$")
 
 _LISTED_NOT_READ = (
     "Voicemail is in this backup but could not be read. "
@@ -28,62 +62,100 @@ _NOT_OPENED = (
 class VoicemailExtractor:
     """Extracts voicemails from iOS backups."""
 
+    VOICEMAIL_DIR = "Library/Voicemail"
     VOICEMAIL_DB_PATH = "Library/Voicemail/voicemail.db"
 
-    def list_voicemails(self, backup, contacts: dict) -> dict:
-        """List all voicemails with metadata.
+    def list_voicemails(self, backup, contacts: dict, include_deleted: bool = False) -> dict:
+        """List voicemails with metadata, newest first.
 
-        When there are none, ``voicemails`` is empty and ``empty_reason`` says why:
+        Each has ``folder``: ``"voicemail"``, ``"spam"`` or ``"deleted"``, the
+        list the Phone app shows it in. Deleted ones are left out unless
+        ``include_deleted``. ``counts`` says how many are in each list, deleted
+        included either way.
+
+        When none are listed, ``voicemails`` is empty and ``empty_reason`` says why:
 
         - ``"not_in_backup"``: no voicemail.db. Many phones never have one,
           because visual voicemail depends on the carrier.
-        - ``"no_records"``: voicemail.db exists but holds no voicemails.
+        - ``"no_records"``: voicemail.db exists but holds none to list.
 
         A voicemail.db that is listed in the backup but can't be read is an
         ``error``, with no ``empty_reason``.
         """
-        db_path = get_database(backup, self.VOICEMAIL_DB_PATH, domain="HomeDomain")
-        if not db_path:
-            if backup.list_files(domain="HomeDomain", path_like=self.VOICEMAIL_DB_PATH):
-                return {"voicemails": [], "error": _LISTED_NOT_READ}
-            return {"voicemails": [], "empty_reason": "not_in_backup"}
+        result = self.voicemail_rows(backup)
+        if "error" in result:
+            return {"voicemails": [], "error": result["error"]}
+        if "empty_reason" in result:
+            return {"voicemails": [], "empty_reason": result["empty_reason"]}
 
-        rows, error = self._read_with_retries(backup, db_path)
-        if rows is None:
-            return {"voicemails": [], "error": f"{_NOT_OPENED} ({error})"}
-
+        counts = {folder: 0 for folder in FOLDERS}
         voicemails = []
-        try:
-            for row in rows:
-                sender = row["sender"] or ""
-                caller_name = resolve_contact(sender, contacts) or sender
+        for row in result["rows"]:
+            counts[row["folder"]] += 1
+            if row["folder"] == "deleted" and not include_deleted:
+                continue
+            sender = row["sender"] or ""
+            date_ts = int(row["date"]) if row["date"] else 0
+            voicemails.append({
+                "id": row["id"],
+                "phone_number": sender,
+                "contact_name": resolve_contact(sender, contacts) or sender,
+                "date_received": (
+                    datetime.fromtimestamp(date_ts, timezone.utc).isoformat() if date_ts else ""
+                ),
+                "duration": row["duration"],
+                "is_read": bool(row["flags"] & _HEARD),
+                "transcript": row["transcript"],
+                "folder": row["folder"],
+            })
 
-                date_ts = int(row["date"]) if row["date"] else 0
-                iso_date = (
-                    datetime.fromtimestamp(date_ts, timezone.utc).isoformat()
-                    if date_ts else ""
-                )
-
-                voicemails.append({
-                    "id": row["ROWID"],
-                    "phone_number": sender,
-                    "contact_name": caller_name,
-                    "date_received": iso_date,
-                    "duration": row["duration"],
-                    "is_read": bool(row["flags"] & 1) if row["flags"] else False,
-                    "transcript": row["transcript"] or "",
-                })
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            return {"voicemails": [], "error": str(e)}
-
-        if not voicemails:
+        if not result["rows"]:
             return {"voicemails": [], "empty_reason": "no_records"}
-        return {"voicemails": voicemails}
+        if not voicemails:  # only deleted ones, not asked for
+            return {"voicemails": [], "empty_reason": "no_records", "counts": counts}
+        return {"voicemails": voicemails, "counts": counts}
 
-    def _read_with_retries(self, backup, db_path: str):
-        """Read voicemail.db's rows, trying again before giving up. Returns (rows, None) or (None, error).
+    def voicemail_rows(self, backup) -> dict:
+        """Every voicemail in every store, matched across stores, newest first.
+
+        Returns ``{"rows": [...]}``, ``{"rows": [], "empty_reason": "not_in_backup"}``
+        or ``{"rows": [], "error": ...}``. Each row has ``id``, ``sender``,
+        ``date`` (Unix seconds), ``duration``, ``flags``, ``transcript`` and ``folder``.
+        For readers that count or list voicemails (calls, statistics), so they
+        agree with the Voicemail list.
+        """
+        stores = []
+        main = get_database(backup, self.VOICEMAIL_DB_PATH, domain="HomeDomain")
+        if main:
+            stores.append(("", main, self.VOICEMAIL_DB_PATH))
+        elif _listed(backup, self.VOICEMAIL_DB_PATH):
+            return {"rows": [], "error": _LISTED_NOT_READ}
+        for name, rel in _account_stores(backup):
+            path = get_database(backup, rel, domain="HomeDomain")
+            if path:
+                stores.append((name, path, rel))
+        if not stores:
+            return {"rows": [], "empty_reason": "not_in_backup"}
+
+        read, error = [], None
+        for name, path, rel in stores:
+            rows, failure = self._read_with_retries(backup, path, rel)
+            if rows is None:
+                if not name:
+                    return {"rows": [], "error": f"{_NOT_OPENED} ({failure})"}
+                error = error or failure  # the main store still lists
+                continue
+            read.append((name, rows))
+        if not read:
+            return {"rows": [], "error": f"{_NOT_OPENED} ({error})"}
+
+        audio = _audio_files(backup)
+        rows = [_pick(copies, audio) for copies in _match_across_stores(read)]
+        rows.sort(key=lambda r: r["date"] or 0, reverse=True)
+        return {"rows": rows}
+
+    def _read_with_retries(self, backup, db_path: str, relative_path: str = VOICEMAIL_DB_PATH):
+        """Read a voicemail.db's rows, trying again before giving up. Returns (rows, None) or (None, error).
 
         The database can be readable one moment and not the next (OE-77: the
         home screen read it, then the list couldn't open it). So a failure is
@@ -100,8 +172,8 @@ class VoicemailExtractor:
 
         tried = {(db_path, False)}
         retries = (
-            (get_database(backup, self.VOICEMAIL_DB_PATH, domain="HomeDomain"), False),
-            (backup.get_file(self.VOICEMAIL_DB_PATH, domain="HomeDomain"), True),
+            (get_database(backup, relative_path, domain="HomeDomain"), False),
+            (backup.get_file(relative_path, domain="HomeDomain"), True),
         )
         for path, ignore_wal in retries:
             if not path or (path, ignore_wal) in tried:
@@ -122,24 +194,117 @@ class VoicemailExtractor:
             # Like every other reader here: sorting or temp tables stay in memory,
             # so a read never needs a file in SQLite's own temp folder.
             conn.execute("PRAGMA temp_store = MEMORY")
-            columns = [col["name"] for col in conn.execute("PRAGMA table_info(voicemail)")]
-            transcript_col = "transcript" if "transcript" in columns else "'' AS transcript"
+            columns = {col["name"] for col in conn.execute("PRAGMA table_info(voicemail)")}
+            # A column a schema lacks reads as empty rather than failing the whole list.
+            wanted = {"sender": "NULL", "duration": "0", "flags": "0", "trashed_date": "0", "transcript": "''"}
+            select = ", ".join(c if c in columns else f"{empty} AS {c}" for c, empty in wanted.items())
             return conn.execute(f"""
-                SELECT ROWID, sender, date, duration, flags, trashed_date, token, {transcript_col}
+                SELECT ROWID, date, {select}
                 FROM voicemail
-                WHERE trashed_date = 0 OR trashed_date IS NULL
                 ORDER BY date DESC
             """).fetchall()
         finally:
             conn.close()
 
-    def get_audio_path(self, backup, voicemail_id: int) -> str | None:
-        """Return the local path to a voicemail .amr audio file, or None."""
-        audio_path = f"Library/Voicemail/{voicemail_id}.amr"
-        file_path = backup.get_file(audio_path, domain="HomeDomain")
+    def get_audio_path(self, backup, voicemail_id) -> str | None:
+        """Return the local path to a voicemail's .amr audio file, or None.
+
+        ``voicemail_id`` is an ``id`` from list_voicemails: a ROWID in the main
+        store, or ``"<account folder>.<ROWID>"``.
+        """
+        match = _ID.match(str(voicemail_id).strip())
+        if not match:
+            return None
+        store, rowid = match.groups()
+        folder = f"{self.VOICEMAIL_DIR}/{store}" if store else self.VOICEMAIL_DIR
+        file_path = backup.get_file(f"{folder}/{rowid}.amr", domain="HomeDomain")
         if file_path and os.path.exists(file_path):
             return file_path
         return None
+
+
+def folder_of(flags, trashed_date) -> str:
+    """The Phone app's list for a voicemail row: "voicemail", "spam" or "deleted"."""
+    flags = flags or 0
+    if trashed_date or flags & _DELETED:
+        return "deleted"
+    if flags & _SPAM:
+        return "spam"
+    return "voicemail"
+
+
+def _listed(backup, relative_path: str) -> bool:
+    try:
+        return bool(backup.list_files(domain="HomeDomain", path_like=relative_path))
+    except Exception:
+        return False
+
+
+def _account_stores(backup) -> list:
+    """(folder name, relative path) of each per-account voicemail.db, in name order."""
+    try:
+        listed = backup.list_files(domain="HomeDomain", path_like="Library/Voicemail/%/voicemail.db")
+    except Exception:
+        return []
+    stores = {}
+    for entry in listed:
+        match = _ACCOUNT_STORE.match(entry["path"])
+        if match:
+            stores[match.group(1)] = entry["path"]
+    return sorted(stores.items())
+
+
+def _audio_files(backup) -> set:
+    try:
+        return {e["path"] for e in backup.list_files(domain="HomeDomain", path_like="Library/Voicemail/%.amr")}
+    except Exception:
+        return set()
+
+
+def _match_across_stores(stores: list) -> list:
+    """Group the rows of each store with their copies in other stores.
+
+    ``stores`` is [(name, rows)], the main store ("") first. A copy is a row
+    in another store with the same date, length and caller. Rows that match
+    within one store stay apart: they are separate rows on the phone too.
+    """
+    groups, by_key = [], {}
+    for name, rows in stores:
+        for row in rows:
+            row = dict(row)
+            row["_store"] = name
+            key = (row["date"], row["duration"], row["sender"])
+            group = by_key.get(key)
+            if group is not None and all(copy["_store"] != name for copy in group):
+                group.append(row)
+                continue
+            group = [row]
+            groups.append(group)
+            by_key.setdefault(key, group)
+    return groups
+
+
+def _pick(copies: list, audio: set) -> dict:
+    """One row for a voicemail from its copies: the first whose audio is in the backup.
+
+    It's deleted if any copy is, so a deletion recorded in one store counts.
+    """
+    def has_audio(row):
+        folder = f"Library/Voicemail/{row['_store']}" if row["_store"] else "Library/Voicemail"
+        return f"{folder}/{row['ROWID']}.amr" in audio
+
+    row = next((r for r in copies if has_audio(r)), copies[0])
+    folders = {folder_of(r["flags"], r["trashed_date"]) for r in copies}
+    folder = next(f for f in ("deleted", "spam", "voicemail") if f in folders)
+    return {
+        "id": f"{row['_store']}.{row['ROWID']}" if row["_store"] else row["ROWID"],
+        "sender": row["sender"],
+        "date": row["date"],
+        "duration": row["duration"],
+        "flags": row["flags"] or 0,
+        "transcript": next((r["transcript"] for r in copies if r["transcript"]), ""),
+        "folder": folder,
+    }
 
 
 def _log_failure(path: str, ignore_wal: bool, error: Exception) -> None:
