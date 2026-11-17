@@ -300,6 +300,8 @@ class MessageExtractor:
             if has_error:             select_parts.append('m.error')
             if has_summary_info:      select_parts.append('m.message_summary_info')
             if has_date_retracted:    select_parts.append('m.date_retracted')
+            if schema.get('has_message_service'):
+                select_parts.append('m.service AS message_service')
             other_handle_join = "LEFT JOIN handle oh ON oh.ROWID = m.other_handle" if has_other_handle else ""
 
             date_clauses = []
@@ -535,6 +537,10 @@ class MessageExtractor:
                     "is_from_me": bool(row["is_from_me"]),
                     "sender": "me" if row["is_from_me"] else sender_name,
                     "sender_handle": handle,
+                    # How this one message went: "iMessage", "SMS" or "RCS".
+                    # A conversation can mix them, so it can differ from the
+                    # conversation's service. None when sms.db doesn't say.
+                    "service": (row["message_service"] or None) if schema.get('has_message_service') else None,
                     "has_attachments": bool(real_attachments),
                     "attachments": real_attachments,
                     "is_reaction": row["associated_message_type"] is not None and row["associated_message_type"] != 0,
