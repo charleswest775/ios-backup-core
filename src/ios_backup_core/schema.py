@@ -36,6 +36,8 @@ def detect_message_schema(conn: sqlite3.Connection) -> dict:
         has_date_retracted    — 'date_retracted' column present (iOS 16+)
         has_associated_type   — 'associated_message_type' column present
                                 (tapbacks; iOS 10+)
+        has_message_service   — 'service' column present ("iMessage", "SMS"
+                                or "RCS" per message; a chat can mix them)
         has_chat_display_name — 'display_name' in chat table (named group
                                 chats; not in the oldest sms.db files)
         has_transfer_name     — 'transfer_name' in attachment table (likewise)
@@ -62,6 +64,7 @@ def detect_message_schema(conn: sqlite3.Connection) -> dict:
         'has_summary_info':      'message_summary_info' in msg_cols,
         'has_date_retracted':    'date_retracted'     in msg_cols,
         'has_associated_type':   'associated_message_type' in msg_cols,
+        'has_message_service':   'service'            in msg_cols,
         'has_chat_display_name': 'display_name'       in chat_cols,
         'has_transfer_name':     'transfer_name'      in attachment_cols,
         'has_total_bytes':       'total_bytes'        in attachment_cols,

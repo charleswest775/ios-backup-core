@@ -191,6 +191,26 @@ def test_events_keep_sender_fields(messages):
     assert not by_id[1]["text"] and by_id[1]["has_attachments"] is False
 
 
+def test_each_message_says_its_own_service():
+    """A conversation can mix iMessage and SMS (a message sent as text when
+    iMessage was down), so each message carries the service it went by."""
+    for version in SCHEMA_VERSIONS:
+        with tempfile.TemporaryDirectory() as tmp:
+            sms_path = os.path.join(tmp, "sms.db")
+            _build_sms_db(sms_path, version, {
+                1: dict(text="Over iMessage", handle_id=KARIN, service="iMessage"),
+                2: dict(text="Sent as text", is_from_me=1, handle_id=KARIN, service="SMS"),
+                3: dict(text="No service recorded", handle_id=KARIN, service=None),
+            })
+            extractor = MessageExtractor()
+            try:
+                by_id = {m["message_id"]: m for m in extractor.get_messages(
+                    _FakeBackup(sms_path), chat_id=1, contacts=CONTACTS)["messages"]}
+            finally:
+                extractor.close()
+        assert [by_id[i]["service"] for i in (1, 2, 3)] == ["iMessage", "SMS", None], version
+
+
 def test_contact_found_by_uncanonicalized_id():
     contacts = {"(555) 000-2222": "Theo B"}
     with tempfile.TemporaryDirectory() as tmp:

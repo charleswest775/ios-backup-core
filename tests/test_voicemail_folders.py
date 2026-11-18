@@ -20,7 +20,12 @@ import pytest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from ios_backup_core.extractors.calls import CallExtractor  # noqa: E402
-from ios_backup_core.extractors.voicemail import VoicemailExtractor, folder_of  # noqa: E402
+from ios_backup_core.extractors.voicemail import (  # noqa: E402
+    VoicemailExtractor,
+    folder_of,
+    is_deleted,
+    is_spam,
+)
 
 MAIN = "Library/Voicemail/voicemail.db"
 ACCOUNT = "A-0B1C2D3E-4F50-4A6B-8C7D-9E0F1A2B3C4D"
@@ -104,6 +109,21 @@ def test_folder_follows_the_phone(flags, trashed_date, folder):
     assert folder_of(flags, trashed_date) == folder
 
 
+@pytest.mark.parametrize("flags, trashed_date, spam, deleted", [
+    (LIVE, 0, False, False),
+    (SPAM, 0, True, False),
+    (TRASHED, 795000000, False, True),
+    (DELETED_LONG_AGO, 0, False, True),
+    (0x118A, 795000000, True, True),  # spam, then deleted: both marks
+    (0x1188, 0, True, True),          # the same without a trashed_date
+    (0x80, None, True, False),
+    (0, 795000000, False, True),
+    (None, None, False, False),
+])
+def test_spam_and_deleted_are_separate_marks(flags, trashed_date, spam, deleted):
+    assert (is_spam(flags), is_deleted(flags, trashed_date)) == (spam, deleted)
+
+
 @pytest.fixture
 def one_store(tmp_path):
     db = _store(tmp_path / "main" / "voicemail.db", [
@@ -128,6 +148,45 @@ def test_every_list_when_deleted_are_asked_for(one_store):
         (5, "voicemail"), (4, "spam"), (3, "deleted"), (2, "deleted"), (1, "voicemail"),
     ]
     assert result["counts"] == {"voicemail": 2, "spam": 1, "deleted": 2}
+
+
+def test_each_voicemail_says_spam_and_deleted(one_store):
+    result = _list(one_store, include_deleted=True)
+    assert [(v["id"], v["folder"], v["is_spam"], v["is_deleted"]) for v in result["voicemails"]] == [
+        (5, "voicemail", False, False),
+        (4, "spam", True, False),
+        (3, "deleted", False, True),
+        (2, "deleted", False, True),
+        (1, "voicemail", False, False),
+    ]
+
+
+def test_a_deleted_spam_voicemail_keeps_its_spam_mark(tmp_path):
+    db = _store(tmp_path / "main" / "voicemail.db", [
+        (1, 9001, 1_760_000_000, "+15550000004", 23, SPAM, 0),
+        (2, 9002, 1_761_000_000, "+15550000006", 11, 0x118A, 1_761_000_900),  # spam, then deleted
+        (3, 9003, 1_762_000_000, "+15550000007", 12, 0x1188, 0),               # likewise, no trashed_date
+    ])
+    result = _list(_Backup({MAIN: db}), include_deleted=True)
+    assert [(v["id"], v["folder"], v["is_spam"], v["is_deleted"]) for v in result["voicemails"]] == [
+        (3, "deleted", True, True),
+        (2, "deleted", True, True),
+        (1, "spam", True, False),
+    ]
+    assert result["counts"] == {"voicemail": 0, "spam": 1, "deleted": 2}
+
+
+def test_a_saved_contacts_number_is_kept(tmp_path):
+    """contact_name is the address book's name; phone_number stays the number."""
+    db = _store(tmp_path / "main" / "voicemail.db", [
+        (1, 9001, 1_760_000_000, "+15550000004", 23, SPAM, 0),
+        (2, 9002, 1_761_000_000, "+15550000099", 11, LIVE, 0),
+    ])
+    result = VoicemailExtractor().list_voicemails(_Backup({MAIN: db}), contacts={"+15550000004": "Dentist"})
+    assert [(v["phone_number"], v["contact_name"]) for v in result["voicemails"]] == [
+        ("+15550000099", "+15550000099"),
+        ("+15550000004", "Dentist"),
+    ]
 
 
 def test_only_deleted_ones_is_no_records_with_counts(tmp_path):
@@ -197,6 +256,26 @@ def test_deleted_in_one_store_is_deleted(tmp_path):
     assert result["counts"] == {"voicemail": 1, "spam": 1, "deleted": 3}
 
 
+def test_spam_in_one_store_and_deleted_in_another_is_both(tmp_path):
+    files = _two_stores(tmp_path)
+    conn = sqlite3.connect(files[ACCOUNT_DB])
+    # The account store's copy of the main store's spam 2400 is deleted, and not marked spam
+    conn.execute("UPDATE voicemail SET flags = 0x4A, trashed_date = 1773000500 WHERE ROWID = 4")
+    conn.commit()
+    conn.close()
+    result = _list(_Backup(files), include_deleted=True)
+    by_id = {v["id"]: v for v in result["voicemails"]}
+    assert (by_id[2400]["folder"], by_id[2400]["is_spam"], by_id[2400]["is_deleted"]) == ("deleted", True, True)
+
+
+def test_rows_say_spam_and_deleted_for_other_readers(tmp_path):
+    rows = VoicemailExtractor().voicemail_rows(_Backup(_two_stores(tmp_path)))["rows"]
+    assert {(r["id"], r["is_spam"], r["is_deleted"]) for r in rows} == {
+        (f"{ACCOUNT}.10", False, False), (2405, False, False), (2404, False, True),
+        (2402, False, False), (2400, True, False),
+    }
+
+
 def test_twins_within_one_store_stay_apart(tmp_path):
     """The main store can hold two rows for one message (same date, length and
     caller, other remote_uids). The phone counts both, so do we."""
@@ -253,4 +332,5 @@ def test_a_schema_without_some_columns_still_lists(tmp_path):
     conn.commit()
     conn.close()
     result = _list(_Backup({MAIN: str(path)}))
-    assert [(v["id"], v["folder"], v["duration"], v["is_read"]) for v in result["voicemails"]] == [(1, "voicemail", 0, False)]
+    assert [(v["id"], v["folder"], v["duration"], v["is_read"], v["is_spam"], v["is_deleted"])
+            for v in result["voicemails"]] == [(1, "voicemail", 0, False, False, False)]

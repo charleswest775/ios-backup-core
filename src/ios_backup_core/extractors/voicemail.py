@@ -25,6 +25,11 @@ Checked against an iOS 27.2 iPhone's Phone app (2026-11-16), voicemail by voicem
 - ``voicemail``: everything else, including old voicemails the carrier no
   longer has (``remote_uid`` 0, ``flags`` 0x40).
 
+A voicemail that was marked spam and then deleted is in Deleted, so its
+``folder`` is ``"deleted"``. Each record also says ``is_spam`` (0x80) and
+``is_deleted`` (0x8, or a ``trashed_date``) on their own, so a deleted spam
+voicemail keeps its spam mark.
+
 ``flags`` 0x1 marks a voicemail as listened to. The phone counted more deleted
 voicemails than its backup held: whatever the rest are, they aren't in the
 backup to be read.
@@ -84,9 +89,13 @@ class VoicemailExtractor:
         """List voicemails with metadata, newest first.
 
         Each has ``folder``: ``"voicemail"``, ``"spam"`` or ``"deleted"``, the
-        list the Phone app shows it in. Deleted ones are left out unless
-        ``include_deleted``. ``counts`` says how many are in each list, deleted
-        included either way.
+        list the Phone app shows it in, and ``is_spam`` and ``is_deleted``,
+        which are separate: a spam voicemail that was deleted is in
+        ``"deleted"`` with ``is_spam`` true. ``phone_number`` is the caller's
+        number as the backup has it, and ``contact_name`` their name in the
+        address book (the number when they aren't in it). Deleted ones are left
+        out unless ``include_deleted``. ``counts`` says how many are in each
+        list, deleted included either way.
 
         When none are listed, ``voicemails`` is empty and ``empty_reason`` says why:
 
@@ -123,6 +132,8 @@ class VoicemailExtractor:
                 "is_read": bool(row["flags"] & _HEARD),
                 "transcript": transcript,
                 "folder": row["folder"],
+                "is_spam": row["is_spam"],
+                "is_deleted": row["is_deleted"],
             })
 
         if not result["rows"]:
@@ -137,6 +148,7 @@ class VoicemailExtractor:
         Returns ``{"rows": [...]}``, ``{"rows": [], "empty_reason": "not_in_backup"}``
         or ``{"rows": [], "error": ...}``. Each row has ``id``, ``sender``,
         ``date`` (Unix seconds), ``duration``, ``flags``, ``folder``,
+        ``is_spam``, ``is_deleted``,
         ``transcript_file`` (the path of its ``.transcript`` in the backup, or
         None) and ``transcript`` (voicemail.db's own column, empty on every
         schema seen so far). The transcript file isn't read here, so readers that
@@ -299,13 +311,26 @@ def transcript_text(data: bytes) -> str:
 
 
 def folder_of(flags, trashed_date) -> str:
-    """The Phone app's list for a voicemail row: "voicemail", "spam" or "deleted"."""
-    flags = flags or 0
-    if trashed_date or flags & _DELETED:
+    """The Phone app's list for a voicemail row: "voicemail", "spam" or "deleted".
+
+    Deleted comes first, as on the phone: a spam voicemail that was deleted is
+    in Deleted. ``is_spam`` keeps its spam mark.
+    """
+    if is_deleted(flags, trashed_date):
         return "deleted"
-    if flags & _SPAM:
+    if is_spam(flags):
         return "spam"
     return "voicemail"
+
+
+def is_spam(flags) -> bool:
+    """Marked spam (0x80), whichever list it's in now."""
+    return bool((flags or 0) & _SPAM)
+
+
+def is_deleted(flags, trashed_date) -> bool:
+    """In Deleted: 0x8, or a trashed_date (every such row has 0x8 too)."""
+    return bool(trashed_date or (flags or 0) & _DELETED)
 
 
 def _listed(backup, relative_path: str) -> bool:
@@ -370,7 +395,8 @@ def _match_across_stores(stores: list) -> list:
 def _pick(copies: list, audio: set, transcripts: set = frozenset()) -> dict:
     """One row for a voicemail from its copies: the first whose audio is in the backup.
 
-    It's deleted if any copy is, so a deletion recorded in one store counts.
+    It's deleted if any copy is, so a deletion recorded in one store counts,
+    and spam if any copy is marked spam.
     Its transcript is the chosen copy's, or else any other copy's.
     """
     def beside(row, extension):
@@ -381,8 +407,9 @@ def _pick(copies: list, audio: set, transcripts: set = frozenset()) -> dict:
     transcript_file = next(
         (beside(r, "transcript") for r in [row, *copies] if beside(r, "transcript") in transcripts), None
     )
-    folders = {folder_of(r["flags"], r["trashed_date"]) for r in copies}
-    folder = next(f for f in ("deleted", "spam", "voicemail") if f in folders)
+    spam = any(is_spam(r["flags"]) for r in copies)
+    deleted = any(is_deleted(r["flags"], r["trashed_date"]) for r in copies)
+    folder = "deleted" if deleted else "spam" if spam else "voicemail"
     return {
         "id": f"{row['_store']}.{row['ROWID']}" if row["_store"] else row["ROWID"],
         "sender": row["sender"],
@@ -392,6 +419,8 @@ def _pick(copies: list, audio: set, transcripts: set = frozenset()) -> dict:
         "transcript": next((r["transcript"] for r in copies if r["transcript"]), ""),
         "transcript_file": transcript_file,
         "folder": folder,
+        "is_spam": spam,
+        "is_deleted": deleted,
     }
 
 
