@@ -23,16 +23,20 @@ ROOT = os.path.join(os.path.dirname(__file__), "..")
 sys.path.insert(0, os.path.join(ROOT, "src"))
 sys.path.insert(0, ROOT)
 
+from backupgen import PERSONAS_DIR  # noqa: E402
 from backupgen.container import BackupWriter, Device  # noqa: E402
 from backupgen.generate import EXPECTED, generate  # noqa: E402
+from backupgen.persona import load_persona  # noqa: E402
 from ios_backup_core.backup import open_local_backup  # noqa: E402
 from ios_backup_core.contacts import ContactResolver  # noqa: E402
 from ios_backup_core.db import connect_readonly  # noqa: E402
 from ios_backup_core.extractors.browser_history import BrowserHistoryExtractor  # noqa: E402
+from ios_backup_core.extractors.calendar_events import CalendarExtractor  # noqa: E402
 from ios_backup_core.extractors.calls import CallExtractor  # noqa: E402
 from ios_backup_core.extractors.messages import MessageExtractor  # noqa: E402
 from ios_backup_core.extractors.notes import NoteExtractor  # noqa: E402
 from ios_backup_core.extractors.photos import PhotoExtractor  # noqa: E402
+from ios_backup_core.extractors.voice_memos import VoiceMemoExtractor  # noqa: E402
 from ios_backup_core.extractors.voicemail import VoicemailExtractor  # noqa: E402
 from ios_backup_core.extractors.whatsapp import WhatsAppExtractor  # noqa: E402
 
@@ -73,6 +77,8 @@ def _read_everything(backup_dir: Path) -> dict:
         for conv in conversations["conversations"]
         for m in extractor.get_messages(accessor, conv["chat_id"], lookup, 0, 10_000)["messages"]
     ]
+    recordings = VoiceMemoExtractor()
+    memos = recordings.list_voice_memos(accessor)
     return {
         "contacts": resolver.list_contacts(accessor),
         "conversations": conversations,
@@ -85,13 +91,47 @@ def _read_everything(backup_dir: Path) -> dict:
         "calls": CallExtractor().list_calls(accessor, lookup),
         "browser_history": BrowserHistoryExtractor().list_browser_history(accessor),
         "whatsapp": WhatsAppExtractor().list_conversations(accessor, lookup),
+        "calendars": CalendarExtractor().list_calendars(accessor),
+        "calendar_events": CalendarExtractor().list_events(accessor, contacts=lookup),
+        "voice_memos": memos,
+        # Audio files and the transcripts inside them are opened too.
+        "voice_memo_audio": [recordings.get_audio_path(accessor, m["id"]) for m in memos["voice_memos"]],
+        "transcripts": [recordings.get_transcript(accessor, m["id"]) for m in memos["voice_memos"]],
     }
+
+
+# Made up: a calendar and a few recordings for the test persona, so Calendar.sqlitedb and
+# CloudRecordings.db (WAL databases on a phone) and the recordings' audio are read too.
+_CALENDAR = {
+    "calendars": [{"id": "cal", "title": "Calendar", "color": "#1BADF8", "account": "icloud"}],
+    "events": [
+        {"id": "standup", "calendar": "cal", "title": "Standup", "start": "2025-06-03T09:30", "end": "2025-06-03T09:45",
+         "created": "2025-05-28T16:00", "organizer": "me", "attendees": ["riley"], "alerts": [5],
+         "repeat": {"frequency": "weekly", "count": 6}},
+        {"id": "trip", "calendar": "cal", "title": "Lisbon", "start": "2025-07-14", "end": "2025-07-18",
+         "created": "2025-05-01T19:00"},
+    ],
+}
+_VOICE_MEMOS = """== 2025-03-10
+08:15 20s Shopping list (favorite) (folder: Lists)
+== 2025-09-01
+18:00 15s Song idea
+  > A short tune for the morning.
+"""
+
+
+def _pack(tmp_path: Path):
+    folder = tmp_path / "packs" / "testpersona"
+    shutil.copytree(PERSONAS_DIR / "testpersona", folder)
+    (folder / "calendar.json").write_text(json.dumps(_CALENDAR), encoding="utf-8")
+    (folder / "voice_memos.txt").write_text(_VOICE_MEMOS, encoding="utf-8")
+    return load_persona("testpersona", root=folder.parent)
 
 
 def _generate(tmp_path: Path):
     # Spaces, '#' and '%' are special in the file: URIs used to open databases.
     out = tmp_path / "Backups #1 100% ü"
-    backup_dir = generate("testpersona", "ios26", out)
+    backup_dir = generate("testpersona", "ios26", out, persona=_pack(tmp_path))
     return backup_dir, json.loads((out / EXPECTED).read_text(encoding="utf-8"))
 
 
@@ -111,6 +151,11 @@ def test_a_read_only_backup_reads_in_full(tmp_path):
     assert len(data["notes"]["notes"]) == len(expected["notes"])
     assert len(data["voicemails"]["voicemails"]) == len(expected["voicemails"])
     assert data["whatsapp"] == {"conversations": [], "empty_reason": "not_in_backup"}
+    assert len(data["calendars"]["calendars"]) == len(expected["calendar"]["calendars"])
+    assert len(data["calendar_events"]["events"]) == len(expected["calendar"]["events"])
+    assert len(data["voice_memos"]["voice_memos"]) == len(expected["voice_memos"])
+    assert all(path and os.path.isfile(path) for path in data["voice_memo_audio"])
+    assert [t and t["text"] for t in data["transcripts"]] == [m["transcript"] for m in expected["voice_memos"]]
 
 
 def test_reading_leaves_the_backup_unchanged(tmp_path):

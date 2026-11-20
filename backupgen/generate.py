@@ -22,12 +22,14 @@ from backupgen import media
 from backupgen.container import BackupWriter, Device
 from backupgen.persona import Persona, load_persona
 from backupgen.sqlitegen import build
+from backupgen.writers import calendar as calendar_writer
 from backupgen.writers import calls as calls_writer
 from backupgen.writers import contacts as contacts_writer
 from backupgen.writers import messages as messages_writer
 from backupgen.writers import notes as notes_writer
 from backupgen.writers import photos as photos_writer
 from backupgen.writers import safari as safari_writer
+from backupgen.writers import voice_memos as voice_memos_writer
 from backupgen.writers import voicemail as voicemail_writer
 from backupgen.writers import whatsapp as whatsapp_writer
 
@@ -149,6 +151,20 @@ def generate(
             for (domain, path), data in whatsapp.files.items():
                 writer.add_file(domain, path, data)
             written["whatsapp"] = whatsapp.messages
+        # Calendar and Voice Memos come after WhatsApp and draw from random generators of their own,
+        # so adding them to a pack leaves the rest of its backups as they were.
+        if persona.calendars is not None:
+            events: list = []
+            calendar_rng = random.Random(f"{persona.id}/{snapshot.id}/calendar")
+            database = build(tmp / "Calendar.sqlitedb", snapshot.schema, "Calendar.sqlitedb",
+                             lambda db: events.append(calendar_writer.populate(db, persona, snapshot, calendar_rng)))
+            writer.add_file(calendar_writer.DOMAIN, calendar_writer.PATH, database)
+            written["calendar"] = events[0]
+        if persona.voice_memos is not None:
+            memos = voice_memos_writer.write(tmp, persona, snapshot, random.Random(f"{persona.id}/{snapshot.id}/voice_memos"))
+            for (domain, path), data in memos.files.items():
+                writer.add_file(domain, path, data)
+            written["voice_memos"] = memos.memos
 
     backup_dir = writer.finalize()
 
@@ -178,6 +194,9 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
         conv["message_count"] += 1
         conv["last_message_date"] = w.date.isoformat()
     present = {kind for kind, records in written.items() if records}
+    # A written Calendar.sqlitedb or CloudRecordings.db is there even with nothing in it, as on a phone:
+    # the readers then list the calendars, or answer "no_records", not "not_in_backup".
+    present |= {"calendar", "voice_memos"} & written.keys()
     if cards:
         present.add("contacts")
     on_phone = {"calls": bool(persona.calls or persona.voicemails), "browser_history": bool(persona.visits)}
@@ -242,5 +261,10 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
         ],
         # Chats in arrival order (each message's "sort"); see writers/whatsapp.py. None when the phone has no WhatsApp.
         "whatsapp": whatsapp_writer.answer_key(whatsapp) if whatsapp and whatsapp.messages else None,
+        # Shaped like the readers' records (see writers/calendar.py and writers/voice_memos.py); events in
+        # row order, recordings newest first. None when the pack has no calendar.json / voice_memos.txt.
+        "calendar": ({"calendars": written["calendar"].calendars, "events": list(written["calendar"])}
+                     if "calendar" in written else None),
+        "voice_memos": written.get("voice_memos"),
         "absent": {t: "encrypted_only" if t in left_out else "none" for t in DATA_TYPES if t not in present},
     }

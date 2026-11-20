@@ -12,6 +12,7 @@ requires-python = ">=3.10"
 dependencies = [
     "iphone-backup-decrypt>=0.11.0",  # 0.11.0 added passphrase_key (iOS 10.0 and 10.1 backups)
     "pytypedstream>=0.1.0",
+    "tzdata; sys_platform == 'win32'",  # Calendar time zones: Windows has no zoneinfo database
 ]
 
 [project.optional-dependencies]

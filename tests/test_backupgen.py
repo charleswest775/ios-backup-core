@@ -69,6 +69,10 @@ def test_missing_schema_falls_back_to_the_nearest_older_version():
     assert load_schema("26.5", "NoteStore.sqlite")["ios"] == "17.3"
     assert load_schema("16.2", "sms.db")["ios"] == "16.1.2"
     assert load_schema("26.5", "Photos.sqlite")["ios"] == "26.5"
+    # Voice Memos: Apple's VoiceMemos14 model for 26.5; the iOS 13 layout until then (14 to 18 were never harvested).
+    assert load_schema("26.5", "CloudRecordings.db")["ios"] == "26.5"
+    assert load_schema("17.3", "CloudRecordings.db")["ios"] == "13.4.1"
+    assert load_schema("15.3.1", "CloudRecordings.db")["ios"] == "13.4.1"
     with pytest.raises(FileNotFoundError):
         load_schema("12.0", "sms.db")
 

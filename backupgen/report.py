@@ -2,8 +2,8 @@
 
 Shows the conceit and time shift, the sourced timeline, the topics kept out, the contacts, every
 conversation with both its real and on-device dates, and the calls, voicemails, notes, Safari
-history, photos (with each photo's licence and credit) and WhatsApp chats, so a reviewer can
-check facts and tone without reading JSON.
+history, photos (with each photo's licence and credit), WhatsApp chats, calendar and voice
+memos, so a reviewer can check facts and tone without reading JSON.
 """
 
 from __future__ import annotations
@@ -31,7 +31,8 @@ def render(persona: Persona) -> str:
     w(f"| Licence | {persona.licence} |")
     total = sum(len(c.messages) for c in persona.chats)
     extras = [(persona.calls, "calls"), (persona.voicemails, "voicemails"), (persona.notes, "notes"),
-              (persona.visits, "Safari visits"), (persona.photos, "photos"), (persona.whatsapp, "WhatsApp chats")]
+              (persona.visits, "Safari visits"), (persona.photos, "photos"), (persona.whatsapp, "WhatsApp chats"),
+              (persona.events, "calendar events"), (persona.voice_memos, "voice memos")]
     more = "".join(f", {len(items)} {label}" for items, label in extras if items is not None)
     w(f"| Size | {len(persona.contacts) + 1} contacts, {len(persona.chats)} conversations, {total} messages{more} |\n")
 
@@ -104,6 +105,8 @@ def render(persona: Persona) -> str:
     _visits(persona, w)
     _photos(persona, w)
     _whatsapp(persona, w)
+    _calendar(persona, w)
+    _voice_memos(persona, w)
     return "\n".join(out) + "\n"
 
 
@@ -214,3 +217,72 @@ def _whatsapp(persona: Persona, w) -> None:
                 caption = f" {m.text}" if m.text else ""
                 w(f"- {m.real_time:%H:%M} **{who(m.sender)}:** *[{detail}]*{caption}{star}")
         w("")
+
+
+def _when(value) -> str:
+    return f"{value:%Y-%m-%d %H:%M}" if isinstance(value, datetime) else f"{value:%Y-%m-%d}"
+
+
+def _repeats(event) -> str:
+    r = event.repeat
+    if r is None:
+        return ""
+    every = {"daily": "day", "weekly": "week", "monthly": "month", "yearly": "year"}[r.frequency]
+    text = f"every {every}" if r.interval == 1 else f"every {r.interval} {every}s"
+    if r.by_day:
+        text += " on " + ", ".join(f"{o}{d}" if o else d for o, d in r.by_day)
+    if r.by_month:
+        text += " in month " + ", ".join(str(m) for m in r.by_month)
+    if r.count:
+        text += f", {r.count} times"
+    if r.until:
+        text += f", until {_when(r.until)}"
+    changes = [f"skips {_when(s)}" for s in event.skip] + [f"{_when(o)} moved to {_when(n)}" for o, n, _ in event.moved]
+    return text + ("; " + "; ".join(changes) if changes else "")
+
+
+def _calendar(persona: Persona, w) -> None:
+    if persona.calendars is None:
+        return
+    w("## Calendar\n")
+    titles = {c.id: c.title for c in persona.calendars}
+    w("Calendars: " + ", ".join(f"{c.title} ({c.account}, {c.color})" for c in persona.calendars)
+      + ". The phone also has its own Default and Birthdays calendars, without events.\n")
+
+    def name(who: str) -> str:
+        return persona.owner.first if who == "me" else persona.contacts[who].display_name
+
+    w("| Starts | Ends | Calendar | Event | Details |\n|---|---|---|---|---|")
+    for e in sorted(persona.events or [], key=lambda e: (_when(e.start), e.id)):
+        zone = " floating" if e.floating else (f" {e.time_zone}" if e.time_zone else "")
+        end_zone = f" {e.end_time_zone}" if e.end_time_zone else ""
+        details = []
+        if e.location:
+            details.append(e.location)
+        if e.organizer:
+            people = ", ".join(f"{name(a)} ({e.statuses.get(a, 'needs_action')})" for a in e.attendees)
+            details.append(f"organizer {name(e.organizer)}; invited {people}")
+        if e.repeat:
+            details.append("repeats " + _repeats(e))
+        if e.alerts:
+            details.append("alerts " + ", ".join(f"{m} min before" if m >= 0 else f"{-m} min after the start"
+                                                 for m in e.alerts))
+        if e.status:
+            details.append(e.status)
+        if e.availability:
+            details.append(f"shows as {e.availability}")
+        details.append(f"made {e.created:%Y-%m-%d}")
+        w(f"| {_when(e.start)}{zone} | {_when(e.end)}{end_zone} | {titles[e.calendar]} | {e.title} | {'; '.join(details)} |")
+    w("")
+
+
+def _voice_memos(persona: Persona, w) -> None:
+    if persona.voice_memos is None:
+        return
+    w("## Voice Memos\n")
+    w("| Recorded | Length | Title | Folder | Flags | Transcript |\n|---|---|---|---|---|---|")
+    for m in persona.voice_memos:
+        flags = ", ".join(f for f, on in (("favourite", m.favorite), ("recently deleted", m.deleted),
+                                           ("iCloud only", m.icloud)) if on)
+        w(f"| {m.real_time:%Y-%m-%d %H:%M} | {_minutes(m.duration)} | {m.title} | {m.folder} | {flags} | {m.transcript} |")
+    w("")

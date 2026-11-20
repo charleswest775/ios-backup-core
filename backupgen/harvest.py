@@ -38,13 +38,23 @@ DATABASES = {
     "Calendar.sqlitedb": ("HomeDomain", "Library/Calendar/Calendar.sqlitedb"),
     "healthdb.sqlite": ("HealthDomain", "Health/healthdb.sqlite"),
     "healthdb_secure.sqlite": ("HealthDomain", "Health/healthdb_secure.sqlite"),
-    "CloudRecordings.db": ("MediaDomain", "Media/Recordings/CloudRecordings.db"),
+    # Voice Memos moved into an app group (iOS 17, probably): the current place first, then iOS 12 to 16's.
+    "CloudRecordings.db": [("AppDomainGroup-group.com.apple.VoiceMemos.shared", "Recordings/CloudRecordings.db"),
+                           ("MediaDomain", "Media/Recordings/CloudRecordings.db")],
     # WhatsApp: the schema follows the app's version, not iOS. ContactsV2 is gone and LID
     # arrives around WhatsApp 2.23, so a backup has one or the other or both.
     "ChatStorage.sqlite": ("AppDomainGroup-group.net.whatsapp.WhatsApp.shared", "ChatStorage.sqlite"),
     "ContactsV2.sqlite": ("AppDomainGroup-group.net.whatsapp.WhatsApp.shared", "ContactsV2.sqlite"),
     "LID.sqlite": ("AppDomainGroup-group.net.whatsapp.WhatsApp.shared", "LID.sqlite"),
 }
+
+
+def locations(name: str) -> list[tuple[str, str]]:
+    """Every (domain, relative path) a database has been found at, the current one first."""
+    places = DATABASES[name]
+    return list(places) if isinstance(places, list) else [places]
+
+
 # Tables SQLite creates for a virtual table itself: FTS3/4/5, then R-tree (Photos' location index).
 _SHADOW_SUFFIXES = ("content", "segments", "segdir", "docsize", "stat", "data", "idx", "config", "node", "parent", "rowid")
 
@@ -204,12 +214,16 @@ def harvest_backup(backup_dir: Path, password: Optional[str], ios: str, build: s
         else:
             backup, manifest_db = None, backup_dir / "Manifest.db"
         lookup = sqlite3.connect(f"{manifest_db.resolve().as_uri()}?mode=ro&immutable=1", uri=True)
-        for name, (domain, relative_path) in DATABASES.items():
+        for name in DATABASES:
             if only is not None and name not in only:
                 continue
-            row = lookup.execute(
-                "SELECT fileID FROM Files WHERE domain = ? AND relativePath = ? AND flags = 1", (domain, relative_path)
-            ).fetchone()
+            row = None
+            for domain, relative_path in locations(name):
+                row = lookup.execute(
+                    "SELECT fileID FROM Files WHERE domain = ? AND relativePath = ? AND flags = 1", (domain, relative_path)
+                ).fetchone()
+                if row:
+                    break
             if not row:
                 continue
             target = tmp / name
