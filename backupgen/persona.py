@@ -39,11 +39,14 @@ A pack is a folder under ``personas/``:
       created: 1905-03-02 09:12
       modified: 1905-03-10 18:40
       pinned: yes
+      shared: besso, mileva
 
       Packing list
       [x] Violin
       [ ] Patent drafts
 
+  ``shared:`` lists the contacts the note is shared with over iCloud, by id; it's
+  shared with each by their first email address, else their first phone number.
 - ``safari.txt`` (optional): ``09:15 https://example.org/page | Page title`` under
   ``== date`` headings, one line per visit.
 - ``photos.json`` (optional): the camera roll, ``{"photos": [...]}``. Each photo has an
@@ -110,7 +113,7 @@ _CALL = re.compile(r"^(\d{1,2}):(\d{2})\s+(in|out)\s+(\+\d+|[A-Za-z0-9_-]+)\s+(m
 _VOICEMAIL = re.compile(r"^(\d{1,2}):(\d{2})\s+(\+\d+|[A-Za-z0-9_-]+)\s+([\dhms]+):\s(.+)$")
 _DURATION = re.compile(r"^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$")
 _VISIT = re.compile(r"^(\d{1,2}):(\d{2})\s+(\S+)\s+\|\s+(.+)$")
-_NOTE_HEADERS = ("folder", "created", "modified", "pinned")
+_NOTE_HEADERS = ("folder", "created", "modified", "pinned", "shared")
 _WA_LINE = re.compile(
     r"^(\d{1,2}):(\d{2})(\*)?\s+([A-Za-z0-9_-]+)(?:\s+>\s+([A-Za-z0-9_-]+))?"
     r"(?::\s(.*)|\s+\+(\S+)|\s+\[([a-z-]+)(?::([^\]]*))?\](?:\s+(.*))?)\s*$"
@@ -197,6 +200,7 @@ class Note:
     pinned: bool
     text: str  # as typed: the first line is the title, "- " and "[ ] " mark list items
     where: str
+    shared_with: tuple[str, ...] = ()  # contact ids it's shared with over iCloud
 
     @property
     def real_time(self) -> datetime:
@@ -446,7 +450,7 @@ def _parse_voicemails(path: Path, contacts: dict[str, Contact]) -> list[Voicemai
     return voicemails
 
 
-def _parse_note(path: Path) -> Note:
+def _parse_note(path: Path, contacts: dict[str, Contact]) -> Note:
     head, _, body = path.read_text(encoding="utf-8").partition("\n\n")
     headers = {}
     for number, line in enumerate(head.splitlines(), 1):
@@ -463,8 +467,14 @@ def _parse_note(path: Path) -> Note:
     modified = datetime.fromisoformat(headers.get("modified", headers["created"]))
     if modified < created:
         raise PersonaError(f"{path.name}: modified before it was created")
+    shared = tuple(c.strip() for c in headers.get("shared", "").split(",") if c.strip())
+    for who in shared:
+        if who not in contacts:
+            raise PersonaError(f"{path.name}: shared with {who!r}, who isn't in contacts")
+        if not contacts[who].emails and not contacts[who].phones:
+            raise PersonaError(f"{path.name}: shared with {who!r}, who has no email address or phone number")
     return Note(path.stem, headers.get("folder", "Notes"), created, modified,
-                headers.get("pinned", "no").lower() in ("yes", "true"), text, path.name)
+                headers.get("pinned", "no").lower() in ("yes", "true"), text, path.name, shared)
 
 
 def _parse_visits(path: Path) -> list[Visit]:
@@ -711,7 +721,7 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
         raise PersonaError(f"{persona_id}: duplicate chat ids")
     calls = _parse_calls(folder / "calls.txt", contacts) if (folder / "calls.txt").exists() else None
     voicemails = _parse_voicemails(folder / "voicemails.txt", contacts) if (folder / "voicemails.txt").exists() else None
-    notes = [_parse_note(p) for p in sorted((folder / "notes").glob("*.txt"))] if (folder / "notes").is_dir() else None
+    notes = [_parse_note(p, contacts) for p in sorted((folder / "notes").glob("*.txt"))] if (folder / "notes").is_dir() else None
     visits = _parse_visits(folder / "safari.txt") if (folder / "safari.txt").exists() else None
     photos = _parse_photos(folder / "photos.json") if (folder / "photos.json").exists() else None
     whatsapp, wa_people, wa_documents = (_parse_whatsapp(folder / "whatsapp", contacts)

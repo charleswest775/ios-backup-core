@@ -9,6 +9,7 @@ Changes:
 """
 
 import gzip
+import plistlib
 import sqlite3
 from html.parser import HTMLParser
 
@@ -22,6 +23,70 @@ from ios_backup_core.timestamps import apple_to_iso
 # entity's columns set, so COALESCE over whichever columns exist finds it.
 _NOTE_CREATED_COLUMNS = ("ZCREATIONDATE3", "ZCREATIONDATE2", "ZCREATIONDATE1", "ZCREATIONDATE")
 _NOTE_MODIFIED_COLUMNS = ("ZMODIFICATIONDATE1", "ZMODIFICATIONDATE")
+
+# A shared note or folder keeps its iCloud share in ZSERVERSHAREDATA (ZSERVERSHARE
+# on iOS 11): a CKShare written with NSKeyedArchiver, its system fields at the top
+# of the archive. "Participants" lists everyone on the share, each a
+# CKShareParticipant whose UserIdentity has the email address or phone number the
+# share went to (LookupInfo), a name (NameComponents) and a CloudKit user record
+# name (UserRecordID). The phone's owner is one of them, under CloudKit's
+# placeholder for the current user or the record name on their Notes account
+# (ZUSERRECORDNAME).
+_SHARE_COLUMNS = ("ZSERVERSHAREDATA", "ZSERVERSHARE")
+_CURRENT_USER_RECORD = "__defaultOwner__"  # CKCurrentUserDefaultName
+
+
+def share_participants(blob, own_record_names=frozenset()) -> list:
+    """Who a CKShare archive says it's shared with, besides the phone's owner.
+
+    Each is {"name", "email", "phone"}, any of them None. An archive that can't
+    be read gives []: a note is still a note when its sharing can't be told.
+    """
+    if not isinstance(blob, (bytes, bytearray)) or not blob:
+        return []
+    try:
+        archive = plistlib.loads(bytes(blob))
+    except Exception:
+        return []
+    if not isinstance(archive, dict) or not isinstance(archive.get("$objects"), list):
+        return []
+    objects = archive["$objects"]
+    top = archive.get("$top") if isinstance(archive.get("$top"), dict) else {}
+
+    def deref(value):
+        """One step through the archive: a UID is the object it points at; "$null" is None."""
+        if isinstance(value, plistlib.UID):
+            value = objects[value.data] if 0 <= value.data < len(objects) else None
+        return None if value == "$null" else value
+
+    def field(obj, key):
+        return deref(obj.get(key)) if isinstance(obj, dict) else None
+
+    def text(obj, key):
+        value = field(obj, key)
+        return value.strip() or None if isinstance(value, str) else None
+
+    participants = deref(top.get("Participants"))
+    if participants is None:
+        participants = field(deref(top.get("root")), "Participants")
+    found = []
+    for item in field(participants, "NS.objects") or []:
+        identity = field(deref(item), "UserIdentity")
+        if not isinstance(identity, dict):
+            continue
+        record = text(field(identity, "UserRecordID"), "RecordName")
+        if record and (record == _CURRENT_USER_RECORD or record in own_record_names):
+            continue
+        lookup = field(identity, "LookupInfo")
+        names = field(identity, "NameComponents")
+        # NSPersonNameComponents keeps its parts one level down, in NS.nameComponentsPrivate
+        names = field(names, "NS.nameComponentsPrivate") or names
+        name = " ".join(p for p in (text(names, "NS.givenName"), text(names, "NS.familyName")) if p) \
+            or text(names, "NS.nickname")
+        person = {"name": name or None, "email": text(lookup, "EmailAddress"), "phone": text(lookup, "PhoneNumber")}
+        if any(person.values()) and person not in found:
+            found.append(person)
+    return found
 
 
 class _HtmlText(HTMLParser):
@@ -145,6 +210,7 @@ class NoteExtractor:
                     "body": body[:5000],
                     "created": apple_to_iso(row["creation_date"]),
                     "modified": apple_to_iso(row["modification_date"]),
+                    "shared_with": [],
                 })
 
             conn.close()
@@ -186,6 +252,7 @@ class NoteExtractor:
                     "body": html_to_text(content or "")[:20000],
                     "created": apple_to_iso(row["created"]),
                     "modified": apple_to_iso(row["modified"]),
+                    "shared_with": [],
                 })
         except sqlite3.Error:
             pass
@@ -206,6 +273,18 @@ class NoteExtractor:
             columns = {r[1] for r in conn.execute("PRAGMA table_info(ZICCLOUDSYNCINGOBJECT)")}
             created = _coalesce_present(columns, _NOTE_CREATED_COLUMNS)
             modified = _coalesce_present(columns, _NOTE_MODIFIED_COLUMNS)
+            # A note's share is on its own row, or on its folder's when the folder is shared
+            share_column = next((c for c in _SHARE_COLUMNS if c in columns), None)
+            note_share = f"n.{share_column}" if share_column else "NULL"
+            folder_share = f"f.{share_column}" if share_column and "ZFOLDER" in columns else "NULL"
+            folder_join = "LEFT JOIN ZICCLOUDSYNCINGOBJECT f ON f.Z_PK = n.ZFOLDER" if "ZFOLDER" in columns else ""
+            own_records = frozenset()
+            if share_column and "ZUSERRECORDNAME" in columns:
+                own_records = frozenset(
+                    r[0] for r in conn.execute(
+                        "SELECT ZUSERRECORDNAME FROM ZICCLOUDSYNCINGOBJECT WHERE ZUSERRECORDNAME IS NOT NULL"
+                    )
+                )
             rows = conn.execute(f"""
                 SELECT
                     n.Z_PK,
@@ -213,9 +292,12 @@ class NoteExtractor:
                     {created} AS created,
                     {modified} AS modified,
                     n.ZSNIPPET AS snippet,
-                    nd.ZDATA AS body_data
+                    nd.ZDATA AS body_data,
+                    {note_share} AS note_share,
+                    {folder_share} AS folder_share
                 FROM ZICCLOUDSYNCINGOBJECT n
                 LEFT JOIN ZICNOTEDATA nd ON nd.ZNOTE = n.Z_PK
+                {folder_join}
                 WHERE n.ZTITLE1 IS NOT NULL
                 ORDER BY modified DESC
             """).fetchall()
@@ -236,12 +318,18 @@ class NoteExtractor:
                         except Exception:
                             pass
 
+                shared_with = share_participants(row["note_share"], own_records)
+                for person in share_participants(row["folder_share"], own_records):
+                    if person not in shared_with:
+                        shared_with.append(person)
+
                 notes.append({
                     "note_id": row["Z_PK"],
                     "title": row["title"] or "Untitled",
                     "body": body[:20000],
                     "created": apple_to_iso(row["created"]),
                     "modified": apple_to_iso(row["modified"]),
+                    "shared_with": shared_with,
                 })
 
             conn.close()

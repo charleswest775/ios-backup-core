@@ -199,6 +199,11 @@ def test_notes_and_safari_read_back(tmp_path, snapshot):
     assert sorted((n["title"], n["body"], n["modified"]) for n in notes) == sorted(
         (n["title"], n["text"], n["modified"]) for n in expected["notes"]
     )
+    # Who each is shared with over iCloud, without the phone's owner
+    assert {n["title"]: n["shared_with"] for n in notes} == {n["title"]: n["shared_with"] for n in expected["notes"]}
+    assert {n["title"]: [p["name"] for p in n["shared_with"]] for n in notes if n["shared_with"]} == {
+        "Groceries": ["Riley Sample", "Jordan Test"],
+    }
     visits = BrowserHistoryExtractor().list_browser_history(accessor)["visits"]
     assert sorted((v["url"], v["title"], v["visit_date"]) for v in visits) == sorted(
         (v["url"], v["title"], v["date"]) for v in expected["browser_history"]
