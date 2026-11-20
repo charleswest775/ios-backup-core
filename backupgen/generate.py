@@ -245,7 +245,7 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
         "notes": [
             {
                 "title": n.title, "text": n.text, "folder": n.folder, "created": n.created.isoformat(),
-                "modified": n.modified.isoformat(), "pinned": n.pinned,
+                "modified": n.modified.isoformat(), "pinned": n.pinned, "shared_with": n.shared_with,
             }
             for n in written.get("notes", [])
         ],
