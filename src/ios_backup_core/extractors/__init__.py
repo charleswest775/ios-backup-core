@@ -7,6 +7,9 @@ from ios_backup_core.extractors.browser_history import BrowserHistoryExtractor
 from ios_backup_core.extractors.voicemail import VoicemailExtractor
 from ios_backup_core.extractors.photos import PhotoExtractor
 from ios_backup_core.extractors.whatsapp import WhatsAppExtractor
+from ios_backup_core.extractors.podcasts import PodcastExtractor
+from ios_backup_core.extractors.voice_memos import VoiceMemoExtractor
+from ios_backup_core.extractors.calendar_events import CalendarExtractor
 
 __all__ = [
     "MessageExtractor",
@@ -16,4 +19,7 @@ __all__ = [
     "VoicemailExtractor",
     "PhotoExtractor",
     "WhatsAppExtractor",
+    "PodcastExtractor",
+    "VoiceMemoExtractor",
+    "CalendarExtractor",
 ]

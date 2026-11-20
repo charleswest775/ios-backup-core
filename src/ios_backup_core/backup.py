@@ -696,3 +696,35 @@ class BackupReader:
             listened_only=listened_only,
             include_descriptions=include_descriptions,
         )
+
+    def voice_memos(self):
+        """List Voice Memos recordings, newest first, with the user's folders.
+
+        Recently Deleted recordings are included with ``is_deleted`` true.
+        Recordings kept only in iCloud are listed with ``audio_available``
+        false: their audio is never in a backup.
+        """
+        from ios_backup_core.extractors.voice_memos import VoiceMemoExtractor
+        extractor = VoiceMemoExtractor()
+        return extractor.list_voice_memos(self._accessor)
+
+    def calendars(self):
+        """List the calendars, each with its account and how many events it holds."""
+        from ios_backup_core.extractors.calendar_events import CalendarExtractor
+        extractor = CalendarExtractor()
+        return extractor.list_calendars(self._accessor)
+
+    def calendar_events(self, calendar_id: Optional[int] = None, include_hidden: bool = False):
+        """List calendar events (all calendars, or one); a repeating event is one row with its rule.
+
+        Invitees with no name of their own are named from the backup's contacts.
+        """
+        from ios_backup_core.extractors.calendar_events import CalendarExtractor
+        extractor = CalendarExtractor()
+        contacts = self.contacts()
+        return extractor.list_events(
+            self._accessor,
+            calendar_id=calendar_id,
+            include_hidden=include_hidden,
+            contacts=contacts,
+        )
