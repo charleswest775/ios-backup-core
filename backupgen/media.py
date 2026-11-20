@@ -1,4 +1,5 @@
-"""Pixels for generated photos: fetched originals or drawn placeholders, saved as camera JPEGs.
+"""Media for generated backups: photos (fetched originals or drawn placeholders, saved as camera
+JPEGs) and silent Voice Memos recordings (``silent_m4a``).
 
 Originals are openly licensed images listed in a persona's photos.json by URL and SHA-1.
 They're downloaded once into a cache ($BACKUPGEN_MEDIA_CACHE, or ~/.cache/backupgen/media)
@@ -8,14 +9,24 @@ run to tens of megabytes, so a photo can also name a smaller rendition (``thumb_
 used instead. Each is
 then scaled down and saved the way an iPhone camera would label it: Apple make and
 model, the time taken with its UTC offset, and GPS coordinates.
+
+Recordings are AAC-LC .m4a files of digital silence, written with the standard library and
+laid out the way Voice Memos writes them: the title, encoder and the recording's unique id in
+``moov/udta/meta/ilst`` (``©nam``, ``©too`` and the freeform ``com.apple.iTunes:voice-memo-uuid``),
+and, for a transcribed recording (iOS 18 on), the transcript as raw JSON in the audio track's
+``moov/trak/udta/tsrp`` box. As Apple's AAC encoder does, the audio starts with 2112 samples
+of encoder delay that an edit list (``edts/elst``) skips, so players report the length asked
+for, to the sample. Checked with ``afinfo``, ``ffprobe`` and an ``ffmpeg`` decode.
 """
 
 from __future__ import annotations
 
 import hashlib
 import io
+import json
 import os
 import random
+import struct
 import time
 import urllib.error
 import urllib.request
@@ -137,3 +148,109 @@ def camera_jpeg(image: Image.Image, taken: datetime, model: str, software: str,
     out = io.BytesIO()
     image.save(out, "JPEG", quality=85, exif=exif)
     return out.getvalue(), image.width, image.height
+
+
+# ── silent Voice Memos recordings ────────────────────────────────────────────
+
+AAC_RATE = 48000
+SILENT_AAC_FRAME = bytes.fromhex("01182007")  # one 1024-sample AAC-LC mono frame of digital silence (ffmpeg's)
+_MP4_EPOCH = 2_082_844_800  # MP4 times count seconds from 1904-01-01; this is 1970-01-01
+_AAC_PRIMING = 2112  # samples of encoder delay at the start of an AAC stream, skipped by the edit list
+
+
+def _box(kind: bytes, *payload: bytes) -> bytes:
+    body = b"".join(payload)
+    return struct.pack(">I", 8 + len(body)) + kind + body
+
+
+def _full(kind: bytes, version: int, flags: int, *payload: bytes) -> bytes:
+    return _box(kind, struct.pack(">I", (version << 24) | flags), *payload)
+
+
+def _descr(tag: int, body: bytes) -> bytes:
+    n = len(body)  # the 4-byte length form, as Apple writes it
+    return bytes([tag, 0x80 | (n >> 21) & 0x7F, 0x80 | (n >> 14) & 0x7F, 0x80 | (n >> 7) & 0x7F, n & 0x7F]) + body
+
+
+def _m4a_samples(seconds: float) -> int:
+    return max(1, round(seconds * AAC_RATE))
+
+
+def m4a_duration(seconds: float) -> float:
+    """How long ``silent_m4a(seconds)`` plays, in seconds: ``seconds`` to the nearest sample."""
+    return _m4a_samples(seconds) / AAC_RATE
+
+
+def transcript_json(segments: list, locale: str = "en_US") -> bytes:
+    """A Voice Memos transcript as its ``tsrp`` box holds it (shape A: runs plus an attribute table).
+
+    ``segments`` is ``[(text, start, end), ...]``; the text is the runs joined, so words after the
+    first carry their leading space.
+    """
+    runs: list = []
+    table = []
+    for n, (text, start, end) in enumerate(segments):
+        runs += [text, n]
+        table.append({"timeRange": [round(start, 2), round(end, 2)]})
+    doc = {"attributedString": {"attributeTable": table, "runs": runs}, "locale": {"identifier": locale, "current": 0}}
+    return json.dumps(doc, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+
+
+def _ilst_item(kind: bytes, value: str) -> bytes:
+    return _box(kind, _box(b"data", struct.pack(">II", 1, 0), value.encode("utf-8")))  # type 1: UTF-8 text
+
+
+def _freeform(name: str, value: str) -> bytes:
+    return _box(b"----", _full(b"mean", 0, 0, b"com.apple.iTunes"), _full(b"name", 0, 0, name.encode("utf-8")),
+                _box(b"data", struct.pack(">II", 1, 0), value.encode("utf-8")))
+
+
+def silent_m4a(seconds: float, created_unix: int = 0, *, title: Optional[str] = None, encoder: Optional[str] = None,
+               unique_id: Optional[str] = None, transcript: Optional[list] = None, locale: str = "en_US") -> bytes:
+    """A silent AAC-LC .m4a about ``seconds`` long, tagged like a Voice Memos recording.
+
+    ``created_unix`` dates the movie and track headers. ``title``, ``encoder`` and ``unique_id``
+    become the ``©nam``, ``©too`` and ``voice-memo-uuid`` tags; ``transcript``
+    (``[(text, start, end), ...]``) is stored in the track's ``udta/tsrp`` box.
+    """
+    valid = _m4a_samples(seconds)
+    frames = -(-(valid + _AAC_PRIMING) // 1024)
+    samples = frames * 1024
+    stamp = int(created_unix) + _MP4_EPOCH
+    asc = bytes([0x11, 0x88])  # AudioSpecificConfig: AAC-LC (2), 48 kHz (index 3), mono (1)
+    decoder = _descr(0x04, bytes([0x40, 0x15]) + bytes(3) + struct.pack(">II", 64000, 64000) + _descr(0x05, asc))
+    esds = _full(b"esds", 0, 0, _descr(0x03, struct.pack(">HB", 1, 0) + decoder + _descr(0x06, b"\x02")))
+    mp4a = _box(b"mp4a", bytes(6), struct.pack(">H", 1), bytes(8), struct.pack(">HHHH", 1, 16, 0, 0),
+                struct.pack(">I", AAC_RATE << 16), esds)
+    stsd = _full(b"stsd", 0, 0, struct.pack(">I", 1), mp4a)
+    stts = _full(b"stts", 0, 0, struct.pack(">III", 1, frames, 1024))
+    stsc = _full(b"stsc", 0, 0, struct.pack(">IIII", 1, 1, frames, 1))
+    stsz = _full(b"stsz", 0, 0, struct.pack(">II", len(SILENT_AAC_FRAME), frames))
+    ftyp = _box(b"ftyp", b"M4A ", bytes(4), b"M4A ", b"isom", b"mp42")
+    matrix = struct.pack(">9I", 0x10000, 0, 0, 0, 0x10000, 0, 0, 0, 0x40000000)
+    millis = round(valid * 1000 / AAC_RATE)  # what plays, in the movie's 1/1000 s
+    edts = _box(b"edts", _full(b"elst", 0, 0, struct.pack(">I", 1), struct.pack(">IiHH", millis, _AAC_PRIMING, 1, 0)))
+    tags = [_ilst_item(b"\xa9nam", title)] if title is not None else []
+    if encoder is not None:
+        tags.append(_ilst_item(b"\xa9too", encoder))
+    if unique_id is not None:
+        tags.append(_freeform("voice-memo-uuid", unique_id))
+    hdlr_mdir = _full(b"hdlr", 0, 0, bytes(4), b"mdir", b"appl", bytes(8), b"\0")
+    movie_udta = _box(b"udta", _full(b"meta", 0, 0, hdlr_mdir, _box(b"ilst", *tags))) if tags else b""
+    track_udta = _box(b"udta", _box(b"tsrp", transcript_json(transcript, locale))) if transcript else b""
+
+    def moov(chunk_offset: int) -> bytes:
+        stbl = _box(b"stbl", stsd, stts, stsc, stsz, _full(b"stco", 0, 0, struct.pack(">II", 1, chunk_offset)))
+        minf = _box(b"minf", _full(b"smhd", 0, 0, bytes(4)),
+                    _box(b"dinf", _full(b"dref", 0, 0, struct.pack(">I", 1), _full(b"url ", 0, 1))), stbl)
+        mdhd = _full(b"mdhd", 0, 0, struct.pack(">IIIIHH", stamp, stamp, AAC_RATE, samples, 0x55C4, 0))
+        hdlr = _full(b"hdlr", 0, 0, bytes(4), b"soun", bytes(12), b"Core Media Audio\0")
+        tkhd = _full(b"tkhd", 0, 1, struct.pack(">IIII", stamp, stamp, 1, 0), struct.pack(">I", millis), bytes(8),
+                     struct.pack(">hhhH", 0, 0, 0x0100, 0), matrix, bytes(8))
+        mvhd = _full(b"mvhd", 0, 0, struct.pack(">IIII", stamp, stamp, 1000, millis), struct.pack(">IH", 0x10000, 0x0100),
+                     bytes(10), matrix, bytes(24), struct.pack(">I", 2))
+        trak = _box(b"trak", tkhd, edts, _box(b"mdia", mdhd, hdlr, minf), track_udta)
+        return _box(b"moov", mvhd, trak, movie_udta)
+
+    offset = len(ftyp) + len(moov(0)) + 8  # the moov is the same size whatever the offset
+    return ftyp + moov(offset) + _box(b"mdat", SILENT_AAC_FRAME * frames)
