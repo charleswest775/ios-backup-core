@@ -75,8 +75,10 @@ def resolve_contact(identifier: str, contacts: dict) -> str:
 
     Merged from contacts.py:resolve_contact() and calls.py:_resolve_contact().
     Handles: exact match, normalized match, +1 prefix toggling, email
-    case-insensitive match. Returns empty string (not 'Unknown') when not found
-    so callers can apply their own fallback.
+    case-insensitive match. An email address is only ever matched as an
+    address, never by the digits in it ("mike86@…" isn't the contact saved
+    as "*86"). Returns empty string (not 'Unknown') when not found so callers
+    can apply their own fallback.
     """
     if identifier is None or identifier == "":
         return ""
@@ -86,12 +88,13 @@ def resolve_contact(identifier: str, contacts: dict) -> str:
     if identifier in contacts:
         return contacts[identifier]
 
+    # An email (FaceTime, iMessage, invitations): case-insensitive, nothing else.
+    if "@" in identifier:
+        return contacts.get(identifier.lower()) or ""
+
     clean = clean_phone_number(identifier)
 
     if not clean:
-        # Maybe it's an email (FaceTime)
-        if "@" in identifier and identifier.lower() in contacts:
-            return contacts[identifier.lower()]
         # Normalized phone fallback
         norm = normalize_phone(identifier)
         if norm and norm in contacts:

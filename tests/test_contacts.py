@@ -132,3 +132,42 @@ class TestInternationalMatching:
 
     def test_suffix_keys_never_equal_real_identifiers(self):
         assert phone_suffix_key("+33612345678").startswith("~")
+
+
+class TestEmailsAreNotPhoneNumbers:
+    """An email address is matched as an address only, never by the digits in it."""
+
+    def _contacts(self):
+        # As ContactResolver.load_contacts stores them: a carrier's "*86"
+        # voicemail number under its bare digits, phones with +1 and suffix
+        # keys, emails as saved and lower-cased.
+        contacts = {"*86": "Voicemail", "86": "Voicemail", "+186": "Voicemail",
+                    "+15551234567": "Alice", "5551234567": "Alice",
+                    "bob7@example.com": "Bob Seven"}
+        add_phone_suffix_key(contacts, "+15551234567", "Alice")
+        add_phone_suffix_key(contacts, "06 12 34 56 78", "Émile")
+        return contacts
+
+    def test_digits_in_an_email_never_match_a_short_number(self):
+        assert resolve_contact("mike86@gmail.com", self._contacts()) == ""
+
+    def test_digits_in_an_email_never_match_a_phone_suffix(self):
+        assert resolve_contact("x.551234567@y.org", self._contacts()) == ""
+        assert resolve_contact("5551234567@vtext.example", self._contacts()) == ""
+
+    def test_case_variants_of_an_email_with_digits(self):
+        contacts = self._contacts()
+        assert resolve_contact("bob7@example.com", contacts) == "Bob Seven"
+        assert resolve_contact("Bob7@Example.com", contacts) == "Bob Seven"
+        assert resolve_contact("BOB7@EXAMPLE.COM", contacts) == "Bob Seven"
+
+    def test_unknown_email(self):
+        assert resolve_contact("nobody@example.com", self._contacts()) == ""
+
+    def test_phone_numbers_still_resolve(self):
+        contacts = self._contacts()
+        assert resolve_contact("+15551234567", contacts) == "Alice"
+        assert resolve_contact("5551234567", contacts) == "Alice"
+        assert resolve_contact("(555) 123-4567", contacts) == "Alice"
+        assert resolve_contact("+33 6 12 34 56 78", contacts) == "Émile"
+        assert resolve_contact("*86", contacts) == "Voicemail"
