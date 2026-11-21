@@ -257,7 +257,8 @@ class ContactResolver:
                         (pid,)
                     ).fetchall()
                 phones = [row["value"] for row in phone_data]
-                phone_details = [normalize_label(row["label"]) for row in phone_data]
+                phone_details = [{ "value": row["value"],
+                                   "label" : normalize_label(row["label"])} for row in phone_data]
 
                 email_data = conn.execute("""SELECT mv.value as value, l.value AS label
                             FROM ABMultiValue mv
@@ -266,7 +267,8 @@ class ContactResolver:
                         (pid,)
                     ).fetchall()
                 emails = [row["value"] for row in email_data]
-                email_details = [normalize_label(row["label"]) for row in email_data]
+                email_details = [{ "value": row["value"],
+                                   "label" : normalize_label(row["label"])} for row in email_data]
 
                 contact_list.append({
                     "id": pid,
