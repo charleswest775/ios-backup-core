@@ -173,6 +173,70 @@ def smart_album_where(columns: set, album_id: Optional[str]) -> Optional[str]:
     return None
 
 
+# ZDETECTEDFACE / ZPERSON.ZDETECTIONTYPE: 1 is a person's face. 3 and 4 are pets, which
+# Photos groups too from iOS 17 (dogs and cats); they're left out for now. iOS 13 and 14
+# have no such column, and every face there is a person's.
+_HUMAN = 1
+
+
+def _face_columns(conn: sqlite3.Connection) -> Optional[dict]:
+    """The People tables' column names, or None when the library has no faces.
+
+    iOS 17 renamed ZDETECTEDFACE's links: ZPERSON and ZASSET became ZPERSONFORFACE and
+    ZASSETFORFACE (and gained links for torsos and video faces, which aren't read).
+    """
+    faces = _table_columns(conn, "ZDETECTEDFACE")
+    people = _table_columns(conn, "ZPERSON")
+    person = next((c for c in ("ZPERSONFORFACE", "ZPERSON") if c in faces), None)
+    asset = next((c for c in ("ZASSETFORFACE", "ZASSET") if c in faces), None)
+    if not person or not asset or "Z_PK" not in people:
+        return None
+    return {"person": person, "asset": asset, "faces": faces, "people": people}
+
+
+def _people_rows(conn: sqlite3.Connection, cols: dict) -> dict:
+    """{ZPERSON Z_PK: row}, each row with FULLNAME, DISPLAYNAME, URI, KEYFACE, TARGET and KIND."""
+    have = cols["people"]
+
+    def column(name: str) -> str:
+        return name if name in have else "NULL"
+
+    rows = conn.execute(
+        f"SELECT Z_PK, {column('ZFULLNAME')} AS FULLNAME, {column('ZDISPLAYNAME')} AS DISPLAYNAME, "
+        f"{column('ZPERSONURI')} AS URI, {column('ZKEYFACE')} AS KEYFACE, "
+        f"{column('ZMERGETARGETPERSON')} AS TARGET, {column('ZDETECTIONTYPE')} AS KIND FROM ZPERSON"
+    ).fetchall()
+    return {row["Z_PK"]: row for row in rows}
+
+
+def _merged_into(people: dict, pk):
+    """The person ``pk`` ends up as after Photos' merges (ZMERGETARGETPERSON), or ``pk`` itself.
+
+    When the user tells Photos two groups are the same person, one row points at the
+    other. A loop, which only a damaged library could hold, stops where it closes.
+    """
+    seen = set()
+    while pk not in seen and pk in people and people[pk]["TARGET"] in people:
+        seen.add(pk)
+        pk = people[pk]["TARGET"]
+    return pk
+
+
+def _text(value) -> Optional[str]:
+    text = str(value).strip() if value is not None else ""
+    return text or None
+
+
+def _face_conditions(cols: dict) -> list:
+    """Conditions on ZDETECTEDFACE (as ``f``) for the faces People shows: not hidden, a person's."""
+    conditions = []
+    if "ZHIDDEN" in cols["faces"]:
+        conditions.append("COALESCE(f.ZHIDDEN, 0) = 0")
+    if "ZDETECTIONTYPE" in cols["faces"]:
+        conditions.append(f"COALESCE(f.ZDETECTIONTYPE, {_HUMAN}) = {_HUMAN}")
+    return conditions
+
+
 def _album_rows(conn: sqlite3.Connection) -> Optional[list]:
     """The titled rows of ZGENERICALBUM the Photos app shows, in the phone's order; None without the table.
 
@@ -407,17 +471,188 @@ class PhotoExtractor:
                 pass
             return {"albums": [], "error": str(e), "source": "error"}
 
+    # ── People: the faces Photos found and the people it grouped them into ──────────
+
+    def _face_rows(self, conn: sqlite3.Connection, cols: dict, person_pks=None) -> list:
+        """The faces People counts, with their person, photo and place in the photo.
+
+        Only faces on photos All Photos shows (not hidden, not in Recently Deleted), not
+        hidden from People, and a person's. ``person_pks`` limits them to those ZPERSON
+        rows. Each row has FACE, PERSON, UUID (the photo's), X, Y and SIZE: Photos'
+        face box, its centre and size as fractions of the photo.
+        """
+        if person_pks is not None and not person_pks:
+            return []
+        assets = asset_table(conn)
+        visible = smart_album_where(_table_columns(conn, assets), ALL_PHOTOS)
+
+        def column(name: str) -> str:
+            return f"f.{name}" if name in cols["faces"] else "NULL"
+
+        where = [f"f.{cols['person']} IS NOT NULL",
+                 f"f.{cols['asset']} IN (SELECT Z_PK FROM {assets} WHERE {visible})", *_face_conditions(cols)]
+        params: list = []
+        if person_pks is not None:
+            where.append(f"f.{cols['person']} IN ({', '.join('?' * len(person_pks))})")
+            params += list(person_pks)
+        return conn.execute(
+            f"SELECT f.Z_PK AS FACE, f.{cols['person']} AS PERSON, a.ZUUID AS UUID, {column('ZCENTERX')} AS X, "
+            f"{column('ZCENTERY')} AS Y, {column('ZSIZE')} AS SIZE "
+            f"FROM ZDETECTEDFACE f JOIN {assets} a ON a.Z_PK = f.{cols['asset']} WHERE {' AND '.join(where)}",
+            params,
+        ).fetchall()
+
+    @staticmethod
+    def _best_first(faces: list, key_face) -> list:
+        """``faces`` with the person's key face (the one Photos shows for them) first, then the biggest."""
+        return sorted(faces, key=lambda f: (f["FACE"] != key_face, -(f["SIZE"] or 0), f["FACE"]))
+
+    @staticmethod
+    def _face_out(face) -> dict:
+        def number(value):
+            return float(value) if value is not None else None
+
+        return {"asset_uuid": uuid_text(face["UUID"]) or "", "center_x": number(face["X"]),
+                "center_y": number(face["Y"]), "size": number(face["SIZE"])}
+
+    def list_people(self, backup, include_assets: bool = False) -> dict:
+        """The people Photos grouped faces into (its People album), named or not.
+
+        Returns ``{"people": [...], "source"}``, most photos first. Each person has:
+
+        - ``id``: the ZPERSON key, for list_photos(person_ids=...) and list_person_faces.
+        - ``name``: the name the user gave them in Photos, else None. Most people Photos
+          groups are never named.
+        - ``contact_uri``: ZPERSONURI, the contact card the user linked them to, else None.
+        - ``photo_count``: photos All Photos shows with their face on.
+        - ``key_face``: the face to show for them: the one Photos picked when it's on a
+          photo All Photos shows, else their biggest. ``asset_uuid`` names the photo;
+          ``center_x``, ``center_y`` and ``size`` are Photos' box as fractions of it.
+        - ``asset_uuids`` (with ``include_assets``): their photos' uuids.
+
+        Groups merged into another person count as that person, and people with no face
+        on a photo All Photos shows are left out, as are pets. This only reads what
+        Photos worked out on the phone; nothing here compares faces.
+        """
+        conn = self._open_photos_db(backup)
+        if not conn:
+            return {"people": [], "source": "unavailable"}
+        try:
+            cols = _face_columns(conn)
+            if cols is None:
+                conn.close()
+                return {"people": [], "source": "photos_sqlite"}
+            people = _people_rows(conn, cols)
+            groups: dict = {}
+            for face in self._face_rows(conn, cols):
+                pk = _merged_into(people, face["PERSON"])
+                if pk not in people or (people[pk]["KIND"] or _HUMAN) != _HUMAN:
+                    continue
+                group = groups.setdefault(pk, {"assets": {}, "faces": []})
+                group["assets"].setdefault(uuid_text(face["UUID"]) or "", None)
+                group["faces"].append(face)
+            listed = []
+            for pk, group in groups.items():
+                row = people[pk]
+                person = {
+                    "id": str(pk),
+                    "name": _text(row["FULLNAME"]) or _text(row["DISPLAYNAME"]),
+                    "contact_uri": _text(row["URI"]),
+                    "photo_count": len(group["assets"]),
+                    "key_face": self._face_out(self._best_first(group["faces"], row["KEYFACE"])[0]),
+                }
+                if include_assets:
+                    person["asset_uuids"] = list(group["assets"])
+                listed.append(person)
+            listed.sort(key=lambda p: (-p["photo_count"], p["name"] is None, (p["name"] or "").casefold(), int(p["id"])))
+            conn.close()
+            return {"people": listed, "source": "photos_sqlite"}
+        except Exception as e:
+            try:
+                conn.close()
+            except Exception:
+                pass
+            return {"people": [], "error": str(e), "source": "error"}
+
+    def _merged_pks(self, people: dict, person_id) -> list:
+        """The ZPERSON rows that count as ``person_id``: the person it ends up as and every group merged
+        into them. [] for an unknown id."""
+        try:
+            target = int(person_id)
+        except (TypeError, ValueError):
+            return []
+        if target not in people:
+            return []
+        target = _merged_into(people, target)
+        return [pk for pk in people if _merged_into(people, pk) == target]
+
+    def list_person_faces(self, backup, person_id: str) -> dict:
+        """One person's faces on photos All Photos shows, best first: ``{"faces": [...], "source"}``.
+
+        Shaped like list_people's ``key_face``, with the key face first and then the
+        biggest, so a caller can pick the first whose photo is in the backup.
+        """
+        conn = self._open_photos_db(backup)
+        if not conn:
+            return {"faces": [], "source": "unavailable"}
+        try:
+            cols = _face_columns(conn)
+            if cols is None:
+                conn.close()
+                return {"faces": [], "source": "photos_sqlite"}
+            people = _people_rows(conn, cols)
+            pks = self._merged_pks(people, person_id)
+            faces = self._face_rows(conn, cols, pks)
+            key_face = people[_merged_into(people, int(person_id))]["KEYFACE"] if pks else None
+            result = [self._face_out(face) for face in self._best_first(faces, key_face)]
+            conn.close()
+            return {"faces": result, "source": "photos_sqlite"}
+        except Exception as e:
+            try:
+                conn.close()
+            except Exception:
+                pass
+            return {"faces": [], "error": str(e), "source": "error"}
+
+    def _people_condition(self, conn: sqlite3.Connection, person_ids: list, match: str) -> tuple:
+        """(condition on the asset table as ``a``, params) for photos with these people on.
+
+        ``match`` "all" wants every one of them in the photo; anything else, any of them.
+        """
+        cols = _face_columns(conn)
+        if cols is None:
+            return "0 = 1", []
+        people = _people_rows(conn, cols)
+        groups = [self._merged_pks(people, person_id) for person_id in person_ids]
+        if match != "all":
+            groups = [[pk for group in groups for pk in group]]
+        if not groups or not all(groups):
+            return "0 = 1", []
+        faces = " AND ".join(_face_conditions(cols)) or "1 = 1"
+        conditions, params = [], []
+        for group in groups:
+            conditions.append(
+                f"a.Z_PK IN (SELECT f.{cols['asset']} FROM ZDETECTEDFACE f "
+                f"WHERE f.{cols['person']} IN ({', '.join('?' * len(group))}) AND {faces})"
+            )
+            params += group
+        return " AND ".join(conditions), params
+
     def list_photos(
         self,
         backup,
         offset: int = 0,
         limit: int = 100,
         album_id: Optional[str] = None,
+        person_ids: Optional[list] = None,
+        person_match: str = "any",
     ) -> dict:
         """List photo assets with rich metadata (no binary data).
 
         ``album_id`` is an id from list_albums, or LIBRARY for every photo with the
         hidden ones; None lists All Photos, which leaves hidden photos out.
+        ``person_ids`` (ids from list_people) keeps the photos with any of those people
+        on, or with all of them when ``person_match`` is "all"; it narrows the album.
         Returns metadata dicts; callers use backup.get_file() to read pixels.
         """
         conn = self._open_photos_db(backup)
@@ -456,9 +691,14 @@ class PhotoExtractor:
                 params.append(int(album_id))
             else:
                 # The whole library when the backup's albums can't be read.
-                base_query = f"SELECT * FROM {assets} WHERE {where or smart_album_where(columns, ALL_PHOTOS)}"
+                base_query = f"SELECT a.* FROM {assets} a WHERE {where or smart_album_where(columns, ALL_PHOTOS)}"
 
-            base_query += " ORDER BY ZDATECREATED DESC"
+            if person_ids:
+                people_where, people_params = self._people_condition(conn, list(person_ids), person_match)
+                base_query += f" AND {people_where}"
+                params += people_params
+
+            base_query += " ORDER BY a.ZDATECREATED DESC"
 
             # Total count
             count_sql = f"SELECT COUNT(*) FROM ({base_query})"

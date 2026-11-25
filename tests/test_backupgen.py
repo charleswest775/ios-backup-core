@@ -237,6 +237,31 @@ def test_photos_read_back(tmp_path, snapshot):
     assert unlocated and all(p["latitude"] is None for p in photos if p["filename"] in unlocated)  # iOS's -180
 
 
+@pytest.mark.parametrize("snapshot", ["ios15", "ios17", "ios26"])  # ZPERSON/ZASSET links before iOS 17, ...FORFACE from it
+def test_photo_people_read_back(tmp_path, snapshot):
+    backup_dir = generate("testpersona", snapshot, tmp_path)
+    expected = json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))
+    uuids = {p["id"]: p["uuid"] for p in expected["photos"]}
+    accessor = open_local_backup(str(backup_dir))
+    extractor = PhotoExtractor()
+    people = extractor.list_people(accessor, include_assets=True)["people"]
+    # Pets and groups merged into another person aren't listed, nor anyone with no photo All Photos shows.
+    shown = [p for p in expected["photo_people"] if not p["pet"] and not p["merged_into"] and p["photos"]]
+    assert sorted((p["name"] or "", sorted(p["asset_uuids"])) for p in people) == sorted(
+        (p["name"] or "", sorted(uuids[i] for i in p["photos"])) for p in shown
+    )
+    assert any(p["name"] is None for p in people)  # most groups are never named
+    cards = {c["display_name"]: c["guid"] for c in ContactResolver().list_contacts(accessor)["contacts"]}
+    for person in people:
+        key = next(p for p in shown if p["name"] == person["name"])
+        assert person["contact_uri"] == (cards[person["name"]] if key["contact"] else None)
+        assert extractor.list_photos(accessor, 0, 100, person_ids=[person["id"]])["total"] == person["photo_count"]
+    named = next(p for p in people if p["name"])
+    assert named["key_face"]["asset_uuid"] == uuids["london-2"]  # the person's key photo
+    together = extractor.list_photos(accessor, 0, 100, person_ids=[p["id"] for p in people], person_match="all")
+    assert [p["uuid"] for p in together["photos"]] == [uuids["desk"], uuids["london-2"]]
+
+
 def test_photos_look_like_the_device_wrote_them(tmp_path):
     from PIL import Image
 
@@ -386,6 +411,26 @@ def test_photos_cannot_be_sent_before_they_are_taken(tmp_path):
     chat.write_text(chat.read_text(encoding="utf-8").replace("10:25 me [photo:london-2]", "09:00 me [photo:london-2]"),
                     encoding="utf-8")
     with pytest.raises(PersonaError, match="sent before it was taken"):
+        load_persona("testpersona", root=tmp_path)
+
+
+@pytest.mark.parametrize("change, message", [
+    (lambda d: d["photos"][0]["faces"].append({"person": "nobody", "x": 0.5, "y": 0.5, "size": 0.1}), "isn't in people"),
+    (lambda d: d["photos"][0]["faces"].append({"person": "friend", "x": 1.5, "y": 0.5, "size": 0.1}), "from 0 to 1"),
+    (lambda d: d["people"].append({"id": "x", "contact": "nobody"}), "no contact"),
+    (lambda d: d["people"].append({"id": "x", "merged_into": "x"}), "isn't another person"),
+    (lambda d: d["people"].append({"id": "x", "pet": "parrot"}), "dog or cat"),
+    (lambda d: d["people"].append({"id": "x", "key": "london-1"}), "has no face of theirs"),
+])
+def test_bad_photo_people_are_rejected(tmp_path, change, message):
+    import shutil
+
+    shutil.copytree(SCHEMAS_DIR.parent / "personas" / "testpersona", tmp_path / "testpersona")
+    path = tmp_path / "testpersona" / "photos.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    change(data)
+    path.write_text(json.dumps(data), encoding="utf-8")
+    with pytest.raises(PersonaError, match=message):
         load_persona("testpersona", root=tmp_path)
 
 

@@ -90,8 +90,13 @@ def generate(
         def fill_messages(db):
             written_messages.extend(messages_writer.populate(db, persona, snapshot, rng, renderer))
 
+        contact_guids: dict = {}
+
         def fill_contacts(db):
             contact_rows.update(contacts_writer.populate(db, persona, snapshot, rng))
+            if db.table("ABPerson").has("guid"):
+                guids = dict(db.conn.execute("SELECT ROWID, guid FROM ABPerson"))
+                contact_guids.update({cid: guids.get(rowid) for cid, rowid in contact_rows.items()})
 
         sms = build(tmp / "sms.db", snapshot.schema, "sms.db", fill_messages)
         address_book = build(tmp / "AddressBook.sqlitedb", snapshot.schema, "AddressBook.sqlitedb", fill_contacts)
@@ -139,7 +144,8 @@ def generate(
         if persona.photos is not None:
             photos: list = []
             library = build(tmp / "Photos.sqlite", snapshot.schema, "Photos.sqlite",
-                            lambda db: photos.extend(photos_writer.populate(db, persona, snapshot, rng, renderer)))
+                            lambda db: photos.extend(photos_writer.populate(db, persona, snapshot, rng, renderer,
+                                                                            contact_guids)))
             writer.add_file("CameraRollDomain", "Media/PhotoData/Photos.sqlite", library)
             for photo in photos:
                 writer.add_file("CameraRollDomain", photo.relative_path, photo.data)
@@ -256,9 +262,12 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
             {
                 "id": p.id, "filename": p.filename, "date": p.date.isoformat(), "width": p.width, "height": p.height,
                 "favorite": p.favorite, "trashed": p.trashed, "lat": p.lat, "lon": p.lon, "albums": p.albums,
+                "uuid": p.uuid,
             }
             for p in written.get("photos", [])
         ],
+        # The People album (see writers/photos.py): every group, with the photos a reader should list for it.
+        "photo_people": photos_writer.people_answer_key(persona, written.get("photos", [])),
         # Chats in arrival order (each message's "sort"); see writers/whatsapp.py. None when the phone has no WhatsApp.
         "whatsapp": whatsapp_writer.answer_key(whatsapp) if whatsapp and whatsapp.messages else None,
         # Shaped like the readers' records (see writers/calendar.py and writers/voice_memos.py); events in

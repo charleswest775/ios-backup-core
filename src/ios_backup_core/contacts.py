@@ -232,8 +232,11 @@ class ContactResolver:
             conn = connect_readonly(db_path, backup)
             conn.row_factory = sqlite3.Row
 
-            persons = conn.execute("""
-                SELECT ROWID, First, Last, Organization, Department, Note
+            # guid is the card's identifier, which Photos keeps (ZPERSON.ZPERSONURI) for a
+            # person in its People album the user linked to the card.
+            has_guid = "guid" in {col[1] for col in conn.execute("PRAGMA table_info('ABPerson')")}
+            persons = conn.execute(f"""
+                SELECT ROWID, First, Last, Organization, Department, Note, {'guid' if has_guid else 'NULL'} AS guid
                 FROM ABPerson
                 ORDER BY First, Last
             """).fetchall()
@@ -268,6 +271,7 @@ class ContactResolver:
                     "phones": phones,
                     "emails": emails,
                     "note": person["Note"],
+                    "guid": person["guid"],
                 })
 
             conn.close()
