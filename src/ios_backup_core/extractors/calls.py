@@ -177,60 +177,6 @@ class CallExtractor:
             rows_out.append(row)
         return rows_out
 
-    def _read_facetime_from_sms(self, backup, contacts: dict) -> list:
-        """Read FaceTime calls from sms.db (item_type 1=video, 2=audio)."""
-        db_path = get_database(backup, "Library/SMS/sms.db", domain="HomeDomain")
-        if not db_path:
-            return []
-
-        rows_out = []
-        try:
-            conn = connect_readonly(db_path, backup)
-            conn.row_factory = sqlite3.Row
-
-            sample = conn.execute(
-                "SELECT date FROM message WHERE item_type IN (1,2) LIMIT 1"
-            ).fetchone()
-            uses_ns = sample and float(sample[0]) > 1_000_000_000_000 if sample else False
-
-            rows = conn.execute("""
-                SELECT m.ROWID, m.date, m.is_from_me, m.item_type,
-                       h.id AS address
-                FROM message m
-                LEFT JOIN handle h ON m.handle_id = h.ROWID
-                WHERE m.item_type IN (1, 2)
-                ORDER BY m.date DESC
-            """).fetchall()
-            conn.close()
-
-            for row in rows:
-                raw_ts = float(row["date"] or 0)
-                if not raw_ts:
-                    continue
-                apple_ts = raw_ts / 1_000_000_000 if uses_ns else raw_ts
-                unix_ts = apple_ts + APPLE_EPOCH_OFFSET
-                iso_date = datetime.fromtimestamp(unix_ts, timezone.utc).isoformat()
-
-                address = _clean_text(row["address"])
-                contact_name = resolve_contact(address, contacts) or address or "Unknown"
-                direction = "outgoing" if row["is_from_me"] else "incoming"
-                app_name = "FaceTime Video" if row["item_type"] == 1 else "FaceTime Audio"
-
-                rows_out.append({
-                    "_unix_ts": unix_ts,
-                    "call_id": f"ft_{row['ROWID']}",
-                    "address": address,
-                    "contact_name": contact_name,
-                    "date": iso_date,
-                    "duration": 0,
-                    "direction": direction,
-                    "status": "answered",
-                    "app": app_name,
-                })
-        except Exception:
-            pass
-        return rows_out
-
     def _read_voicemails_as_calls(self, backup, contacts: dict) -> list:
         """Return each voicemail that isn't deleted as a synthetic call record.
 
@@ -274,7 +220,16 @@ class CallExtractor:
         offset: int = 0,
         limit: int = 200,
     ) -> dict:
-        """List call history records, supplemented with FaceTime and voicemail records.
+        """List call history records, supplemented with voicemail records.
+
+        FaceTime calls come from CallHistory itself (com.apple.FaceTime, or
+        ZCALLTYPE 8/16 before iOS 10). sms.db isn't read for calls: its
+        item_type 1 and 2 rows are group changes (someone added or removed, the
+        group renamed), not calls, and its item_type 6 rows, a FaceTime call or
+        SharePlay in a conversation, have no length or answer and are shown in
+        that conversation already. An unencrypted backup has no CallHistory, so
+        a few of those would also have hidden that call history needs an
+        encrypted backup.
 
         When there are no records, ``calls`` is empty and ``empty_reason`` says why:
 
@@ -371,7 +326,6 @@ class CallExtractor:
                     call_records.append(rec)
 
         _merge(self._read_voicemails_as_calls(backup, contacts))
-        _merge(self._read_facetime_from_sms(backup, contacts))
 
         if not call_records:
             empty = {"calls": [], "total": 0, "offset": offset, "limit": limit}
