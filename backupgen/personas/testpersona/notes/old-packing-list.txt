@@ -1,0 +1,7 @@
+created: 2021-01-10 18:00
+modified: 2021-01-12 09:00
+deleted: 2022-02-20 12:00
+
+Old packing list
+- Passport
+- Charger

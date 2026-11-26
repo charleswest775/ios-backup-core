@@ -41,6 +41,13 @@ _NOTE_MODIFIED_COLUMNS = ("ZMODIFICATIONDATE1", "ZMODIFICATIONDATE")
 _SHARE_COLUMNS = ("ZSERVERSHAREDATA", "ZSERVERSHARE")
 _CURRENT_USER_RECORD = "__defaultOwner__"  # CKCurrentUserDefaultName
 
+# A deleted note sits in the account's Recently Deleted folder for 30 days before
+# the iPhone removes it. That folder is a folder row with ZFOLDERTYPE 1 (0 is an
+# ordinary folder, 3 a smart folder), and a note in it can also have
+# ZMARKEDFORDELETION set, as both were in an iOS 27.3 backup. Either one makes
+# the note deleted.
+_TRASH_FOLDER_TYPE = 1
+
 
 def share_participants(blob, own_record_names=frozenset()) -> list:
     """Who a CKShare archive says it's shared with, besides the phone's owner.
@@ -173,6 +180,9 @@ class NoteExtractor:
         are listed. A note keeps its row number as its note_id; when both files
         have notes, those from notes.sqlite get "legacy_" in front so no two
         notes share an id.
+
+        Each note has ``is_deleted``: True for one in the iPhone's Recently
+        Deleted folder, which the iPhone's Notes app keeps apart from the others.
         """
         notes = self._notestore_notes(backup)
         legacy = []
@@ -239,6 +249,7 @@ class NoteExtractor:
                     "created": apple_to_iso(row["creation_date"]),
                     "modified": apple_to_iso(row["modification_date"]),
                     "shared_with": [],
+                    "is_deleted": False,
                 })
 
             conn.close()
@@ -281,6 +292,7 @@ class NoteExtractor:
                     "created": apple_to_iso(row["created"]),
                     "modified": apple_to_iso(row["modified"]),
                     "shared_with": [],
+                    "is_deleted": False,
                 })
         except sqlite3.Error:
             pass
@@ -306,6 +318,12 @@ class NoteExtractor:
             note_share = f"n.{share_column}" if share_column else "NULL"
             folder_share = f"f.{share_column}" if share_column and "ZFOLDER" in columns else "NULL"
             folder_join = "LEFT JOIN ZICCLOUDSYNCINGOBJECT f ON f.Z_PK = n.ZFOLDER" if "ZFOLDER" in columns else ""
+            deleted_if = []
+            if folder_join and "ZFOLDERTYPE" in columns:
+                deleted_if.append(f"f.ZFOLDERTYPE = {_TRASH_FOLDER_TYPE}")
+            if "ZMARKEDFORDELETION" in columns:
+                deleted_if.append("n.ZMARKEDFORDELETION = 1")
+            deleted = f"COALESCE({' OR '.join(deleted_if)}, 0)" if deleted_if else "0"
             own_records = frozenset()
             if share_column and "ZUSERRECORDNAME" in columns:
                 own_records = frozenset(
@@ -322,7 +340,8 @@ class NoteExtractor:
                     n.ZSNIPPET AS snippet,
                     nd.ZDATA AS body_data,
                     {note_share} AS note_share,
-                    {folder_share} AS folder_share
+                    {folder_share} AS folder_share,
+                    {deleted} AS deleted
                 FROM ZICCLOUDSYNCINGOBJECT n
                 LEFT JOIN ZICNOTEDATA nd ON nd.ZNOTE = n.Z_PK
                 {folder_join}
@@ -359,6 +378,7 @@ class NoteExtractor:
                     "created": apple_to_iso(row["created"]),
                     "modified": apple_to_iso(row["modified"]),
                     "shared_with": shared_with,
+                    "is_deleted": bool(row["deleted"]),
                 })
 
             conn.close()
