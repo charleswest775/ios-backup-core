@@ -1,0 +1,11 @@
+folder: Trips
+created: 2026-04-18 21:15
+modified: 2026-04-26 19:30
+deleted: 2026-06-14 20:05
+
+Cascades backup plan
+If Hwy 20 isn't open by Memorial Day:
+- Mount Baker instead, Heather Meadows (check the road too)
+- Camp at Douglas Fir, first come first served
+- Or back to the coast, Kalaloch
+Ask Nadia which one has permits left

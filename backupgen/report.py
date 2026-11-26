@@ -141,8 +141,9 @@ def _notes(persona: Persona, w) -> None:
     for note in persona.notes:
         title, _, body = note.text.partition("\n")
         pinned = ", pinned" if note.pinned else ""
+        deleted = f" Deleted {note.deleted:%Y-%m-%d %H:%M}." if note.deleted else ""
         w(f"### {title}\n")
-        w(f"*{note.folder}{pinned}. Created {note.created:%Y-%m-%d %H:%M}, modified {note.modified:%Y-%m-%d %H:%M}. "
+        w(f"*{note.folder}{pinned}. Created {note.created:%Y-%m-%d %H:%M}, modified {note.modified:%Y-%m-%d %H:%M}.{deleted} "
           f"File: `notes/{note.id}.txt`*\n")
         w("\n".join(f"> {line}" if line else ">" for line in body.strip("\n").split("\n")) + "\n")
 

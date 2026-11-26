@@ -11,6 +11,9 @@ Rows follow what iOS 13–17 write:
   text (5). Runs count UTF-16 units, include each line's newline and carry an edit
   timestamp (13). Style 0 is the title, 101 a dashed list item, 103 a checklist item.
 - ZSNIPPET is the first line after the title, as the notes list shows it.
+- A deleted note moves to the account's Recently Deleted folder, a folder row with
+  ZFOLDERTYPE 1 (0 for the others), and has ZMARKEDFORDELETION 1, as in an iOS 27.3
+  backup. The iPhone removes it 30 days later.
 - A note shared over iCloud keeps its CKShare in ZSERVERSHAREDATA, archived with
   NSKeyedArchiver: the share's fields sit at the top of the archive, and
   "Participants" holds a CKShareParticipant per person, the owner first. Each one's
@@ -28,13 +31,15 @@ import random
 import re
 import uuid
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from backupgen.persona import Contact, Note, Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import CoreData, cocoa_seconds
 
 _TITLE, _DASHED, _CHECKLIST = 0, 101, 103
+RECENTLY_DELETED = "Recently Deleted"
+_KEPT_DELETED = timedelta(days=30)
 
 
 @dataclass
@@ -43,11 +48,12 @@ class WrittenNote:
 
     title: str
     text: str  # what the note holds: list markers become formatting, not characters
-    folder: str
+    folder: str  # "Recently Deleted" for a deleted note
     created: datetime
     modified: datetime
     pinned: bool
     shared_with: list[dict]  # {"name", "email", "phone"} for each person besides the owner
+    deleted: bool  # in Recently Deleted
 
 
 def _varint(n: int) -> bytes:
@@ -190,12 +196,19 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
         modified = persona.device_time(note.modified)
         if modified > snapshot.backup_date:
             modified = created  # the edit came after this backup
-        if note.folder not in folders:
-            folders[note.folder] = objects.insert({
-                "Z_ENT": core.ent("ICFolder"), "Z_OPT": 1, "ZTITLE2": note.folder, "ZFOLDERTYPE": 0,
-                "ZIDENTIFIER": _uuid(rng), "ZMARKEDFORDELETION": 0, "ZOWNER": account,
+        deleted = note.deleted is not None and persona.device_time(note.deleted) <= snapshot.backup_date
+        if deleted and snapshot.backup_date - persona.device_time(note.deleted) > _KEPT_DELETED:
+            continue  # gone from Recently Deleted by this backup
+        # A note that gets deleted draws from its own random numbers, so deleting
+        # one changes nothing else in the backup.
+        note_rng = random.Random(f"{persona.id}/notes/{note.id}") if note.deleted else rng
+        folder = RECENTLY_DELETED if deleted else note.folder
+        if folder not in folders:
+            folders[folder] = objects.insert({
+                "Z_ENT": core.ent("ICFolder"), "Z_OPT": 1, "ZTITLE2": folder, "ZFOLDERTYPE": int(deleted),
+                "ZIDENTIFIER": _uuid(note_rng), "ZMARKEDFORDELETION": 0, "ZOWNER": account,
             })
-            core.saw("ICCloudSyncingObject", folders[note.folder])
+            core.saw("ICCloudSyncingObject", folders[folder])
         lines = parse_lines(note)
         title = lines[0][0]
         snippet = next((t for t, _, _ in lines[1:] if t.strip()), "")
@@ -204,17 +217,17 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
             "Z_ENT": core.ent("ICNote"), "Z_OPT": 1,
             "ZTITLE1": title, "ZSNIPPET": snippet,
             created_column: cocoa_seconds(created), "ZMODIFICATIONDATE1": cocoa_seconds(modified),
-            "ZFOLDER": folders[note.folder], "ZISPINNED": int(note.pinned), "ZMARKEDFORDELETION": 0,
-            "ZIDENTIFIER": _uuid(rng),
+            "ZFOLDER": folders[folder], "ZISPINNED": int(note.pinned), "ZMARKEDFORDELETION": int(deleted),
+            "ZIDENTIFIER": _uuid(note_rng),
         }
         if people:
             row["ZSERVERSHAREDATA"] = share_data(persona, people)
         pk = objects.insert(row)
         core.saw("ICCloudSyncingObject", pk)
-        data_pk = data.insert({"Z_ENT": core.ent("ICNoteData"), "Z_OPT": 1, "ZNOTE": pk, "ZDATA": note_data(lines, modified, rng)})
+        data_pk = data.insert({"Z_ENT": core.ent("ICNoteData"), "Z_OPT": 1, "ZNOTE": pk, "ZDATA": note_data(lines, modified, note_rng)})
         core.saw("ICNoteData", data_pk)
         db.conn.execute("UPDATE ZICCLOUDSYNCINGOBJECT SET ZNOTEDATA = ? WHERE Z_PK = ?", (data_pk, pk))
-        written.append(WrittenNote(title, "\n".join(t for t, _, _ in lines), note.folder, created, modified, note.pinned,
-                                   [share_address(c) for c in people]))
+        written.append(WrittenNote(title, "\n".join(t for t, _, _ in lines), folder, created, modified, note.pinned,
+                                   [share_address(c) for c in people], deleted))
     core.finish()
     return written

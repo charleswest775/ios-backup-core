@@ -208,6 +208,13 @@ def test_notes_and_safari_read_back(tmp_path, snapshot):
     assert {n["title"]: [p["name"] for p in n["shared_with"]] for n in notes if n["shared_with"]} == {
         "Groceries": ["Riley Sample", "Jordan Test"],
     }
+    # Notes in Recently Deleted: one deleted ten days before the iOS 15 backup is gone
+    # by iOS 17's; the other is still in Work then, deleted two weeks before iOS 26's.
+    assert {n["title"]: n["is_deleted"] for n in notes} == {n["title"]: n["deleted"] for n in expected["notes"]}
+    assert sorted(n["title"] for n in notes if n["is_deleted"]) == {
+        "ios15": ["Old packing list"], "ios17": [], "ios26": ["Meeting scratch"],
+    }[snapshot]
+    assert ("Meeting scratch" in {n["title"] for n in notes}) == (snapshot != "ios15")
     visits = BrowserHistoryExtractor().list_browser_history(accessor)["visits"]
     assert sorted((v["url"], v["title"], v["visit_date"]) for v in visits) == sorted(
         (v["url"], v["title"], v["date"]) for v in expected["browser_history"]
@@ -222,6 +229,8 @@ def test_note_text_keeps_list_items_without_their_markers(tmp_path):
     assert notes["Release checklist"]["text"].split("\n")[1:4] == ["Tag the build", "Write the notes", "Tell support"]
     assert notes["Release checklist"]["folder"] == "Work" and notes["Release checklist"]["pinned"]
     assert notes["Groceries"]["folder"] == "Notes"
+    assert notes["Meeting scratch"]["folder"] == "Recently Deleted" and notes["Meeting scratch"]["deleted"]
+    assert not notes["Groceries"]["deleted"]
 
 
 @pytest.mark.parametrize("snapshot", ["ios15", "ios26"])
