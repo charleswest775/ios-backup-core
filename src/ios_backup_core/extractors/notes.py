@@ -14,7 +14,13 @@ import sqlite3
 from html.parser import HTMLParser
 
 from ios_backup_core.db import connect_readonly, get_database
-from ios_backup_core.protobuf import extract_protobuf_strings
+from ios_backup_core.protobuf import (
+    ProtobufError,
+    extract_protobuf_strings,
+    field_text,
+    parse_fields,
+    sub_message,
+)
 from ios_backup_core.timestamps import apple_to_iso
 
 # Core Data numbers attribute columns per entity, and the numbering moves between
@@ -89,6 +95,23 @@ def share_participants(blob, own_record_names=frozenset()) -> list:
     return found
 
 
+def note_text(proto: bytes):
+    """A note's text from its unzipped ZICNOTEDATA.ZDATA, or None when it can't be read.
+
+    The text is field 2 of the Note (field 3) in the Document (field 2), as
+    apple_cloud_notes_parser reads it. Searching every string in the data for
+    the longest one finds the same text, except in a note whose text has fewer
+    than three letters, such as one that's only a number: that search skips
+    those as noise, and the note came back blank.
+    """
+    try:
+        document = sub_message(parse_fields(proto), 2)
+    except ProtobufError:
+        return None
+    note = sub_message(document, 3) if document else None
+    return field_text(note, 2) if note else None
+
+
 class _HtmlText(HTMLParser):
     """Plain text from the HTML a notes.sqlite note body is (iOS 4 to 8)."""
 
@@ -140,37 +163,42 @@ class NoteExtractor:
     NOTES_DB_PATH = "Library/Notes/notes.sqlite"
 
     def list_notes(self, backup) -> dict:
-        """List all notes with content."""
-        # Try legacy notes.sqlite first (iOS 8 and earlier)
+        """List all notes with content, newest change first.
+
+        Notes can be in two files, and a backup can have both: NoteStore.sqlite
+        (iOS 9 and later) and notes.sqlite (iOS 8 and earlier). iOS 9 leaves an
+        account's notes in notes.sqlite until that account is upgraded, so a
+        phone restored from backups since then can still carry, say, an old
+        "On My iPhone" account there next to its iCloud notes in NoteStore. Both
+        are listed. A note keeps its row number as its note_id; when both files
+        have notes, those from notes.sqlite get "legacy_" in front so no two
+        notes share an id.
+        """
+        notes = self._notestore_notes(backup)
+        legacy = []
         db_path = get_database(backup, self.NOTES_DB_PATH, domain="HomeDomain")
-
-        notes = []
-
         if db_path:
-            notes = self._parse_legacy_notes(db_path, backup)
-
-        if not notes:
-            # Try the group container path for newer iOS via manifest scan.
-            files = backup.list_files(path_like="%NoteStore.sqlite")
-            for f in files:
-                extracted = get_database(backup, f["path"], domain=f["domain"])
-                if extracted:
-                    notes = self._parse_notestore(extracted, backup)
-                    if notes:
-                        break
-
-        if not notes:
-            # Encrypted backups: Manifest.db is encrypted so list_files() returns
-            # nothing. Try the well-known iOS 11+ group container path directly.
-            notestore_path = get_database(
-                backup,
-                "NoteStore.sqlite",
-                domain="AppDomainGroup-group.com.apple.notes",
-            )
-            if notestore_path:
-                notes = self._parse_notestore(notestore_path, backup)
-
+            legacy = self._parse_legacy_notes(db_path, backup)
+        if notes and legacy:
+            for note in legacy:
+                note["note_id"] = f"legacy_{note['note_id']}"
+        notes = notes + legacy
+        notes.sort(key=lambda n: n["modified"] or "", reverse=True)
         return {"notes": notes}
+
+    def _notestore_notes(self, backup) -> list:
+        """The notes in NoteStore.sqlite (iOS 9 and later), or [] when it has none."""
+        for f in backup.list_files(path_like="%NoteStore.sqlite"):
+            extracted = get_database(backup, f["path"], domain=f["domain"])
+            if extracted:
+                notes = self._parse_notestore(extracted, backup)
+                if notes:
+                    return notes
+        # When the file list can't be searched, try where iOS 11 and later keep it
+        notestore_path = get_database(backup, "NoteStore.sqlite", domain="AppDomainGroup-group.com.apple.notes")
+        if notestore_path:
+            return self._parse_notestore(notestore_path, backup)
+        return []
 
     def _parse_legacy_notes(self, db_path: str, backup=None) -> list:
         """Parse Library/Notes/notes.sqlite, the notes of iOS 8 and earlier."""
@@ -310,11 +338,12 @@ class NoteExtractor:
                     if idx != -1:
                         try:
                             decompressed = gzip.decompress(data[idx:])
-                            pb_strings = extract_protobuf_strings(decompressed)
-                            if pb_strings:
-                                text = max(pb_strings, key=len)
-                                if len(text) > len(body):
-                                    body = text.strip()
+                            text = note_text(decompressed)
+                            if text is None:
+                                pb_strings = extract_protobuf_strings(decompressed)
+                                text = max(pb_strings, key=len) if pb_strings else ""
+                            if len(text) > len(body):
+                                body = text.strip()
                         except Exception:
                             pass
 
