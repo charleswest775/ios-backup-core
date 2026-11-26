@@ -198,6 +198,32 @@ def parse_attributed_body(data: bytes) -> tuple[str, str]:
     return "", "text"
 
 
+# The attribute Messages puts on each U+FFFC that stands for a file: the
+# attachment's guid (attachment.guid in sms.db).
+_FILE_TRANSFER_KEY = b"__kIMFileTransferGUIDAttributeName"
+
+
+def file_placeholders(data: bytes) -> int:
+    """How many files a message's ``attributedBody`` stands for when it has no text.
+
+    A photo or file sent in Messages is a U+FFFC in the body carrying
+    ``__kIMFileTransferGUIDAttributeName``. When iOS removes the attachment's
+    record (and its file) but keeps the message, the body is all that's left:
+    nothing but those placeholders. Returns their number for such a body, and 0
+    for anything else: a body with text, one whose U+FFFC aren't files, or one
+    that can't be read.
+    """
+    if not data:
+        return 0
+    data = bytes(data)
+    if data.startswith(b"bplist00") or _FILE_TRANSFER_KEY not in data:
+        return 0
+    body = _parse_typedstream_pytypedstream(data)
+    if not body or body.replace("￼", "").strip():
+        return 0
+    return body.count("￼")
+
+
 def parse_link_payload(data: bytes) -> dict:
     """Extract URL, title, summary and site name from a URLBalloonProvider payload_data blob.
 

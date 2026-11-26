@@ -22,6 +22,7 @@ from ios_backup_core.db import connect_readonly, get_database
 from ios_backup_core.schema import detect_message_schema, is_legacy_sms_db
 from ios_backup_core.text import (
     _type_from_bundle_id,
+    file_placeholders,
     parse_attributed_body,
     parse_link_payload,
     clean_message_text,
@@ -93,6 +94,18 @@ def _group_event(item_type: int, action: int, actor: str, other: str,
         unattributed = False
     words = unnamed if unattributed or not actor else named
     return message_type, words.format(actor=actor, other=other or "someone", title=title)
+
+
+def _attachment_not_in_backup() -> dict:
+    """An attachment sms.db no longer has a record of, so no id, name or type."""
+    return {
+        "attachment_id": None,
+        "filename": "",
+        "mime_type": None,
+        "transfer_name": "",
+        "total_bytes": None,
+        "available": False,
+    }
 
 
 class MessageExtractor:
@@ -519,6 +532,17 @@ class MessageExtractor:
                 ):
                     msg_type = "unsent"
                     event_text = f"{'You' if row['is_from_me'] else sender_name or 'Someone'} unsent a message"
+
+                # A photo or file whose attachment record iOS removed (with its
+                # file) while keeping the message: the body is nothing but the
+                # files' placeholders. Each is an attachment that isn't in the
+                # backup, marked the way a file the backup lacks is
+                # ("available": False), with no id: sms.db has no record of it.
+                if msg_type == "system" and not msg_text and not real_attachments and has_attributed_body:
+                    gone = file_placeholders(row["attributedBody"])
+                    if gone:
+                        msg_type = "attachment"
+                        real_attachments = [_attachment_not_in_backup() for _ in range(gone)]
 
                 link_preview = None
                 if msg_type == "link" and has_payload_data and row["payload_data"]:

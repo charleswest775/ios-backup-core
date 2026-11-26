@@ -28,7 +28,7 @@ class Message:
 
 @dataclass
 class Call:
-    call_id: object            # int (ZCALLRECORD) or str (ft_/vm_ prefixed)
+    call_id: object            # int (ZCALLRECORD) or str (vm_ prefixed: a voicemail)
     address: str               # raw phone/email
     contact_name: str
     date: Optional[str]        # ISO 8601
