@@ -149,7 +149,8 @@ def test_a_read_only_backup_reads_in_full(tmp_path):
     assert data["photos"]["source"] != "unavailable"
     assert len(data["photos"]["photos"]) == len([p for p in expected["photos"] if not p["trashed"]])
     assert len(data["notes"]["notes"]) == len(expected["notes"])
-    assert len(data["voicemails"]["voicemails"]) == len(expected["voicemails"])
+    # The voicemail list leaves out the Deleted list unless asked; the answer key holds every list.
+    assert len(data["voicemails"]["voicemails"]) == len([v for v in expected["voicemails"] if not v["is_deleted"]])
     assert data["whatsapp"] == {"conversations": [], "empty_reason": "not_in_backup"}
     assert len(data["calendars"]["calendars"]) == len(expected["calendar"]["calendars"])
     assert len(data["calendar_events"]["events"]) == len(expected["calendar"]["events"])

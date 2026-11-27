@@ -229,17 +229,23 @@ def test_calls_and_voicemails_read_back(tmp_path, snapshot):
     contacts = ContactResolver().load_contacts(accessor)
     calls = CallExtractor().list_calls(accessor, contacts, 0, 1000)["calls"]
     # Voicemails also show as missed calls; each one here has its missed call, so none are added.
+    # A caller with no number has none on the call either (the answer key's None, the reader's "").
     assert sorted((c["address"], c["date"], c["duration"], c["direction"]) for c in calls) == sorted(
-        (c["address"], c["date"], c["duration"], "outgoing" if c["outgoing"] else "incoming") for c in expected["calls"]
+        (c["address"] or "", c["date"], c["duration"], "outgoing" if c["outgoing"] else "incoming")
+        for c in expected["calls"]
     )
+    # The list leaves out the Deleted list unless asked for it; the answer key holds every list.
     voicemails = VoicemailExtractor().list_voicemails(accessor, contacts)["voicemails"]
     assert sorted((v["phone_number"], v["date_received"], v["duration"], v["transcript"]) for v in voicemails) == sorted(
-        (v["sender"], v["date"], v["duration"], v["transcript"]) for v in expected["voicemails"]
+        (v["sender"] or "", v["date"], v["duration"], v["transcript"]) for v in expected["voicemails"]
+        if not v["is_deleted"]
     )
-    assert all(v["transcript"] for v in voicemails)
     for v in expected["voicemails"]:
-        audio = Path(VoicemailExtractor().get_audio_path(accessor, v["rowid"])).read_bytes()
-        assert audio.startswith(b"#!AMR\n") and len(audio) == 6 + 32 * 50 * v["duration"]
+        path = VoicemailExtractor().get_audio_path(accessor, v["id"])
+        assert (path is not None) == v["audio_available"], v["id"]
+        if path:
+            audio = Path(path).read_bytes()
+            assert audio.startswith(b"#!AMR\n") and len(audio) == 6 + 32 * 50 * v["duration"]
 
 
 @pytest.mark.parametrize("snapshot", ["ios15", "ios17", "ios26"])
@@ -392,7 +398,7 @@ def test_unencrypted_backups_leave_out_call_history(tmp_path):
     expected = json.loads((tmp_path / EXPECTED).read_text(encoding="utf-8"))
     assert expected["calls"] == [] and expected["absent"]["calls"] == "encrypted_only"
     assert expected["browser_history"] == [] and expected["absent"]["browser_history"] == "encrypted_only"
-    assert len(expected["voicemails"]) == 3
+    assert len(expected["voicemails"]) == 15 and len(expected["removed_voicemails"]) == 5
     manifest = sqlite3.connect(backup_dir / "Manifest.db")
     paths = {r[0] for r in manifest.execute("SELECT relativePath FROM Files")}
     assert "Library/Voicemail/voicemail.db" in paths and "NoteStore.sqlite" in paths

@@ -1,8 +1,7 @@
 """A voicemail's transcript, from the <ROWID>.transcript file beside its audio.
 
-No voicemail.db schema we hold (iOS 13 to 17) has a transcript column, and an
-iOS 27.2 backup listed 928 voicemails with every transcript empty while the
-phone showed them. The text is in a file per voicemail: an NSKeyedArchiver
+No voicemail.db schema we hold (iOS 13 to 17) has a transcript column. The text
+is in a file per voicemail: an NSKeyedArchiver
 archive of VisualVoicemail.framework's VMVoicemailTranscript, whose
 ``transcriptionString`` is what the Phone app shows. The archives here are
 built as that class's ``encodeWithCoder:`` writes them (iOS 18.2).
@@ -51,9 +50,9 @@ def _transcripts(tmp_path, folder, texts):
 
 def _one_store(tmp_path, texts):
     db = _store(tmp_path / "main" / "voicemail.db", [
-        (1, 9001, 1_760_000_000, "+15550000001", 20, LIVE, 0),
-        (2, 9002, 1_770_000_000, "+15550000002", 31, SPAM, 0),
-        (3, 9003, 1_780_000_000, "+15550000003", 12, TRASHED, 1_780_000_500),
+        (1, 9001, 1_700_000_000, "+15550000001", 50, LIVE, 0),
+        (2, 9002, 1_700_100_000, "+15550000002", 31, SPAM, 0),
+        (3, 9003, 1_700_200_000, "+15550000003", 12, TRASHED, 1_700_200_500),
     ])
     return _Backup({
         MAIN: db, **_audio(tmp_path, "Library/Voicemail", 1, 2, 3),
@@ -92,19 +91,19 @@ def test_a_transcript_listed_but_not_extracted_is_empty(tmp_path):
 
 def test_the_account_store_has_its_own_transcripts(tmp_path):
     files = _two_stores(tmp_path)
-    files.update(_transcripts(tmp_path, f"Library/Voicemail/{ACCOUNT}", {10: "Only in the account store."}))
-    files.update(_transcripts(tmp_path, "Library/Voicemail", {10: "Main store's ROWID 10 is no voicemail."}))
+    files.update(_transcripts(tmp_path, f"Library/Voicemail/{ACCOUNT}", {13: "Only in the account store."}))
+    files.update(_transcripts(tmp_path, "Library/Voicemail", {13: "Main store's ROWID 13 is no voicemail."}))
     result = _list(_Backup(files))
-    assert result["voicemails"][0]["id"] == f"{ACCOUNT}.10"
+    assert result["voicemails"][0]["id"] == f"{ACCOUNT}.13"
     assert result["voicemails"][0]["transcript"] == "Only in the account store."
 
 
 def test_a_copy_without_a_transcript_takes_the_other_copys(tmp_path):
-    # Main store's 2405 is listed (it has audio); only its account copy, 9, was transcribed.
+    # Main store's 24 is listed (it has audio); only its account copy, 12, was transcribed.
     files = _two_stores(tmp_path)
-    files.update(_transcripts(tmp_path, f"Library/Voicemail/{ACCOUNT}", {9: "Transcribed in the other store."}))
+    files.update(_transcripts(tmp_path, f"Library/Voicemail/{ACCOUNT}", {12: "Transcribed in the other store."}))
     by_id = {v["id"]: v["transcript"] for v in _list(_Backup(files))["voicemails"]}
-    assert by_id[2405] == "Transcribed in the other store."
+    assert by_id[24] == "Transcribed in the other store."
 
 
 def test_counting_voicemails_opens_no_transcript(tmp_path):

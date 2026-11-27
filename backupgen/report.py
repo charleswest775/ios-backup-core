@@ -12,6 +12,7 @@ from collections import Counter
 from datetime import datetime
 
 from backupgen.persona import Persona
+from backupgen.persona.voicemail import UNKNOWN_CALLER
 
 
 def _device_date(persona: Persona, real: datetime) -> str:
@@ -111,6 +112,8 @@ def render(persona: Persona) -> str:
 
 
 def _who(persona: Persona, who: str) -> str:
+    if who == UNKNOWN_CALLER:
+        return "no number"
     return who if who.startswith("+") else persona.contacts[who].display_name
 
 
@@ -130,7 +133,8 @@ def _calls(persona: Persona, w) -> None:
         w("## Voicemails\n")
         w("| When | From | Length | Message |\n|---|---|---|---|")
         for v in persona.voicemails:
-            w(f"| {v.real_time:%Y-%m-%d %H:%M} | {_who(persona, v.who)} | {_minutes(v.duration)} | {v.transcript} |")
+            kept = "".join(f" ({flag})" for flag in sorted(v.flags))
+            w(f"| {v.real_time:%Y-%m-%d %H:%M} | {_who(persona, v.who)} | {_minutes(v.duration)}{kept} | {v.transcript} |")
         w("")
 
 
