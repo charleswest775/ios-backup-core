@@ -25,7 +25,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from backupgen.persona.core import Contact, PersonaError
+from backupgen.persona.core import AreaData, Contact, Pack, PersonaError
 
 
 @dataclass
@@ -137,8 +137,9 @@ def _parse_photo_people(path: Path, photos: list[Photo], contacts: dict[str, Con
     return people
 
 
-def load_photos(folder: Path, contacts: dict[str, Contact]) -> tuple[Optional[list[Photo]], list[PhotoPerson]]:
-    """The photos (None when the pack has no photos.json) and the People album's groups."""
-    photos = _parse_photos(folder / "photos.json") if (folder / "photos.json").exists() else None
-    people = _parse_photo_people(folder / "photos.json", photos, contacts) if photos is not None else []
-    return photos, people
+def load(pack: Pack) -> AreaData:
+    """Persona.photos (None when the pack has no photos.json) and Persona.photo_people, the People album's groups."""
+    path = pack.folder / "photos.json"
+    photos = _parse_photos(path) if path.exists() else None
+    people = _parse_photo_people(path, photos, pack.contacts) if photos is not None else []
+    return AreaData({"photos": photos, "photo_people": people}, records=photos or [])

@@ -10,9 +10,8 @@ import re
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
-from backupgen.persona.core import PersonaError, _dated_lines
+from backupgen.persona.core import AreaData, Pack, PersonaError, _dated_lines
 
 _VISIT = re.compile(r"^(\d{1,2}):(\d{2})\s+(\S+)\s+\|\s+(.+)$")
 
@@ -36,6 +35,7 @@ def _parse_visits(path: Path) -> list[Visit]:
     return visits
 
 
-def load_visits(folder: Path) -> Optional[list[Visit]]:
-    """The visits, or None when the pack has no safari.txt."""
-    return _parse_visits(folder / "safari.txt") if (folder / "safari.txt").exists() else None
+def load(pack: Pack) -> AreaData:
+    """Persona.visits: the visits, or None when the pack has no safari.txt."""
+    visits = _parse_visits(pack.folder / "safari.txt") if (pack.folder / "safari.txt").exists() else None
+    return AreaData({"visits": visits}, records=visits or [])

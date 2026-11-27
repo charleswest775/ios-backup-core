@@ -24,7 +24,7 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Optional
 
-from backupgen.persona.core import Contact, PersonaError
+from backupgen.persona.core import AreaData, Contact, Pack, PersonaError
 
 REACTIONS = {"love": 2000, "like": 2001, "dislike": 2002, "laugh": 2003, "emphasize": 2004, "question": 2005}
 _LINE = re.compile(r"^(\d{1,2}):(\d{2})\s+([A-Za-z0-9_-]+)(?::\s(.*)|\s+\+(\w+)|\s+\[photo:([A-Za-z0-9_-]+)\])\s*$")
@@ -92,10 +92,11 @@ def _parse_chat(path: Path, contacts: dict[str, Contact]) -> Chat:
     return chat
 
 
-def load_chats(folder: Path, contacts: dict[str, Contact], persona_id: str) -> list[Chat]:
-    """Every conversation in chats/, in file name order."""
-    chats =[_parse_chat(p, contacts) for p in sorted((folder / "chats").glob("*.txt"))]
+def load(pack: Pack) -> AreaData:
+    """Every conversation in chats/, in file name order (Persona.chats)."""
+    chats = [_parse_chat(p, pack.contacts) for p in sorted((pack.folder / "chats").glob("*.txt"))]
     ids = [c.id for c in chats]
     if len(ids) != len(set(ids)):
-        raise PersonaError(f"{persona_id}: duplicate chat ids")
-    return chats
+        raise PersonaError(f"{pack.id}: duplicate chat ids")
+    messages = [m for chat in chats for m in chat.messages]
+    return AreaData({"chats": chats}, records=messages, sent_photos=[m for m in messages if m.photo])

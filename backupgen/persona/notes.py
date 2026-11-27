@@ -25,9 +25,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
-from backupgen.persona.core import Contact, PersonaError
+from backupgen.persona.core import AreaData, Contact, Pack, PersonaError
 
 _NOTE_HEADERS = ("folder", "created", "modified", "pinned", "shared", "deleted")
 
@@ -79,8 +78,9 @@ def _parse_note(path: Path, contacts: dict[str, Contact]) -> Note:
                 headers.get("pinned", "no").lower() in ("yes", "true"), text, path.name, shared, deleted)
 
 
-def load_notes(folder: Path, contacts: dict[str, Contact]) -> Optional[list[Note]]:
-    """The notes, or None when the pack has no notes/ folder."""
-    if not (folder / "notes").is_dir():
-        return None
-    return [_parse_note(p, contacts) for p in sorted((folder / "notes").glob("*.txt"))]
+def load(pack: Pack) -> AreaData:
+    """Persona.notes: the notes, or None when the pack has no notes/ folder."""
+    if not (pack.folder / "notes").is_dir():
+        return AreaData({"notes": None})
+    notes = [_parse_note(p, pack.contacts) for p in sorted((pack.folder / "notes").glob("*.txt"))]
+    return AreaData({"notes": notes}, records=notes)

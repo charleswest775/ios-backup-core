@@ -1,13 +1,19 @@
 """What every part of a persona pack shares: the persona, its contacts and snapshots, and the loader.
 
-Each kind of file in a pack has a module of its own beside this one (messages.py, calls.py,
-notes.py, safari.py, photos.py, whatsapp.py, calendar.py, voice_memos.py) that documents its
-format and parses it. load_persona reads persona.json, calls those parsers in turn and checks
-what spans them: photos sent after they were taken, every record inside the persona's period.
+Each kind of file in a pack belongs to an area with a module of its own beside this one (AREAS:
+messages.py, calls.py, voicemail.py, notes.py, safari.py, photos.py, whatsapp.py, calendar.py,
+voice_memos.py) that documents its format and parses it. Each has ``load(pack) -> AreaData``:
+the Persona attributes it fills and its dated records. load_persona reads persona.json, runs
+those loaders in turn and checks what spans them: photos sent after they were taken, every
+record inside the persona's period.
+
+A new area is a module with a ``load`` plus its name in AREAS and a line per attribute in
+Persona; nothing else here changes.
 """
 
 from __future__ import annotations
 
+import importlib
 import json
 import re
 from dataclasses import dataclass, field
@@ -21,15 +27,21 @@ from backupgen.container import Host
 
 if TYPE_CHECKING:
     from backupgen.persona.calendar import CalendarDef, EventDef
-    from backupgen.persona.calls import Call, Voicemail
+    from backupgen.persona.calls import Call
     from backupgen.persona.messages import Chat
     from backupgen.persona.notes import Note
     from backupgen.persona.photos import Photo, PhotoPerson
     from backupgen.persona.safari import Visit
     from backupgen.persona.voice_memos import VoiceMemoDef
+    from backupgen.persona.voicemail import Voicemail
     from backupgen.persona.whatsapp import WAChat, WAPerson
 
 _DURATION = re.compile(r"^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$")
+
+# The pack's areas, each a module in this package with ``load(pack) -> AreaData``, in the order
+# load_persona runs them (which decides which error a broken pack shows first, and the order the
+# period check goes through their records).
+AREAS = ("messages", "calls", "voicemail", "notes", "safari", "photos", "whatsapp", "calendar", "voice_memos")
 
 
 class PersonaError(ValueError):
@@ -83,7 +95,7 @@ class Persona:
     owner: Contact
     device_name: str
     contacts: dict[str, Contact]
-    chats: list[Chat]
+    chats: list[Chat]  # this and the attributes from calls on are filled by the areas' loaders (AREAS)
     snapshots: dict[str, Snapshot]
     timeline: list[dict]
     folder: Path
@@ -110,6 +122,27 @@ class Persona:
     def real_time(self, device: datetime) -> datetime:
         local = device.astimezone(self.tz).replace(tzinfo=None)
         return local.replace(year=local.year - self.shift_years)
+
+
+@dataclass
+class Pack:
+    """What an area's loader gets: the pack's folder and what persona.json says that areas use."""
+
+    id: str  # the pack's folder name
+    folder: Path
+    contacts: dict[str, Contact]  # everyone but the owner, by id
+    owner: Contact
+    tz: ZoneInfo
+    shift_years: int
+
+
+@dataclass
+class AreaData:
+    """What an area's loader gives load_persona."""
+
+    fields: dict  # Persona attribute -> value (None, or left out, when the pack has no file for it)
+    records: list = field(default_factory=list)  # dated records (.real_time, .where), checked against the period
+    sent_photos: list = field(default_factory=list)  # messages that send a camera-roll photo (.photo, .real_time, .where)
 
 
 def _contact(raw: dict) -> Contact:
@@ -174,21 +207,12 @@ def _check_who(who: str, contacts: dict[str, Contact], where: str) -> None:
 
 
 def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
-    # The parsers import this module, so they're imported here rather than at the top.
-    from backupgen.persona.calendar import load_calendar
-    from backupgen.persona.calls import load_calls
-    from backupgen.persona.messages import load_chats
-    from backupgen.persona.notes import load_notes
-    from backupgen.persona.photos import load_photos
-    from backupgen.persona.safari import load_visits
-    from backupgen.persona.voice_memos import load_voice_memos
-    from backupgen.persona.whatsapp import WA_MISSING_PHOTO, load_whatsapp
-
     folder = root / persona_id
     raw = json.loads((folder / "persona.json").read_text(encoding="utf-8"))
     contacts = {c["id"]: _contact(c) for c in raw["contacts"]}
     owner = contacts.pop(raw["owner"])
     tz = ZoneInfo(raw["timezone"])
+    options = _options(raw, "persona.json")
     snapshots = {}
     for s in raw["snapshots"]:
         snapshots[s["id"]] = Snapshot(
@@ -203,22 +227,18 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
             host=Host(**s.get("host", {})),
             options=_options(s, f"persona.json snapshot {s['id']}"),
         )
-    chats = load_chats(folder, contacts, persona_id)
-    calls, voicemails = load_calls(folder, contacts)
-    notes = load_notes(folder, contacts)
-    visits = load_visits(folder)
-    photos, photo_people = load_photos(folder, contacts)
-    whatsapp, wa_people, wa_documents = load_whatsapp(folder, contacts)
-    calendars, events = load_calendar(folder, contacts, owner, tz, raw["shift_years"])
-    voice_memos = load_voice_memos(folder)
+    pack = Pack(persona_id, folder, contacts, owner, tz, raw["shift_years"])
+    fields: dict = {}
+    records: list = []
+    sent: list = []
+    # The area modules import this one, so they're imported here rather than at the top.
+    for name in AREAS:
+        area = importlib.import_module(f"backupgen.persona.{name}").load(pack)
+        fields.update(area.fields)
+        records += area.records
+        sent += area.sent_photos
     start, end = (date.fromisoformat(d) for d in raw["real_period"])
-    wa_messages = [m for chat in whatsapp or [] for m in chat.messages]
-    # Events are checked by when they were made, so they may start after the backup, as on a phone.
-    records = ([m for chat in chats for m in chat.messages] + (calls or []) + (voicemails or []) + (notes or [])
-               + (visits or []) + (photos or []) + wa_messages + (events or []) + (voice_memos or []))
-    taken = {photo.id: photo.real_time for photo in photos or []}
-    sent = [m for chat in chats for m in chat.messages if m.photo]
-    sent += [m for m in wa_messages if m.photo and m.photo != WA_MISSING_PHOTO]
+    taken = {photo.id: photo.real_time for photo in fields.get("photos") or []}
     for message in sent:
         if message.photo not in taken:
             raise PersonaError(f"{message.where}: no photo {message.photo!r} in photos.json")
@@ -241,24 +261,12 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
         owner=owner,
         device_name=raw["device_name"],
         contacts=contacts,
-        chats=chats,
         snapshots=snapshots,
         timeline=research.get("events", []),
         folder=folder,
         avoid=research.get("avoid", []),
-        calls=calls,
-        voicemails=voicemails,
-        notes=notes,
-        visits=visits,
-        photos=photos,
-        photo_people=photo_people,
-        whatsapp=whatsapp,
-        whatsapp_people=wa_people,
-        whatsapp_documents=wa_documents,
-        calendars=calendars,
-        events=events,
-        voice_memos=voice_memos,
-        options=_options(raw, "persona.json"),
+        options=options,
+        **fields,
     )
 
 

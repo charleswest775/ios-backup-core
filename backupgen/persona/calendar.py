@@ -42,7 +42,7 @@ from pathlib import Path
 from typing import Optional
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from backupgen.persona.core import Contact, PersonaError
+from backupgen.persona.core import AreaData, Contact, Pack, PersonaError
 
 CALENDAR_ACCOUNTS = ("icloud", "local", "subscribed", "holidays", "suggestions")
 FREQUENCIES = ("daily", "weekly", "monthly", "yearly")
@@ -424,17 +424,20 @@ def _parse_calendar(path: Path, contacts: dict[str, Contact], owner: Contact,
     return list(calendars.values()), events
 
 
-def load_calendar(folder: Path, contacts: dict[str, Contact], owner: Contact, tz: ZoneInfo,
-                  shift_years: int) -> tuple[Optional[list[CalendarDef]], Optional[list[EventDef]]]:
-    """The calendars and events, or (None, None) when the pack has no calendar.json."""
-    if not (folder / "calendar.json").exists():
-        return None, None
-    calendars, events = _parse_calendar(folder / "calendar.json", contacts, owner, tz)
-    if shift_years % 400:
+def load(pack: Pack) -> AreaData:
+    """Persona.calendars and .events, both None when the pack has no calendar.json.
+
+    Events are dated (for the period check) by when they were made, so they may start after
+    the backup, as on a phone.
+    """
+    if not (pack.folder / "calendar.json").exists():
+        return AreaData({"calendars": None, "events": None})
+    calendars, events = _parse_calendar(pack.folder / "calendar.json", pack.contacts, pack.owner, pack.tz)
+    if pack.shift_years % 400:
         # A series is expanded in real years and its rule written unchanged, so after the shift its
         # start, skips and last start would no longer fall on the rule's days.
         for event in events:
             if event.repeat is not None:
                 raise PersonaError(f"{event.where}: a repeating event needs shift_years 0 (or a multiple of 400): "
                                    "shifting by whole years moves weekdays and 29 February off the rule")
-    return calendars, events
+    return AreaData({"calendars": calendars, "events": events}, records=events)

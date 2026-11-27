@@ -39,7 +39,7 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Optional
 
-from backupgen.persona.core import Contact, PersonaError, _seconds
+from backupgen.persona.core import AreaData, Contact, Pack, PersonaError, _seconds
 
 _WA_LINE = re.compile(
     r"^(\d{1,2}):(\d{2})(\*)?\s+([A-Za-z0-9_-]+)(?:\s+>\s+([A-Za-z0-9_-]+))?"
@@ -278,9 +278,11 @@ def _parse_whatsapp(folder: Path, contacts: dict[str, Contact]):
     return chats, people, documents
 
 
-def load_whatsapp(folder: Path, contacts: dict[str, Contact]
-                  ) -> tuple[Optional[list[WAChat]], dict[str, WAPerson], dict[str, str]]:
-    """(chats, people, documents), or (None, {}, {}) when the pack has no whatsapp/ folder."""
-    if not (folder / "whatsapp").is_dir():
-        return None, {}, {}
-    return _parse_whatsapp(folder / "whatsapp", contacts)
+def load(pack: Pack) -> AreaData:
+    """Persona.whatsapp (the chats; None when the pack has no whatsapp/ folder), .whatsapp_people and .whatsapp_documents."""
+    if not (pack.folder / "whatsapp").is_dir():
+        return AreaData({"whatsapp": None, "whatsapp_people": {}, "whatsapp_documents": {}})
+    chats, people, documents = _parse_whatsapp(pack.folder / "whatsapp", pack.contacts)
+    messages = [m for chat in chats for m in chat.messages]
+    return AreaData({"whatsapp": chats, "whatsapp_people": people, "whatsapp_documents": documents}, records=messages,
+                    sent_photos=[m for m in messages if m.photo and m.photo != WA_MISSING_PHOTO])

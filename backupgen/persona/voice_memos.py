@@ -19,7 +19,7 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Optional
 
-from backupgen.persona.core import PersonaError, _seconds
+from backupgen.persona.core import AreaData, Pack, PersonaError, _seconds
 
 _MEMO = re.compile(r"^(\d{1,2}):(\d{2})\s+([\dhms]+)\s+(.+)$")
 _MEMO_FLAG = re.compile(r"\s*\((favorite|deleted|icloud|folder:[^()]*)\)\s*$")
@@ -91,6 +91,8 @@ def _parse_voice_memos(path: Path) -> list[VoiceMemoDef]:
     return memos
 
 
-def load_voice_memos(folder: Path) -> Optional[list[VoiceMemoDef]]:
-    """The recordings, or None when the pack has no voice_memos.txt."""
-    return _parse_voice_memos(folder / "voice_memos.txt") if (folder / "voice_memos.txt").exists() else None
+def load(pack: Pack) -> AreaData:
+    """Persona.voice_memos: the recordings, or None when the pack has no voice_memos.txt."""
+    path = pack.folder / "voice_memos.txt"
+    memos = _parse_voice_memos(path) if path.exists() else None
+    return AreaData({"voice_memos": memos}, records=memos or [])
