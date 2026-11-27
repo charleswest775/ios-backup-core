@@ -1,0 +1,6 @@
+store: legacy
+created: 2021-01-02 09:00
+deleted: 2021-01-25 12:00
+
+Old shopping list
+Milk

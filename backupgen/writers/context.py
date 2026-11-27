@@ -90,8 +90,16 @@ class Step:
     # The pack options it reads (persona.json "options" under its kind), each with its default; the
     # step gets them merged as ctx.options. Document each key beside its writer's STEP.
     options: Mapping[str, Any] = field(default_factory=dict)
+    # The data type this step writes more of, when it isn't one of its own: another file the same
+    # data shows up in (legacy_notes: notes.sqlite's notes are Notes, beside NoteStore's). Such a
+    # step has its own random numbers, options and result like any other, but no "absent" entry:
+    # what it writes makes that data type present, and that data type's sections read its result.
+    part_of: Optional[str] = None
 
     def __post_init__(self) -> None:
         if self.encrypted_only != (self.on_phone is not None):
             raise ValueError(f"{self.kind}: on_phone goes with encrypted_only (both or neither), so an "
                              f"unencrypted backup can say whether the phone has any")
+        if self.part_of is not None and self.encrypted_only:
+            raise ValueError(f"{self.kind}: a step that's part of {self.part_of} can't be encrypted_only: it has no "
+                             f"\"absent\" entry to say so, and it must leave unencrypted backups out itself")

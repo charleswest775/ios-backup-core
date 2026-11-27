@@ -35,6 +35,7 @@ Phone numbers are from ranges set aside for fiction (Ofcom 07700 900xxx and
 from __future__ import annotations
 
 import hashlib
+import html
 import io
 import json
 import plistlib
@@ -50,6 +51,7 @@ from typing import Optional
 
 from backupgen.container import mbfile_record
 from backupgen.crypto import aes_wrap, encrypt_cbc
+from backupgen.writers.legacy_notes import LegacyNote, notes_sqlite
 
 MBDB_HEADER = b"mbdb\x05\x00"
 # The Files table as in every Manifest.db (see schemas/ios-*/container.json).
@@ -420,28 +422,16 @@ def _photos_sqlite(major: int) -> bytes:
     return _sqlite_bytes(script, rows)
 
 
-def _notes_sqlite() -> bytes:
-    script = """
-        CREATE TABLE Z_PRIMARYKEY (Z_ENT INTEGER PRIMARY KEY, Z_NAME VARCHAR, Z_SUPER INTEGER, Z_MAX INTEGER);
-        CREATE TABLE ZNOTE (Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZCONTAINSCJK INTEGER,
-            ZCONTENTTYPE INTEGER, ZDELETEDFLAG INTEGER, ZEXTERNALFLAGS INTEGER, ZEXTERNALSERVERINTID INTEGER,
-            ZINTEGERID INTEGER, ZISBOOKKEEPINGENTRY INTEGER, ZBODY INTEGER, ZSTORE INTEGER,
-            ZCREATIONDATE TIMESTAMP, ZMODIFICATIONDATE TIMESTAMP, ZAUTHOR VARCHAR, ZGUID VARCHAR,
-            ZSERVERID VARCHAR, ZSUMMARY VARCHAR, ZTITLE VARCHAR, ZEXTERNALCONTENTREF BLOB,
-            ZEXTERNALREPRESENTATION BLOB);
-        CREATE TABLE ZNOTEBODY (Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZOWNER INTEGER,
-            ZCONTENT VARCHAR, ZEXTERNALCONTENTREF VARCHAR, ZEXTERNALREPRESENTATION BLOB);
-    """
-    rows: list = []
+def _notes_sqlite(major: int) -> bytes:
+    """notes.sqlite, written by the same code as a persona's legacy notes (writers/legacy_notes.py)."""
+    notes = []
     for pk, (title, body, created, modified, deleted) in enumerate(NOTES, 1):
-        summary = body.split("<div>")[1].split("</div>")[0] if "<div>" in body else ""
-        rows.append(("INSERT INTO ZNOTE (Z_PK, Z_ENT, Z_OPT, ZCONTAINSCJK, ZCONTENTTYPE, ZDELETEDFLAG,"
-                     " ZINTEGERID, ZISBOOKKEEPINGENTRY, ZBODY, ZSTORE, ZCREATIONDATE, ZMODIFICATIONDATE,"
-                     " ZGUID, ZSUMMARY, ZTITLE) VALUES (?, 3, 1, 0, 0, ?, ?, 0, ?, 1, ?, ?, ?, ?, ?)",
-                     (pk, int(deleted), pk, pk, _cocoa(created), _cocoa(modified),
-                      str(uuid.UUID(int=pk)).upper(), summary, title)))
-        rows.append(("INSERT INTO ZNOTEBODY VALUES (?, 1, 1, ?, ?, NULL, NULL)", (pk, pk, body)))
-    return _sqlite_bytes(script, rows)
+        first = body.split("<div>")[1].split("</div>")[0] if "<div>" in body else ""
+        notes.append(LegacyNote(title, body, html.unescape(first) or None, created, modified, deleted,
+                                str(uuid.UUID(int=pk)).upper()))
+    with tempfile.TemporaryDirectory(prefix="backupgen-legacy-") as tmp:
+        return notes_sqlite(Path(tmp) / "notes.sqlite", notes, account_identifier=str(uuid.UUID(int=100)).upper(),
+                            store_uuid=str(uuid.UUID(int=101)).upper(), offered_upgrade=major >= 9)
 
 
 def _jpeg(name: str) -> bytes:
@@ -652,7 +642,7 @@ def generate_legacy(out_dir: Path, *, ios: str = "9.3.5", password: Optional[str
         # Real records carry extended attributes like this one; readers must skip them.
         writer.add_file("CameraRollDomain", f"Media/DCIM/100APPLE/{name}", _jpeg(name),
                         properties={"com.apple.assetsd.UUID": str(uuid.UUID(int=pk)).upper().encode()})
-    writer.add_file("HomeDomain", "Library/Notes/notes.sqlite", _notes_sqlite())
+    writer.add_file("HomeDomain", "Library/Notes/notes.sqlite", _notes_sqlite(major))
     for _, _, _, _, messages in CONVERSATIONS:
         for _, _, _, attachment in messages:
             if attachment:

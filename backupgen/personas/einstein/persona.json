@@ -60,6 +60,7 @@
      "product_type": "iPhone15,4", "product_name": "iPhone 15", "container": "17.3",
      "host": {"kind": "pymobiledevice3"},
      "apps": [{"id": "net.whatsapp.WhatsApp", "name": "WhatsApp", "version": "2.26.11.73"},
-              {"id": "org.example.olympia.reader", "name": "Olympia Reader", "version": "3", "store": false}]}
+              {"id": "org.example.olympia.reader", "name": "Olympia Reader", "version": "3", "store": false}],
+     "options": {"notes": {"placeholders": 1}}}
   ]
 }

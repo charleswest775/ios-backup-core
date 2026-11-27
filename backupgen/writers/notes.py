@@ -10,7 +10,33 @@ Rows follow what iOS 13–17 write:
   version vector keyed by a 16-byte replica UUID (4) and "attribute runs" that style the
   text (5). Runs count UTF-16 units, include each line's newline and carry an edit
   timestamp (13). Style 0 is the title, 101 a dashed list item, 103 a checklist item.
-- ZSNIPPET is the first line after the title, as the notes list shows it.
+- ZSNIPPET is the first line after the title with text in it, as the notes list shows
+  it: NULL for a note that's only its title ('' for one the pack marks ``snippet: empty``).
+- Each note row points at its account (as well as its folder) in the account column of
+  ICNote's, which Core Data renumbers as the model grows: ZACCOUNT3 in the iOS 13
+  schemas, ZACCOUNT4 in 15.3.1, ZACCOUNT7 in 16.1.2 and 17.3, the one just before
+  ZFOLDER in each (note_account_column). It's not password protected
+  (ZISPASSWORDPROTECTED 0), has the default paper (ZPAPERSTYLETYPE 0) and, from iOS 16,
+  says whether it has a checklist and whether one is still in progress
+  (ZHASCHECKLIST, ZHASCHECKLISTINPROGRESS).
+- The account has the default "Notes" folder even when no note is in it, and an
+  ICAccountData row (its ZACCOUNTDATA; the row's ZACCOUNT points back).
+- A note whose text can't be read (``data:`` in the pack) has an ICNoteData row with a
+  NULL or empty ZDATA, or none at all, the ways a note's data can be missing: only its
+  title is known.
+- ZNEEDSINITIALFETCHFROMCLOUD, as its name says, marks a note whose content iCloud hasn't
+  fetched yet. Such a note is written as a placeholder ICNote row: an identifier, its
+  account, that flag set to 1 and an ICNoteData row with a NULL ZDATA, but no title, folder
+  or dates, which only the fetch would fill in. Readers don't list it, and it's not in the
+  answer key. The step's ``placeholders`` option says how many a backup has (0); a pack with
+  no notes/ folder still gets a NoteStore when it asks for any: a phone whose owner never
+  used its Notes app, once iCloud has set the store up, with a note written elsewhere still
+  to download.
+- ``store: legacy`` notes go to notes.sqlite instead (writers/legacy_notes.py), and the
+  answer key's "notes" lists them after NoteStore's. Each entry says its ``store``
+  ("notestore" or "legacy") and the ``note_id`` a reader gives it: a NoteStore note's
+  Z_PK, a legacy note's Z_PK with "legacy_" in front when NoteStore lists notes too
+  (placeholders don't count).
 - A deleted note moves to the account's Recently Deleted folder, a folder row with
   ZFOLDERTYPE 1 (0 for the others), and has ZMARKEDFORDELETION 1, as in an iOS 27.3
   backup. The iPhone removes it 30 days later.
@@ -34,14 +60,16 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any, Mapping, Optional
 
-from backupgen.persona.core import Contact, Persona, Snapshot
+from backupgen.persona.core import Contact, Persona, PersonaError, Snapshot
 from backupgen.persona.notes import Note
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import CoreData, cocoa_seconds
+from backupgen.writers import legacy_notes
 from backupgen.writers.context import Step, StepContext
 
 _TITLE, _DASHED, _CHECKLIST = 0, 101, 103
 RECENTLY_DELETED = "Recently Deleted"
+DEFAULT_FOLDER = "Notes"
 _KEPT_DELETED = timedelta(days=30)
 
 
@@ -57,6 +85,7 @@ class WrittenNote:
     pinned: bool
     shared_with: list[dict]  # {"name", "email", "phone"} for each person besides the owner
     deleted: bool  # in Recently Deleted
+    pk: int  # its Z_PK, the reader's note_id
 
 
 def _varint(n: int) -> bytes:
@@ -182,17 +211,40 @@ def _uuid(rng: random.Random) -> str:
     return str(uuid.UUID(bytes=rng.randbytes(16))).upper()
 
 
-def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: random.Random) -> list[WrittenNote]:
+def note_account_column(schema: dict) -> str:
+    """The ZICCLOUDSYNCINGOBJECT column holding a note's account in this schema.
+
+    Each entity's columns sit together, and Core Data numbers the "account" relationships of the
+    entities in that table in turn, so ICNote's moves when one is added: it's the one just before
+    ICNote's ZFOLDER (ZACCOUNT3 on iOS 13, ZACCOUNT4 on 15, ZACCOUNT7 on 16 and 17).
+    """
+    names = [column["name"] for column in schema["columns"]["ZICCLOUDSYNCINGOBJECT"]]
+    column = names[names.index("ZFOLDER") - 1]
+    if not column.startswith("ZACCOUNT"):
+        raise ValueError(f"NoteStore schema: no account column before ZFOLDER (found {column})")
+    return column
+
+
+def snippet(lines: list[tuple[str, int | None, bool | None]], empty: bool = False) -> Optional[str]:
+    """ZSNIPPET: the first line after the title with text in it; NULL ('' when ``empty``) for a title alone."""
+    if len(lines) == 1:
+        return "" if empty else None
+    return next((t for t, _, _ in lines[1:] if t.strip()), "")
+
+
+def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: random.Random,
+             placeholders: int = 0) -> list[WrittenNote]:
     core = CoreData(db)
     objects, data = db.table("ZICCLOUDSYNCINGOBJECT"), db.table("ZICNOTEDATA")
     created_column = "ZCREATIONDATE3" if objects.has("ZCREATIONDATE3") else "ZCREATIONDATE1"
+    account_column = note_account_column(db.schema)
     account = objects.insert({"Z_ENT": core.ent("ICAccount"), "Z_OPT": 1, "ZNAME": "iCloud", "ZACCOUNTTYPE": 1,
                               "ZIDENTIFIER": _uuid(rng), "ZMARKEDFORDELETION": 0,
                               "ZUSERRECORDNAME": user_record(persona, persona.owner)})
     core.saw("ICCloudSyncingObject", account)
     folders: dict[str, int] = {}
     written = []
-    for note in sorted(persona.notes or [], key=lambda n: n.created):
+    for note in sorted((n for n in persona.notes or [] if n.store == "notestore"), key=lambda n: n.created):
         created = persona.device_time(note.created)
         if created > snapshot.backup_date:
             continue
@@ -214,34 +266,61 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
             core.saw("ICCloudSyncingObject", folders[folder])
         lines = parse_lines(note)
         title = lines[0][0]
-        snippet = next((t for t, _, _ in lines[1:] if t.strip()), "")
+        checklist = [checked for _, style, checked in lines if style == _CHECKLIST]
         people = [persona.contacts[c] for c in note.shared_with]
         row = {
             "Z_ENT": core.ent("ICNote"), "Z_OPT": 1,
-            "ZTITLE1": title, "ZSNIPPET": snippet,
+            "ZTITLE1": title, "ZSNIPPET": snippet(lines, note.empty_snippet),
             created_column: cocoa_seconds(created), "ZMODIFICATIONDATE1": cocoa_seconds(modified),
             "ZFOLDER": folders[folder], "ZISPINNED": int(note.pinned), "ZMARKEDFORDELETION": int(deleted),
-            "ZIDENTIFIER": _uuid(note_rng),
+            "ZIDENTIFIER": _uuid(note_rng), account_column: account, "ZISPASSWORDPROTECTED": 0,
+            "ZPAPERSTYLETYPE": 0, "ZHASCHECKLIST": int(bool(checklist)),
+            "ZHASCHECKLISTINPROGRESS": int(bool(checklist) and not all(checklist)),
         }
         if people:
             row["ZSERVERSHAREDATA"] = share_data(persona, people)
         pk = objects.insert(row)
         core.saw("ICCloudSyncingObject", pk)
-        data_pk = data.insert({"Z_ENT": core.ent("ICNoteData"), "Z_OPT": 1, "ZNOTE": pk, "ZDATA": note_data(lines, modified, note_rng)})
+        if note.unreadable != "missing":
+            blob = {"null": None, "empty": b""}.get(note.unreadable) if note.unreadable else note_data(lines, modified, note_rng)
+            data_pk = data.insert({"Z_ENT": core.ent("ICNoteData"), "Z_OPT": 1, "ZNOTE": pk, "ZDATA": blob})
+            core.saw("ICNoteData", data_pk)
+            db.conn.execute("UPDATE ZICCLOUDSYNCINGOBJECT SET ZNOTEDATA = ? WHERE Z_PK = ?", (data_pk, pk))
+        text = "" if note.unreadable else "\n".join(t for t, _, _ in lines)
+        written.append(WrittenNote(title, text, folder, created, modified, note.pinned,
+                                   [share_address(c) for c in people], deleted, pk))
+    # What comes after the notes draws its random numbers after theirs, so a pack's notes keep theirs.
+    if DEFAULT_FOLDER not in folders:
+        folders[DEFAULT_FOLDER] = objects.insert({
+            "Z_ENT": core.ent("ICFolder"), "Z_OPT": 1, "ZTITLE2": DEFAULT_FOLDER, "ZFOLDERTYPE": 0,
+            "ZIDENTIFIER": _uuid(rng), "ZMARKEDFORDELETION": 0, "ZOWNER": account,
+        })
+        core.saw("ICCloudSyncingObject", folders[DEFAULT_FOLDER])
+    for _ in range(placeholders):
+        pk = objects.insert({"Z_ENT": core.ent("ICNote"), "Z_OPT": 1, "ZIDENTIFIER": _uuid(rng),
+                             account_column: account, "ZNEEDSINITIALFETCHFROMCLOUD": 1, "ZMARKEDFORDELETION": 0})
+        core.saw("ICCloudSyncingObject", pk)
+        data_pk = data.insert({"Z_ENT": core.ent("ICNoteData"), "Z_OPT": 1, "ZNOTE": pk, "ZDATA": None})
         core.saw("ICNoteData", data_pk)
         db.conn.execute("UPDATE ZICCLOUDSYNCINGOBJECT SET ZNOTEDATA = ? WHERE Z_PK = ?", (data_pk, pk))
-        written.append(WrittenNote(title, "\n".join(t for t, _, _ in lines), folder, created, modified, note.pinned,
-                                   [share_address(c) for c in people], deleted))
+    account_data = objects.insert({"Z_ENT": core.ent("ICAccountData"), "Z_OPT": 1, "ZACCOUNT": account,
+                                   "ZIDENTIFIER": _uuid(rng), "ZMARKEDFORDELETION": 0})
+    core.saw("ICCloudSyncingObject", account_data)
+    db.conn.execute("UPDATE ZICCLOUDSYNCINGOBJECT SET ZACCOUNTDATA = ? WHERE Z_PK = ?", (account_data, account))
     core.finish()
     return written
 
 
 def step(ctx: StepContext) -> Optional[list[WrittenNote]]:
-    """NoteStore.sqlite in the Notes app group. Returns the notes written."""
-    if ctx.persona.notes is None:
+    """NoteStore.sqlite in the Notes app group. Returns the notes written (listed ones; no placeholders)."""
+    placeholders = ctx.options["placeholders"]
+    if not isinstance(placeholders, int) or isinstance(placeholders, bool) or placeholders < 0:
+        raise PersonaError(f"options.notes.placeholders: a number of notes (0 or more), not {placeholders!r}")
+    if ctx.persona.notes is None and not placeholders:
         return None
     notes: list[WrittenNote] = []
-    store = ctx.build("NoteStore.sqlite", lambda db: notes.extend(populate(db, ctx.persona, ctx.snapshot, ctx.rng)))
+    store = ctx.build("NoteStore.sqlite",
+                      lambda db: notes.extend(populate(db, ctx.persona, ctx.snapshot, ctx.rng, placeholders)))
     ctx.writer.add_file("AppDomainGroup-group.com.apple.notes", "NoteStore.sqlite", store)
     return notes
 
@@ -251,14 +330,17 @@ def answer_key(written: Optional[list[WrittenNote]]) -> list[dict]:
         {
             "title": n.title, "text": n.text, "folder": n.folder, "created": n.created.isoformat(),
             "modified": n.modified.isoformat(), "pinned": n.pinned, "shared_with": n.shared_with,
-            "deleted": n.deleted,
+            "deleted": n.deleted, "store": "notestore", "note_id": n.pk,
         }
         for n in written or []
     ]
 
 
 def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
-    return {"notes": answer_key(written.get("notes"))}
+    """"notes": NoteStore's notes, then notes.sqlite's (the legacy_notes step's)."""
+    note_store = answer_key(written.get("notes"))
+    return {"notes": note_store + legacy_notes.answer_key(written.get("legacy_notes"), bool(note_store))}
 
 
-STEP = Step("notes", step, sections)
+# placeholders: how many notes wait for their first download from iCloud (see the module docs).
+STEP = Step("notes", step, sections, options={"placeholders": 0})

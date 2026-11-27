@@ -26,6 +26,7 @@ from backupgen.writers import calendar as calendar_writer
 from backupgen.writers import calls as calls_writer
 from backupgen.writers import contacts as contacts_writer
 from backupgen.writers import health as health_writer
+from backupgen.writers import legacy_notes as legacy_notes_writer
 from backupgen.writers import messages as messages_writer
 from backupgen.writers import notes as notes_writer
 from backupgen.writers import photos as photos_writer
@@ -43,7 +44,9 @@ EXPECTED = "expected.json"
 # persona/core.py AREAS and its attribute to Persona, beside its neighbours'. Its answer-key
 # sections go after the ones before it, its data type joins DATA_TYPES and its pack options are
 # the ones its Step declares. A Step's kind names its random numbers, its result, its "absent"
-# entry and its options in packs, so a kind is never renamed.
+# entry and its options in packs, so a kind is never renamed. A step that writes more of another
+# data type (Step.part_of: legacy_notes, notes.sqlite beside NoteStore) is a writer like the rest
+# but no data type of its own: no "absent" entry, and its data type's sections read its result.
 #
 # Random numbers: each step draws only from its own stream, ctx.rng = area_random(seed, <its data
 # type>), never from another step's or a shared one, so adding a message, a call or a photo to a
@@ -60,6 +63,7 @@ STEPS = (
     calls_writer.STEP,
     voicemail_writer.STEP,
     notes_writer.STEP,
+    legacy_notes_writer.STEP,  # part of Notes: notes.sqlite, beside NoteStore
     safari_writer.STEP,
     photos_writer.STEP,
     whatsapp_writer.STEP,
@@ -85,7 +89,7 @@ def data_types(steps=None) -> tuple[str, ...]:
     checked for clean empty results as well as for content: "none" means the phone has none;
     "encrypted_only" means Apple leaves it out of unencrypted backups.
     """
-    kinds = [step.kind for step in (STEPS if steps is None else steps)] + list(PLANNED)
+    kinds = [step.kind for step in (STEPS if steps is None else steps) if step.part_of is None] + list(PLANNED)
     return tuple([k for k in _ABSENT_ORDER if k in kinds] + [k for k in kinds if k not in _ABSENT_ORDER])
 
 
@@ -219,7 +223,7 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
             if section in key or section == "absent":
                 raise ValueError(f"{step.kind}: answer-key section {section!r} is already taken")
             key[section] = value
-    present = {step.kind for step in STEPS
+    present = {step.part_of or step.kind for step in STEPS
                if step.kind in written and (written[step.kind] or step.present_if_written)}
     left_out = {step.kind for step in STEPS
                 if step.encrypted_only and password is None and step.on_phone is not None and step.on_phone(persona)}
