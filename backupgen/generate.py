@@ -37,7 +37,9 @@ from backupgen.writers.context import Step, StepContext
 EXPECTED = "expected.json"
 
 # The write steps, in the order they run: each writer module's STEP (see writers/context.py, Step).
-# A new writer is its module's STEP plus one line here (and its import above); its answer-key
+# A new writer is its module's STEP plus one line here (and its import above), and an adding
+# case in tests/test_backupgen_streams.py CASES; a new pack area also adds its name to
+# persona/core.py AREAS and its attribute to Persona, beside its neighbours'. Its answer-key
 # sections go after the ones before it, its data type joins DATA_TYPES and its pack options are
 # the ones its Step declares. A Step's kind names its random numbers, its result, its "absent"
 # entry and its options in packs, so a kind is never renamed.

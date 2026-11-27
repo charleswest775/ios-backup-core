@@ -45,7 +45,17 @@ _DURATION = re.compile(r"^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$")
 # The pack's areas, each a module in this package with ``load(pack) -> AreaData``, in the order
 # load_persona runs them (which decides which error a broken pack shows first, and the order the
 # period check goes through their records).
-AREAS = ("messages", "calls", "voicemail", "notes", "safari", "photos", "whatsapp", "calendar", "voice_memos")
+AREAS = (
+    "messages",
+    "calls",
+    "voicemail",
+    "notes",
+    "safari",
+    "photos",
+    "whatsapp",
+    "calendar",
+    "voice_memos",
+)
 
 
 class PersonaError(ValueError):
