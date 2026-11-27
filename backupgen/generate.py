@@ -21,6 +21,7 @@ from typing import Optional
 
 from backupgen import media
 from backupgen.container import BackupWriter, Device
+from backupgen.filler import add_filler, check_filler
 from backupgen.persona import Persona, PersonaError, Snapshot, load_persona
 from backupgen.writers import calendar as calendar_writer
 from backupgen.writers import calls as calls_writer
@@ -147,10 +148,16 @@ def generate(
     iterations: str = "fast",
     seed: Optional[int] = None,
     persona: Optional[Persona] = None,
+    filler: Optional[dict] = None,
 ) -> Path:
-    """Write the backup for one snapshot into ``out_dir``. Returns the backup folder."""
+    """Write the backup for one snapshot into ``out_dir``. Returns the backup folder.
+
+    ``filler`` pads Manifest.db with many more rows, which the answer key leaves out
+    (filler.py: ``{"files": 20000, "domains": 300, "seed": 1}``); None, the default, adds none.
+    """
     persona = persona or load_persona(persona_id)
     check_options(persona)
+    filler = check_filler(filler)
     snapshot = persona.snapshots[snapshot_id]
     seed = default_seed(persona.id, snapshot_id, password is not None) if seed is None else seed
     rng = random.Random(seed)  # only the container's seed comes from here; each step has its own (area_random)
@@ -183,6 +190,8 @@ def generate(
             if result is not None:
                 written[step.kind] = result
         health_writer.write_empty(writer, snapshot.schema, Path(tmp))
+    if filler:
+        add_filler(writer, filler)
 
     backup_dir = writer.finalize()
 
