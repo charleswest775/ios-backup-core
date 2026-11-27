@@ -7,7 +7,8 @@ import uuid
 from datetime import datetime, time
 from typing import Any, Mapping
 
-from backupgen.persona.core import Contact, Persona, Snapshot
+from backupgen.persona.contacts import Contact
+from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import cocoa_seconds
 from backupgen.writers.context import Step, StepContext

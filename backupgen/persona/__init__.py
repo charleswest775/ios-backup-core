@@ -2,14 +2,19 @@
 
 A pack is a folder under ``personas/``:
 
-- ``persona.json``: owner, contacts, time shift, devices and backup snapshots. The pack and
-  each snapshot may also have ``options``: settings for the writers by data type,
+- ``persona.json``: owner, time shift, devices, backup snapshots and cards (contacts.py). The
+  pack and each snapshot may also have ``options``: settings for the writers by data type,
   ``{"<data type>": {"<key>": value}}`` (``{}`` when left out), read as ``Persona.options`` and
   ``Snapshot.options``. A snapshot's value for a key overrides the pack's. Each writer declares
   the keys it reads, with their defaults, in its STEP (``Step.options``; the list of every key is
   ``generate.declared_options()``, empty so far) and reads them merged as ``ctx.options``.
   Generating from a pack whose options name a data type or key no writer declares fails with a
   PersonaError naming it, so a typo can't quietly leave a case out.
+- ``contacts.json`` (optional): more cards, after persona.json's ``contacts`` (contacts.py).
+  Cards are Contacts data, the contacts lane's: a person a chat, a shared note, an event or the
+  People album names needs one, and adding one changes Contacts. Call history and voicemail
+  can name someone without a card by an E.164 number instead, and WhatsApp's people.txt adds
+  people who aren't contacts, which leaves Contacts as it was.
 - ``timeline.json``: the documented events the conversations are built on, with sources.
 - ``chats/*.txt``: one conversation per file, written like a transcript (messages.py).
 - ``calls.txt`` (optional): call history (calls.py).
@@ -23,10 +28,10 @@ A pack is a folder under ``personas/``:
 
 Each of those modules in this package (an "area", listed in core.AREAS) documents its files'
 format and has ``load(pack)``, which parses them and returns the Persona attributes they fill and
-their dated records (core.AreaData); core.py holds what they share (Persona, Snapshot, Contact,
-PersonaError) and load_persona, which runs the loaders and checks what spans them. A new pack
-file goes in its area's module (or a new one named in core.AREAS) plus a line per new attribute
-in Persona.
+their dated records (core.AreaData); contacts.py reads the cards (Contact), before the areas,
+which name people by card id; core.py holds what they share (Persona, Snapshot, PersonaError)
+and load_persona, which runs the loaders and checks what spans them. A new pack file goes in its
+area's module (or a new one named in core.AREAS) plus a line per new attribute in Persona.
 
 The generator adds made-up detail (the seconds of a message, ids, file names) from random
 numbers, and each data type has its own (generate.area_random): adding a chat to a pack
@@ -63,7 +68,8 @@ from backupgen.persona.calendar import (
     Repeat,
 )
 from backupgen.persona.calls import CALL_SERVICES, Call
-from backupgen.persona.core import AreaData, Contact, Pack, Persona, PersonaError, Snapshot, list_personas, load_persona
+from backupgen.persona.contacts import Contact
+from backupgen.persona.core import AreaData, Pack, Persona, PersonaError, Snapshot, list_personas, load_persona
 from backupgen.persona.messages import REACTIONS, Chat, Message
 from backupgen.persona.notes import Note
 from backupgen.persona.photos import Face, Photo, PhotoPerson

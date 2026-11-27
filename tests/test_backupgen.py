@@ -524,7 +524,7 @@ def test_a_key_twice_in_any_pack_json_file_is_refused(tmp_path, name):
     (lambda d: d["contacts"].append({"id": "riley", "first": "Second", "phones": [["mobile", "+44 7700 900088"]]}),
      "persona.json contact 5 \\(riley\\): duplicate id"),
     (lambda d: d["contacts"].append({"first": "Nobody"}), 'persona.json contact 5: needs an "id"'),
-    (lambda d: d.update(owner="nobody"), "persona.json: the owner 'nobody' isn't one of the contacts"),
+    (lambda d: d.update(owner="nobody"), "persona.json: the owner 'nobody' has no card"),
     (lambda d: d["snapshots"].append(dict(d["snapshots"][0])), "persona.json snapshot ios15: duplicate id"),
 ])
 def test_contacts_and_snapshots_need_ids_of_their_own(tmp_path, change, message):
@@ -535,6 +535,46 @@ def test_contacts_and_snapshots_need_ids_of_their_own(tmp_path, change, message)
     change(data)
     path.write_text(json.dumps(data), encoding="utf-8")
     with pytest.raises(PersonaError, match=message):
+        load_persona("p", root=root)
+
+
+@pytest.mark.parametrize("moved", [1, 3, 4])
+def test_cards_can_live_in_contacts_json(tmp_path, moved):
+    """contacts.json's cards come after persona.json's, so moving the last cards there changes nothing.
+
+    With all four moved, the owner's card is in contacts.json and persona.json has no "contacts".
+    """
+    chat = "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n"
+    original, root = _pack(tmp_path / "original", chat), _pack(tmp_path / "moved", chat)
+    path = root / "p" / "persona.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["contacts"], cards = data["contacts"][:-moved], data["contacts"][-moved:]
+    if not data["contacts"]:
+        del data["contacts"]
+    path.write_text(json.dumps(data), encoding="utf-8")
+    (root / "p" / "contacts.json").write_text(json.dumps({"contacts": cards}), encoding="utf-8")
+    before, after = load_persona("p", root=original), load_persona("p", root=root)
+    assert after.owner == before.owner and list(after.contacts.items()) == list(before.contacts.items())
+    trees = []
+    for persona in (before, after):
+        out = tmp_path / "out" / persona.folder.parent.parent.name
+        generate("p", "ios26", out, password="pw", persona=persona)
+        trees.append({f.relative_to(out).as_posix(): f.read_bytes() for f in sorted(out.rglob("*")) if f.is_file()})
+    assert trees[0] == trees[1]
+
+
+@pytest.mark.parametrize("text, message", [
+    ('{"contacts": [{"id": "riley", "first": "Again"}]}', "contacts.json contact 1 (riley): duplicate id"),
+    ('{"contacts": [{"first": "Nobody"}]}', 'contacts.json contact 1: needs an "id"'),
+    ('[{"id": "x"}]', 'contacts.json: expected {"contacts": [...]}'),
+    ('{"contacts": {"id": "x"}}', 'contacts.json: expected {"contacts": [...]}'),
+])
+def test_bad_contacts_json_is_refused(tmp_path, text, message):
+    import re
+
+    root = _pack(tmp_path, "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n")
+    (root / "p" / "contacts.json").write_text(text, encoding="utf-8")
+    with pytest.raises(PersonaError, match=re.escape(message)):
         load_persona("p", root=root)
 
 

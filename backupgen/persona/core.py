@@ -1,11 +1,13 @@
-"""What every part of a persona pack shares: the persona, its contacts and snapshots, and the loader.
+"""What every part of a persona pack shares: the persona, its snapshots, and the loader.
 
-Each kind of file in a pack belongs to an area with a module of its own beside this one (AREAS:
-messages.py, calls.py, voicemail.py, notes.py, safari.py, photos.py, whatsapp.py, calendar.py,
-voice_memos.py) that documents its format and parses it. Each has ``load(pack) -> AreaData``:
-the Persona attributes it fills and its dated records. load_persona reads persona.json, runs
-those loaders in turn and checks what spans them: photos sent after they were taken, every
-record inside the persona's period.
+The cards (persona.json's "contacts" and contacts.json) are contacts.py's, beside this one:
+load_persona reads them first, since the other areas name people by card id. Each other kind of
+file in a pack belongs to an area with a module of its own (AREAS: messages.py, calls.py,
+voicemail.py, notes.py, safari.py, photos.py, whatsapp.py, calendar.py, voice_memos.py) that
+documents its format and parses it. Each has ``load(pack) -> AreaData``: the Persona attributes
+it fills and its dated records. load_persona reads persona.json and the cards, runs those
+loaders in turn and checks what spans them: photos sent after they were taken, every record
+inside the persona's period.
 
 A new area is a module with a ``load`` plus its name in AREAS and a line per attribute in
 Persona; nothing else here changes.
@@ -24,6 +26,7 @@ from zoneinfo import ZoneInfo
 
 from backupgen import PERSONAS_DIR
 from backupgen.container import Host
+from backupgen.persona.contacts import Contact, load_cards
 
 if TYPE_CHECKING:
     from backupgen.persona.calendar import CalendarDef, EventDef
@@ -46,26 +49,6 @@ AREAS = ("messages", "calls", "voicemail", "notes", "safari", "photos", "whatsap
 
 class PersonaError(ValueError):
     pass
-
-
-@dataclass
-class Contact:
-    id: str
-    first: str
-    last: str = ""
-    nickname: str = ""
-    organization: str = ""
-    department: str = ""
-    job_title: str = ""
-    note: str = ""
-    phones: list[tuple[str, str]] = field(default_factory=list)  # (label, number as displayed)
-    emails: list[tuple[str, str]] = field(default_factory=list)
-    handle: str = ""  # Messages handle: E.164 phone or email
-    added: Optional[date] = None  # real date the card was created
-
-    @property
-    def display_name(self) -> str:
-        return " ".join(p for p in (self.first, self.last) if p) or self.organization
 
 
 @dataclass
@@ -94,7 +77,7 @@ class Persona:
     real_end: date
     owner: Contact
     device_name: str
-    contacts: dict[str, Contact]
+    contacts: dict[str, Contact]  # every card but the owner's, by id (contacts.py)
     chats: list[Chat]  # this and the attributes from calls on are filled by the areas' loaders (AREAS)
     snapshots: dict[str, Snapshot]
     timeline: list[dict]
@@ -143,31 +126,6 @@ class AreaData:
     fields: dict  # Persona attribute -> value (None, or left out, when the pack has no file for it)
     records: list = field(default_factory=list)  # dated records (.real_time, .where), checked against the period
     sent_photos: list = field(default_factory=list)  # messages that send a camera-roll photo (.photo, .real_time, .where)
-
-
-def _contact(raw: dict) -> Contact:
-    return Contact(
-        id=raw["id"],
-        first=raw.get("first", ""),
-        last=raw.get("last", ""),
-        nickname=raw.get("nickname", ""),
-        organization=raw.get("organization", ""),
-        department=raw.get("department", ""),
-        job_title=raw.get("job_title", ""),
-        note=raw.get("note", ""),
-        phones=[tuple(p) for p in raw.get("phones", [])],
-        emails=[tuple(e) for e in raw.get("emails", [])],
-        handle=raw.get("handle") or _default_handle(raw),
-        added=date.fromisoformat(raw["added"]) if raw.get("added") else None,
-    )
-
-
-def _default_handle(raw: dict) -> str:
-    if raw.get("phones"):
-        return "+" + re.sub(r"\D", "", raw["phones"][0][1])
-    if raw.get("emails"):
-        return raw["emails"][0][1].lower()
-    return ""
 
 
 def _options(raw: dict, where: str) -> dict:
@@ -236,15 +194,10 @@ def _check_who(who: str, contacts: dict[str, Contact], where: str) -> None:
 def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
     folder = root / persona_id
     raw = _read_json(folder / "persona.json")
-    contacts: dict[str, Contact] = {}
-    for n, card in enumerate(raw["contacts"], 1):
-        if not card.get("id"):
-            raise PersonaError(f'persona.json contact {n}: needs an "id"')
-        if card["id"] in contacts:
-            raise PersonaError(f"persona.json contact {n} ({card['id']}): duplicate id")
-        contacts[card["id"]] = _contact(card)
+    contacts = load_cards(folder, raw)
     if raw["owner"] not in contacts:
-        raise PersonaError(f"persona.json: the owner {raw['owner']!r} isn't one of the contacts")
+        raise PersonaError(f"persona.json: the owner {raw['owner']!r} has no card "
+                           f"(persona.json's or contacts.json's contacts)")
     owner = contacts.pop(raw["owner"])
     tz = ZoneInfo(raw["timezone"])
     options = _options(raw, "persona.json")
