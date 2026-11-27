@@ -513,12 +513,65 @@ def _with_options(tmp_path, persona_options=None, snapshot_options=None):
     return root
 
 
-def test_options_are_free_form_and_empty_when_left_out(tmp_path):
+def test_options_are_by_data_type_and_empty_when_left_out(tmp_path):
     persona = load_persona("testpersona")
     assert persona.options == {} and all(s.options == {} for s in persona.snapshots.values())
-    persona = load_persona("p", root=_with_options(tmp_path, {"any": [1, {"nested": True}]}, {"x": 1}))
-    assert persona.options == {"any": [1, {"nested": True}]}
-    assert persona.snapshots["ios15"].options == {"x": 1} and persona.snapshots["ios17"].options == {}
+    persona = load_persona("p", root=_with_options(tmp_path, {"notes": {"any": [1, {"nested": True}]}}, {"calls": {"x": 1}}))
+    assert persona.options == {"notes": {"any": [1, {"nested": True}]}}
+    assert persona.snapshots["ios15"].options == {"calls": {"x": 1}} and persona.snapshots["ios17"].options == {}
+
+
+@pytest.mark.parametrize("value", [[], "fast", 1, None])
+@pytest.mark.parametrize("on, where", [("persona", "persona.json"), ("snapshot", "persona.json snapshot ios15")])
+def test_each_data_types_options_must_be_a_json_object(tmp_path, value, on, where):
+    root = _with_options(tmp_path, **{f"{on}_options": {"notes": value}})
+    with pytest.raises(PersonaError, match=f"{where}: options.notes should be a JSON object"):
+        load_persona("p", root=root)
+
+
+@pytest.mark.parametrize("on, where", [("persona", "persona.json"), ("snapshot", "persona.json snapshot ios15")])
+def test_options_no_writer_declares_are_refused_when_generating(tmp_path, on, where):
+    """A typo in a data type or key fails loudly instead of quietly leaving its case out."""
+    root = _with_options(tmp_path, **{f"{on}_options": {"note": {}}})
+    with pytest.raises(PersonaError, match=f"{where}: options: no data type 'note' \\(one of: contacts, messages, "):
+        generate("p", "ios17", tmp_path / "out", persona=load_persona("p", root=root))
+    root = _with_options(tmp_path / "2", **{f"{on}_options": {"notes": {"pinned_first": True}}})
+    with pytest.raises(PersonaError, match=f"{where}: options.notes: unknown key 'pinned_first' \\(notes options: none yet\\)"):
+        generate("p", "ios17", tmp_path / "out2", persona=load_persona("p", root=root))
+
+
+def test_a_step_reads_its_options_with_snapshot_over_pack_over_defaults(tmp_path, monkeypatch):
+    import dataclasses
+
+    from backupgen import generate as gen
+
+    seen = {}
+
+    def spy(step):
+        def run(ctx):
+            seen[(ctx.snapshot.id, ctx.kind)] = ctx.options
+            return step.run(ctx)
+        return run
+
+    steps = [dataclasses.replace(s, run=spy(s), options={"a": 1, "b": 2, "c": 3} if s.kind == "notes" else s.options)
+             for s in gen.STEPS]
+    monkeypatch.setattr(gen, "STEPS", tuple(steps))
+    assert gen.declared_options()["notes"] == {"a": 1, "b": 2, "c": 3}
+    root = _with_options(tmp_path, {"notes": {"b": 20, "c": 30}}, {"notes": {"c": 300}})
+    persona = load_persona("p", root=root)
+    for snapshot in ("ios15", "ios17"):
+        generate("p", snapshot, tmp_path / snapshot, persona=persona)
+    assert seen[("ios15", "notes")] == {"a": 1, "b": 20, "c": 300}
+    assert seen[("ios17", "notes")] == {"a": 1, "b": 20, "c": 30}
+    assert all(options == {} for (_, kind), options in seen.items() if kind != "notes")
+
+
+def test_shipped_packs_options_are_all_declared():
+    from backupgen.generate import check_options
+    from backupgen.persona import list_personas
+
+    for persona_id in list_personas():
+        check_options(load_persona(persona_id))
 
 
 @pytest.mark.parametrize("value", [[], "fast", 1, False])

@@ -3,9 +3,13 @@
 A pack is a folder under ``personas/``:
 
 - ``persona.json``: owner, contacts, time shift, devices and backup snapshots. The pack and
-  each snapshot may also have ``options``, a free-form JSON object (``{}`` when left out) of
-  settings for the writers, read as ``Persona.options`` and ``Snapshot.options``. Nothing
-  reads them yet; a writer that does documents its keys.
+  each snapshot may also have ``options``: settings for the writers by data type,
+  ``{"<data type>": {"<key>": value}}`` (``{}`` when left out), read as ``Persona.options`` and
+  ``Snapshot.options``. A snapshot's value for a key overrides the pack's. Each writer declares
+  the keys it reads, with their defaults, in its STEP (``Step.options``; the list of every key is
+  ``generate.declared_options()``, empty so far) and reads them merged as ``ctx.options``.
+  Generating from a pack whose options name a data type or key no writer declares fails with a
+  PersonaError naming it, so a typo can't quietly leave a case out.
 - ``timeline.json``: the documented events the conversations are built on, with sources.
 - ``chats/*.txt``: one conversation per file, written like a transcript (messages.py).
 - ``calls.txt`` (optional): call history (calls.py).

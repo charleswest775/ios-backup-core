@@ -79,7 +79,7 @@ class Snapshot:
     schema: str  # harvested schema version used for databases
     container: str  # harvested container shape version
     host: Host
-    options: dict = field(default_factory=dict)  # the snapshot's free-form "options" in persona.json
+    options: dict = field(default_factory=dict)  # the snapshot's "options": {data type: {key: value}}
 
 
 @dataclass
@@ -112,7 +112,7 @@ class Persona:
     calendars: Optional[list[CalendarDef]] = None  # None: the pack has no calendar.json
     events: Optional[list[EventDef]] = None
     voice_memos: Optional[list[VoiceMemoDef]] = None  # None: the pack has no voice_memos.txt
-    options: dict = field(default_factory=dict)  # persona.json's free-form "options"
+    options: dict = field(default_factory=dict)  # persona.json's "options": {data type: {key: value}}
 
     def device_time(self, real: datetime) -> datetime:
         """Move a real wall-clock time onto the device calendar and return it as an aware UTC time."""
@@ -171,10 +171,18 @@ def _default_handle(raw: dict) -> str:
 
 
 def _options(raw: dict, where: str) -> dict:
-    """The free-form ``options`` of the pack or of a snapshot: any JSON object, ``{}`` when left out."""
+    """The ``options`` of the pack or of a snapshot: ``{data type: {key: value}}``, ``{}`` when left out.
+
+    Only the shape is checked here; which data types and keys exist is up to the writers (each
+    Step's options), and generate.check_options refuses the rest.
+    """
     options = raw.get("options", {})
     if not isinstance(options, dict):
         raise PersonaError(f"{where}: options should be a JSON object ({{...}}), not {json.dumps(options)}")
+    for kind, values in options.items():
+        if not isinstance(values, dict):
+            raise PersonaError(f"{where}: options.{kind} should be a JSON object of {kind}'s settings "
+                               f"({{\"key\": value}}), not {json.dumps(values)}")
     return options
 
 

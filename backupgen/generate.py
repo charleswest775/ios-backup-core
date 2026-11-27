@@ -20,7 +20,7 @@ from typing import Optional
 
 from backupgen import media
 from backupgen.container import BackupWriter, Device
-from backupgen.persona import Persona, load_persona
+from backupgen.persona import Persona, PersonaError, Snapshot, load_persona
 from backupgen.writers import calendar as calendar_writer
 from backupgen.writers import calls as calls_writer
 from backupgen.writers import contacts as contacts_writer
@@ -31,14 +31,15 @@ from backupgen.writers import safari as safari_writer
 from backupgen.writers import voice_memos as voice_memos_writer
 from backupgen.writers import voicemail as voicemail_writer
 from backupgen.writers import whatsapp as whatsapp_writer
-from backupgen.writers.context import StepContext
+from backupgen.writers.context import Step, StepContext
 
 EXPECTED = "expected.json"
 
 # The write steps, in the order they run: each writer module's STEP (see writers/context.py, Step).
 # A new writer is its module's STEP plus one line here (and its import above); its answer-key
-# sections go after the ones before it, and its data type joins DATA_TYPES. A Step's kind names its
-# random numbers, its result and its "absent" entry, so a kind is never renamed.
+# sections go after the ones before it, its data type joins DATA_TYPES and its pack options are
+# the ones its Step declares. A Step's kind names its random numbers, its result, its "absent"
+# entry and its options in packs, so a kind is never renamed.
 #
 # Random numbers: each step draws only from its own stream, ctx.rng = area_random(seed, <its data
 # type>), never from another step's or a shared one, so adding a message, a call or a photo to a
@@ -86,6 +87,31 @@ DATA_TYPES = data_types()
 ENCRYPTED_ONLY = {step.kind for step in STEPS if step.encrypted_only} | {k for k, only in PLANNED.items() if only}
 
 
+def declared_options() -> dict[str, dict]:
+    """Every pack option a writer reads: {data type: {key: default}} (see persona/__init__.py)."""
+    return {step.kind: dict(step.options) for step in STEPS}
+
+
+def step_options(step: Step, persona: Persona, snapshot: Snapshot) -> dict:
+    """A step's options for one snapshot: its Step.options, then the pack's options[kind], then the snapshot's."""
+    return {**step.options, **persona.options.get(step.kind, {}), **snapshot.options.get(step.kind, {})}
+
+
+def check_options(persona: Persona) -> None:
+    """Refuse pack and snapshot options that name a data type or key no writer declares."""
+    declared = declared_options()
+    places = [("persona.json", persona.options)]
+    places += [(f"persona.json snapshot {s.id}", s.options) for s in persona.snapshots.values()]
+    for where, options in places:
+        for kind, values in options.items():
+            if kind not in declared:
+                raise PersonaError(f"{where}: options: no data type {kind!r} (one of: {', '.join(declared)})")
+            for key in values:
+                if key not in declared[kind]:
+                    known = ", ".join(declared[kind]) or "none yet"
+                    raise PersonaError(f"{where}: options.{kind}: unknown key {key!r} ({kind} options: {known})")
+
+
 def default_seed(persona_id: str, snapshot_id: str, encrypted: bool) -> int:
     digest = hashlib.sha256(f"{persona_id}/{snapshot_id}/{'enc' if encrypted else 'plain'}".encode()).digest()
     return int.from_bytes(digest[:8], "big")
@@ -114,6 +140,7 @@ def generate(
 ) -> Path:
     """Write the backup for one snapshot into ``out_dir``. Returns the backup folder."""
     persona = persona or load_persona(persona_id)
+    check_options(persona)
     snapshot = persona.snapshots[snapshot_id]
     seed = default_seed(persona.id, snapshot_id, password is not None) if seed is None else seed
     rng = random.Random(seed)  # only the container's seed comes from here; each step has its own (area_random)
@@ -140,7 +167,7 @@ def generate(
         for step in STEPS:
             # What the steps share, with this step's own random numbers.
             ctx = StepContext(step.kind, persona, snapshot, area_random(seed, step.kind), writer, renderer, Path(tmp),
-                              contact_guids)
+                              contact_guids, step_options(step, persona, snapshot))
             result = step.run(ctx)
             if result is not None:
                 written[step.kind] = result

@@ -51,6 +51,9 @@ class StepContext:
     # every card it wrote (None where the schema has no guid column), which Photos uses to link
     # People album groups to cards. Empty until the contacts step has run.
     contact_guids: dict[str, Optional[str]] = field(default_factory=dict)
+    # This step's options for this snapshot: its Step's defaults, then the pack's options[kind],
+    # then the snapshot's, key by key (generate.step_options).
+    options: dict[str, Any] = field(default_factory=dict)
 
     @property
     def encrypted(self) -> bool:
@@ -82,3 +85,6 @@ class Step:
     # it under "absent" as "encrypted_only" rather than "none".
     on_phone: Optional[Callable[[Persona], bool]] = None
     present_if_written: bool = False  # an empty result still counts as there (not "absent")
+    # The pack options it reads (persona.json "options" under its kind), each with its default; the
+    # step gets them merged as ctx.options. Document each key beside its writer's STEP.
+    options: Mapping[str, Any] = field(default_factory=dict)
