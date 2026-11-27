@@ -1,7 +1,8 @@
 """backupgen gives each data type its own random numbers (generate.area_random).
 
-So adding a chat, a contact, a note, a voicemail, a photo, a WhatsApp chat or a Safari visit to a
-pack changes only the contents of that data type's part of the backup and of its answer key (the
+So adding a chat, a contact, a call, a voicemail, a note, a Safari visit, a photo, a WhatsApp chat,
+a calendar event or a voice memo to a pack (one case per writer) changes only the contents of that
+data type's part of the backup and of its answer key (the
 contact goes before a card the People album links to, so Photos is checked for leaks through
 ctx.contact_guids); the same snapshot comes out byte for byte the same in any
 process, whatever PYTHONHASHSEED is; --seed (and plain versus encrypted) still changes every
@@ -138,6 +139,25 @@ def _add_visit(pack: Path) -> None:
                     + path.read_text(encoding="utf-8"), encoding="utf-8")
 
 
+def _add_call(pack: Path) -> None:
+    path = pack / "calls.txt"
+    path.write_text("== 2021-01-04\n10:00 out riley 2m\n" + path.read_text(encoding="utf-8"), encoding="utf-8")
+
+
+def _add_calendar_event(pack: Path) -> None:
+    # The test persona has no calendar.json, so this also takes "calendar" out of "absent".
+    calendar = {"calendars": [{"id": "home", "title": "Home", "color": "#34AADC", "account": "local"}],
+                "events": [{"id": "added", "calendar": "home", "title": "Added", "start": "2024-03-01T10:00",
+                            "end": "2024-03-01T11:00", "created": "2024-02-01T09:00"}]}
+    (pack / "calendar.json").write_text(json.dumps(calendar), encoding="utf-8")
+
+
+def _add_voice_memo(pack: Path) -> None:
+    # The test persona has no voice_memos.txt, so this also takes "voice_memos" out of "absent".
+    (pack / "voice_memos.txt").write_text("== 2024-03-01\n10:00 30s Added memo\n  > A memo the streams test added.\n",
+                                          encoding="utf-8")
+
+
 def _messages_file(domain: str, path: str) -> bool:
     return (domain, path) == ("HomeDomain", "Library/SMS/sms.db") or (
         domain == "MediaDomain" and path.startswith("Library/SMS/Attachments/"))
@@ -149,6 +169,9 @@ CASES = {
     "messages": (_add_chat, "messages", {"conversations", "messages"}, _messages_file),
     "contacts": (_add_contact, "contacts", {"contacts"},
                  lambda domain, path: domain == "HomeDomain" and path.startswith("Library/AddressBook/")),
+    # Only encrypted backups hold call history: the plain backup doesn't change at all.
+    "calls": (_add_call, "calls", {"calls"},
+              lambda domain, path: (domain, path) == ("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata")),
     "notes": (_add_note, "notes", {"notes"},
               lambda domain, path: domain == "AppDomainGroup-group.com.apple.notes"),
     # A voicemail with no missed call in calls.txt adds that call to call history (data from the
@@ -163,6 +186,10 @@ CASES = {
     # Only encrypted backups hold Safari history: the plain backup doesn't change at all.
     "browser_history": (_add_visit, "browser_history", {"browser_history"},
                         lambda domain, path: (domain, path) == ("HomeDomain", "Library/Safari/History.db")),
+    "calendar": (_add_calendar_event, "calendar", {"calendar"},
+                 lambda domain, path: (domain, path) == ("HomeDomain", "Library/Calendar/Calendar.sqlitedb")),
+    "voice_memos": (_add_voice_memo, "voice_memos", {"voice_memos"},
+                    lambda domain, path: domain == "AppDomainGroup-group.com.apple.VoiceMemos.shared"),
 }
 
 
@@ -183,6 +210,10 @@ def baseline(tmp_path_factory):
             generate("testpersona", "ios26", folder, password=password, persona=persona)
             out[password] = (_expected(folder), _contents(folder, password))
     return out
+
+
+def test_every_writer_has_an_adding_case():
+    assert set(CASES) == {step.kind for step in STEPS}
 
 
 @pytest.mark.parametrize("area", sorted(CASES))
