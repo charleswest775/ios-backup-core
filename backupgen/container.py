@@ -125,6 +125,7 @@ class Device:
     imei: str = ""
     iccid: str = ""
     guid: str = ""
+    meid: str = ""  # an iPhone's MEID is its IMEI without the check digit (fill_identifiers)
 
     def fill_identifiers(self, rng: random.Random) -> "Device":
         hex_upper = "0123456789ABCDEF"
@@ -138,6 +139,8 @@ class Device:
             self.serial = "SYN" + "".join(rng.choice("0123456789ABCDEFGHJKLMNPQRSTUVWXYZ") for _ in range(9))
         if not self.imei:
             self.imei = "00" + "".join(rng.choice("0123456789") for _ in range(13))  # "00" TAC: not allocated
+        if not self.meid:
+            self.meid = self.imei[:14]  # no random draw, so nothing after it moves
         if not self.iccid:
             self.iccid = "89990" + "".join(rng.choice("0123456789") for _ in range(14))
         if not self.guid:
@@ -154,11 +157,11 @@ class Host:
 
     "finder": Finder on macOS (iTunes' keys plus "macOS Version" and "macOS Build Version").
     "pymobiledevice3": pymobiledevice3's Mobilebackup2Service, which OpenExtract backs up with:
-    exactly the keys its init_mobile_backup_factory_info writes (read from its source to match
-    the file format), so no "Last Backup Date", "Product Name", "iTunes Settings" (it writes that
-    only for an iPhone that has iTunes settings) or macOS keys; an "iTunes Version"; "Unique
-    Identifier" in upper case; "GUID" as 16 raw bytes; and "Applications" only for apps with App
-    Store metadata. A backup made this way is dated only by Manifest.plist and Status.plist,
+    the Device's fields through the rules of its init_mobile_backup_factory_info (read from its
+    source to match the file format). So no "Last Backup Date", "Product Name" or macOS keys; an
+    "iTunes Version"; "Unique Identifier" in upper case; "GUID" as 16 raw bytes; "Applications"
+    only for apps with App Store metadata; and the keys it writes only when the iPhone reports
+    them as _pymobiledevice3_info says. A backup made this way is dated only by Manifest.plist and Status.plist,
     which the iPhone writes. The macOS fields are only Finder's.
     """
 
@@ -373,9 +376,10 @@ class BackupWriter:
         return info
 
     def _pymobiledevice3_info(self) -> dict:
-        """Info.plist as pymobiledevice3 writes it (see Host). The keys it writes only when the
-        iPhone reports them: ICCID, IMEI and Phone Number are written when the phone has them;
-        MEID (CDMA phones), iBooks Data 2 (an old Books file) and iTunes Settings are left out."""
+        """Info.plist as pymobiledevice3 writes it (see Host). Of the keys it writes only when the
+        iPhone reports them, ICCID, IMEI, MEID and Phone Number come from the Device when it has
+        them; iBooks Data 2 (an old Books file) and iTunes Settings have no Device field, so they're
+        never written."""
         d = self.device
         info = {
             "iTunes Version": _ITUNES_VERSION,
@@ -393,7 +397,7 @@ class BackupWriter:
             "Build Version": d.build,
             "Applications": self._store_apps(),
         }
-        for key, value in (("ICCID", d.iccid), ("IMEI", d.imei), ("Phone Number", d.phone_number)):
+        for key, value in (("ICCID", d.iccid), ("IMEI", d.imei), ("MEID", d.meid), ("Phone Number", d.phone_number)):
             if value:
                 info[key] = value
         return info

@@ -9,6 +9,7 @@ still give that backup its date.
 import json
 import os
 import plistlib
+import random
 import sqlite3
 import sys
 from datetime import datetime, timezone
@@ -30,11 +31,12 @@ from ios_backup_core.backup import BackupReader, _read_backup_info, open_local_b
 WHATSAPP = "net.whatsapp.WhatsApp"
 PASSWORD = "pw"
 
-# Exactly the keys pymobiledevice3's init_mobile_backup_factory_info writes for an iPhone with a
-# SIM and a phone number and no iTunes settings: no "Last Backup Date", "Product Name",
-# "iTunes Settings" or macOS keys, and an "iTunes Version".
+# The keys pymobiledevice3's init_mobile_backup_factory_info writes, given backupgen's Device
+# fields: the 14 it always writes, plus ICCID, IMEI, MEID and Phone Number, which it writes when
+# the iPhone reports them (a Device has all four). Never "Last Backup Date", "Product Name" or
+# macOS keys; "iTunes Settings" and "iBooks Data 2" have no Device field.
 PYMOBILEDEVICE3_KEYS = {
-    "Applications", "Build Version", "Device Name", "Display Name", "GUID", "ICCID", "IMEI",
+    "Applications", "Build Version", "Device Name", "Display Name", "GUID", "ICCID", "IMEI", "MEID",
     "Installed Applications", "Phone Number", "Product Type", "Product Version", "Serial Number",
     "Target Identifier", "Target Type", "Unique Identifier", "iTunes Files", "iTunes Version",
 }
@@ -122,6 +124,28 @@ def test_pymobiledevice3_writes_the_unique_identifier_in_upper_case(tmp_path):
     assert writer.device.udid == writer.device.udid.lower() and len(writer.device.udid) == 40
     assert info["Unique Identifier"] == writer.device.udid.upper()
     assert info["Target Identifier"] == writer.device.udid == backup_dir.name
+
+
+def test_pymobiledevice3_writes_the_identifiers_the_device_has(tmp_path):
+    """MEID is the IMEI without its check digit, drawing no random numbers; a phone without a
+    number, or with no MEID, leaves that key out, as pymobiledevice3 does."""
+    full = _writer(tmp_path / "full", host=Host(kind="pymobiledevice3"))
+    info = _plist(full.finalize(), "Info.plist")
+    assert info["MEID"] == info["IMEI"][:14] == full.device.meid and len(info["IMEI"]) == 15
+    assert info["ICCID"] == full.device.iccid and info["Phone Number"] == "+44 7700 900001"
+    # Filling the MEID in draws nothing: the identifiers drawn after it are the same as when a
+    # persona gives one.
+    drawn, given = (Device(name="A", product_type="iPhone15,4", product_name="iPhone", ios="26.5", build="23F77",
+                           phone_number="", meid=meid) for meid in ("", "35000000000000"))
+    drawn.fill_identifiers(random.Random(5))
+    given.fill_identifiers(random.Random(5))
+    assert drawn.meid == drawn.imei[:14] and given.meid == "35000000000000"
+    assert (drawn.udid, drawn.imei, drawn.iccid, drawn.guid) == (given.udid, given.imei, given.iccid, given.guid)
+
+    bare = _writer(tmp_path / "bare", host=Host(kind="pymobiledevice3"))
+    bare.device.phone_number = bare.device.meid = ""  # after the writer filled the identifiers in
+    info = _plist(bare.finalize(), "Info.plist")
+    assert set(info) == PYMOBILEDEVICE3_KEYS - {"MEID", "Phone Number"}
 
 
 def test_app_store_metadata_only_for_store_apps_whatever_made_the_backup(tmp_path):
