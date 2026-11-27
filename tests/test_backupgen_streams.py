@@ -18,6 +18,7 @@ import io
 import json
 import os
 import shutil
+import sqlite3
 import subprocess
 import sys
 from pathlib import Path
@@ -174,8 +175,10 @@ CASES = {
               lambda domain, path: (domain, path) == ("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata")),
     "notes": (_add_note, "notes", {"notes"},
               lambda domain, path: domain == "AppDomainGroup-group.com.apple.notes"),
-    # A voicemail with no missed call in calls.txt adds that call to call history (data from the
-    # pack, not random numbers), so Calls may change too.
+    # A voicemail with no missed call in calls.txt adds that call to call history, and, being one
+    # more draw in Calls' own numbers, re-draws the seconds and ids of the calls after it, so Calls
+    # may change too. This one is dated before every call, so they all move;
+    # test_a_voicemail_after_every_call_keeps_every_call checks that Calls changes no more than that.
     "voicemail": (_add_voicemail, "voicemails", {"voicemails", "calls"},
                   lambda domain, path: (domain == "HomeDomain" and path.startswith("Library/Voicemail/"))
                   or (domain, path) == ("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata")),
@@ -240,6 +243,23 @@ def test_adding_to_one_data_type_changes_nothing_else(tmp_path, baseline, area, 
                            if before_files.get(key) != after_files.get(key))
     assert changed_files, "the addition should change a file"
     assert [key for key in changed_files if not may_change_file(*key)] == []
+
+
+def test_a_voicemail_after_every_call_keeps_every_call(tmp_path, baseline):
+    """The voicemail case lets all of Calls change, since a voicemail's missed call re-draws the calls after
+    it. One dated after every call shows the rest: every call stays as it was and its missed call is the
+    only one added, so nothing about a voicemail moves Calls' random numbers but that one call."""
+    pack = _pack(tmp_path / "packs")
+    path = pack / "voicemails.txt"
+    path.write_text(path.read_text(encoding="utf-8").rstrip("\n")
+                    + "\n== 2025-06-01\n10:00 casey 12s: A voicemail after every call.\n", encoding="utf-8")
+    out = tmp_path / "out"
+    generate("testpersona", "ios26", out, password=PASSWORD, persona=load_persona("testpersona", root=pack.parent))
+    before, after = baseline[PASSWORD][0]["calls"], _expected(out)["calls"]
+    assert len(after) == len(before) + 1
+    assert [_canonical(call) for call in after[:-1]] == [_canonical(call) for call in before]
+    assert after[-1]["date"].startswith("2025-06-01T09:00:")  # 10:00 BST
+    assert (after[-1]["address"], after[-1]["outgoing"], after[-1]["duration"]) == ("+447700900005", False, 0)
 
 
 def test_each_step_starts_from_its_own_stream(tmp_path, monkeypatch):
@@ -339,11 +359,25 @@ def _cli(out: Path, *args: str) -> Path:
     return out / "testpersona-ios26-encrypted"
 
 
+def _card_guids(files: dict, scratch: Path) -> set:
+    """Every ABPerson guid in the backup's address book (its card guids, which Photos' People album links to)."""
+    scratch.write_bytes(files[_DATABASES["contacts"]])
+    connection = sqlite3.connect(scratch)
+    try:
+        guids = {guid for (guid,) in connection.execute("SELECT guid FROM ABPerson")}
+    finally:
+        connection.close()
+    assert guids and None not in guids
+    return guids
+
+
 def test_seed_changes_every_data_type_that_follows_it(tmp_path):
     one, again, two = _cli(tmp_path / "1", "--seed", "1"), _cli(tmp_path / "1b", "--seed", "1"), _cli(tmp_path / "2", "--seed", "2")
     assert _tree(one) == _tree(again)
     files_one, files_two = _contents(one, PASSWORD), _contents(two, PASSWORD)
     assert {area for area, key in _DATABASES.items() if files_one[key] == files_two[key]} == set()
+    # The address book differs anyway by its ABStore guid, so the cards' own guids are checked too.
+    assert _card_guids(files_one, tmp_path / "one.sqlitedb").isdisjoint(_card_guids(files_two, tmp_path / "two.sqlitedb"))
     key_one, key_two = _expected(one), _expected(two)
     for section in ("messages", "calls", "browser_history", "photos"):
         assert key_one[section] != key_two[section], section
@@ -354,6 +388,8 @@ def test_plain_and_encrypted_backups_still_have_their_own_seeds(tmp_path):
     generate("testpersona", "ios26", tmp_path / "enc", password=PASSWORD)
     plain, enc = _expected(tmp_path / "plain"), _expected(tmp_path / "enc")
     assert plain["messages"] != enc["messages"] and plain["photos"] != enc["photos"]
+    plain_guids = _card_guids(_contents(tmp_path / "plain"), tmp_path / "plain.sqlitedb")
+    assert plain_guids.isdisjoint(_card_guids(_contents(tmp_path / "enc", PASSWORD), tmp_path / "enc.sqlitedb"))
 
 
 def test_each_data_type_has_its_own_stream():
