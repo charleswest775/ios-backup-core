@@ -530,14 +530,28 @@ def test_each_data_types_options_must_be_a_json_object(tmp_path, value, on, wher
 
 
 @pytest.mark.parametrize("on, where", [("persona", "persona.json"), ("snapshot", "persona.json snapshot ios15")])
-def test_options_no_writer_declares_are_refused_when_generating(tmp_path, on, where):
-    """A typo in a data type or key fails loudly instead of quietly leaving its case out."""
+def test_options_no_writer_declares_are_refused_when_generating(tmp_path, monkeypatch, on, where):
+    """A typo in a data type or key fails loudly instead of quietly leaving its case out.
+
+    The unknown keys are tried on scratch steps, not on a real writer, so a writer that declares
+    options of its own doesn't change what this test expects.
+    """
+    from backupgen import generate as gen
+    from backupgen.writers.context import Step
+
+    scratch = (Step("extra", lambda ctx: None, lambda persona, written: {}),
+               Step("extra_declared", lambda ctx: None, lambda persona, written: {}, options={"known": 1, "other": 2}))
+    monkeypatch.setattr(gen, "STEPS", gen.STEPS + scratch)
     root = _with_options(tmp_path, **{f"{on}_options": {"note": {}}})
-    with pytest.raises(PersonaError, match=f"{where}: options: no data type 'note' \\(one of: contacts, messages, "):
+    with pytest.raises(PersonaError, match=f"{where}: options: no data type 'note' \\(one of: "):
         generate("p", "ios17", tmp_path / "out", persona=load_persona("p", root=root))
-    root = _with_options(tmp_path / "2", **{f"{on}_options": {"notes": {"pinned_first": True}}})
-    with pytest.raises(PersonaError, match=f"{where}: options.notes: unknown key 'pinned_first' \\(notes options: none yet\\)"):
+    root = _with_options(tmp_path / "2", **{f"{on}_options": {"extra": {"pinned_first": True}}})
+    with pytest.raises(PersonaError, match=f"{where}: options.extra: unknown key 'pinned_first' \\(extra options: none yet\\)"):
         generate("p", "ios17", tmp_path / "out2", persona=load_persona("p", root=root))
+    root = _with_options(tmp_path / "3", **{f"{on}_options": {"extra_declared": {"known": 10, "knwon": 1}}})
+    with pytest.raises(PersonaError, match=f"{where}: options.extra_declared: unknown key 'knwon' "
+                                           f"\\(extra_declared options: known, other\\)"):
+        generate("p", "ios17", tmp_path / "out3", persona=load_persona("p", root=root))
 
 
 def test_a_step_reads_its_options_with_snapshot_over_pack_over_defaults(tmp_path, monkeypatch):
@@ -563,7 +577,7 @@ def test_a_step_reads_its_options_with_snapshot_over_pack_over_defaults(tmp_path
         generate("p", snapshot, tmp_path / snapshot, persona=persona)
     assert seen[("ios15", "notes")] == {"a": 1, "b": 20, "c": 300}
     assert seen[("ios17", "notes")] == {"a": 1, "b": 20, "c": 30}
-    assert all(options == {} for (_, kind), options in seen.items() if kind != "notes")
+    assert all(options == gen.declared_options()[kind] for (_, kind), options in seen.items() if kind != "notes")
 
 
 def test_shipped_packs_options_are_all_declared():
