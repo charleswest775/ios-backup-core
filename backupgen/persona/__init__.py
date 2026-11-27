@@ -41,8 +41,8 @@ pack file says about another data type still shows there: a voicemail with no mi
 calls.txt adds that call to call history, and, being one more draw in Calls' own random
 numbers, re-draws the seconds and ids of the calls after it.) The backup's own files still
 move: Manifest.db's inode numbers and, in an encrypted backup, the keys and so the raw bytes of
-files after a new one (writers/context.py). Each new data type draws only from its own numbers too (see
-generate.STEPS).
+files after a new one (writers/context.py). Each new data type draws only from its own numbers
+too (see generate.STEPS).
 
 Real dates are written as they happened. ``shift_years`` moves them onto the
 device-era calendar (Einstein's 1905 plays out in 2021), so that backup formats

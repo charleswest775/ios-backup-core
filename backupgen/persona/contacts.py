@@ -13,9 +13,10 @@ A card:
 
 ``id`` is how the rest of the pack names the person, and no two cards share one. Also
 ``organization``, ``department``, ``job_title`` and ``note``; phone and email labels are
-mobile, home, work, main, other and iphone. ``handle`` is their Messages address (default:
-the first phone as E.164, else the first email). ``added`` is the real date the card was
-created: a backup made before it doesn't have the card (default: the start of the period).
+mobile, home, work, main, other and iphone (anything else is written as other). ``handle`` is
+their Messages address (default: the first phone as E.164, else the first email). ``added`` is
+the real date the card was created: a backup made before it doesn't have the card (default:
+the start of the period).
 
 A card is Contacts data: adding one changes AddressBook.sqlitedb and the contacts answer key,
 however it's used. Messages chats, shared notes, calendar people and the People album name

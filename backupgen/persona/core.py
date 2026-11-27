@@ -251,24 +251,24 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
             raise PersonaError(f"{record.where}: {record.real_time.date()} is outside the persona's period {start}–{end}")
     timeline_path = folder / "timeline.json"
     research = _read_json(timeline_path) if timeline_path.exists() else {}
-    own = dict(
-        id=raw["id"],
-        name=raw["name"],
-        summary=raw.get("summary", ""),
-        licence=raw.get("licence", ""),
-        tz=tz,
-        shift_years=raw["shift_years"],
-        real_start=start,
-        real_end=end,
-        owner=owner,
-        device_name=raw["device_name"],
-        contacts=contacts,
-        snapshots=snapshots,
-        timeline=research.get("events", []),
-        folder=folder,
-        avoid=research.get("avoid", []),
-        options=options,
-    )
+    own = {
+        "id": raw["id"],
+        "name": raw["name"],
+        "summary": raw.get("summary", ""),
+        "licence": raw.get("licence", ""),
+        "tz": tz,
+        "shift_years": raw["shift_years"],
+        "real_start": start,
+        "real_end": end,
+        "owner": owner,
+        "device_name": raw["device_name"],
+        "contacts": contacts,
+        "snapshots": snapshots,
+        "timeline": research.get("events", []),
+        "folder": folder,
+        "avoid": research.get("avoid", []),
+        "options": options,
+    }
     clash = sorted(fields.keys() & own.keys())
     if clash:
         raise PersonaError(f"{filled_by[clash[0]]}: {', '.join(clash)} already filled by load_persona "
