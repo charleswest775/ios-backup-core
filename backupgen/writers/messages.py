@@ -19,14 +19,14 @@ import random
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Any, Mapping, Optional
 
 from backupgen.persona.core import Persona, Snapshot
 from backupgen.persona.messages import REACTIONS, Chat, Message
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.typedstream import attributed_body
 from backupgen.writers import cocoa_nanoseconds, country_code
-from backupgen.writers.context import StepContext
+from backupgen.writers.context import Step, StepContext
 
 _REACTION_VERBS = {
     "love": "Loved", "like": "Liked", "dislike": "Disliked",
@@ -286,3 +286,11 @@ def answer_key(written: list[Written]) -> list[dict]:
         }
         for w in written
     ]
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    messages = written.get("messages", [])
+    return {"conversations": conversations_answer_key(persona, messages), "messages": answer_key(messages)}
+
+
+STEP = Step("messages", step, sections)

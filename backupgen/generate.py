@@ -35,36 +35,55 @@ from backupgen.writers.context import StepContext
 
 EXPECTED = "expected.json"
 
-# Every data type OpenExtract reads or is adding. The answer key lists the ones a backup doesn't hold
-# under "absent", with why, so readers can be checked for clean empty results as well as for content:
-# "none" means the phone has none; "encrypted_only" means Apple leaves it out of unencrypted backups.
-DATA_TYPES = ("messages", "contacts", "calls", "voicemail", "notes", "photos", "browser_history",
-              "calendar", "voice_memos", "health", "whatsapp")
-ENCRYPTED_ONLY = {"calls", "browser_history", "health"}
-
-# The write steps, in the order they run (see writers/context.py). Each builds its data type's
-# database(s), adds its files to the backup and returns what its part of the answer key needs,
-# kept under its data type (None: the backup holds none).
+# The write steps, in the order they run: each writer module's STEP (see writers/context.py, Step).
+# A new writer is its module's STEP plus one line here (and its import above); its answer-key
+# sections go after the ones before it, and its data type joins DATA_TYPES. A Step's kind names its
+# random numbers, its result and its "absent" entry, so a kind is never renamed.
 #
 # Random numbers: each step draws only from its own stream, ctx.rng = area_random(seed, <its data
 # type>), never from another step's or a shared one, so adding a message, a call or a photo to a
-# pack changes only that data type's databases, files and answer key. Every new step follows the
-# same rule: it draws only from its ctx.rng, and anything one step leaves for another
-# (ctx.contact_guids) is data, not random numbers. Calendar and Voice Memos keep the fixed seeds
-# they had before this rule ("<persona>/<snapshot>/calendar" and ".../voice_memos", which don't
-# follow --seed), as do Photos' People album and each deleted note, so their data stayed as it was.
+# pack changes only the contents of that data type's databases, files and answer key. Every new
+# step follows the same rule: it draws only from its ctx.rng, and anything one step leaves for
+# another (ctx.contact_guids) is data, not random numbers. Calendar and Voice Memos keep the fixed
+# seeds they had before this rule ("<persona>/<snapshot>/calendar" and ".../voice_memos", which
+# don't follow --seed), as do Photos' People album and each deleted note, so their data stayed as
+# it was. So the order of the steps changes no data, only the order of the answer key's sections.
 STEPS = (
-    ("messages", messages_writer.step),
-    ("contacts", contacts_writer.step),
-    ("calls", calls_writer.step),
-    ("voicemail", voicemail_writer.step),
-    ("notes", notes_writer.step),
-    ("browser_history", safari_writer.step),
-    ("photos", photos_writer.step),
-    ("whatsapp", whatsapp_writer.step),
-    ("calendar", calendar_writer.step),
-    ("voice_memos", voice_memos_writer.step),
+    contacts_writer.STEP,  # first: later steps use its cards (calls, voicemail) and their guids (photos)
+    messages_writer.STEP,
+    calls_writer.STEP,
+    voicemail_writer.STEP,
+    notes_writer.STEP,
+    safari_writer.STEP,
+    photos_writer.STEP,
+    whatsapp_writer.STEP,
+    calendar_writer.STEP,
+    voice_memos_writer.STEP,
 )
+
+# Data types OpenExtract reads or is adding that no writer writes yet, with whether Apple leaves
+# them out of unencrypted backups: always "absent" ("none"). A writer for one takes it out of here.
+PLANNED = {"health": True}
+
+# The order of the answer key's "absent" entries from when DATA_TYPES was written by hand, kept so
+# answer keys stay byte for byte as they were; a data type not named here follows, in STEPS order.
+_ABSENT_ORDER = ("messages", "contacts", "calls", "voicemail", "notes", "photos", "browser_history",
+                 "calendar", "voice_memos", "health", "whatsapp")
+
+
+def data_types(steps=None) -> tuple[str, ...]:
+    """Every data type OpenExtract reads or is adding, in the order the answer key's "absent" lists them.
+
+    The answer key lists the ones a backup doesn't hold under "absent", with why, so readers can be
+    checked for clean empty results as well as for content: "none" means the phone has none;
+    "encrypted_only" means Apple leaves it out of unencrypted backups.
+    """
+    kinds = [step.kind for step in (STEPS if steps is None else steps)] + list(PLANNED)
+    return tuple([k for k in _ABSENT_ORDER if k in kinds] + [k for k in kinds if k not in _ABSENT_ORDER])
+
+
+DATA_TYPES = data_types()
+ENCRYPTED_ONLY = {step.kind for step in STEPS if step.encrypted_only} | {k for k, only in PLANNED.items() if only}
 
 
 def default_seed(persona_id: str, snapshot_id: str, encrypted: bool) -> int:
@@ -118,12 +137,13 @@ def generate(
     with tempfile.TemporaryDirectory(prefix="backupgen-") as tmp:
         renderer, contact_guids = media.Renderer(persona, snapshot), {}
         written = {}
-        for kind, step in STEPS:
+        for step in STEPS:
             # What the steps share, with this step's own random numbers.
-            ctx = StepContext(persona, snapshot, area_random(seed, kind), writer, renderer, Path(tmp), contact_guids)
-            result = step(ctx)
+            ctx = StepContext(step.kind, persona, snapshot, area_random(seed, step.kind), writer, renderer, Path(tmp),
+                              contact_guids)
+            result = step.run(ctx)
             if result is not None:
-                written[kind] = result
+                written[step.kind] = result
 
     backup_dir = writer.finalize()
 
@@ -133,16 +153,10 @@ def generate(
 
 
 def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Optional[str], written: dict) -> dict:
-    """The answer key: the backup's identity, then each writer's part (see its answer_key) in a fixed order."""
+    """The answer key: the backup's identity, then each step's sections (its Step.sections) in STEPS order,
+    then "absent"."""
     snapshot = persona.snapshots[snapshot_id]
-    cards = written["contacts"]
-    present = {kind for kind, result in written.items() if result}
-    # A written Calendar.sqlitedb or CloudRecordings.db is there even with nothing in it, as on a phone:
-    # the readers then list the calendars, or answer "no_records", not "not_in_backup".
-    present |= {"calendar", "voice_memos"} & written.keys()
-    on_phone = {"calls": bool(persona.calls or persona.voicemails), "browser_history": bool(persona.visits)}
-    left_out = {t for t in ENCRYPTED_ONLY if password is None and on_phone.get(t)}
-    return {
+    key = {
         "persona": persona.id,
         "snapshot": snapshot_id,
         "ios": snapshot.ios,
@@ -152,21 +166,15 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
         "backup_date": snapshot.backup_date.isoformat(),
         "encrypted": password is not None,
         "password": password,
-        "contacts": contacts_writer.answer_key(persona, cards),
-        "conversations": messages_writer.conversations_answer_key(persona, written["messages"]),
-        "messages": messages_writer.answer_key(written["messages"]),
-        "calls": calls_writer.answer_key(written.get("calls"), cards),
-        "voicemails": voicemail_writer.answer_key(written.get("voicemail"), cards),
-        "notes": notes_writer.answer_key(written.get("notes")),
-        "browser_history": safari_writer.answer_key(written.get("browser_history")),
-        "photos": photos_writer.answer_key(written.get("photos")),
-        # The People album (see writers/photos.py): every group, with the photos a reader should list for it.
-        "photo_people": photos_writer.people_answer_key(persona, written.get("photos")),
-        # Chats in arrival order (each message's "sort"); see writers/whatsapp.py. None when the phone has no WhatsApp.
-        "whatsapp": whatsapp_writer.answer_key(written.get("whatsapp")),
-        # Shaped like the readers' records (see writers/calendar.py and writers/voice_memos.py); events in
-        # row order, recordings newest first. None when the pack has no calendar.json / voice_memos.txt.
-        "calendar": calendar_writer.answer_key(written.get("calendar")),
-        "voice_memos": voice_memos_writer.answer_key(written.get("voice_memos")),
-        "absent": {t: "encrypted_only" if t in left_out else "none" for t in DATA_TYPES if t not in present},
     }
+    for step in STEPS:
+        for section, value in step.sections(persona, written).items():
+            if section in key or section == "absent":
+                raise ValueError(f"{step.kind}: answer-key section {section!r} is already taken")
+            key[section] = value
+    present = {step.kind for step in STEPS
+               if step.kind in written and (written[step.kind] or step.present_if_written)}
+    left_out = {step.kind for step in STEPS
+                if step.encrypted_only and password is None and step.on_phone is not None and step.on_phone(persona)}
+    key["absent"] = {t: "encrypted_only" if t in left_out else "none" for t in data_types() if t not in present}
+    return key

@@ -9,6 +9,7 @@ and Maren's (her photo downloads replaced by small generated images), so nothing
 network.
 """
 
+import dataclasses
 import hashlib
 import io
 import json
@@ -178,16 +179,17 @@ def test_each_step_starts_from_its_own_stream(tmp_path, monkeypatch):
 
     seen = []
 
-    def spy(kind, step):
+    def spy(step):
         def wrapped(ctx):
-            seen.append((kind, ctx.rng))
-            assert ctx.rng.getstate() == area_random(12345, kind).getstate(), kind
-            return step(ctx)
+            seen.append((ctx.kind, ctx.rng))
+            assert ctx.kind == step.kind
+            assert ctx.rng.getstate() == area_random(12345, step.kind).getstate(), step.kind
+            return step.run(ctx)
         return wrapped
 
-    monkeypatch.setattr(gen, "STEPS", tuple((kind, spy(kind, step)) for kind, step in STEPS))
+    monkeypatch.setattr(gen, "STEPS", tuple(dataclasses.replace(step, run=spy(step)) for step in STEPS))
     gen.generate("maren", "ios26", tmp_path, password=PASSWORD, seed=12345)
-    assert [kind for kind, _ in seen] == [kind for kind, _ in STEPS]
+    assert [kind for kind, _ in seen] == [step.kind for step in STEPS]
     assert len({id(rng) for _, rng in seen}) == len(STEPS)
 
 
@@ -285,7 +287,7 @@ def test_each_data_type_has_its_own_stream():
         rng = area_random(seed, area)
         return [rng.getrandbits(64) for _ in range(4)]
 
-    areas = [kind for kind, _ in STEPS]
+    areas = [step.kind for step in STEPS]
     assert len({tuple(draws(1, area)) for area in areas}) == len(areas)
     assert draws(1, "messages") == draws(1, "messages") != draws(2, "messages")
 

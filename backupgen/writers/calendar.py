@@ -49,14 +49,14 @@ from __future__ import annotations
 import random
 import uuid
 from datetime import date, datetime, time, timedelta, timezone
-from typing import Optional
+from typing import Any, Mapping, Optional
 from zoneinfo import ZoneInfo
 
 from backupgen.persona.calendar import EventDef
 from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import cocoa_seconds
-from backupgen.writers.context import StepContext
+from backupgen.writers.context import Step, StepContext
 
 DOMAIN = "HomeDomain"
 PATH = "Library/Calendar/Calendar.sqlitedb"
@@ -440,3 +440,13 @@ def answer_key(written: Optional[Written]) -> Optional[dict]:
     if written is None:
         return None
     return {"calendars": written.calendars, "events": list(written)}
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    """Shaped like the reader's records; events in row order. None when the pack has no calendar.json."""
+    return {"calendar": answer_key(written.get("calendar"))}
+
+
+# A written Calendar.sqlitedb is there even with no events in it, as on a phone: the reader then
+# lists the calendars rather than answering "not_in_backup".
+STEP = Step("calendar", step, sections, present_if_written=True)

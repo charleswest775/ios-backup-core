@@ -19,13 +19,13 @@ import random
 import struct
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Any, Mapping, Optional
 from urllib.parse import urlparse
 
 from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import cocoa_seconds
-from backupgen.writers.context import StepContext
+from backupgen.writers.context import Step, StepContext
 
 
 @dataclass
@@ -92,3 +92,14 @@ def step(ctx: StepContext) -> Optional[list[WrittenVisit]]:
 
 def answer_key(written: Optional[list[WrittenVisit]]) -> list[dict]:
     return [{"date": v.date.isoformat(), "url": v.url, "title": v.title} for v in written or []]
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    return {"browser_history": answer_key(written.get("browser_history"))}
+
+
+def on_phone(persona: Persona) -> bool:
+    return bool(persona.visits)
+
+
+STEP = Step("browser_history", step, sections, encrypted_only=True, on_phone=on_phone)

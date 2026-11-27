@@ -21,12 +21,12 @@ import re
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Any, Mapping, Optional
 
 from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers.calls import address_of, contact_name
-from backupgen.writers.context import StepContext
+from backupgen.writers.context import Step, StepContext
 
 _HEARD = 3  # what iOS stores once a voicemail has been played
 _AMR_FRAME = bytes([0x3C]) + bytes(31)  # one 20 ms frame at 12.2 kbit/s, all zero: silence
@@ -147,3 +147,10 @@ def answer_key(written: Optional[list[WrittenVoicemail]], cards: list) -> list[d
         }
         for v in written or []
     ]
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    return {"voicemails": answer_key(written.get("voicemail"), written.get("contacts", []))}
+
+
+STEP = Step("voicemail", step, sections)

@@ -20,13 +20,13 @@ import random
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Any, Mapping, Optional
 
 from backupgen.persona.calls import Call
 from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import CoreData, cocoa_seconds, country_code
-from backupgen.writers.context import StepContext
+from backupgen.writers.context import Step, StepContext
 
 _CALL_TYPES = {"phone": 1, "facetime-video": 8, "facetime-audio": 16}
 _PROVIDERS = {"phone": "com.apple.Telephony", "facetime-video": "com.apple.FaceTime",
@@ -166,3 +166,15 @@ def answer_key(written: Optional[list[WrittenCall]], cards: list) -> list[dict]:
         }
         for c in written or []
     ]
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    return {"calls": answer_key(written.get("calls"), written.get("contacts", []))}
+
+
+def on_phone(persona: Persona) -> bool:
+    """Whether the phone has call history (each voicemail leaves a missed call)."""
+    return bool(persona.calls or persona.voicemails)
+
+
+STEP = Step("calls", step, sections, encrypted_only=True, on_phone=on_phone)

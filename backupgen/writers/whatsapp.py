@@ -50,7 +50,7 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Any, Mapping, Optional
 
 from PIL import Image, ImageDraw
 
@@ -60,7 +60,7 @@ from backupgen.persona.core import Persona, Snapshot
 from backupgen.persona.whatsapp import WA_MISSING_PHOTO, WAChat, WAMessage
 from backupgen.sqlitegen import build, load_schema
 from backupgen.writers import CoreData, cocoa_seconds
-from backupgen.writers.context import StepContext
+from backupgen.writers.context import Step, StepContext
 
 DOMAIN = "AppDomainGroup-group.net.whatsapp.WhatsApp.shared"
 PLIST = "Library/Preferences/group.net.whatsapp.WhatsApp.shared.plist"
@@ -808,3 +808,11 @@ def answer_key(store: Optional[Store]) -> Optional[dict]:
         "status_updates": store.status_updates,
         "calls_left_out": store.calls_left_out,
     }
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    """Chats in arrival order (each message's "sort"). None when the phone has no WhatsApp."""
+    return {"whatsapp": answer_key(written.get("whatsapp"))}
+
+
+STEP = Step("whatsapp", step, sections)

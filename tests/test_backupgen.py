@@ -173,6 +173,51 @@ def test_answer_key_lists_absent_data_types(tmp_path):
     assert expected["whatsapp"] is None
 
 
+def test_steps_declare_every_data_type_once():
+    from backupgen import generate as gen
+
+    kinds = [step.kind for step in gen.STEPS]
+    assert len(kinds) == len(set(kinds)) and set(kinds).isdisjoint(gen.PLANNED)
+    assert set(gen.DATA_TYPES) == set(kinds) | set(gen.PLANNED)
+    assert gen.ENCRYPTED_ONLY == {"calls", "browser_history", "health"}
+    assert kinds[0] == "contacts"  # later steps use its cards
+
+
+def test_a_new_step_adds_its_sections_and_data_type_after_the_others(tmp_path, monkeypatch):
+    """A writer is its STEP plus a line in STEPS: its sections and "absent" entry come last, nothing else moves."""
+    import dataclasses
+
+    from backupgen import generate as gen
+    from backupgen.writers.context import Step
+
+    generate("einstein", "ios15", tmp_path / "before")
+    before = json.loads((tmp_path / "before" / EXPECTED).read_text(encoding="utf-8"))
+
+    def run(ctx):
+        assert ctx.kind == "extra" and ctx.rng.getstate() == gen.area_random(gen.default_seed("einstein", "ios15", False),
+                                                                             "extra").getstate()
+        return []  # nothing on this phone
+
+    extra = Step("extra", run, lambda persona, written: {"extra": written.get("extra")})
+    monkeypatch.setattr(gen, "STEPS", gen.STEPS + (extra,))
+    generate("einstein", "ios15", tmp_path / "after")
+    after = json.loads((tmp_path / "after" / EXPECTED).read_text(encoding="utf-8"))
+    assert list(after) == list(before)[:-1] + ["extra", "absent"]
+    assert after["extra"] == [] and list(after["absent"]) == list(before["absent"]) + ["extra"]
+    assert {k: v for k, v in after.items() if k not in ("extra", "absent")} == {k: v for k, v in before.items() if k != "absent"}
+
+    # present_if_written: an empty result still counts as there
+    monkeypatch.setattr(gen, "STEPS", gen.STEPS[:-1] + (dataclasses.replace(extra, present_if_written=True),))
+    generate("einstein", "ios15", tmp_path / "present")
+    assert "extra" not in json.loads((tmp_path / "present" / EXPECTED).read_text(encoding="utf-8"))["absent"]
+
+    # two steps can't both write a section
+    clash = Step("clash", lambda ctx: None, lambda persona, written: {"messages": []})
+    monkeypatch.setattr(gen, "STEPS", gen.STEPS[:-1] + (clash,))
+    with pytest.raises(ValueError, match="clash: answer-key section 'messages' is already taken"):
+        generate("einstein", "ios15", tmp_path / "clash")
+
+
 @pytest.mark.parametrize("snapshot", ["ios15", "ios17", "ios26"])
 def test_calls_and_voicemails_read_back(tmp_path, snapshot):
     backup_dir = generate("testpersona", snapshot, tmp_path, password="pw")

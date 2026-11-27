@@ -5,11 +5,12 @@ from __future__ import annotations
 import random
 import uuid
 from datetime import datetime, time
+from typing import Any, Mapping
 
 from backupgen.persona.core import Contact, Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import cocoa_seconds
-from backupgen.writers.context import StepContext
+from backupgen.writers.context import Step, StepContext
 
 PHONE, EMAIL = 3, 4
 LABELS = {
@@ -91,15 +92,15 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
 def step(ctx: StepContext) -> list[Contact]:
     """AddressBook.sqlitedb and an empty AddressBookImages.sqlitedb. Returns the cards written.
 
-    Leaves each card's guid in ``ctx.contact_guids`` for Photos' People album.
+    Leaves every card's guid in ``ctx.contact_guids`` (None where the schema has no guid column)
+    for Photos' People album.
     """
     rows: dict[str, int] = {}
 
     def fill(db: SchemaDatabase) -> None:
         rows.update(populate(db, ctx.persona, ctx.snapshot, ctx.rng))
-        if db.table("ABPerson").has("guid"):
-            guids = dict(db.conn.execute("SELECT ROWID, guid FROM ABPerson"))
-            ctx.contact_guids.update({cid: guids.get(rowid) for cid, rowid in rows.items()})
+        guids = dict(db.conn.execute("SELECT ROWID, guid FROM ABPerson")) if db.table("ABPerson").has("guid") else {}
+        ctx.contact_guids.update({cid: guids.get(rowid) for cid, rowid in rows.items()})
 
     address_book = ctx.build("AddressBook.sqlitedb", fill)
     images = ctx.build("AddressBookImages.sqlitedb", lambda db: None)
@@ -117,3 +118,11 @@ def answer_key(persona: Persona, cards: list[Contact]) -> list[dict]:
         }
         for c in cards
     ]
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    return {"contacts": answer_key(persona, written.get("contacts", []))}
+
+
+# Runs first (generate.STEPS): calls and voicemail name callers from its cards, Photos links People to them.
+STEP = Step("contacts", step, sections)

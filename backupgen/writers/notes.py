@@ -32,13 +32,13 @@ import re
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Any, Mapping, Optional
 
 from backupgen.persona.core import Contact, Persona, Snapshot
 from backupgen.persona.notes import Note
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import CoreData, cocoa_seconds
-from backupgen.writers.context import StepContext
+from backupgen.writers.context import Step, StepContext
 
 _TITLE, _DASHED, _CHECKLIST = 0, 101, 103
 RECENTLY_DELETED = "Recently Deleted"
@@ -255,3 +255,10 @@ def answer_key(written: Optional[list[WrittenNote]]) -> list[dict]:
         }
         for n in written or []
     ]
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    return {"notes": answer_key(written.get("notes"))}
+
+
+STEP = Step("notes", step, sections)
