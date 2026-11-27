@@ -31,6 +31,9 @@ from backupgen.crypto import Keybag, encrypt_cbc
 FILE_MODE = 0o100644
 DIR_MODE = 0o40700
 ROOT_MODE = 0o40711
+LINK_MODE = 0o120755  # S_IFLNK, lrwxr-xr-x
+# Manifest.db's flags column: what a row is.
+FLAG_FILE, FLAG_DIRECTORY, FLAG_SYMLINK = 1, 2, 4
 MOBILE_UID = 501
 _LOCKDOWN_EXTRAS = {
     "com.apple.Accessibility": {
@@ -73,8 +76,10 @@ def load_container_shape(version: str) -> dict:
 
 
 def mbfile_record(relative_path: str, *, mode: int, size: int, protection_class: int, inode: int, stamp: int,
-                  wrapped_key: Optional[bytes] = None, digest: Optional[bytes] = None) -> bytes:
-    """A Manifest.db row's ``file`` column: an NSKeyedArchiver ``MBFile``."""
+                  wrapped_key: Optional[bytes] = None, digest: Optional[bytes] = None,
+                  target: Optional[str] = None) -> bytes:
+    """A Manifest.db row's ``file`` column: an NSKeyedArchiver ``MBFile``. A symbolic link's has its
+    ``Target``, the path it points to."""
     top = {
         "LastModified": stamp,
         "Flags": 0,
@@ -89,6 +94,9 @@ def mbfile_record(relative_path: str, *, mode: int, size: int, protection_class:
         "ProtectionClass": protection_class,
     }
     objects: list = ["$null", top, relative_path]
+    if target is not None:
+        top["Target"] = plistlib.UID(len(objects))
+        objects.append(target)
     if digest is not None:
         top["Digest"] = plistlib.UID(len(objects))
         objects.append(digest)
@@ -117,6 +125,7 @@ class Device:
     imei: str = ""
     iccid: str = ""
     guid: str = ""
+    meid: str = ""  # an iPhone's MEID is its IMEI without the check digit (fill_identifiers)
 
     def fill_identifiers(self, rng: random.Random) -> "Device":
         hex_upper = "0123456789ABCDEF"
@@ -130,6 +139,8 @@ class Device:
             self.serial = "SYN" + "".join(rng.choice("0123456789ABCDEFGHJKLMNPQRSTUVWXYZ") for _ in range(9))
         if not self.imei:
             self.imei = "00" + "".join(rng.choice("0123456789") for _ in range(13))  # "00" TAC: not allocated
+        if not self.meid:
+            self.meid = self.imei[:14]  # no random draw, so nothing after it moves
         if not self.iccid:
             self.iccid = "89990" + "".join(rng.choice("0123456789") for _ in range(14))
         if not self.guid:
@@ -146,11 +157,11 @@ class Host:
 
     "finder": Finder on macOS (iTunes' keys plus "macOS Version" and "macOS Build Version").
     "pymobiledevice3": pymobiledevice3's Mobilebackup2Service, which OpenExtract backs up with:
-    exactly the keys its init_mobile_backup_factory_info writes (read from its source to match
-    the file format), so no "Last Backup Date", "Product Name", "iTunes Settings" (it writes that
-    only for an iPhone that has iTunes settings) or macOS keys; an "iTunes Version"; "Unique
-    Identifier" in upper case; "GUID" as 16 raw bytes; and "Applications" only for apps with App
-    Store metadata. A backup made this way is dated only by Manifest.plist and Status.plist,
+    the Device's fields through the rules of its init_mobile_backup_factory_info (read from its
+    source to match the file format). So no "Last Backup Date", "Product Name" or macOS keys; an
+    "iTunes Version"; "Unique Identifier" in upper case; "GUID" as 16 raw bytes; "Applications"
+    only for apps with App Store metadata; and the keys it writes only when the iPhone reports
+    them as _pymobiledevice3_info says. A backup made this way is dated only by Manifest.plist and Status.plist,
     which the iPhone writes. The macOS fields are only Finder's.
     """
 
@@ -182,10 +193,11 @@ class App:
 class _Entry:
     domain: str
     relative_path: str
-    flags: int  # 1 file, 2 directory
+    flags: int  # FLAG_FILE, FLAG_DIRECTORY or FLAG_SYMLINK
     data: bytes = b""
     protection_class: int = 3
     mode: int = FILE_MODE
+    target: Optional[str] = None  # a symbolic link's
 
 
 @dataclass
@@ -211,21 +223,37 @@ class BackupWriter:
         return self.password is not None
 
     def add_file(self, domain: str, relative_path: str, data: bytes, protection_class: int = 3) -> None:
-        self._entries[(domain, relative_path)] = _Entry(domain, relative_path, 1, data, protection_class)
+        self._entries[(domain, relative_path)] = _Entry(domain, relative_path, FLAG_FILE, data, protection_class)
+        self._add_parents(domain, relative_path)
+
+    def has_row(self, domain: str, relative_path: str) -> bool:
+        """Whether Manifest.db will have a row (file, folder or link) for this path."""
+        return (domain, relative_path) in self._entries
+
+    def add_directory(self, domain: str, relative_path: str) -> None:
+        """A folder, empty or not (a file's folders are added with it)."""
+        self._add_parents(domain, f"{relative_path}/x" if relative_path else "x")
+
+    def add_symlink(self, domain: str, relative_path: str, target: str) -> None:
+        """A symbolic link: a row with flags 4 whose MBFile has a Target, and no stored file."""
+        self._entries[(domain, relative_path)] = _Entry(domain, relative_path, FLAG_SYMLINK, b"", 0, LINK_MODE, target)
+        self._add_parents(domain, relative_path)
+
+    def _add_parents(self, domain: str, relative_path: str) -> None:
         parts = PurePosixPath(relative_path).parts[:-1]
         for depth in range(len(parts) + 1):
             parent = "/".join(parts[:depth])
             key = (domain, parent)
             if key not in self._entries:
                 mode, pclass = (ROOT_MODE, 0) if parent == "" else (DIR_MODE, 4)
-                self._entries[key] = _Entry(domain, parent, 2, b"", pclass, mode)
+                self._entries[key] = _Entry(domain, parent, FLAG_DIRECTORY, b"", pclass, mode)
 
     # ── records ──────────────────────────────────────────────────────────────
 
     def _mbfile(self, entry: _Entry, inode: int, stamp: int, wrapped_key: Optional[bytes], digest: Optional[bytes]) -> bytes:
         return mbfile_record(entry.relative_path, mode=entry.mode, size=len(entry.data),
                              protection_class=entry.protection_class, inode=inode, stamp=stamp,
-                             wrapped_key=wrapped_key, digest=digest)
+                             wrapped_key=wrapped_key, digest=digest, target=entry.target)
 
     # ── writing ──────────────────────────────────────────────────────────────
 
@@ -244,7 +272,7 @@ class BackupWriter:
             inode += 1
             fid = file_id(domain, relative_path)
             wrapped = digest = None
-            if entry.flags == 1:
+            if entry.flags == FLAG_FILE:
                 data = entry.data
                 if self.encrypted:
                     key = self.rng.randbytes(32)
@@ -348,9 +376,10 @@ class BackupWriter:
         return info
 
     def _pymobiledevice3_info(self) -> dict:
-        """Info.plist as pymobiledevice3 writes it (see Host). The keys it writes only when the
-        iPhone reports them: ICCID, IMEI and Phone Number are written when the phone has them;
-        MEID (CDMA phones), iBooks Data 2 (an old Books file) and iTunes Settings are left out."""
+        """Info.plist as pymobiledevice3 writes it (see Host). Of the keys it writes only when the
+        iPhone reports them, ICCID, IMEI, MEID and Phone Number come from the Device when it has
+        them; iBooks Data 2 (an old Books file) and iTunes Settings have no Device field, so they're
+        never written."""
         d = self.device
         info = {
             "iTunes Version": _ITUNES_VERSION,
@@ -368,7 +397,7 @@ class BackupWriter:
             "Build Version": d.build,
             "Applications": self._store_apps(),
         }
-        for key, value in (("ICCID", d.iccid), ("IMEI", d.imei), ("Phone Number", d.phone_number)):
+        for key, value in (("ICCID", d.iccid), ("IMEI", d.imei), ("MEID", d.meid), ("Phone Number", d.phone_number)):
             if value:
                 info[key] = value
         return info

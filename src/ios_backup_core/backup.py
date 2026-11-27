@@ -592,6 +592,7 @@ def open_local_backup(
                 cur.execute("SELECT COUNT(*) FROM Files")
         except Exception as e:
             raise ValueError(f"Failed to decrypt backup: {e}") from e
+        _look_files_up_by_path(decrypted_backup)
 
     return LocalBackupAccessor(
         backup_dir=backup_dir,
@@ -600,6 +601,28 @@ def open_local_backup(
         encrypted=encrypted,
         decrypted_backup=decrypted_backup,
     )
+
+
+def _look_files_up_by_path(decrypted_backup) -> None:
+    """Make iphone-backup-decrypt find each file by its path rather than by reading every row.
+
+    Its query for one file ("relativePath = ? AND domain LIKE ? AND flags=1 ORDER BY domain,
+    relativePath") can use Manifest.db's index on relativePath or the one on flags
+    (FilesFlagsIdx). With no statistics to go on, SQLite picks flags, which nearly every row
+    has, so each file looked up reads the whole list: in a backup of 400,000 files, 468 ms a
+    file on a Windows PC and 154 ms on a Mac (OpenExtract's OE-132, an hour to look up a save of
+    8,000 photos). Without that index it uses relativePath, a few hundredths of a millisecond.
+    Nothing that asks for files by flags alone gets slower, as that reads nearly every row
+    either way.
+
+    Only the decrypted temporary copy of Manifest.db changes, never the backup. If it can't be
+    changed, the backup still opens and works, more slowly.
+    """
+    try:
+        with decrypted_backup.manifest_db_cursor() as cur:
+            cur.execute("DROP INDEX IF EXISTS FilesFlagsIdx")
+    except Exception as e:
+        print(f"[backup] couldn't speed up file lookups: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
 
 
 def _open_legacy_encrypted(backup_dir: str, password: str) -> LegacyEncryptedBackup:

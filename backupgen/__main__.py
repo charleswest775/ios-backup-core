@@ -23,6 +23,9 @@ def main(argv=None) -> int:
     gen.add_argument("--iterations", choices=("fast", "real"), default="fast",
                      help="PBKDF2 rounds: 'real' matches iOS (10M, slow to open), 'fast' for tests")
     gen.add_argument("--seed", type=int)
+    gen.add_argument("--filler", metavar="JSON",
+                     help='pad Manifest.db with many more rows, e.g. \'{"files": 20000, "domains": 300, "seed": 1}\' '
+                          "(left out of the answer key; see backupgen/filler.py)")
 
     legacy = sub.add_parser("legacy", help="write a small backup the way iOS 10.1 and earlier did (Manifest.mbdb before iOS 10)")
     legacy.add_argument("--ios", default="9.3.5", help="6.x to 10.1 (default 9.3.5)")
@@ -53,14 +56,21 @@ def main(argv=None) -> int:
         return 0
 
     if args.command == "generate":
+        import json
+
+        from backupgen.filler import FillerError, check_filler
         from backupgen.generate import generate
 
+        try:
+            filler = check_filler(json.loads(args.filler)) if args.filler else None
+        except (ValueError, FillerError) as e:  # bad JSON (json.JSONDecodeError is a ValueError) or options
+            parser.error(f"--filler: {e}")
         persona = load_persona(args.persona)
         for snapshot_id in args.snapshot or list(persona.snapshots):
             variant = "encrypted" if args.password else "plain"
             out = args.out / f"{persona.id}-{snapshot_id}-{variant}"
             backup = generate(persona.id, snapshot_id, out, password=args.password,
-                              iterations=args.iterations, seed=args.seed, persona=persona)
+                              iterations=args.iterations, seed=args.seed, persona=persona, filler=filler)
             print(backup)
         return 0
 
