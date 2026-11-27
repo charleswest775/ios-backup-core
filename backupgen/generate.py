@@ -25,6 +25,7 @@ from backupgen.persona import Persona, PersonaError, Snapshot, load_persona
 from backupgen.writers import calendar as calendar_writer
 from backupgen.writers import calls as calls_writer
 from backupgen.writers import contacts as contacts_writer
+from backupgen.writers import health as health_writer
 from backupgen.writers import messages as messages_writer
 from backupgen.writers import notes as notes_writer
 from backupgen.writers import photos as photos_writer
@@ -68,6 +69,7 @@ STEPS = (
 
 # Data types OpenExtract reads or is adding that no writer writes yet, with whether Apple leaves
 # them out of unencrypted backups: always "absent" ("none"). A writer for one takes it out of here.
+# Health's two databases are still in every encrypted backup, empty (writers/health.py).
 PLANNED = {"health": True}
 
 # The order of the answer key's "absent" entries from when DATA_TYPES was written by hand, kept so
@@ -167,7 +169,8 @@ def generate(
     identity = hashlib.sha256(f"{persona.id}/{snapshot.product_type}".encode()).digest()
     device.fill_identifiers(random.Random(int.from_bytes(identity[:8], "big")))
     writer = BackupWriter(out_dir, device, snapshot.backup_date, snapshot.container,
-                          password=password, iterations=iterations, seed=rng.getrandbits(64), host=snapshot.host)
+                          password=password, iterations=iterations, seed=rng.getrandbits(64), host=snapshot.host,
+                          apps=snapshot.apps)
 
     with tempfile.TemporaryDirectory(prefix="backupgen-") as tmp:
         renderer, contact_guids = media.Renderer(persona, snapshot), {}
@@ -179,6 +182,7 @@ def generate(
             result = step.run(ctx)
             if result is not None:
                 written[step.kind] = result
+        health_writer.write_empty(writer, snapshot.schema, Path(tmp))
 
     backup_dir = writer.finalize()
 
@@ -201,6 +205,14 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
         "backup_date": snapshot.backup_date.isoformat(),
         "encrypted": password is not None,
         "password": password,
+        # What made it, which decides Info.plist (container.Host): a "pymobiledevice3" backup, the
+        # way OpenExtract makes them, has no "Last Backup Date", so only Status.plist and
+        # Manifest.plist date it.
+        "host": snapshot.host.kind,
+        # The apps the phone has (bundle ids), which Info.plist and Manifest.plist list, whatever
+        # data of theirs the backup holds: WhatsApp here with no "whatsapp" section is the app on
+        # a phone whose chats aren't in the backup.
+        "apps": [app.bundle_id for app in snapshot.apps],
     }
     for step in STEPS:
         for section, value in step.sections(persona, written).items():

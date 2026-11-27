@@ -422,6 +422,30 @@ def _temp_name(domain: str, relative_path: str) -> str:
 # Factory helpers
 # ---------------------------------------------------------------------------
 
+def _status_date(backup_dir: str) -> Optional[datetime]:
+    """The date in the last Status.plist the iPhone wrote (UTC, as plistlib reads it), or None.
+
+    None too when the backup may not have finished, since Status.plist's date is then the try's,
+    or pymobiledevice3's own: it writes a Status.plist saying "finished", in the computer's local
+    time, before the iPhone sends anything. So only a Status.plist that says "finished", in a
+    folder with no Snapshot (the iPhone removes it at the very end) and a Manifest.plist that
+    isn't empty (pymobiledevice3 empties it first; the iPhone writes it near the end), counts.
+    """
+    try:
+        with open(os.path.join(backup_dir, "Status.plist"), "rb") as f:
+            status = plistlib.load(f)
+        if status.get("SnapshotState") != "finished":
+            return None
+        if os.path.isdir(os.path.join(backup_dir, "Snapshot")):
+            return None
+        if os.path.getsize(os.path.join(backup_dir, "Manifest.plist")) == 0:
+            return None
+    except Exception:  # missing, empty or damaged
+        return None
+    date = status.get("Date")
+    return date if isinstance(date, datetime) else None
+
+
 def _read_backup_info(backup_dir: str) -> Optional[dict]:
     """Read metadata from a backup directory. Returns None if not a valid backup.
 
@@ -448,7 +472,9 @@ def _read_backup_info(backup_dir: str) -> Optional[dict]:
                 "product_version": plist.get("Product Version", "Unknown"),
                 "serial_number": plist.get("Serial Number", ""),
                 "phone_number": plist.get("Phone Number", ""),
-                "last_backup": plist.get("Last Backup Date", ""),
+                # A backup made with pymobiledevice3 (OpenExtract's) has no "Last Backup Date" in
+                # Info.plist; the last Status.plist, which the iPhone writes, still has the date.
+                "last_backup": plist.get("Last Backup Date") or _status_date(backup_dir) or "",
             }
             if isinstance(info["last_backup"], datetime):
                 info["last_backup"] = info["last_backup"].isoformat()
