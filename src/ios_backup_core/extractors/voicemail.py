@@ -9,30 +9,29 @@ Changes:
 Where an iPhone keeps voicemail
 -------------------------------
 ``Library/Voicemail/voicemail.db``, with each message's audio beside it as
-``<ROWID>.amr``. Newer iPhones also keep a store per account,
-``Library/Voicemail/A-<UUID>/voicemail.db``, with its own audio. Its rows
-mostly repeat the main store's, under other ROWIDs and other remote_uids, so a
-voicemail is matched across stores by its date, length and caller and listed once.
+``<ROWID>.amr``. This reader also reads any per-account store,
+``Library/Voicemail/A-<UUID>/voicemail.db``, with its own audio. A row there
+with the same date, length and caller as a row in another store, under any
+ROWID and remote_uid, is taken as the same voicemail and listed once; so is
+one whose number lacks its "+", or whose date is a second off.
 
-Which list a voicemail is in on the phone
------------------------------------------
-Checked against an iOS 27.2 iPhone's Phone app (2026-11-16), voicemail by voicemail:
+voicemail.db also has a ``deleted`` table with the same columns. This reader
+doesn't list its rows; whether the Phone app does isn't known.
 
-- ``deleted``: ``flags`` has 0x8. Every row with a ``trashed_date`` has it too,
-  and older deleted ones can have 0x8 without a ``trashed_date``.
-- ``spam``: ``flags`` has 0x80 and isn't deleted. The phone's Spam list held
-  exactly these.
-- ``voicemail``: everything else, including old voicemails the carrier no
-  longer has (``remote_uid`` 0, ``flags`` 0x40).
+Which list a voicemail is in
+----------------------------
+Each voicemail gets a ``folder``:
+
+- ``deleted``: ``flags`` has 0x8, or the row has a ``trashed_date``.
+- ``spam``: ``flags`` has 0x80 and it isn't deleted.
+- ``voicemail``: everything else.
 
 A voicemail that was marked spam and then deleted is in Deleted, so its
 ``folder`` is ``"deleted"``. Each record also says ``is_spam`` (0x80) and
 ``is_deleted`` (0x8, or a ``trashed_date``) on their own, so a deleted spam
 voicemail keeps its spam mark.
 
-``flags`` 0x1 marks a voicemail as listened to. The phone counted more deleted
-voicemails than its backup held: whatever the rest are, they aren't in the
-backup to be read.
+``flags`` 0x1 marks a voicemail as listened to. Other bits are ignored.
 
 Transcripts
 -----------
@@ -92,8 +91,10 @@ class VoicemailExtractor:
         list the Phone app shows it in, and ``is_spam`` and ``is_deleted``,
         which are separate: a spam voicemail that was deleted is in
         ``"deleted"`` with ``is_spam`` true. ``phone_number`` is the caller's
-        number as the backup has it, and ``contact_name`` their name in the
-        address book (the number when they aren't in it). Deleted ones are left
+        number as the backup has it ("" when the caller had no number), and
+        ``contact_name`` their name in the address book (the number when they
+        aren't in it, "Unknown" when there's no number, as Calls has it).
+        Deleted ones are left
         out unless ``include_deleted``. ``counts`` says how many are in each
         list, deleted included either way.
 
@@ -124,7 +125,7 @@ class VoicemailExtractor:
             voicemails.append({
                 "id": row["id"],
                 "phone_number": sender,
-                "contact_name": resolve_contact(sender, contacts) or sender,
+                "contact_name": resolve_contact(sender, contacts) or sender or "Unknown",
                 "date_received": (
                     datetime.fromtimestamp(date_ts, timezone.utc).isoformat() if date_ts else ""
                 ),
@@ -313,8 +314,8 @@ def transcript_text(data: bytes) -> str:
 def folder_of(flags, trashed_date) -> str:
     """The Phone app's list for a voicemail row: "voicemail", "spam" or "deleted".
 
-    Deleted comes first, as on the phone: a spam voicemail that was deleted is
-    in Deleted. ``is_spam`` keeps its spam mark.
+    Deleted comes first: a spam voicemail that was deleted is in Deleted.
+    ``is_spam`` keeps its spam mark.
     """
     if is_deleted(flags, trashed_date):
         return "deleted"
@@ -329,7 +330,7 @@ def is_spam(flags) -> bool:
 
 
 def is_deleted(flags, trashed_date) -> bool:
-    """In Deleted: 0x8, or a trashed_date (every such row has 0x8 too)."""
+    """In Deleted: 0x8, or a trashed_date."""
     return bool(trashed_date or (flags or 0) & _DELETED)
 
 
@@ -369,26 +370,37 @@ def _files_like(backup, pattern: str) -> set:
         return set()
 
 
+def _caller(sender) -> str:
+    """A sender as copies are compared: its digits ("+447700900003" and "447700900003" are one caller)."""
+    text = "" if sender is None else str(sender)
+    digits = "".join(ch for ch in text if ch.isdigit())
+    return digits or text.strip().lower()
+
+
 def _match_across_stores(stores: list) -> list:
     """Group the rows of each store with their copies in other stores.
 
     ``stores`` is [(name, rows)], the main store ("") first. A copy is a row
-    in another store with the same date, length and caller. Rows that match
-    within one store stay apart: they are separate rows on the phone too.
+    in another store with the same length and caller (by the digits of the
+    number, so one without its "+" counts) and a date at most a second off.
+    Rows that match within one store stay apart, and each can have its own
+    copy in another store.
     """
-    groups, by_key = [], {}
+    groups, by_key = [], {}  # by_key: (date, duration, caller) -> the groups started with that key
     for name, rows in stores:
         for row in rows:
             row = dict(row)
             row["_store"] = name
-            key = (row["date"], row["duration"], row["sender"])
-            group = by_key.get(key)
-            if group is not None and all(copy["_store"] != name for copy in group):
+            date, duration, caller = row["date"], row["duration"], _caller(row["sender"])
+            near = (date, date - 1, date + 1) if isinstance(date, int) else (date,)
+            group = next((g for d in near for g in by_key.get((d, duration, caller), [])
+                          if all(copy["_store"] != name for copy in g)), None)
+            if group is not None:
                 group.append(row)
                 continue
             group = [row]
             groups.append(group)
-            by_key.setdefault(key, group)
+            by_key.setdefault((date, duration, caller), []).append(group)
     return groups
 
 

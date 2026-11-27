@@ -179,7 +179,8 @@ CASES = {
     # more draw in Calls' own numbers, re-draws the seconds and ids of the calls after it, so Calls
     # may change too. This one is dated before every call, so they all move;
     # test_a_voicemail_after_every_call_keeps_every_call checks that Calls changes no more than that.
-    "voicemail": (_add_voicemail, "voicemails", {"voicemails", "calls"},
+    # It also takes a ROWID, so the removed voicemails' (in voicemail.db's deleted table) move up one.
+    "voicemail": (_add_voicemail, "voicemails", {"voicemails", "removed_voicemails", "calls"},
                   lambda domain, path: (domain == "HomeDomain" and path.startswith("Library/Voicemail/"))
                   or (domain, path) == ("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata")),
     "photos": (_add_photo, "photos", {"photos", "photo_people"},
@@ -252,13 +253,13 @@ def test_a_voicemail_after_every_call_keeps_every_call(tmp_path, baseline):
     pack = _pack(tmp_path / "packs")
     path = pack / "voicemails.txt"
     path.write_text(path.read_text(encoding="utf-8").rstrip("\n")
-                    + "\n== 2025-06-01\n10:00 casey 12s: A voicemail after every call.\n", encoding="utf-8")
+                    + "\n== 2025-12-30\n10:00 casey 12s: A voicemail after every call.\n", encoding="utf-8")
     out = tmp_path / "out"
     generate("testpersona", "ios26", out, password=PASSWORD, persona=load_persona("testpersona", root=pack.parent))
     before, after = baseline[PASSWORD][0]["calls"], _expected(out)["calls"]
     assert len(after) == len(before) + 1
     assert [_canonical(call) for call in after[:-1]] == [_canonical(call) for call in before]
-    assert after[-1]["date"].startswith("2025-06-01T09:00:")  # 10:00 BST
+    assert after[-1]["date"].startswith("2025-12-30T10:00:")  # 10:00 GMT
     assert (after[-1]["address"], after[-1]["outgoing"], after[-1]["duration"]) == ("+447700900005", False, 0)
 
 

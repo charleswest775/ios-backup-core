@@ -1,9 +1,49 @@
-# Jordan's and the unknown caller's voicemails match missed calls in calls.txt.
-# Riley's has none there, so the generator adds the missed call.
+# Jordan's 2021 voicemail and the parcel company's match missed calls in calls.txt. Every
+# other one has none there, so the generator adds its missed call.
+#
+# The words in brackets give the shapes this persona covers (persona/voicemail.py): the
+# Deleted and Spam lists, voicemail.db's deleted table, audio with no row, a voicemail whose
+# audio isn't in the backup, a caller with no number, one never transcribed, and the
+# per-line store (A-<UUID>) with its copies of main rows. Spam and the per-line store come
+# in 2025, so only the iOS 26 snapshot has them.
 
 == 2021-06-01
 08:40 jordan 38s: Hi Sam, it's Jordan. Call me back about the release when you get a minute.
+== 2021-09-14
+16:05 riley 22s (deleted-old): Never mind, I sorted it. Talk later.
+== 2021-11-02
+10:30 +447700900123 14s (removed) (no-audio): Your appointment is confirmed for Thursday.
+== 2022-01-20
+13:12 jordan 31s (deleted): Sam, ignore my last message, the meeting has moved to Friday.
 == 2022-02-14
-09:00 +447700900099 21s: This is a message for Sam Example about your parcel delivery.
+09:00 +447700900099 21s (no-audio): This is a message for Sam Example about your parcel delivery.
+== 2022-02-20
+18:45 unknown 12s: Hello, this is a call about your recent order. Please call us back.
+== 2023-05-08
+12:00 riley 6s (unheard)
+== 2023-10-17
+09:20 +447700900140 18s (removed): We tried to deliver a parcel today.
 == 2024-11-05
 14:20 riley 15s: Running late, see you at seven.
+== 2025-03-19
+17:30 jordan 25s (line): Hey, it's Jordan. Dinner is at eight on Saturday.
+== 2025-05-02
+11:10 casey 19s (line-audio): Hi Sam, Casey here. The keys are with the neighbour.
+== 2025-06-20
+08:05 +447700900155 9s (line-deleted): Please call the surgery to rebook.
+== 2025-08-08
+19:40 riley 13s (line-no-plus): Got the tickets, I'll send them over.
+== 2025-09-18
+13:15 riley 24s (line): Can you pick up some milk on the way home?
+== 2025-10-15
+10:05 +447700900160 28s (spam) (line-late): Congratulations, you have been selected for a free holiday.
+== 2025-10-28
+15:50 +447700900188 16s (spam) (unheard): This is your final notice about your car's warranty.
+== 2025-11-20
+12:35 jordan 21s (line-only): Jordan again, ignore the last one, all sorted.
+== 2025-12-05
+09:15 casey 11s (audio-only)
+== 2025-12-10
+16:20 +447700900111 17s (removed) (deleted): Your prescription is ready to collect.
+== 2025-12-12
+13:00 riley 8s (removed) (no-audio)

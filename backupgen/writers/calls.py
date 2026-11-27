@@ -7,6 +7,9 @@ Rows follow what iOS 13–17 write:
   picked up; outgoing calls keep 0 even when they connect.
 - ZDATE is seconds since 2001-01-01, ZDURATION is seconds.
 - ZADDRESS is the other party's number or email: a BLOB of UTF-8 before iOS 17, text after.
+  A caller with no number (a voicemail's ``unknown``) has none: NULL, and no handle. iOS
+  probably says why in ZNUMBER_AVAILABILITY too, but no value of it has been checked, so
+  it stays 0 here as on every other call.
 - Each call links its remote party in ZHANDLE through the Z_<n>REMOTEPARTICIPANTHANDLES join.
 - ZCALLDBPROPERTIES keeps the phone's running call-time totals.
 
@@ -24,6 +27,7 @@ from typing import Any, Mapping, Optional
 
 from backupgen.persona.calls import Call
 from backupgen.persona.core import Persona, Snapshot
+from backupgen.persona.voicemail import UNKNOWN_CALLER
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import CoreData, cocoa_seconds, country_code
 from backupgen.writers.context import Step, StepContext
@@ -55,8 +59,13 @@ def all_calls(persona: Persona) -> list[Call]:
     return sorted(calls, key=lambda c: c.real_time)
 
 
-def address_of(persona: Persona, who: str, service: str = "phone") -> str:
-    """The number (or, for FaceTime with someone who has no number, the email) a call shows."""
+def address_of(persona: Persona, who: str, service: str = "phone") -> Optional[str]:
+    """The number (or, for FaceTime with someone who has no number, the email) a call shows.
+
+    None for a caller with no number (UNKNOWN_CALLER).
+    """
+    if who == UNKNOWN_CALLER:
+        return None
     if who.startswith("+"):
         return who
     contact = persona.contacts[who]
@@ -86,8 +95,8 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
         when = persona.device_time(call.real_time) + timedelta(seconds=rng.randrange(30))
         if when > snapshot.backup_date:
             continue
-        address = address_of(persona, call.who, call.service)
-        is_email = "@" in address
+        address = address_of(persona, call.who, call.service)  # None: no caller ID
+        is_email = address is not None and "@" in address
         pk = records.insert({
             "Z_ENT": core.ent("CallRecord"), "Z_OPT": 1,
             "ZANSWERED": int(not call.outgoing and call.duration > 0),
@@ -100,15 +109,15 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
             "ZREAD": 1,
             "ZDATE": cocoa_seconds(when),
             "ZDURATION": float(call.duration),
-            "ZADDRESS": address.encode("utf-8") if address_is_blob else address,
-            "ZISO_COUNTRY_CODE": None if is_email else country_code(address),
+            "ZADDRESS": address.encode("utf-8") if address_is_blob and address is not None else address,
+            "ZISO_COUNTRY_CODE": None if is_email or address is None else country_code(address),
             "ZSERVICE_PROVIDER": _PROVIDERS[call.service],
             "ZUNIQUE_ID": str(uuid.UUID(bytes=rng.randbytes(16))).upper(),
             "ZLOCALPARTICIPANTUUID": sim,
             "ZOUTGOINGLOCALPARTICIPANTUUID": sim,
         })
         core.saw("CallRecord", pk)
-        if handles_table and join:
+        if handles_table and join and address is not None:
             if address not in handles:
                 handles[address] = handles_table.insert({
                     "Z_ENT": core.ent("Handle"), "Z_OPT": 1,
@@ -133,8 +142,10 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
     return written
 
 
-def contact_name(cards: list, address: str) -> Optional[str]:
-    """The name a reader should show for an address, from the cards in this backup."""
+def contact_name(cards: list, address: Optional[str]) -> Optional[str]:
+    """The name a reader should show for an address, from the cards in this backup (None: no address)."""
+    if not address:
+        return None
     digits = "".join(ch for ch in address if ch.isdigit())
     for card in cards:
         if any(address == e.lower() for _, e in card.emails):
