@@ -50,8 +50,8 @@ def silent_amr(seconds: int) -> bytes:
 def transcript_archive(text: str, seconds: int) -> bytes:
     """A ``<ROWID>.transcript`` file holding ``text``, its words spread evenly over ``seconds``.
 
-    Confidence is fixed rather than drawn, so adding transcripts doesn't move the
-    random draws that the rest of a backup's contents come from.
+    Confidence is fixed rather than drawn, so adding a transcript doesn't move the
+    random draws that the other voicemails come from.
     """
     objects: list = ["$null"]
 

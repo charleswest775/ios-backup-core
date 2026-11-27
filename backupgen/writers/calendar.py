@@ -420,7 +420,11 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
 
 
 def step(ctx: StepContext) -> Optional[Written]:
-    """Calendar.sqlitedb, from a random generator of its own. Returns the events written, with ``.calendars``."""
+    """Calendar.sqlitedb, from a random generator of its own. Returns the events written, with ``.calendars``.
+
+    Its seed predates generate.area_random and is kept, so the data stays as it was: it doesn't
+    follow --seed and is the same plain and encrypted.
+    """
     persona, snapshot = ctx.persona, ctx.snapshot
     if persona.calendars is None:
         return None

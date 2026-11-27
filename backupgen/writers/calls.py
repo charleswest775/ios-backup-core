@@ -148,12 +148,11 @@ def step(ctx: StepContext) -> Optional[list[WrittenCall]]:
     """CallHistory.storedata, which only encrypted backups hold. Returns the calls written."""
     if ctx.persona.calls is None and ctx.persona.voicemails is None:
         return None
-    # The rng draws happen either way, so encrypting a backup doesn't change its other contents.
+    if not ctx.encrypted:
+        return None  # nothing else draws from Calls' random numbers, so leaving it out changes nothing else
     calls: list[WrittenCall] = []
     history = ctx.build("CallHistory.storedata",
                         lambda db: calls.extend(populate(db, ctx.persona, ctx.snapshot, ctx.rng)))
-    if not ctx.encrypted:
-        return None
     ctx.writer.add_file("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata", history)
     return calls
 

@@ -44,9 +44,15 @@ ENCRYPTED_ONLY = {"calls", "browser_history", "health"}
 
 # The write steps, in the order they run (see writers/context.py). Each builds its data type's
 # database(s), adds its files to the backup and returns what its part of the answer key needs,
-# kept under its data type (None: the backup holds none). They share one random generator in this
-# order, so a new writer goes last and draws from a generator of its own, as Calendar and Voice
-# Memos do: adding it to a pack then leaves the rest of that pack's backups as they were.
+# kept under its data type (None: the backup holds none).
+#
+# Random numbers: each step draws only from its own stream, ctx.rng = area_random(seed, <its data
+# type>), never from another step's or a shared one, so adding a message, a call or a photo to a
+# pack changes only that data type's databases, files and answer key. Every new step follows the
+# same rule: it draws only from its ctx.rng, and anything one step leaves for another
+# (ctx.contact_guids) is data, not random numbers. Calendar and Voice Memos keep the fixed seeds
+# they had before this rule ("<persona>/<snapshot>/calendar" and ".../voice_memos", which don't
+# follow --seed), as do Photos' People album and each deleted note, so their data stayed as it was.
 STEPS = (
     ("messages", messages_writer.step),
     ("contacts", contacts_writer.step),
@@ -66,6 +72,17 @@ def default_seed(persona_id: str, snapshot_id: str, encrypted: bool) -> int:
     return int.from_bytes(digest[:8], "big")
 
 
+def area_random(seed: int, area: str) -> random.Random:
+    """The random numbers of one data type ("area", e.g. "messages") in the snapshot with this seed.
+
+    Made from the seed and the area's name only, so no area's draws depend on another's, and,
+    like the seed, they differ between plain and encrypted backups and follow --seed. A string
+    seed is hashed with SHA-512 by ``random``, never with hash(), so they are the same in every
+    process whatever PYTHONHASHSEED is.
+    """
+    return random.Random(f"backupgen/{seed}/{area}")
+
+
 def generate(
     persona_id: str,
     snapshot_id: str,
@@ -80,7 +97,7 @@ def generate(
     persona = persona or load_persona(persona_id)
     snapshot = persona.snapshots[snapshot_id]
     seed = default_seed(persona.id, snapshot_id, password is not None) if seed is None else seed
-    rng = random.Random(seed)
+    rng = random.Random(seed)  # only the container's seed comes from here; each step has its own (area_random)
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -99,9 +116,11 @@ def generate(
                           password=password, iterations=iterations, seed=rng.getrandbits(64), host=snapshot.host)
 
     with tempfile.TemporaryDirectory(prefix="backupgen-") as tmp:
-        ctx = StepContext(persona, snapshot, rng, writer, media.Renderer(persona, snapshot), Path(tmp))
+        renderer, contact_guids = media.Renderer(persona, snapshot), {}
         written = {}
         for kind, step in STEPS:
+            # What the steps share, with this step's own random numbers.
+            ctx = StepContext(persona, snapshot, area_random(seed, kind), writer, renderer, Path(tmp), contact_guids)
             result = step(ctx)
             if result is not None:
                 written[kind] = result

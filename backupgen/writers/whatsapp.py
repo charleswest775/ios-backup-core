@@ -776,7 +776,6 @@ def step(ctx: StepContext) -> Optional[Store]:
     """WhatsApp's databases, preferences and media. Returns them, or None when no chat has messages."""
     if ctx.persona.whatsapp is None:
         return None
-    # The last step to draw from ctx.rng, so adding WhatsApp to a pack leaves the rest of its backups as they were.
     store = write(ctx.tmp, ctx.persona, ctx.snapshot, ctx.rng, ctx.renderer)
     for (domain, path), data in store.files.items():
         ctx.writer.add_file(domain, path, data)

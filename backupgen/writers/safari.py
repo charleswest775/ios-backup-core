@@ -82,11 +82,10 @@ def step(ctx: StepContext) -> Optional[list[WrittenVisit]]:
     """History.db, which only encrypted backups hold. Returns the visits written."""
     if ctx.persona.visits is None:
         return None
-    # The rng draws happen either way, so encrypting a backup doesn't change its other contents.
+    if not ctx.encrypted:
+        return None  # nothing else draws from Safari's random numbers, so leaving it out changes nothing else
     visits: list[WrittenVisit] = []
     history = ctx.build("History.db", lambda db: visits.extend(populate(db, ctx.persona, ctx.snapshot, ctx.rng)))
-    if not ctx.encrypted:
-        return None
     ctx.writer.add_file("HomeDomain", "Library/Safari/History.db", history)
     return visits
 

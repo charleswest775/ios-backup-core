@@ -197,7 +197,11 @@ def write(tmp: Path, persona: Persona, snapshot: Snapshot, rng: random.Random) -
 
 
 def step(ctx: StepContext) -> Optional[Store]:
-    """Voice Memos' database and recordings, from a random generator of their own. Returns them."""
+    """Voice Memos' database and recordings, from a random generator of their own. Returns them.
+
+    Its seed predates generate.area_random and is kept, so the data stays as it was: it doesn't
+    follow --seed and is the same plain and encrypted.
+    """
     persona, snapshot = ctx.persona, ctx.snapshot
     if persona.voice_memos is None:
         return None

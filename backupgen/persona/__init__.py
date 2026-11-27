@@ -19,6 +19,14 @@ A pack is a folder under ``personas/``:
 Each of those modules in this package documents its files' format and parses them; core.py
 holds what they share (Persona, Snapshot, Contact, PersonaError) and load_persona.
 
+The generator adds made-up detail (the seconds of a message, ids, file names) from random
+numbers, and each data type has its own (generate.area_random): adding a chat to a pack
+changes only its Messages database, attachments and the messages part of the answer key,
+never another data type's, so packs can grow one data type at a time. (What a pack file says
+about another data type still shows there: a voicemail with no missed call in calls.txt adds
+one to call history.) Each new data type draws only from its own numbers too (see
+generate.STEPS).
+
 Real dates are written as they happened. ``shift_years`` moves them onto the
 device-era calendar (Einstein's 1905 plays out in 2021), so that backup formats
 and iOS versions line up with real years. Wall-clock times are kept in the
