@@ -46,12 +46,13 @@ EXPECTED = "expected.json"
 # type>), never from another step's or a shared one, so adding a message, a call or a photo to a
 # pack changes only the contents of that data type's databases, files and answer key. Every new
 # step follows the same rule: it draws only from its ctx.rng, and anything one step leaves for
-# another (ctx.contact_guids) is data, not random numbers. Calendar and Voice Memos keep the fixed
+# another depends only on the seed and the pack, never on another step's draws (ctx.contact_guids:
+# each card's guid on the seed and that card's id). Calendar and Voice Memos keep the fixed
 # seeds they had before this rule ("<persona>/<snapshot>/calendar" and ".../voice_memos", which
 # don't follow --seed), as do Photos' People album and each deleted note, so their data stayed as
 # it was. So the order of the steps changes no data, only the order of the answer key's sections.
 STEPS = (
-    contacts_writer.STEP,  # first: later steps use its cards (calls, voicemail) and their guids (photos)
+    contacts_writer.STEP,  # first, for Photos: the People album links groups to its cards' guids
     messages_writer.STEP,
     calls_writer.STEP,
     voicemail_writer.STEP,

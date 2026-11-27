@@ -15,7 +15,8 @@ made from the snapshot's seed and the step's data type) and draws only from that
 draws move another's, and adding to one data type in a pack changes the contents of no other
 data type's databases, files or answer key. Within a step, the order of its draws still decides
 its contents. A new writer follows the same rule (see generate.STEPS), and anything one step
-leaves for another (ctx.contact_guids) is data from the pack, not random numbers.
+leaves for another depends only on the seed and the pack, never on another step's draws
+(ctx.contact_guids: each card's guid on the seed and that card's id).
 
 The container (BackupWriter: keybag, file keys, inode numbers, Status.plist) has a generator
 of its own, as before, drawn in file order: adding a file renumbers the inodes in Manifest.db

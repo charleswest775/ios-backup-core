@@ -79,7 +79,7 @@ class Persona:
     owner: Contact
     device_name: str
     contacts: dict[str, Contact]  # every card but the owner's, by id (contacts.py)
-    chats: list[Chat]  # this and the attributes from calls on are filled by the areas' loaders (AREAS)
+    chats: list[Chat]  # filled by the areas' loaders (AREAS), as are calls to voice_memos below
     snapshots: dict[str, Snapshot]
     timeline: list[dict]
     folder: Path

@@ -7,7 +7,7 @@ A pack is a folder under ``personas/``:
   ``{"<data type>": {"<key>": value}}`` (``{}`` when left out), read as ``Persona.options`` and
   ``Snapshot.options``. A snapshot's value for a key overrides the pack's. Each writer declares
   the keys it reads, with their defaults, in its STEP (``Step.options``; the list of every key is
-  ``generate.declared_options()``, empty so far) and reads them merged as ``ctx.options``.
+  ``generate.declared_options()``) and reads them merged as ``ctx.options``.
   Generating from a pack whose options name a data type or key no writer declares fails with a
   PersonaError naming it, so a typo can't quietly leave a case out.
 - ``contacts.json`` (optional): more cards, after persona.json's ``contacts`` (contacts.py).
@@ -38,9 +38,10 @@ numbers, and each data type has its own (generate.area_random): adding a chat to
 changes only the contents of its Messages database and attachments and the messages part of
 the answer key, never another data type's, so packs can grow one data type at a time. (What a
 pack file says about another data type still shows there: a voicemail with no missed call in
-calls.txt adds one to call history.) The backup's own files still move: Manifest.db's inode
-numbers and, in an encrypted backup, the keys and so the raw bytes of files after a new one
-(writers/context.py). Each new data type draws only from its own numbers too (see
+calls.txt adds that call to call history, and, being one more draw in Calls' own random
+numbers, re-draws the seconds and ids of the calls after it.) The backup's own files still
+move: Manifest.db's inode numbers and, in an encrypted backup, the keys and so the raw bytes of
+files after a new one (writers/context.py). Each new data type draws only from its own numbers too (see
 generate.STEPS).
 
 Real dates are written as they happened. ``shift_years`` moves them onto the

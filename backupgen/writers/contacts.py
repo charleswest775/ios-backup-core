@@ -54,6 +54,7 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
     people, values, labels = db.table("ABPerson"), db.table("ABMultiValue"), db.table("ABMultiValueLabel")
     store = db.table("ABStore")
     label_ids = {key: labels.insert({"value": value}) for key, value in LABELS.items()}
+    # Must stay the first draw from rng: every card's guid depends on it, and so Photos' ZPERSONURI.
     base = rng.getrandbits(64)
     owner_rowid = None
     rowids: dict[str, int] = {}
@@ -138,5 +139,7 @@ def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
     return {"contacts": answer_key(persona, written.get("contacts", []))}
 
 
-# Runs first (generate.STEPS): calls and voicemail name callers from its cards, Photos links People to them.
+# Runs first (generate.STEPS) only for Photos, whose People album links groups to its cards' guids
+# (ctx.contact_guids). Calls and voicemail name callers from its cards too, but in their answer-key
+# sections, which are built after every step has run.
 STEP = Step("contacts", step, sections)

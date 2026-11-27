@@ -3,7 +3,8 @@
 - ``voicemails.txt`` (optional): one voicemail per line under a date,
   ``09:40 besso 38s: what they said``: a contact id or an E.164 number, how long it is,
   then its transcript. Each voicemail also leaves a missed call in call history, as on a
-  real phone (writers/calls.py).
+  real phone (writers/calls.py), unless calls.txt has it already; a new one, being one more
+  call in Calls' random numbers, re-draws the seconds and ids of the calls after it.
 """
 
 from __future__ import annotations
