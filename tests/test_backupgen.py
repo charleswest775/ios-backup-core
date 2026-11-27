@@ -666,6 +666,47 @@ def test_shipped_packs_options_are_all_declared():
         check_options(load_persona(persona_id))
 
 
+def test_a_step_gets_a_copy_of_its_options(tmp_path):
+    """A step that changed a list in ctx.options would otherwise change its Step's default and the pack's
+    options, and with them every later snapshot and run."""
+    from backupgen import generate as gen
+    from backupgen.writers.context import Step
+
+    step = Step("notes", lambda ctx: None, lambda persona, written: {},
+                options={"folders": ["Trips"], "nested": {"x": []}})
+    persona = load_persona("p", root=_with_options(tmp_path, {"notes": {"pinned": [1]}}))
+    options = gen.step_options(step, persona, persona.snapshots["ios15"])
+    options["folders"].append("Work")
+    options["nested"]["x"].append(1)
+    options["pinned"].append(2)
+    assert step.options == {"folders": ["Trips"], "nested": {"x": []}}
+    assert persona.options == {"notes": {"pinned": [1]}}
+    assert gen.step_options(step, persona, persona.snapshots["ios15"]) == {
+        "folders": ["Trips"], "nested": {"x": []}, "pinned": [1]}
+
+
+@pytest.mark.parametrize("flags", [{"encrypted_only": True}, {"on_phone": lambda persona: True}])
+def test_on_phone_goes_with_encrypted_only(flags):
+    """Without on_phone, an encrypted-only data type would be "none" rather than "encrypted_only" in a plain backup."""
+    from backupgen.writers.context import Step
+
+    with pytest.raises(ValueError, match="x: on_phone goes with encrypted_only"):
+        Step("x", lambda ctx: None, lambda persona, written: {}, **flags)
+
+
+@pytest.mark.parametrize("area_fields, message", [
+    ({"calls": []}, "persona/safari.py: calls already filled by persona/calls.py"),
+    ({"bogus": 1, "visits": []}, "persona/safari.py: Persona has no attribute bogus "),
+    ({"options": {}}, "persona/safari.py: options already filled by load_persona"),
+])
+def test_an_area_fills_only_its_own_persona_attributes(monkeypatch, area_fields, message):
+    from backupgen.persona import AreaData, safari
+
+    monkeypatch.setattr(safari, "load", lambda pack: AreaData(area_fields))
+    with pytest.raises(PersonaError, match=message):
+        load_persona("testpersona")
+
+
 @pytest.mark.parametrize("value", [[], "fast", 1, False])
 @pytest.mark.parametrize("on, where", [("persona", "persona.json"), ("snapshot", "persona.json snapshot ios15")])
 def test_options_must_be_a_json_object(tmp_path, value, on, where):

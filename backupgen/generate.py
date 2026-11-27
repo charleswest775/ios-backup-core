@@ -11,6 +11,7 @@ compare against it are independent of the code under test.
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import random
@@ -93,8 +94,12 @@ def declared_options() -> dict[str, dict]:
 
 
 def step_options(step: Step, persona: Persona, snapshot: Snapshot) -> dict:
-    """A step's options for one snapshot: its Step.options, then the pack's options[kind], then the snapshot's."""
-    return {**step.options, **persona.options.get(step.kind, {}), **snapshot.options.get(step.kind, {})}
+    """A step's options for one snapshot: its Step.options, then the pack's options[kind], then the snapshot's.
+
+    A deep copy, so a list or dict in it isn't shared with the Step's defaults or the pack's options
+    (and through them with later snapshots and runs).
+    """
+    return copy.deepcopy({**step.options, **persona.options.get(step.kind, {}), **snapshot.options.get(step.kind, {})})
 
 
 def check_options(persona: Persona) -> None:

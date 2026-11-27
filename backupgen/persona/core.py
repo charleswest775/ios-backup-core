@@ -15,6 +15,7 @@ Persona; nothing else here changes.
 
 from __future__ import annotations
 
+import dataclasses
 import importlib
 import json
 import re
@@ -219,11 +220,22 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
         )
     pack = Pack(persona_id, folder, contacts, owner, tz, raw["shift_years"])
     fields: dict = {}
+    filled_by: dict[str, str] = {}  # Persona attribute -> the area module that filled it
+    attributes = {f.name for f in dataclasses.fields(Persona)}
     records: list = []
     sent: list = []
     # The area modules import this one, so they're imported here rather than at the top.
     for name in AREAS:
         area = importlib.import_module(f"backupgen.persona.{name}").load(pack)
+        where = f"persona/{name}.py"
+        unknown = sorted(area.fields.keys() - attributes)
+        if unknown:
+            raise PersonaError(f"{where}: Persona has no attribute {', '.join(unknown)} "
+                               f"(add a line for each to Persona in core.py)")
+        clash = sorted(area.fields.keys() & filled_by.keys())
+        if clash:
+            raise PersonaError(f"{where}: {', '.join(clash)} already filled by {filled_by[clash[0]]}")
+        filled_by.update(dict.fromkeys(area.fields, where))
         fields.update(area.fields)
         records += area.records
         sent += area.sent_photos
@@ -239,7 +251,7 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
             raise PersonaError(f"{record.where}: {record.real_time.date()} is outside the persona's period {start}–{end}")
     timeline_path = folder / "timeline.json"
     research = _read_json(timeline_path) if timeline_path.exists() else {}
-    return Persona(
+    own = dict(
         id=raw["id"],
         name=raw["name"],
         summary=raw.get("summary", ""),
@@ -256,8 +268,12 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
         folder=folder,
         avoid=research.get("avoid", []),
         options=options,
-        **fields,
     )
+    clash = sorted(fields.keys() & own.keys())
+    if clash:
+        raise PersonaError(f"{filled_by[clash[0]]}: {', '.join(clash)} already filled by load_persona "
+                           f"(persona.json or timeline.json)")
+    return Persona(**own, **fields)
 
 
 def list_personas(root: Path = PERSONAS_DIR) -> list[str]:

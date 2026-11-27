@@ -52,7 +52,8 @@ class StepContext:
     # People album groups to cards. Empty until the contacts step has run.
     contact_guids: dict[str, Optional[str]] = field(default_factory=dict)
     # This step's options for this snapshot: its Step's defaults, then the pack's options[kind],
-    # then the snapshot's, key by key (generate.step_options).
+    # then the snapshot's, key by key (generate.step_options). Read-only: it's a deep copy made
+    # for this step, so changing it changes nothing else, but a step reads options, never sets them.
     options: dict[str, Any] = field(default_factory=dict)
 
     @property
@@ -88,3 +89,8 @@ class Step:
     # The pack options it reads (persona.json "options" under its kind), each with its default; the
     # step gets them merged as ctx.options. Document each key beside its writer's STEP.
     options: Mapping[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        if self.encrypted_only != (self.on_phone is not None):
+            raise ValueError(f"{self.kind}: on_phone goes with encrypted_only (both or neither), so an "
+                             f"unencrypted backup can say whether the phone has any")
