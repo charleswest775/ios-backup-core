@@ -26,7 +26,7 @@ from typing import TYPE_CHECKING, Optional
 from zoneinfo import ZoneInfo
 
 from backupgen import PERSONAS_DIR
-from backupgen.container import Host
+from backupgen.container import HOST_KINDS, App, Host
 from backupgen.persona.contacts import Contact, load_cards
 
 if TYPE_CHECKING:
@@ -74,6 +74,8 @@ class Snapshot:
     container: str  # harvested container shape version
     host: Host
     options: dict = field(default_factory=dict)  # the snapshot's "options": {data type: {key: value}}
+    # The apps installed on the phone at the time: the snapshot's "apps", else persona.json's.
+    apps: list[App] = field(default_factory=list)
 
 
 @dataclass
@@ -155,6 +157,55 @@ def _options(raw: dict, where: str) -> dict:
     return options
 
 
+_APP_KEYS = {"id": str, "name": str, "version": str, "store": bool}
+
+
+def _apps(raw: dict, where: str, default: Optional[list] = None) -> list:
+    """The ``apps`` of the pack or of a snapshot: the apps installed on the phone, which fill Info.plist's
+    "Installed Applications" and "Applications" and Manifest.plist's "Applications".
+
+    Each is ``{"id": bundle id, "name": its .app's name, "version": CFBundleVersion (default "1.0"),
+    "store": from the App Store, so Info.plist keeps its store metadata (default true)}``. A
+    snapshot's list replaces the pack's (``default``); left out of both, the phone lists no apps.
+    """
+    if "apps" not in raw:
+        return list(default or [])
+    apps = raw["apps"]
+    if not isinstance(apps, list):
+        raise PersonaError(f"{where}: apps should be a JSON list ([...]), not {json.dumps(apps)}")
+    out: list[App] = []
+    for number, app in enumerate(apps, 1):
+        here = f"{where}: apps[{number}]"
+        if not isinstance(app, dict):
+            raise PersonaError(f"{here} should be a JSON object, not {json.dumps(app)}")
+        unknown = sorted(app.keys() - _APP_KEYS.keys())
+        if unknown:
+            raise PersonaError(f"{here}: unknown key {unknown[0]!r} (one of: {', '.join(_APP_KEYS)})")
+        for key in ("id", "name"):
+            if not app.get(key):
+                raise PersonaError(f"{here}: needs an {key!r}")
+        for key, kind in _APP_KEYS.items():
+            if key in app and not isinstance(app[key], kind):
+                raise PersonaError(f"{here}: {key} should be a {kind.__name__}, not {json.dumps(app[key])}")
+        if any(a.bundle_id == app["id"] for a in out):
+            raise PersonaError(f"{here}: {app['id']} is listed twice")
+        out.append(App(app["id"], app["name"], app.get("version", "1.0"), app.get("store", True)))
+    return out
+
+
+def _host(raw: dict, where: str) -> Host:
+    host = raw.get("host", {})
+    if not isinstance(host, dict):
+        raise PersonaError(f"{where}: host should be a JSON object ({{...}}), not {json.dumps(host)}")
+    try:
+        return Host(**host)
+    except TypeError as e:  # a key Host doesn't have
+        raise PersonaError(f"{where}: host: {e}") from None
+    except ValueError:
+        raise PersonaError(f"{where}: host: unknown kind {host.get('kind')!r} "
+                           f"(one of: {', '.join(HOST_KINDS)})") from None
+
+
 def _read_json(path: Path) -> object:
     """A pack's JSON file, refusing a key that appears twice in one object.
 
@@ -212,6 +263,7 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
     owner = contacts.pop(raw["owner"])
     tz = ZoneInfo(raw["timezone"])
     options = _options(raw, "persona.json")
+    apps = _apps(raw, "persona.json")
     snapshots = {}
     for s in raw["snapshots"]:
         if s["id"] in snapshots:
@@ -225,8 +277,9 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
             product_name=s["product_name"],
             schema=s.get("schema", s["ios"]),
             container=s.get("container", s.get("schema", s["ios"])),
-            host=Host(**s.get("host", {})),
+            host=_host(s, f"persona.json snapshot {s['id']}"),
             options=_options(s, f"persona.json snapshot {s['id']}"),
+            apps=_apps(s, f"persona.json snapshot {s['id']}", apps),
         )
     pack = Pack(persona_id, folder, contacts, owner, tz, raw["shift_years"])
     fields: dict = {}

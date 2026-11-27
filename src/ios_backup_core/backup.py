@@ -422,6 +422,16 @@ def _temp_name(domain: str, relative_path: str) -> str:
 # Factory helpers
 # ---------------------------------------------------------------------------
 
+def _status_date(backup_dir: str) -> Optional[datetime]:
+    """Status.plist's "Date" (UTC, as plistlib reads it), or None if it's missing, damaged or has none."""
+    try:
+        with open(os.path.join(backup_dir, "Status.plist"), "rb") as f:
+            date = plistlib.load(f).get("Date")
+    except Exception:
+        return None
+    return date if isinstance(date, datetime) else None
+
+
 def _read_backup_info(backup_dir: str) -> Optional[dict]:
     """Read metadata from a backup directory. Returns None if not a valid backup.
 
@@ -448,7 +458,9 @@ def _read_backup_info(backup_dir: str) -> Optional[dict]:
                 "product_version": plist.get("Product Version", "Unknown"),
                 "serial_number": plist.get("Serial Number", ""),
                 "phone_number": plist.get("Phone Number", ""),
-                "last_backup": plist.get("Last Backup Date", ""),
+                # A backup made with pymobiledevice3 (OpenExtract's) has no "Last Backup Date" in
+                # Info.plist; the last Status.plist, which the iPhone writes, still has the date.
+                "last_backup": plist.get("Last Backup Date") or _status_date(backup_dir) or "",
             }
             if isinstance(info["last_backup"], datetime):
                 info["last_backup"] = info["last_backup"].isoformat()

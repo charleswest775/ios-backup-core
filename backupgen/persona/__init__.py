@@ -10,6 +10,11 @@ A pack is a folder under ``personas/``:
   ``generate.declared_options()``) and reads them merged as ``ctx.options``.
   Generating from a pack whose options name a data type or key no writer declares fails with a
   PersonaError naming it, so a typo can't quietly leave a case out.
+  Each snapshot's ``host`` says what made the backup, which decides Info.plist's keys:
+  ``{"kind": "finder", "macos_version": ..., "macos_build": ...}`` (the default) or
+  ``{"kind": "pymobiledevice3"}``, the way OpenExtract backs up (container.Host). The pack and each
+  snapshot may also have ``apps``, the apps installed on the phone (core._apps); a snapshot's list
+  replaces the pack's.
 - ``contacts.json`` (optional): more cards, after persona.json's ``contacts`` (contacts.py).
   Cards are Contacts data, the contacts lane's: a person a chat, a shared note, an event or the
   People album names needs one, and adding one changes Contacts. Call history and voicemail
