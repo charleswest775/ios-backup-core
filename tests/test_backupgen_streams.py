@@ -1,7 +1,7 @@
 """backupgen gives each data type its own random numbers (generate.area_random).
 
-So adding a chat, a contact, a call, a voicemail, a note, a Safari visit, a photo, a WhatsApp chat,
-a calendar event or a voice memo to a pack (one case per writer) changes only the contents of that
+So adding a chat, a contact, a call, a voicemail, a note (to NoteStore or the old notes.sqlite), a
+Safari visit, a photo, a WhatsApp chat, a calendar event or a voice memo to a pack (one case per writer) changes only the contents of that
 data type's part of the backup and of its answer key (the
 contact goes before a card the People album links to, so Photos is checked for leaks through
 ctx.contact_guids); the same snapshot comes out byte for byte the same in any
@@ -100,6 +100,12 @@ def _add_note(pack: Path) -> None:
         "created: 2021-01-05 09:00\nmodified: 2021-01-05 09:30\n\nAdded note\n[ ] One\n[x] Two\n", encoding="utf-8")
 
 
+def _add_legacy_note(pack: Path) -> None:
+    # Before every other legacy note, so all of notes.sqlite's draws move.
+    (pack / "notes" / "added-legacy.txt").write_text(
+        "store: legacy\ncreated: 2021-01-01 09:00\n\nAdded old note\nKept in notes.sqlite\n", encoding="utf-8")
+
+
 def _add_voicemail(pack: Path) -> None:
     path = pack / "voicemails.txt"
     path.write_text("== 2021-01-04\n10:00 casey 12s: A voicemail the streams test added.\n"
@@ -175,6 +181,9 @@ CASES = {
               lambda domain, path: (domain, path) == ("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata")),
     "notes": (_add_note, "notes", {"notes"},
               lambda domain, path: domain == "AppDomainGroup-group.com.apple.notes"),
+    # Part of Notes: a note in the old notes.sqlite shows in "notes" and changes only that file.
+    "legacy_notes": (_add_legacy_note, "notes", {"notes"},
+                     lambda domain, path: (domain, path) == ("HomeDomain", "Library/Notes/notes.sqlite")),
     # A voicemail with no missed call in calls.txt adds that call to call history, and, being one
     # more draw in Calls' own numbers, re-draws the seconds and ids of the calls after it, so Calls
     # may change too. This one is dated before every call, so they all move;
@@ -348,6 +357,7 @@ _DATABASES = {
     "calls": ("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata"),
     "voicemail": ("HomeDomain", "Library/Voicemail/voicemail.db"),
     "notes": ("AppDomainGroup-group.com.apple.notes", "NoteStore.sqlite"),
+    "legacy_notes": ("HomeDomain", "Library/Notes/notes.sqlite"),
     "browser_history": ("HomeDomain", "Library/Safari/History.db"),
     "photos": ("CameraRollDomain", "Media/PhotoData/Photos.sqlite"),
 }

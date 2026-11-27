@@ -8,6 +8,7 @@
   "real_period": ["2021-01-01", "2025-12-31"],
   "device_name": "Sam's iPhone",
   "owner": "sam",
+  "options": {"notes": {"placeholders": 1}},
   "contacts": [
     {"id": "sam", "first": "Sam", "last": "Example", "phones": [["mobile", "+44 7700 900001"]], "emails": [["home", "sam@example.org"]]},
     {"id": "riley", "first": "Riley", "last": "Sample", "nickname": "Ri", "phones": [["mobile", "+44 7700 900002"]], "emails": [["home", "riley@example.org"]], "handle": "riley@example.org"},

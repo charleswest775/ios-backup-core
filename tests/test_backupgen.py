@@ -178,7 +178,10 @@ def test_steps_declare_every_data_type_once():
 
     kinds = [step.kind for step in gen.STEPS]
     assert len(kinds) == len(set(kinds)) and set(kinds).isdisjoint(gen.PLANNED)
-    assert set(gen.DATA_TYPES) == set(kinds) | set(gen.PLANNED)
+    # A step that's part of another data type (legacy_notes: notes.sqlite's notes are Notes) has no entry of its own
+    parts = {step.kind: step.part_of for step in gen.STEPS if step.part_of}
+    assert parts == {"legacy_notes": "notes"} and set(parts.values()) <= set(kinds) - set(parts)
+    assert set(gen.DATA_TYPES) == (set(kinds) - set(parts)) | set(gen.PLANNED)
     assert gen.ENCRYPTED_ONLY == {"calls", "browser_history", "health"}
     assert kinds[0] == "contacts"  # later steps use its cards
 
@@ -452,6 +455,7 @@ def _pack(tmp_path, chat_text):
     (folder / "chats").mkdir(parents=True)
     source = json.loads((SCHEMAS_DIR.parent / "personas" / "testpersona" / "persona.json").read_text(encoding="utf-8"))
     source["id"] = "p"
+    source.pop("options", None)  # the test persona's own (a Notes placeholder); these packs have none
     (folder / "persona.json").write_text(json.dumps(source), encoding="utf-8")
     (folder / "chats" / "c.txt").write_text(chat_text, encoding="utf-8")
     return folder.parent
@@ -592,7 +596,7 @@ def _with_options(tmp_path, persona_options=None, snapshot_options=None):
 
 
 def test_options_are_by_data_type_and_empty_when_left_out(tmp_path):
-    persona = load_persona("testpersona")
+    persona = load_persona("p", root=_with_options(tmp_path / "none"))  # testpersona's people, no options
     assert persona.options == {} and all(s.options == {} for s in persona.snapshots.values())
     persona = load_persona("p", root=_with_options(tmp_path, {"notes": {"any": [1, {"nested": True}]}}, {"calls": {"x": 1}}))
     assert persona.options == {"notes": {"any": [1, {"nested": True}]}}
@@ -645,16 +649,16 @@ def test_a_step_reads_its_options_with_snapshot_over_pack_over_defaults(tmp_path
             return step.run(ctx)
         return run
 
-    steps = [dataclasses.replace(s, run=spy(s), options={"a": 1, "b": 2, "c": 3} if s.kind == "notes" else s.options)
+    steps = [dataclasses.replace(s, run=spy(s), options={**s.options, "a": 1, "b": 2, "c": 3} if s.kind == "notes" else s.options)
              for s in gen.STEPS]
     monkeypatch.setattr(gen, "STEPS", tuple(steps))
-    assert gen.declared_options()["notes"] == {"a": 1, "b": 2, "c": 3}
+    assert gen.declared_options()["notes"] == {"placeholders": 0, "a": 1, "b": 2, "c": 3}
     root = _with_options(tmp_path, {"notes": {"b": 20, "c": 30}}, {"notes": {"c": 300}})
     persona = load_persona("p", root=root)
     for snapshot in ("ios15", "ios17"):
         generate("p", snapshot, tmp_path / snapshot, persona=persona)
-    assert seen[("ios15", "notes")] == {"a": 1, "b": 20, "c": 300}
-    assert seen[("ios17", "notes")] == {"a": 1, "b": 20, "c": 30}
+    assert seen[("ios15", "notes")] == {"placeholders": 0, "a": 1, "b": 20, "c": 300}
+    assert seen[("ios17", "notes")] == {"placeholders": 0, "a": 1, "b": 20, "c": 30}
     assert all(options == gen.declared_options()[kind] for (_, kind), options in seen.items() if kind != "notes")
 
 

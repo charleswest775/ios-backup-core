@@ -142,8 +142,11 @@ def _notes(persona: Persona, w) -> None:
         title, _, body = note.text.partition("\n")
         pinned = ", pinned" if note.pinned else ""
         deleted = f" Deleted {note.deleted:%Y-%m-%d %H:%M}." if note.deleted else ""
+        where = "Old notes.sqlite (On My iPhone)" if note.store == "legacy" else note.folder
+        shape = f", text can't be read (ZDATA {note.unreadable})" if note.unreadable else ""
+        shape += ", empty snippet" if note.empty_snippet else ""
         w(f"### {title}\n")
-        w(f"*{note.folder}{pinned}. Created {note.created:%Y-%m-%d %H:%M}, modified {note.modified:%Y-%m-%d %H:%M}.{deleted} "
+        w(f"*{where}{pinned}{shape}. Created {note.created:%Y-%m-%d %H:%M}, modified {note.modified:%Y-%m-%d %H:%M}.{deleted} "
           f"File: `notes/{note.id}.txt`*\n")
         w("\n".join(f"> {line}" if line else ">" for line in body.strip("\n").split("\n")) + "\n")
 

@@ -1,0 +1,8 @@
+store: legacy
+created: 2021-01-03 10:00
+modified: 2021-01-20 19:30
+
+Gift ideas
+Riley: a good pen
+
+Jordan: maps & <old> guides
