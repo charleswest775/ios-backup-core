@@ -19,13 +19,12 @@
 
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from backupgen.persona.core import AreaData, Contact, Pack, PersonaError
+from backupgen.persona.core import AreaData, Contact, Pack, PersonaError, _read_json
 
 
 @dataclass
@@ -75,7 +74,7 @@ class PhotoPerson:
 
 def _parse_photos(path: Path) -> list[Photo]:
     photos, seen = [], set()
-    for n, raw in enumerate(json.loads(path.read_text(encoding="utf-8"))["photos"], 1):
+    for n, raw in enumerate(_read_json(path)["photos"], 1):
         where = f"{path.name} photo {n} ({raw.get('id', '?')})"
         if raw["id"] in seen:
             raise PersonaError(f"{where}: duplicate id")
@@ -114,7 +113,7 @@ _PETS = ("dog", "cat")
 
 def _parse_photo_people(path: Path, photos: list[Photo], contacts: dict[str, Contact]) -> list[PhotoPerson]:
     people: list[PhotoPerson] = []
-    for n, raw in enumerate(json.loads(path.read_text(encoding="utf-8")).get("people", []), 1):
+    for n, raw in enumerate(_read_json(path).get("people", []), 1):
         where = f"{path.name} person {n} ({raw.get('id', '?')})"
         if not raw.get("id") or any(p.id == raw["id"] for p in people):
             raise PersonaError(f"{where}: needs an id of its own")

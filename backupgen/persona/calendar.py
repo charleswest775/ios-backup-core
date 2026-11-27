@@ -42,7 +42,7 @@ from pathlib import Path
 from typing import Optional
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from backupgen.persona.core import AreaData, Contact, Pack, PersonaError
+from backupgen.persona.core import AreaData, Contact, Pack, PersonaError, _read_json
 
 CALENDAR_ACCOUNTS = ("icloud", "local", "subscribed", "holidays", "suggestions")
 FREQUENCIES = ("daily", "weekly", "monthly", "yearly")
@@ -395,7 +395,7 @@ def _parse_event(raw, n: int, calendars: dict[str, CalendarDef], contacts: dict[
 def _parse_calendar(path: Path, contacts: dict[str, Contact], owner: Contact,
                     tz: ZoneInfo) -> tuple[list[CalendarDef], list[EventDef]]:
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
+        raw = _read_json(path)
     except json.JSONDecodeError as e:
         raise PersonaError(f"{path.name}: not valid JSON ({e})") from None
     if not isinstance(raw, dict) or not isinstance(raw.get("calendars"), list) or not isinstance(raw.get("events", []), list):

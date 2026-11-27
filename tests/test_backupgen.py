@@ -500,6 +500,44 @@ def test_bad_chat_files_are_rejected(tmp_path, chat_text, message):
         load_persona("p", root=_pack(tmp_path, chat_text))
 
 
+def test_a_key_twice_in_persona_json_is_refused(tmp_path):
+    """JSON keeps only the last of two keys, so a second "options" would drop the first without a word."""
+    root = _pack(tmp_path, "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n")
+    path = root / "p" / "persona.json"
+    text = path.read_text(encoding="utf-8")
+    path.write_text('{"options": {"messagez": {"lane_a_case": true}}, ' + text[1:-1] + ', "options": {"calls": {}}}',
+                    encoding="utf-8")
+    with pytest.raises(PersonaError, match="persona.json: the key 'options' appears twice in one object"):
+        load_persona("p", root=root)
+
+
+@pytest.mark.parametrize("name", ["photos.json", "calendar.json", "timeline.json"])
+def test_a_key_twice_in_any_pack_json_file_is_refused(tmp_path, name):
+    root = _pack(tmp_path, "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n")
+    top = {"photos.json": "photos", "calendar.json": "calendars", "timeline.json": "events"}[name]
+    (root / "p" / name).write_text(f'{{"{top}": [{{"id": "a", "id": "b"}}]}}', encoding="utf-8")
+    with pytest.raises(PersonaError, match=f"{name}: the key 'id' appears twice in one object"):
+        load_persona("p", root=root)
+
+
+@pytest.mark.parametrize("change, message", [
+    (lambda d: d["contacts"].append({"id": "riley", "first": "Second", "phones": [["mobile", "+44 7700 900088"]]}),
+     "persona.json contact 5 \\(riley\\): duplicate id"),
+    (lambda d: d["contacts"].append({"first": "Nobody"}), 'persona.json contact 5: needs an "id"'),
+    (lambda d: d.update(owner="nobody"), "persona.json: the owner 'nobody' isn't one of the contacts"),
+    (lambda d: d["snapshots"].append(dict(d["snapshots"][0])), "persona.json snapshot ios15: duplicate id"),
+])
+def test_contacts_and_snapshots_need_ids_of_their_own(tmp_path, change, message):
+    """A second card with an id already taken used to replace the first card silently."""
+    root = _pack(tmp_path, "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n")
+    path = root / "p" / "persona.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    change(data)
+    path.write_text(json.dumps(data), encoding="utf-8")
+    with pytest.raises(PersonaError, match=message):
+        load_persona("p", root=root)
+
+
 def _with_options(tmp_path, persona_options=None, snapshot_options=None):
     """A pack whose persona.json has these "options" (None: left out), the second for its first snapshot."""
     root = _pack(tmp_path, "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n")

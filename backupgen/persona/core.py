@@ -186,6 +186,25 @@ def _options(raw: dict, where: str) -> dict:
     return options
 
 
+def _read_json(path: Path) -> object:
+    """A pack's JSON file, refusing a key that appears twice in one object.
+
+    ``json`` would keep the last one and drop the first without a word, so a second "options"
+    added in another place (which merges cleanly in git), or a field written twice, would quietly
+    undo the first.
+    """
+    def no_duplicates(pairs: list) -> dict:
+        obj: dict = {}
+        for key, value in pairs:
+            if key in obj:
+                raise PersonaError(f"{path.name}: the key {key!r} appears twice in one object "
+                                   f"(JSON would keep only the last)")
+            obj[key] = value
+        return obj
+
+    return json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=no_duplicates)
+
+
 def _seconds(text: str, where: str) -> int:
     match = _DURATION.match(text)
     if not text or not match:
@@ -216,13 +235,23 @@ def _check_who(who: str, contacts: dict[str, Contact], where: str) -> None:
 
 def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
     folder = root / persona_id
-    raw = json.loads((folder / "persona.json").read_text(encoding="utf-8"))
-    contacts = {c["id"]: _contact(c) for c in raw["contacts"]}
+    raw = _read_json(folder / "persona.json")
+    contacts: dict[str, Contact] = {}
+    for n, card in enumerate(raw["contacts"], 1):
+        if not card.get("id"):
+            raise PersonaError(f'persona.json contact {n}: needs an "id"')
+        if card["id"] in contacts:
+            raise PersonaError(f"persona.json contact {n} ({card['id']}): duplicate id")
+        contacts[card["id"]] = _contact(card)
+    if raw["owner"] not in contacts:
+        raise PersonaError(f"persona.json: the owner {raw['owner']!r} isn't one of the contacts")
     owner = contacts.pop(raw["owner"])
     tz = ZoneInfo(raw["timezone"])
     options = _options(raw, "persona.json")
     snapshots = {}
     for s in raw["snapshots"]:
+        if s["id"] in snapshots:
+            raise PersonaError(f"persona.json snapshot {s['id']}: duplicate id")
         snapshots[s["id"]] = Snapshot(
             id=s["id"],
             backup_date=datetime.fromisoformat(s["backup_date"]).replace(tzinfo=tz),
@@ -256,7 +285,7 @@ def load_persona(persona_id: str, root: Path = PERSONAS_DIR) -> Persona:
         if not start <= record.real_time.date() <= end:
             raise PersonaError(f"{record.where}: {record.real_time.date()} is outside the persona's period {start}–{end}")
     timeline_path = folder / "timeline.json"
-    research = json.loads(timeline_path.read_text(encoding="utf-8")) if timeline_path.exists() else {}
+    research = _read_json(timeline_path) if timeline_path.exists() else {}
     return Persona(
         id=raw["id"],
         name=raw["name"],
