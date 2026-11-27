@@ -30,10 +30,12 @@ in Persona.
 
 The generator adds made-up detail (the seconds of a message, ids, file names) from random
 numbers, and each data type has its own (generate.area_random): adding a chat to a pack
-changes only its Messages database, attachments and the messages part of the answer key,
-never another data type's, so packs can grow one data type at a time. (What a pack file says
-about another data type still shows there: a voicemail with no missed call in calls.txt adds
-one to call history.) Each new data type draws only from its own numbers too (see
+changes only the contents of its Messages database and attachments and the messages part of
+the answer key, never another data type's, so packs can grow one data type at a time. (What a
+pack file says about another data type still shows there: a voicemail with no missed call in
+calls.txt adds one to call history.) The backup's own files still move: Manifest.db's inode
+numbers and, in an encrypted backup, the keys and so the raw bytes of files after a new one
+(writers/context.py). Each new data type draws only from its own numbers too (see
 generate.STEPS).
 
 Real dates are written as they happened. ``shift_years`` moves them onto the

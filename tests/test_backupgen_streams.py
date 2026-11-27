@@ -1,7 +1,9 @@
 """backupgen gives each data type its own random numbers (generate.area_random).
 
-So adding a chat, a note, a voicemail or a photo to a pack changes only that data type's part of
-the backup and of its answer key; the same snapshot comes out byte for byte the same in any
+So adding a chat, a contact, a note, a voicemail, a photo, a WhatsApp chat or a Safari visit to a
+pack changes only the contents of that data type's part of the backup and of its answer key (the
+contact goes before a card the People album links to, so Photos is checked for leaks through
+ctx.contact_guids); the same snapshot comes out byte for byte the same in any
 process, whatever PYTHONHASHSEED is; --seed (and plain versus encrypted) still changes every
 data type that follows the seed; and Calendar and Voice Memos, which keep the fixed seeds they
 had before, are as they were. The packs here are copies of the test persona (placeholder photos)
@@ -27,7 +29,7 @@ sys.path.insert(0, ROOT)
 
 from backupgen import PERSONAS_DIR, media  # noqa: E402
 from backupgen.__main__ import main  # noqa: E402
-from backupgen.generate import EXPECTED, STEPS, area_random, generate  # noqa: E402
+from backupgen.generate import ENCRYPTED_ONLY, EXPECTED, STEPS, area_random, generate  # noqa: E402
 from backupgen.persona import load_persona  # noqa: E402
 from ios_backup_core.backup import open_local_backup  # noqa: E402
 
@@ -110,15 +112,43 @@ def _add_photo(pack: Path) -> None:
     path.write_text(json.dumps(data, indent=1), encoding="utf-8")
 
 
+def _add_contact(pack: Path) -> None:
+    # Straight after the owner, before riley, whose card the People album's "riley" group links to. A number
+    # nobody in the pack calls from, so call history and voicemail name nobody new.
+    path = pack / "persona.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["contacts"].insert(1, {"id": "added", "first": "Added", "last": "Card",
+                                "phones": [["mobile", "+44 7700 900077"]], "emails": [["home", "added@example.org"]]})
+    path.write_text(json.dumps(data, indent=1), encoding="utf-8")
+
+
+def _add_whatsapp_chat(pack: Path) -> None:
+    # The test persona has no WhatsApp, so this also takes "whatsapp" out of "absent".
+    (pack / "whatsapp").mkdir()
+    (pack / "whatsapp" / "people.txt").write_text("riley - Riley R.\n", encoding="utf-8")
+    (pack / "whatsapp" / "riley.txt").write_text(
+        "chat: riley\nwith: riley\n\n== 2024-03-02\n10:00 notice: encrypted\n10:01 riley: On WhatsApp now\n"
+        "10:02 me [photo:london-1] The one from London\n10:03 riley [voice:9s]\n"
+        "10:04 me [location:51.50,-0.12 London]\n10:05 riley [call:voice 2m10s]\n10:06 riley +👍\n", encoding="utf-8")
+
+
+def _add_visit(pack: Path) -> None:
+    path = pack / "safari.txt"
+    path.write_text("== 2021-01-04\n09:00 https://example.org/added | Added by the streams test\n"
+                    + path.read_text(encoding="utf-8"), encoding="utf-8")
+
+
 def _messages_file(domain: str, path: str) -> bool:
     return (domain, path) == ("HomeDomain", "Library/SMS/sms.db") or (
         domain == "MediaDomain" and path.startswith("Library/SMS/Attachments/"))
 
 
 # data type: (what to add to the pack, the answer-key section it shows in, the sections that may
-# change, the backup files that may change)
+# change, the backup files that may change). "absent" may lose that data type, nothing else.
 CASES = {
     "messages": (_add_chat, "messages", {"conversations", "messages"}, _messages_file),
+    "contacts": (_add_contact, "contacts", {"contacts"},
+                 lambda domain, path: domain == "HomeDomain" and path.startswith("Library/AddressBook/")),
     "notes": (_add_note, "notes", {"notes"},
               lambda domain, path: domain == "AppDomainGroup-group.com.apple.notes"),
     # A voicemail with no missed call in calls.txt adds that call to call history (data from the
@@ -128,7 +158,16 @@ CASES = {
                   or (domain, path) == ("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata")),
     "photos": (_add_photo, "photos", {"photos", "photo_people"},
                lambda domain, path: domain == "CameraRollDomain"),
+    "whatsapp": (_add_whatsapp_chat, "whatsapp", {"whatsapp"},
+                 lambda domain, path: domain == "AppDomainGroup-group.net.whatsapp.WhatsApp.shared"),
+    # Only encrypted backups hold Safari history: the plain backup doesn't change at all.
+    "browser_history": (_add_visit, "browser_history", {"browser_history"},
+                        lambda domain, path: (domain, path) == ("HomeDomain", "Library/Safari/History.db")),
 }
+
+
+def _without(absent: dict, kind: str) -> dict:
+    return {k: v for k, v in absent.items() if k != kind}
 
 
 @pytest.fixture(scope="module")
@@ -157,9 +196,13 @@ def test_adding_to_one_data_type_changes_nothing_else(tmp_path, baseline, area, 
     before, before_files = baseline[password]
     after, after_files = _expected(out), _contents(out, password)
 
+    if area in ENCRYPTED_ONLY and password is None:
+        assert after == before and after_files == before_files
+        return
     assert _canonical(after[shown_in]) != _canonical(before[shown_in]), "the addition should show in the answer key"
     assert after.keys() == before.keys()
-    changed = sorted(key for key in before if _canonical(before[key]) != _canonical(after[key]))
+    assert _without(after["absent"], area) == _without(before["absent"], area)
+    changed = sorted(key for key in before if key != "absent" and _canonical(before[key]) != _canonical(after[key]))
     assert set(changed) <= may_change, f"adding to {area} changed {changed}"
 
     changed_files = sorted(key for key in before_files.keys() | after_files.keys()
