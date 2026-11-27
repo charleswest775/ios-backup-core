@@ -423,12 +423,26 @@ def _temp_name(domain: str, relative_path: str) -> str:
 # ---------------------------------------------------------------------------
 
 def _status_date(backup_dir: str) -> Optional[datetime]:
-    """Status.plist's "Date" (UTC, as plistlib reads it), or None if it's missing, damaged or has none."""
+    """The date in the last Status.plist the iPhone wrote (UTC, as plistlib reads it), or None.
+
+    None too when the backup may not have finished, since Status.plist's date is then the try's,
+    or pymobiledevice3's own: it writes a Status.plist saying "finished", in the computer's local
+    time, before the iPhone sends anything. So only a Status.plist that says "finished", in a
+    folder with no Snapshot (the iPhone removes it at the very end) and a Manifest.plist that
+    isn't empty (pymobiledevice3 empties it first; the iPhone writes it near the end), counts.
+    """
     try:
         with open(os.path.join(backup_dir, "Status.plist"), "rb") as f:
-            date = plistlib.load(f).get("Date")
-    except Exception:
+            status = plistlib.load(f)
+        if status.get("SnapshotState") != "finished":
+            return None
+        if os.path.isdir(os.path.join(backup_dir, "Snapshot")):
+            return None
+        if os.path.getsize(os.path.join(backup_dir, "Manifest.plist")) == 0:
+            return None
+    except Exception:  # missing, empty or damaged
         return None
+    date = status.get("Date")
     return date if isinstance(date, datetime) else None
 
 

@@ -166,7 +166,8 @@ def test_core_keeps_info_plists_date_when_there_is_one(tmp_path):
     assert _read_backup_info(str(backup_dir))["last_backup"] == info["Last Backup Date"].isoformat()
 
 
-@pytest.mark.parametrize("status", [None, b"", b"not a plist", {"SnapshotState": "finished"}, {"Date": "yesterday"}])
+@pytest.mark.parametrize("status", [None, b"", b"not a plist", [1], {"SnapshotState": "finished"},
+                                    {"SnapshotState": "finished", "Date": "yesterday"}])
 def test_core_has_no_date_without_one_in_status_plist(einstein26, tmp_path, status):
     import shutil
 
@@ -178,6 +179,25 @@ def test_core_has_no_date_without_one_in_status_plist(einstein26, tmp_path, stat
         (backup_dir / "Status.plist").write_bytes(status if isinstance(status, bytes) else plistlib.dumps(status))
     info = _read_backup_info(str(backup_dir))
     assert info["last_backup"] == "" and info["udid"] == backup_dir.name.upper()
+
+
+@pytest.mark.parametrize("unfinished", ["uploading", "snapshot", "empty manifest.plist"])
+def test_core_takes_no_date_from_a_backup_that_may_not_have_finished(einstein26, tmp_path, unfinished):
+    """Status.plist's date then belongs to the try, or to pymobiledevice3, which writes "finished" in local
+    time before the iPhone sends anything and empties Manifest.plist; the iPhone's Snapshot folder goes last."""
+    import shutil
+
+    backup_dir = tmp_path / einstein26[None][0].name
+    shutil.copytree(einstein26[None][0], backup_dir)
+    status = _plist(backup_dir, "Status.plist")
+    if unfinished == "uploading":
+        status["SnapshotState"] = "uploading"
+        (backup_dir / "Status.plist").write_bytes(plistlib.dumps(status, fmt=plistlib.FMT_BINARY))
+    elif unfinished == "snapshot":
+        (backup_dir / "Snapshot").mkdir()
+    else:
+        (backup_dir / "Manifest.plist").write_bytes(b"")
+    assert _read_backup_info(str(backup_dir))["last_backup"] == ""
 
 
 # ── chip IDs ─────────────────────────────────────────────────────────────────
