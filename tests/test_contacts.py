@@ -2,11 +2,41 @@
 
 import sys
 import os
+import sqlite3
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from ios_backup_core.contacts import (
-    add_phone_suffix_key, clean_phone_number, normalize_phone, phone_suffix_key, resolve_contact,
+    add_phone_suffix_key, clean_phone_number, normalize_phone, phone_suffix_key, resolve_contact, ContactResolver,
 )
+
+
+class _FakeBackup:
+    def __init__(self, db_path):
+        self.db_path = db_path
+
+    def get_file(self, relative_path, domain="HomeDomain"):
+        return self.db_path if relative_path == ContactResolver.ADDRESS_BOOK_PATH else None
+
+
+def _address_book(path):
+    conn = sqlite3.connect(path)
+    conn.executescript("""
+        CREATE TABLE ABPerson (ROWID INTEGER PRIMARY KEY, First TEXT, Last TEXT,
+            Organization TEXT, Department TEXT, Note TEXT);
+        CREATE TABLE ABMultiValue (UID INTEGER PRIMARY KEY, record_id INTEGER,
+            property INTEGER, identifier INTEGER, label INTEGER, value TEXT);
+        CREATE TABLE ABMultiValueLabel (value TEXT, UNIQUE(value));
+        INSERT INTO ABMultiValueLabel (rowid, value) VALUES (1, '_$!<Mobile>!$_'), (2, 'Boat');
+        INSERT INTO ABPerson VALUES (1, 'Ada', 'Lovelace', NULL, NULL, NULL);
+        INSERT INTO ABMultiValue VALUES
+            (1, 1, 3, 0, 1, '+44 7700 900001'),     -- built-in label
+            (2, 1, 3, 1, 2, '+44 7700 900002'),     -- custom label
+            (3, 1, 3, 2, NULL, '+44 7700 900003'),  -- no label
+            (4, 1, 4, 0, 99, 'ada@example.com');    -- label id missing from the table
+    """)
+    conn.commit()
+    conn.close()
+    return str(path)
 
 
 class TestNormalizePhone:
@@ -171,3 +201,18 @@ class TestEmailsAreNotPhoneNumbers:
         assert resolve_contact("(555) 123-4567", contacts) == "Alice"
         assert resolve_contact("+33 6 12 34 56 78", contacts) == "Émile"
         assert resolve_contact("*86", contacts) == "Voicemail"
+
+
+class TestExtraContactInfo:
+    def test_phone_and_email_labels(self, tmp_path):
+        db = _address_book(tmp_path / "AddressBook.sqlitedb")
+        (contact,) = ContactResolver().list_contacts(_FakeBackup(db))["contacts"]
+        assert contact["phones"] == ["+44 7700 900001", "+44 7700 900002", "+44 7700 900003"]
+        email_details = contact["email_details"]
+        assert len(email_details) == 1
+        assert email_details[0] == {"label": None, "value": "ada@example.com"}
+        phone_details = contact["phone_details"]
+        assert len(phone_details) == 3
+        assert {"label": "Mobile", "value": "+44 7700 900001"} in phone_details
+        assert {"label": "Boat", "value": "+44 7700 900002"} in phone_details
+        assert {"label": None, "value": "+44 7700 900003"} in phone_details
