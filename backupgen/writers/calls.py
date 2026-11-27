@@ -20,11 +20,13 @@ import random
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Any, Mapping, Optional
 
-from backupgen.persona import Call, Persona, Snapshot
+from backupgen.persona.calls import Call
+from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import CoreData, cocoa_seconds, country_code
+from backupgen.writers.context import Step, StepContext
 
 _CALL_TYPES = {"phone": 1, "facetime-video": 8, "facetime-audio": 16}
 _PROVIDERS = {"phone": "com.apple.Telephony", "facetime-video": "com.apple.FaceTime",
@@ -140,3 +142,39 @@ def contact_name(cards: list, address: str) -> Optional[str]:
         if digits and any("".join(ch for ch in n if ch.isdigit()) == digits for _, n in card.phones):
             return card.display_name
     return None
+
+
+def step(ctx: StepContext) -> Optional[list[WrittenCall]]:
+    """CallHistory.storedata, which only encrypted backups hold. Returns the calls written."""
+    if ctx.persona.calls is None and ctx.persona.voicemails is None:
+        return None
+    if not ctx.encrypted:
+        return None  # nothing else draws from Calls' random numbers, so leaving it out changes nothing else
+    calls: list[WrittenCall] = []
+    history = ctx.build("CallHistory.storedata",
+                        lambda db: calls.extend(populate(db, ctx.persona, ctx.snapshot, ctx.rng)))
+    ctx.writer.add_file("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata", history)
+    return calls
+
+
+def answer_key(written: Optional[list[WrittenCall]], cards: list) -> list[dict]:
+    """The calls written, each named from ``cards`` (the contacts step's result)."""
+    return [
+        {
+            "date": c.date.isoformat(), "address": c.address, "contact": contact_name(cards, c.address),
+            "outgoing": c.outgoing, "answered": c.duration > 0, "duration": c.duration, "service": c.service,
+        }
+        for c in written or []
+    ]
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    return {"calls": answer_key(written.get("calls"), written.get("contacts", []))}
+
+
+def on_phone(persona: Persona) -> bool:
+    """Whether the phone has call history (each voicemail leaves a missed call)."""
+    return bool(persona.calls or persona.voicemails)
+
+
+STEP = Step("calls", step, sections, encrypted_only=True, on_phone=on_phone)

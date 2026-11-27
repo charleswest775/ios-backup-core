@@ -173,6 +173,51 @@ def test_answer_key_lists_absent_data_types(tmp_path):
     assert expected["whatsapp"] is None
 
 
+def test_steps_declare_every_data_type_once():
+    from backupgen import generate as gen
+
+    kinds = [step.kind for step in gen.STEPS]
+    assert len(kinds) == len(set(kinds)) and set(kinds).isdisjoint(gen.PLANNED)
+    assert set(gen.DATA_TYPES) == set(kinds) | set(gen.PLANNED)
+    assert gen.ENCRYPTED_ONLY == {"calls", "browser_history", "health"}
+    assert kinds[0] == "contacts"  # later steps use its cards
+
+
+def test_a_new_step_adds_its_sections_and_data_type_after_the_others(tmp_path, monkeypatch):
+    """A writer is its STEP plus a line in STEPS: its sections and "absent" entry come last, nothing else moves."""
+    import dataclasses
+
+    from backupgen import generate as gen
+    from backupgen.writers.context import Step
+
+    generate("einstein", "ios15", tmp_path / "before")
+    before = json.loads((tmp_path / "before" / EXPECTED).read_text(encoding="utf-8"))
+
+    def run(ctx):
+        assert ctx.kind == "extra" and ctx.rng.getstate() == gen.area_random(gen.default_seed("einstein", "ios15", False),
+                                                                             "extra").getstate()
+        return []  # nothing on this phone
+
+    extra = Step("extra", run, lambda persona, written: {"extra": written.get("extra")})
+    monkeypatch.setattr(gen, "STEPS", gen.STEPS + (extra,))
+    generate("einstein", "ios15", tmp_path / "after")
+    after = json.loads((tmp_path / "after" / EXPECTED).read_text(encoding="utf-8"))
+    assert list(after) == list(before)[:-1] + ["extra", "absent"]
+    assert after["extra"] == [] and list(after["absent"]) == list(before["absent"]) + ["extra"]
+    assert {k: v for k, v in after.items() if k not in ("extra", "absent")} == {k: v for k, v in before.items() if k != "absent"}
+
+    # present_if_written: an empty result still counts as there
+    monkeypatch.setattr(gen, "STEPS", gen.STEPS[:-1] + (dataclasses.replace(extra, present_if_written=True),))
+    generate("einstein", "ios15", tmp_path / "present")
+    assert "extra" not in json.loads((tmp_path / "present" / EXPECTED).read_text(encoding="utf-8"))["absent"]
+
+    # two steps can't both write a section
+    clash = Step("clash", lambda ctx: None, lambda persona, written: {"messages": []})
+    monkeypatch.setattr(gen, "STEPS", gen.STEPS[:-1] + (clash,))
+    with pytest.raises(ValueError, match="clash: answer-key section 'messages' is already taken"):
+        generate("einstein", "ios15", tmp_path / "clash")
+
+
 @pytest.mark.parametrize("snapshot", ["ios15", "ios17", "ios26"])
 def test_calls_and_voicemails_read_back(tmp_path, snapshot):
     backup_dir = generate("testpersona", snapshot, tmp_path, password="pw")
@@ -453,6 +498,221 @@ def test_bad_photo_people_are_rejected(tmp_path, change, message):
 def test_bad_chat_files_are_rejected(tmp_path, chat_text, message):
     with pytest.raises(PersonaError, match=message):
         load_persona("p", root=_pack(tmp_path, chat_text))
+
+
+def test_a_key_twice_in_persona_json_is_refused(tmp_path):
+    """JSON keeps only the last of two keys, so a second "options" would drop the first without a word."""
+    root = _pack(tmp_path, "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n")
+    path = root / "p" / "persona.json"
+    text = path.read_text(encoding="utf-8")
+    path.write_text('{"options": {"messagez": {"lane_a_case": true}}, ' + text[1:-1] + ', "options": {"calls": {}}}',
+                    encoding="utf-8")
+    with pytest.raises(PersonaError, match="persona.json: the key 'options' appears twice in one object"):
+        load_persona("p", root=root)
+
+
+@pytest.mark.parametrize("name", ["photos.json", "calendar.json", "timeline.json"])
+def test_a_key_twice_in_any_pack_json_file_is_refused(tmp_path, name):
+    root = _pack(tmp_path, "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n")
+    top = {"photos.json": "photos", "calendar.json": "calendars", "timeline.json": "events"}[name]
+    (root / "p" / name).write_text(f'{{"{top}": [{{"id": "a", "id": "b"}}]}}', encoding="utf-8")
+    with pytest.raises(PersonaError, match=f"{name}: the key 'id' appears twice in one object"):
+        load_persona("p", root=root)
+
+
+@pytest.mark.parametrize("change, message", [
+    (lambda d: d["contacts"].append({"id": "riley", "first": "Second", "phones": [["mobile", "+44 7700 900088"]]}),
+     "persona.json contact 5 \\(riley\\): duplicate id"),
+    (lambda d: d["contacts"].append({"first": "Nobody"}), 'persona.json contact 5: needs an "id"'),
+    (lambda d: d.update(owner="nobody"), "persona.json: the owner 'nobody' has no card"),
+    (lambda d: d["snapshots"].append(dict(d["snapshots"][0])), "persona.json snapshot ios15: duplicate id"),
+])
+def test_contacts_and_snapshots_need_ids_of_their_own(tmp_path, change, message):
+    """A second card with an id already taken used to replace the first card silently."""
+    root = _pack(tmp_path, "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n")
+    path = root / "p" / "persona.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    change(data)
+    path.write_text(json.dumps(data), encoding="utf-8")
+    with pytest.raises(PersonaError, match=message):
+        load_persona("p", root=root)
+
+
+@pytest.mark.parametrize("moved", [1, 3, 4])
+def test_cards_can_live_in_contacts_json(tmp_path, moved):
+    """contacts.json's cards come after persona.json's, so moving the last cards there changes nothing.
+
+    With all four moved, the owner's card is in contacts.json and persona.json has no "contacts".
+    """
+    chat = "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n"
+    original, root = _pack(tmp_path / "original", chat), _pack(tmp_path / "moved", chat)
+    path = root / "p" / "persona.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["contacts"], cards = data["contacts"][:-moved], data["contacts"][-moved:]
+    if not data["contacts"]:
+        del data["contacts"]
+    path.write_text(json.dumps(data), encoding="utf-8")
+    (root / "p" / "contacts.json").write_text(json.dumps({"contacts": cards}), encoding="utf-8")
+    before, after = load_persona("p", root=original), load_persona("p", root=root)
+    assert after.owner == before.owner and list(after.contacts.items()) == list(before.contacts.items())
+    trees = []
+    for persona in (before, after):
+        out = tmp_path / "out" / persona.folder.parent.parent.name
+        generate("p", "ios26", out, password="pw", persona=persona)
+        trees.append({f.relative_to(out).as_posix(): f.read_bytes() for f in sorted(out.rglob("*")) if f.is_file()})
+    assert trees[0] == trees[1]
+
+
+@pytest.mark.parametrize("text, message", [
+    ('{"contacts": [{"id": "riley", "first": "Again"}]}', "contacts.json contact 1 (riley): duplicate id"),
+    ('{"contacts": [{"first": "Nobody"}]}', 'contacts.json contact 1: needs an "id"'),
+    ('[{"id": "x"}]', 'contacts.json: expected {"contacts": [...]}'),
+    ('{"contacts": {"id": "x"}}', 'contacts.json: expected {"contacts": [...]}'),
+])
+def test_bad_contacts_json_is_refused(tmp_path, text, message):
+    import re
+
+    root = _pack(tmp_path, "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n")
+    (root / "p" / "contacts.json").write_text(text, encoding="utf-8")
+    with pytest.raises(PersonaError, match=re.escape(message)):
+        load_persona("p", root=root)
+
+
+def _with_options(tmp_path, persona_options=None, snapshot_options=None):
+    """A pack whose persona.json has these "options" (None: left out), the second for its first snapshot."""
+    root = _pack(tmp_path, "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n")
+    path = root / "p" / "persona.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if persona_options is not None:
+        data["options"] = persona_options
+    if snapshot_options is not None:
+        data["snapshots"][0]["options"] = snapshot_options
+    path.write_text(json.dumps(data), encoding="utf-8")
+    return root
+
+
+def test_options_are_by_data_type_and_empty_when_left_out(tmp_path):
+    persona = load_persona("testpersona")
+    assert persona.options == {} and all(s.options == {} for s in persona.snapshots.values())
+    persona = load_persona("p", root=_with_options(tmp_path, {"notes": {"any": [1, {"nested": True}]}}, {"calls": {"x": 1}}))
+    assert persona.options == {"notes": {"any": [1, {"nested": True}]}}
+    assert persona.snapshots["ios15"].options == {"calls": {"x": 1}} and persona.snapshots["ios17"].options == {}
+
+
+@pytest.mark.parametrize("value", [[], "fast", 1, None])
+@pytest.mark.parametrize("on, where", [("persona", "persona.json"), ("snapshot", "persona.json snapshot ios15")])
+def test_each_data_types_options_must_be_a_json_object(tmp_path, value, on, where):
+    root = _with_options(tmp_path, **{f"{on}_options": {"notes": value}})
+    with pytest.raises(PersonaError, match=f"{where}: options.notes should be a JSON object"):
+        load_persona("p", root=root)
+
+
+@pytest.mark.parametrize("on, where", [("persona", "persona.json"), ("snapshot", "persona.json snapshot ios15")])
+def test_options_no_writer_declares_are_refused_when_generating(tmp_path, monkeypatch, on, where):
+    """A typo in a data type or key fails loudly instead of quietly leaving its case out.
+
+    The unknown keys are tried on scratch steps, not on a real writer, so a writer that declares
+    options of its own doesn't change what this test expects.
+    """
+    from backupgen import generate as gen
+    from backupgen.writers.context import Step
+
+    scratch = (Step("extra", lambda ctx: None, lambda persona, written: {}),
+               Step("extra_declared", lambda ctx: None, lambda persona, written: {}, options={"known": 1, "other": 2}))
+    monkeypatch.setattr(gen, "STEPS", gen.STEPS + scratch)
+    root = _with_options(tmp_path, **{f"{on}_options": {"note": {}}})
+    with pytest.raises(PersonaError, match=f"{where}: options: no data type 'note' \\(one of: "):
+        generate("p", "ios17", tmp_path / "out", persona=load_persona("p", root=root))
+    root = _with_options(tmp_path / "2", **{f"{on}_options": {"extra": {"pinned_first": True}}})
+    with pytest.raises(PersonaError, match=f"{where}: options.extra: unknown key 'pinned_first' \\(extra options: none yet\\)"):
+        generate("p", "ios17", tmp_path / "out2", persona=load_persona("p", root=root))
+    root = _with_options(tmp_path / "3", **{f"{on}_options": {"extra_declared": {"known": 10, "knwon": 1}}})
+    with pytest.raises(PersonaError, match=f"{where}: options.extra_declared: unknown key 'knwon' "
+                                           f"\\(extra_declared options: known, other\\)"):
+        generate("p", "ios17", tmp_path / "out3", persona=load_persona("p", root=root))
+
+
+def test_a_step_reads_its_options_with_snapshot_over_pack_over_defaults(tmp_path, monkeypatch):
+    import dataclasses
+
+    from backupgen import generate as gen
+
+    seen = {}
+
+    def spy(step):
+        def run(ctx):
+            seen[(ctx.snapshot.id, ctx.kind)] = ctx.options
+            return step.run(ctx)
+        return run
+
+    steps = [dataclasses.replace(s, run=spy(s), options={"a": 1, "b": 2, "c": 3} if s.kind == "notes" else s.options)
+             for s in gen.STEPS]
+    monkeypatch.setattr(gen, "STEPS", tuple(steps))
+    assert gen.declared_options()["notes"] == {"a": 1, "b": 2, "c": 3}
+    root = _with_options(tmp_path, {"notes": {"b": 20, "c": 30}}, {"notes": {"c": 300}})
+    persona = load_persona("p", root=root)
+    for snapshot in ("ios15", "ios17"):
+        generate("p", snapshot, tmp_path / snapshot, persona=persona)
+    assert seen[("ios15", "notes")] == {"a": 1, "b": 20, "c": 300}
+    assert seen[("ios17", "notes")] == {"a": 1, "b": 20, "c": 30}
+    assert all(options == gen.declared_options()[kind] for (_, kind), options in seen.items() if kind != "notes")
+
+
+def test_shipped_packs_options_are_all_declared():
+    from backupgen.generate import check_options
+    from backupgen.persona import list_personas
+
+    for persona_id in list_personas():
+        check_options(load_persona(persona_id))
+
+
+def test_a_step_gets_a_copy_of_its_options(tmp_path):
+    """A step that changed a list in ctx.options would otherwise change its Step's default and the pack's
+    options, and with them every later snapshot and run."""
+    from backupgen import generate as gen
+    from backupgen.writers.context import Step
+
+    step = Step("notes", lambda ctx: None, lambda persona, written: {},
+                options={"folders": ["Trips"], "nested": {"x": []}})
+    persona = load_persona("p", root=_with_options(tmp_path, {"notes": {"pinned": [1]}}))
+    options = gen.step_options(step, persona, persona.snapshots["ios15"])
+    options["folders"].append("Work")
+    options["nested"]["x"].append(1)
+    options["pinned"].append(2)
+    assert step.options == {"folders": ["Trips"], "nested": {"x": []}}
+    assert persona.options == {"notes": {"pinned": [1]}}
+    assert gen.step_options(step, persona, persona.snapshots["ios15"]) == {
+        "folders": ["Trips"], "nested": {"x": []}, "pinned": [1]}
+
+
+@pytest.mark.parametrize("flags", [{"encrypted_only": True}, {"on_phone": lambda persona: True}])
+def test_on_phone_goes_with_encrypted_only(flags):
+    """Without on_phone, an encrypted-only data type would be "none" rather than "encrypted_only" in a plain backup."""
+    from backupgen.writers.context import Step
+
+    with pytest.raises(ValueError, match="x: on_phone goes with encrypted_only"):
+        Step("x", lambda ctx: None, lambda persona, written: {}, **flags)
+
+
+@pytest.mark.parametrize("area_fields, message", [
+    ({"calls": []}, "persona/safari.py: calls already filled by persona/calls.py"),
+    ({"bogus": 1, "visits": []}, "persona/safari.py: Persona has no attribute bogus "),
+    ({"options": {}}, "persona/safari.py: options already filled by load_persona"),
+])
+def test_an_area_fills_only_its_own_persona_attributes(monkeypatch, area_fields, message):
+    from backupgen.persona import AreaData, safari
+
+    monkeypatch.setattr(safari, "load", lambda pack: AreaData(area_fields))
+    with pytest.raises(PersonaError, match=message):
+        load_persona("testpersona")
+
+
+@pytest.mark.parametrize("value", [[], "fast", 1, False])
+@pytest.mark.parametrize("on, where", [("persona", "persona.json"), ("snapshot", "persona.json snapshot ios15")])
+def test_options_must_be_a_json_object(tmp_path, value, on, where):
+    root = _with_options(tmp_path, **{f"{on}_options": value})
+    with pytest.raises(PersonaError, match=f"{where}: options should be a JSON object"):
+        load_persona("p", root=root)
 
 
 def test_sms_databases_have_no_wal_files(tmp_path):

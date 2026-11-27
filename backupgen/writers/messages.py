@@ -19,12 +19,14 @@ import random
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Any, Mapping, Optional
 
-from backupgen.persona import REACTIONS, Chat, Message, Persona, Snapshot
+from backupgen.persona.core import Persona, Snapshot
+from backupgen.persona.messages import REACTIONS, Chat, Message
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.typedstream import attributed_body
 from backupgen.writers import cocoa_nanoseconds, country_code
+from backupgen.writers.context import Step, StepContext
 
 _REACTION_VERBS = {
     "love": "Loved", "like": "Liked", "dislike": "Disliked",
@@ -242,3 +244,53 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
                             (cocoa_nanoseconds(incoming[-1].date), rowid))
     return written
 
+
+def step(ctx: StepContext) -> list[Written]:
+    """sms.db, and the photos sent in Messages (in MediaDomain). Returns the messages written."""
+    written: list[Written] = []
+    sms = ctx.build("sms.db", lambda db: written.extend(populate(db, ctx.persona, ctx.snapshot, ctx.rng, ctx.renderer)))
+    ctx.writer.add_file("HomeDomain", "Library/SMS/sms.db", sms)
+    for message in written:
+        if message.attachment:
+            ctx.writer.add_file("MediaDomain", message.attachment[0], message.attachment[2])
+    return written
+
+
+def conversations_answer_key(persona: Persona, written: list[Written]) -> list[dict]:
+    """One record per chat that has messages, by chat_identifier."""
+    chats = {chat.id: chat for chat in persona.chats}
+    conversations: dict[str, dict] = {}
+    for w in written:
+        chat = chats[w.chat_id]
+        conv = conversations.setdefault(w.chat_id, {
+            "chat": chat.id,
+            "chat_identifier": w.chat_identifier,
+            "service": chat.service,
+            "is_group": chat.is_group,
+            "name": chat.name if chat.is_group else "",
+            "participants": [persona.contacts[p].handle for p in chat.participants],
+            "message_count": 0,
+        })
+        conv["message_count"] += 1
+        conv["last_message_date"] = w.date.isoformat()
+    return sorted(conversations.values(), key=lambda c: c["chat_identifier"])
+
+
+def answer_key(written: list[Written]) -> list[dict]:
+    """Every message in ROWID order, tapbacks included."""
+    return [
+        {
+            "guid": w.guid, "chat_identifier": w.chat_identifier, "date": w.date.isoformat(),
+            "is_from_me": w.is_from_me, "sender_handle": w.sender_handle, "text": w.text, "is_reaction": w.is_reaction,
+            "attachment": {"name": w.attachment[1], "bytes": len(w.attachment[2])} if w.attachment else None,
+        }
+        for w in written
+    ]
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    messages = written.get("messages", [])
+    return {"conversations": conversations_answer_key(persona, messages), "messages": answer_key(messages)}
+
+
+STEP = Step("messages", step, sections)

@@ -5,10 +5,13 @@ from __future__ import annotations
 import random
 import uuid
 from datetime import datetime, time
+from typing import Any, Mapping
 
-from backupgen.persona import Contact, Persona, Snapshot
+from backupgen.persona.contacts import Contact
+from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import cocoa_seconds
+from backupgen.writers.context import Step, StepContext
 
 PHONE, EMAIL = 3, 4
 LABELS = {
@@ -35,11 +38,24 @@ def visible_contacts(persona: Persona, snapshot: Snapshot) -> list[Contact]:
     return cards
 
 
+def card_random(base: int, contact_id: str) -> random.Random:
+    """One card's random numbers: its guid, its creation minute and its phone and email guids."""
+    return random.Random(f"{base}/card/{contact_id}")
+
+
 def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: random.Random) -> dict[str, int]:
-    """Write the cards; returns contact id → ABPerson ROWID."""
+    """Write the cards; returns contact id → ABPerson ROWID.
+
+    Each card draws from random numbers of its own (card_random: one draw from ``rng`` and the
+    contact's id), so adding, removing or reordering cards in a pack, or a card's ``added`` date
+    taking it in or out of a snapshot, leaves every other card's guid as it was. Photos' People
+    album links groups to cards by those guids (ctx.contact_guids), so it doesn't change either.
+    """
     people, values, labels = db.table("ABPerson"), db.table("ABMultiValue"), db.table("ABMultiValueLabel")
     store = db.table("ABStore")
     label_ids = {key: labels.insert({"value": value}) for key, value in LABELS.items()}
+    # Must stay the first draw from rng: every card's guid depends on it, and so Photos' ZPERSONURI.
+    base = rng.getrandbits(64)
     owner_rowid = None
     rowids: dict[str, int] = {}
     store_id = None
@@ -49,8 +65,9 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
             "ExternalIdentifier": None, "Capabilities": 0, "AccountID": 0,
         })
     for contact in visible_contacts(persona, snapshot):
+        card = card_random(base, contact.id)
         added = contact.added or persona.real_start
-        created = cocoa_seconds(persona.device_time(datetime.combine(added, time(9, rng.randrange(60)))))
+        created = cocoa_seconds(persona.device_time(datetime.combine(added, time(9, card.randrange(60)))))
         rowid = people.insert({
             "First": contact.first or None,
             "Last": contact.last or None,
@@ -71,17 +88,58 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
             "StoreID": store_id,
             "PersonLink": -1,
             "IsPreferredName": 1,
-            "guid": _guid(rng),
+            "guid": _guid(card),
         })
         rowids[contact.id] = rowid
         if contact is persona.owner:
             owner_rowid = rowid
         for identifier, (label, number) in enumerate(contact.phones):
             values.insert({"record_id": rowid, "property": PHONE, "identifier": identifier,
-                           "label": label_ids.get(label, label_ids["other"]), "value": number, "guid": _guid(rng)})
+                           "label": label_ids.get(label, label_ids["other"]), "value": number, "guid": _guid(card)})
         for identifier, (label, address) in enumerate(contact.emails, start=len(contact.phones)):
             values.insert({"record_id": rowid, "property": EMAIL, "identifier": identifier,
-                           "label": label_ids.get(label, label_ids["other"]), "value": address, "guid": _guid(rng)})
+                           "label": label_ids.get(label, label_ids["other"]), "value": address, "guid": _guid(card)})
     if store and store.has("MeIdentifier") and owner_rowid is not None:
         db.conn.execute('UPDATE ABStore SET MeIdentifier = ? WHERE ROWID = ?', (owner_rowid, store_id))
     return rowids
+
+
+def step(ctx: StepContext) -> list[Contact]:
+    """AddressBook.sqlitedb and an empty AddressBookImages.sqlitedb. Returns the cards written.
+
+    Leaves every card's guid in ``ctx.contact_guids`` (None where the schema has no guid column)
+    for Photos' People album.
+    """
+    rows: dict[str, int] = {}
+
+    def fill(db: SchemaDatabase) -> None:
+        rows.update(populate(db, ctx.persona, ctx.snapshot, ctx.rng))
+        guids = dict(db.conn.execute("SELECT ROWID, guid FROM ABPerson")) if db.table("ABPerson").has("guid") else {}
+        ctx.contact_guids.update({cid: guids.get(rowid) for cid, rowid in rows.items()})
+
+    address_book = ctx.build("AddressBook.sqlitedb", fill)
+    images = ctx.build("AddressBookImages.sqlitedb", lambda db: None)
+    ctx.writer.add_file("HomeDomain", "Library/AddressBook/AddressBook.sqlitedb", address_book)
+    ctx.writer.add_file("HomeDomain", "Library/AddressBook/AddressBookImages.sqlitedb", images)
+    return visible_contacts(ctx.persona, ctx.snapshot)
+
+
+def answer_key(persona: Persona, cards: list[Contact]) -> list[dict]:
+    return [
+        {
+            "first": c.first, "last": c.last, "organization": c.organization,
+            "phones": [number for _, number in c.phones], "emails": [address for _, address in c.emails],
+            "is_owner": c is persona.owner,
+        }
+        for c in cards
+    ]
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    return {"contacts": answer_key(persona, written.get("contacts", []))}
+
+
+# Runs first (generate.STEPS) only for Photos, whose People album links groups to its cards' guids
+# (ctx.contact_guids). Calls and voicemail name callers from its cards too, but in their answer-key
+# sections, which are built after every step has run.
+STEP = Step("contacts", step, sections)

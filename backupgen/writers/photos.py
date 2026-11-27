@@ -26,12 +26,13 @@ import re
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Any, Mapping, Optional
 
 from backupgen import media
-from backupgen.persona import Persona, Snapshot
+from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import CoreData, cocoa_seconds
+from backupgen.writers.context import Step, StepContext
 
 NO_LOCATION = -180.0
 _USER_ALBUM, _ROOT_FOLDER = 2, 3999
@@ -199,7 +200,7 @@ def _write_people(db: SchemaDatabase, core: CoreData, persona: Persona, snapshot
             db.conn.execute("UPDATE ZDETECTEDFACE SET ZPERSONBEINGKEYFACE = ? WHERE Z_PK = ?", (pk, key_faces[person_id]))
 
 
-def people_answer_key(persona: Persona, written: list[WrittenPhoto]) -> list[dict]:
+def people_answer_key(persona: Persona, written: Optional[list[WrittenPhoto]]) -> list[dict]:
     """The People album as a reader should give it, from the photos as written.
 
     Every group, with ``photos``: the ids of photos All Photos shows (not in Recently
@@ -215,7 +216,7 @@ def people_answer_key(persona: Persona, written: list[WrittenPhoto]) -> list[dic
             person_id = by_id[person_id].merged_into
         return person_id
 
-    shown = {p.id for p in written if not p.trashed}
+    shown = {p.id for p in written or [] if not p.trashed}
     photos: dict[str, list[str]] = {person.id: [] for person in persona.photo_people}
     for photo in persona.photos or []:
         if photo.id not in shown:
@@ -233,3 +234,37 @@ def people_answer_key(persona: Persona, written: list[WrittenPhoto]) -> list[dic
             "photos": photos[person.id],
         })
     return out
+
+
+def step(ctx: StepContext) -> Optional[list[WrittenPhoto]]:
+    """Photos.sqlite and the camera roll's files. Returns the photos written."""
+    if ctx.persona.photos is None:
+        return None
+    if ctx.persona.photo_people and not ctx.contact_guids:
+        raise RuntimeError("the contacts step runs before photos: the People album links groups to its cards' guids")
+    photos: list[WrittenPhoto] = []
+    library = ctx.build("Photos.sqlite", lambda db: photos.extend(populate(db, ctx.persona, ctx.snapshot, ctx.rng,
+                                                                           ctx.renderer, ctx.contact_guids)))
+    ctx.writer.add_file("CameraRollDomain", "Media/PhotoData/Photos.sqlite", library)
+    for photo in photos:
+        ctx.writer.add_file("CameraRollDomain", photo.relative_path, photo.data)
+    return photos
+
+
+def answer_key(written: Optional[list[WrittenPhoto]]) -> list[dict]:
+    return [
+        {
+            "id": p.id, "filename": p.filename, "date": p.date.isoformat(), "width": p.width, "height": p.height,
+            "favorite": p.favorite, "trashed": p.trashed, "lat": p.lat, "lon": p.lon, "albums": p.albums,
+            "uuid": p.uuid,
+        }
+        for p in written or []
+    ]
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    """The camera roll, then the People album: every group, with the photos a reader should list for it."""
+    return {"photos": answer_key(written.get("photos")), "photo_people": people_answer_key(persona, written.get("photos"))}
+
+
+STEP = Step("photos", step, sections)

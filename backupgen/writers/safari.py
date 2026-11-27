@@ -19,11 +19,13 @@ import random
 import struct
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from typing import Any, Mapping, Optional
 from urllib.parse import urlparse
 
-from backupgen.persona import Persona, Snapshot
+from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import cocoa_seconds
+from backupgen.writers.context import Step, StepContext
 
 
 @dataclass
@@ -74,3 +76,30 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
         })
         written.append(WrittenVisit(when, visit.url, visit.title))
     return written
+
+
+def step(ctx: StepContext) -> Optional[list[WrittenVisit]]:
+    """History.db, which only encrypted backups hold. Returns the visits written."""
+    if ctx.persona.visits is None:
+        return None
+    if not ctx.encrypted:
+        return None  # nothing else draws from Safari's random numbers, so leaving it out changes nothing else
+    visits: list[WrittenVisit] = []
+    history = ctx.build("History.db", lambda db: visits.extend(populate(db, ctx.persona, ctx.snapshot, ctx.rng)))
+    ctx.writer.add_file("HomeDomain", "Library/Safari/History.db", history)
+    return visits
+
+
+def answer_key(written: Optional[list[WrittenVisit]]) -> list[dict]:
+    return [{"date": v.date.isoformat(), "url": v.url, "title": v.title} for v in written or []]
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    return {"browser_history": answer_key(written.get("browser_history"))}
+
+
+def on_phone(persona: Persona) -> bool:
+    return bool(persona.visits)
+
+
+STEP = Step("browser_history", step, sections, encrypted_only=True, on_phone=on_phone)

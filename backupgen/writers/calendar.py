@@ -49,12 +49,14 @@ from __future__ import annotations
 import random
 import uuid
 from datetime import date, datetime, time, timedelta, timezone
-from typing import Optional
+from typing import Any, Mapping, Optional
 from zoneinfo import ZoneInfo
 
-from backupgen.persona import EventDef, Persona, Snapshot
+from backupgen.persona.calendar import EventDef
+from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import cocoa_seconds
+from backupgen.writers.context import Step, StepContext
 
 DOMAIN = "HomeDomain"
 PATH = "Library/Calendar/Calendar.sqlitedb"
@@ -415,3 +417,36 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
     rows = sorted(writer.calendar_rows.values(), key=lambda c: c["_order"])
     writer.written.calendars = [{k: v for k, v in c.items() if not k.startswith("_")} for c in rows]
     return writer.written
+
+
+def step(ctx: StepContext) -> Optional[Written]:
+    """Calendar.sqlitedb, from a random generator of its own. Returns the events written, with ``.calendars``.
+
+    Its seed predates generate.area_random and is kept, so the data stays as it was: it doesn't
+    follow --seed and is the same plain and encrypted.
+    """
+    persona, snapshot = ctx.persona, ctx.snapshot
+    if persona.calendars is None:
+        return None
+    events: list[Written] = []
+    rng = random.Random(f"{persona.id}/{snapshot.id}/calendar")
+    database = ctx.build("Calendar.sqlitedb", lambda db: events.append(populate(db, persona, snapshot, rng)))
+    ctx.writer.add_file(DOMAIN, PATH, database)
+    return events[0]
+
+
+def answer_key(written: Optional[Written]) -> Optional[dict]:
+    """Shaped like the reader's records: every calendar, and the events in row order. None: no calendar.json."""
+    if written is None:
+        return None
+    return {"calendars": written.calendars, "events": list(written)}
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    """Shaped like the reader's records; events in row order. None when the pack has no calendar.json."""
+    return {"calendar": answer_key(written.get("calendar"))}
+
+
+# A written Calendar.sqlitedb is there even with no events in it, as on a phone: the reader then
+# lists the calendars rather than answering "not_in_backup".
+STEP = Step("calendar", step, sections, present_if_written=True)

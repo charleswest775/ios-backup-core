@@ -45,11 +45,14 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from typing import Any, Mapping, Optional
 
 from backupgen.media import m4a_duration, silent_m4a
-from backupgen.persona import Persona, Snapshot, VoiceMemoDef
+from backupgen.persona.core import Persona, Snapshot
+from backupgen.persona.voice_memos import VoiceMemoDef
 from backupgen.sqlitegen import build, load_schema
 from backupgen.writers import CoreData, cocoa_seconds
+from backupgen.writers.context import Step, StepContext
 
 SHARED_DOMAIN = "AppDomainGroup-group.com.apple.VoiceMemos.shared"
 LEGACY_DOMAIN = "MediaDomain"
@@ -191,3 +194,33 @@ def write(tmp: Path, persona: Persona, snapshot: Snapshot, rng: random.Random) -
     data = build(Path(tmp) / DATABASE, snapshot.schema, DATABASE, writer.populate)
     store.files = {(writer.domain, f"{writer.folder}/{DATABASE}"): data, **store.files}
     return store
+
+
+def step(ctx: StepContext) -> Optional[Store]:
+    """Voice Memos' database and recordings, from a random generator of their own. Returns them.
+
+    Its seed predates generate.area_random and is kept, so the data stays as it was: it doesn't
+    follow --seed and is the same plain and encrypted.
+    """
+    persona, snapshot = ctx.persona, ctx.snapshot
+    if persona.voice_memos is None:
+        return None
+    store = write(ctx.tmp, persona, snapshot, random.Random(f"{persona.id}/{snapshot.id}/voice_memos"))
+    for (domain, path), data in store.files.items():
+        ctx.writer.add_file(domain, path, data)
+    return store
+
+
+def answer_key(store: Optional[Store]) -> Optional[list]:
+    """The recordings, newest first, shaped like the reader's records. None: no voice_memos.txt."""
+    return store.memos if store is not None else None
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    """Shaped like the reader's records, newest first. None when the pack has no voice_memos.txt."""
+    return {"voice_memos": answer_key(written.get("voice_memos"))}
+
+
+# A written CloudRecordings.db is there even with no recordings in it, as on a phone: the reader
+# then answers "no_records" rather than "not_in_backup".
+STEP = Step("voice_memos", step, sections, present_if_written=True)

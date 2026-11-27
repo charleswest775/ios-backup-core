@@ -11,6 +11,7 @@ compare against it are independent of the code under test.
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import random
@@ -20,8 +21,7 @@ from typing import Optional
 
 from backupgen import media
 from backupgen.container import BackupWriter, Device
-from backupgen.persona import Persona, load_persona
-from backupgen.sqlitegen import build
+from backupgen.persona import Persona, PersonaError, Snapshot, load_persona
 from backupgen.writers import calendar as calendar_writer
 from backupgen.writers import calls as calls_writer
 from backupgen.writers import contacts as contacts_writer
@@ -32,20 +32,108 @@ from backupgen.writers import safari as safari_writer
 from backupgen.writers import voice_memos as voice_memos_writer
 from backupgen.writers import voicemail as voicemail_writer
 from backupgen.writers import whatsapp as whatsapp_writer
+from backupgen.writers.context import Step, StepContext
 
 EXPECTED = "expected.json"
 
-# Every data type OpenExtract reads or is adding. The answer key lists the ones a backup doesn't hold
-# under "absent", with why, so readers can be checked for clean empty results as well as for content:
-# "none" means the phone has none; "encrypted_only" means Apple leaves it out of unencrypted backups.
-DATA_TYPES = ("messages", "contacts", "calls", "voicemail", "notes", "photos", "browser_history",
-              "calendar", "voice_memos", "health", "whatsapp")
-ENCRYPTED_ONLY = {"calls", "browser_history", "health"}
+# The write steps, in the order they run: each writer module's STEP (see writers/context.py, Step).
+# A new writer is its module's STEP plus one line here (and its import above), and an adding
+# case in tests/test_backupgen_streams.py CASES; a new pack area also adds its name to
+# persona/core.py AREAS and its attribute to Persona, beside its neighbours'. Its answer-key
+# sections go after the ones before it, its data type joins DATA_TYPES and its pack options are
+# the ones its Step declares. A Step's kind names its random numbers, its result, its "absent"
+# entry and its options in packs, so a kind is never renamed.
+#
+# Random numbers: each step draws only from its own stream, ctx.rng = area_random(seed, <its data
+# type>), never from another step's or a shared one, so adding a message, a call or a photo to a
+# pack changes only the contents of that data type's databases, files and answer key. Every new
+# step follows the same rule: it draws only from its ctx.rng, and anything one step leaves for
+# another depends only on the seed and the pack, never on another step's draws (ctx.contact_guids:
+# each card's guid on the seed and that card's id). Calendar and Voice Memos keep the fixed
+# seeds they had before this rule ("<persona>/<snapshot>/calendar" and ".../voice_memos", which
+# don't follow --seed), as do Photos' People album and each deleted note, so their data stayed as
+# it was. So the order of the steps changes no data, only the order of the answer key's sections.
+STEPS = (
+    contacts_writer.STEP,  # first, for Photos: the People album links groups to its cards' guids
+    messages_writer.STEP,
+    calls_writer.STEP,
+    voicemail_writer.STEP,
+    notes_writer.STEP,
+    safari_writer.STEP,
+    photos_writer.STEP,
+    whatsapp_writer.STEP,
+    calendar_writer.STEP,
+    voice_memos_writer.STEP,
+)
+
+# Data types OpenExtract reads or is adding that no writer writes yet, with whether Apple leaves
+# them out of unencrypted backups: always "absent" ("none"). A writer for one takes it out of here.
+PLANNED = {"health": True}
+
+# The order of the answer key's "absent" entries from when DATA_TYPES was written by hand, kept so
+# answer keys stay byte for byte as they were; a data type not named here follows, in STEPS order.
+_ABSENT_ORDER = ("messages", "contacts", "calls", "voicemail", "notes", "photos", "browser_history",
+                 "calendar", "voice_memos", "health", "whatsapp")
+
+
+def data_types(steps=None) -> tuple[str, ...]:
+    """Every data type OpenExtract reads or is adding, in the order the answer key's "absent" lists them.
+
+    The answer key lists the ones a backup doesn't hold under "absent", with why, so readers can be
+    checked for clean empty results as well as for content: "none" means the phone has none;
+    "encrypted_only" means Apple leaves it out of unencrypted backups.
+    """
+    kinds = [step.kind for step in (STEPS if steps is None else steps)] + list(PLANNED)
+    return tuple([k for k in _ABSENT_ORDER if k in kinds] + [k for k in kinds if k not in _ABSENT_ORDER])
+
+
+DATA_TYPES = data_types()
+ENCRYPTED_ONLY = {step.kind for step in STEPS if step.encrypted_only} | {k for k, only in PLANNED.items() if only}
+
+
+def declared_options() -> dict[str, dict]:
+    """Every pack option a writer reads: {data type: {key: default}} (see persona/__init__.py)."""
+    return {step.kind: dict(step.options) for step in STEPS}
+
+
+def step_options(step: Step, persona: Persona, snapshot: Snapshot) -> dict:
+    """A step's options for one snapshot: its Step.options, then the pack's options[kind], then the snapshot's.
+
+    A deep copy, so a list or dict in it isn't shared with the Step's defaults or the pack's options
+    (and through them with later snapshots and runs).
+    """
+    return copy.deepcopy({**step.options, **persona.options.get(step.kind, {}), **snapshot.options.get(step.kind, {})})
+
+
+def check_options(persona: Persona) -> None:
+    """Refuse pack and snapshot options that name a data type or key no writer declares."""
+    declared = declared_options()
+    places = [("persona.json", persona.options)]
+    places += [(f"persona.json snapshot {s.id}", s.options) for s in persona.snapshots.values()]
+    for where, options in places:
+        for kind, values in options.items():
+            if kind not in declared:
+                raise PersonaError(f"{where}: options: no data type {kind!r} (one of: {', '.join(declared)})")
+            for key in values:
+                if key not in declared[kind]:
+                    known = ", ".join(declared[kind]) or "none yet"
+                    raise PersonaError(f"{where}: options.{kind}: unknown key {key!r} ({kind} options: {known})")
 
 
 def default_seed(persona_id: str, snapshot_id: str, encrypted: bool) -> int:
     digest = hashlib.sha256(f"{persona_id}/{snapshot_id}/{'enc' if encrypted else 'plain'}".encode()).digest()
     return int.from_bytes(digest[:8], "big")
+
+
+def area_random(seed: int, area: str) -> random.Random:
+    """The random numbers of one data type ("area", e.g. "messages") in the snapshot with this seed.
+
+    Made from the seed and the area's name only, so no area's draws depend on another's, and,
+    like the seed, they differ between plain and encrypted backups and follow --seed. A string
+    seed is hashed with SHA-512 by ``random``, never with hash(), so they are the same in every
+    process whatever PYTHONHASHSEED is.
+    """
+    return random.Random(f"backupgen/{seed}/{area}")
 
 
 def generate(
@@ -60,9 +148,10 @@ def generate(
 ) -> Path:
     """Write the backup for one snapshot into ``out_dir``. Returns the backup folder."""
     persona = persona or load_persona(persona_id)
+    check_options(persona)
     snapshot = persona.snapshots[snapshot_id]
     seed = default_seed(persona.id, snapshot_id, password is not None) if seed is None else seed
-    rng = random.Random(seed)
+    rng = random.Random(seed)  # only the container's seed comes from here; each step has its own (area_random)
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -81,133 +170,28 @@ def generate(
                           password=password, iterations=iterations, seed=rng.getrandbits(64), host=snapshot.host)
 
     with tempfile.TemporaryDirectory(prefix="backupgen-") as tmp:
-        tmp = Path(tmp)
-        written_messages: list = []
-        contact_rows: dict = {}
-
-        renderer = media.Renderer(persona, snapshot)
-
-        def fill_messages(db):
-            written_messages.extend(messages_writer.populate(db, persona, snapshot, rng, renderer))
-
-        contact_guids: dict = {}
-
-        def fill_contacts(db):
-            contact_rows.update(contacts_writer.populate(db, persona, snapshot, rng))
-            if db.table("ABPerson").has("guid"):
-                guids = dict(db.conn.execute("SELECT ROWID, guid FROM ABPerson"))
-                contact_guids.update({cid: guids.get(rowid) for cid, rowid in contact_rows.items()})
-
-        sms = build(tmp / "sms.db", snapshot.schema, "sms.db", fill_messages)
-        address_book = build(tmp / "AddressBook.sqlitedb", snapshot.schema, "AddressBook.sqlitedb", fill_contacts)
-        images = build(tmp / "AddressBookImages.sqlitedb", snapshot.schema, "AddressBookImages.sqlitedb", lambda db: None)
-        writer.add_file("HomeDomain", "Library/SMS/sms.db", sms)
-        for message in written_messages:
-            if message.attachment:
-                writer.add_file("MediaDomain", message.attachment[0], message.attachment[2])
-        writer.add_file("HomeDomain", "Library/AddressBook/AddressBook.sqlitedb", address_book)
-        writer.add_file("HomeDomain", "Library/AddressBook/AddressBookImages.sqlitedb", images)
-
-        written = {"messages": written_messages}
-        if persona.calls is not None or persona.voicemails is not None:
-            # The rng draws happen either way, so encrypting a backup doesn't change its other contents.
-            calls: list = []
-            history = build(tmp / "CallHistory.storedata", snapshot.schema, "CallHistory.storedata",
-                            lambda db: calls.extend(calls_writer.populate(db, persona, snapshot, rng)))
-            if password is not None:
-                writer.add_file("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata", history)
-                written["calls"] = calls
-        if persona.voicemails is not None:
-            voicemails: list = []
-            database = build(tmp / "voicemail.db", snapshot.schema, "voicemail.db",
-                             lambda db: voicemails.extend(voicemail_writer.populate(db, persona, snapshot, rng)))
-            writer.add_file("HomeDomain", "Library/Voicemail/voicemail.db", database)
-            for v in voicemails:
-                writer.add_file("HomeDomain", f"Library/Voicemail/{v.rowid}.amr", voicemail_writer.silent_amr(v.duration))
-                if v.transcript:
-                    writer.add_file("HomeDomain", f"Library/Voicemail/{v.rowid}.transcript",
-                                    voicemail_writer.transcript_archive(v.transcript, v.duration))
-            written["voicemail"] = voicemails
-        if persona.notes is not None:
-            notes: list = []
-            store = build(tmp / "NoteStore.sqlite", snapshot.schema, "NoteStore.sqlite",
-                          lambda db: notes.extend(notes_writer.populate(db, persona, snapshot, rng)))
-            writer.add_file("AppDomainGroup-group.com.apple.notes", "NoteStore.sqlite", store)
-            written["notes"] = notes
-        if persona.visits is not None:
-            visits: list = []
-            history = build(tmp / "History.db", snapshot.schema, "History.db",
-                            lambda db: visits.extend(safari_writer.populate(db, persona, snapshot, rng)))
-            if password is not None:
-                writer.add_file("HomeDomain", "Library/Safari/History.db", history)
-                written["browser_history"] = visits
-        if persona.photos is not None:
-            photos: list = []
-            library = build(tmp / "Photos.sqlite", snapshot.schema, "Photos.sqlite",
-                            lambda db: photos.extend(photos_writer.populate(db, persona, snapshot, rng, renderer,
-                                                                            contact_guids)))
-            writer.add_file("CameraRollDomain", "Media/PhotoData/Photos.sqlite", library)
-            for photo in photos:
-                writer.add_file("CameraRollDomain", photo.relative_path, photo.data)
-            written["photos"] = photos
-        whatsapp = None
-        if persona.whatsapp is not None:
-            # Last, so adding WhatsApp to a pack leaves the rest of its backups as they were.
-            whatsapp = whatsapp_writer.write(tmp, persona, snapshot, rng, renderer)
-            for (domain, path), data in whatsapp.files.items():
-                writer.add_file(domain, path, data)
-            written["whatsapp"] = whatsapp.messages
-        # Calendar and Voice Memos come after WhatsApp and draw from random generators of their own,
-        # so adding them to a pack leaves the rest of its backups as they were.
-        if persona.calendars is not None:
-            events: list = []
-            calendar_rng = random.Random(f"{persona.id}/{snapshot.id}/calendar")
-            database = build(tmp / "Calendar.sqlitedb", snapshot.schema, "Calendar.sqlitedb",
-                             lambda db: events.append(calendar_writer.populate(db, persona, snapshot, calendar_rng)))
-            writer.add_file(calendar_writer.DOMAIN, calendar_writer.PATH, database)
-            written["calendar"] = events[0]
-        if persona.voice_memos is not None:
-            memos = voice_memos_writer.write(tmp, persona, snapshot, random.Random(f"{persona.id}/{snapshot.id}/voice_memos"))
-            for (domain, path), data in memos.files.items():
-                writer.add_file(domain, path, data)
-            written["voice_memos"] = memos.memos
+        renderer, contact_guids = media.Renderer(persona, snapshot), {}
+        written = {}
+        for step in STEPS:
+            # What the steps share, with this step's own random numbers.
+            ctx = StepContext(step.kind, persona, snapshot, area_random(seed, step.kind), writer, renderer, Path(tmp),
+                              contact_guids, step_options(step, persona, snapshot))
+            result = step.run(ctx)
+            if result is not None:
+                written[step.kind] = result
 
     backup_dir = writer.finalize()
 
-    expected = answer_key(persona, snapshot_id, device, password, written, whatsapp)
+    expected = answer_key(persona, snapshot_id, device, password, written)
     (out_dir / EXPECTED).write_text(json.dumps(expected, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return backup_dir
 
 
-def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Optional[str], written: dict,
-               whatsapp: Optional[whatsapp_writer.Store] = None) -> dict:
+def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Optional[str], written: dict) -> dict:
+    """The answer key: the backup's identity, then each step's sections (its Step.sections) in STEPS order,
+    then "absent"."""
     snapshot = persona.snapshots[snapshot_id]
-    cards = contacts_writer.visible_contacts(persona, snapshot)
-    chats = {chat.id: chat for chat in persona.chats}
-    conversations: dict[str, dict] = {}
-    messages = written["messages"]
-    for w in messages:
-        chat = chats[w.chat_id]
-        conv = conversations.setdefault(w.chat_id, {
-            "chat": chat.id,
-            "chat_identifier": w.chat_identifier,
-            "service": chat.service,
-            "is_group": chat.is_group,
-            "name": chat.name if chat.is_group else "",
-            "participants": [persona.contacts[p].handle for p in chat.participants],
-            "message_count": 0,
-        })
-        conv["message_count"] += 1
-        conv["last_message_date"] = w.date.isoformat()
-    present = {kind for kind, records in written.items() if records}
-    # A written Calendar.sqlitedb or CloudRecordings.db is there even with nothing in it, as on a phone:
-    # the readers then list the calendars, or answer "no_records", not "not_in_backup".
-    present |= {"calendar", "voice_memos"} & written.keys()
-    if cards:
-        present.add("contacts")
-    on_phone = {"calls": bool(persona.calls or persona.voicemails), "browser_history": bool(persona.visits)}
-    left_out = {t for t in ENCRYPTED_ONLY if password is None and on_phone.get(t)}
-    return {
+    key = {
         "persona": persona.id,
         "snapshot": snapshot_id,
         "ios": snapshot.ios,
@@ -217,64 +201,15 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
         "backup_date": snapshot.backup_date.isoformat(),
         "encrypted": password is not None,
         "password": password,
-        "contacts": [
-            {
-                "first": c.first, "last": c.last, "organization": c.organization,
-                "phones": [number for _, number in c.phones], "emails": [address for _, address in c.emails],
-                "is_owner": c is persona.owner,
-            }
-            for c in cards
-        ],
-        "conversations": sorted(conversations.values(), key=lambda c: c["chat_identifier"]),
-        "messages": [
-            {
-                "guid": w.guid, "chat_identifier": w.chat_identifier, "date": w.date.isoformat(),
-                "is_from_me": w.is_from_me, "sender_handle": w.sender_handle, "text": w.text, "is_reaction": w.is_reaction,
-                "attachment": {"name": w.attachment[1], "bytes": len(w.attachment[2])} if w.attachment else None,
-            }
-            for w in messages
-        ],
-        "calls": [
-            {
-                "date": c.date.isoformat(), "address": c.address, "contact": calls_writer.contact_name(cards, c.address),
-                "outgoing": c.outgoing, "answered": c.duration > 0, "duration": c.duration, "service": c.service,
-            }
-            for c in written.get("calls", [])
-        ],
-        "voicemails": [
-            {
-                "rowid": v.rowid, "date": v.date.isoformat(), "sender": v.sender,
-                "contact": calls_writer.contact_name(cards, v.sender), "duration": v.duration, "transcript": v.transcript,
-            }
-            for v in written.get("voicemail", [])
-        ],
-        "notes": [
-            {
-                "title": n.title, "text": n.text, "folder": n.folder, "created": n.created.isoformat(),
-                "modified": n.modified.isoformat(), "pinned": n.pinned, "shared_with": n.shared_with,
-                "deleted": n.deleted,
-            }
-            for n in written.get("notes", [])
-        ],
-        "browser_history": [
-            {"date": v.date.isoformat(), "url": v.url, "title": v.title} for v in written.get("browser_history", [])
-        ],
-        "photos": [
-            {
-                "id": p.id, "filename": p.filename, "date": p.date.isoformat(), "width": p.width, "height": p.height,
-                "favorite": p.favorite, "trashed": p.trashed, "lat": p.lat, "lon": p.lon, "albums": p.albums,
-                "uuid": p.uuid,
-            }
-            for p in written.get("photos", [])
-        ],
-        # The People album (see writers/photos.py): every group, with the photos a reader should list for it.
-        "photo_people": photos_writer.people_answer_key(persona, written.get("photos", [])),
-        # Chats in arrival order (each message's "sort"); see writers/whatsapp.py. None when the phone has no WhatsApp.
-        "whatsapp": whatsapp_writer.answer_key(whatsapp) if whatsapp and whatsapp.messages else None,
-        # Shaped like the readers' records (see writers/calendar.py and writers/voice_memos.py); events in
-        # row order, recordings newest first. None when the pack has no calendar.json / voice_memos.txt.
-        "calendar": ({"calendars": written["calendar"].calendars, "events": list(written["calendar"])}
-                     if "calendar" in written else None),
-        "voice_memos": written.get("voice_memos"),
-        "absent": {t: "encrypted_only" if t in left_out else "none" for t in DATA_TYPES if t not in present},
     }
+    for step in STEPS:
+        for section, value in step.sections(persona, written).items():
+            if section in key or section == "absent":
+                raise ValueError(f"{step.kind}: answer-key section {section!r} is already taken")
+            key[section] = value
+    present = {step.kind for step in STEPS
+               if step.kind in written and (written[step.kind] or step.present_if_written)}
+    left_out = {step.kind for step in STEPS
+                if step.encrypted_only and password is None and step.on_phone is not None and step.on_phone(persona)}
+    key["absent"] = {t: "encrypted_only" if t in left_out else "none" for t in data_types() if t not in present}
+    return key

@@ -50,15 +50,17 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Any, Mapping, Optional
 
 from PIL import Image, ImageDraw
 
 from backupgen import SCHEMAS_DIR
 from backupgen.media import placeholder
-from backupgen.persona import WA_MISSING_PHOTO, Persona, Snapshot, WAChat, WAMessage
+from backupgen.persona.core import Persona, Snapshot
+from backupgen.persona.whatsapp import WA_MISSING_PHOTO, WAChat, WAMessage
 from backupgen.sqlitegen import build, load_schema
 from backupgen.writers import CoreData, cocoa_seconds
+from backupgen.writers.context import Step, StepContext
 
 DOMAIN = "AppDomainGroup-group.net.whatsapp.WhatsApp.shared"
 PLIST = "Library/Preferences/group.net.whatsapp.WhatsApp.shared.plist"
@@ -770,6 +772,16 @@ def write(tmp: Path, persona: Persona, snapshot: Snapshot, rng: random.Random, r
     return store
 
 
+def step(ctx: StepContext) -> Optional[Store]:
+    """WhatsApp's databases, preferences and media. Returns them, or None when no chat has messages."""
+    if ctx.persona.whatsapp is None:
+        return None
+    store = write(ctx.tmp, ctx.persona, ctx.snapshot, ctx.rng, ctx.renderer)
+    for (domain, path), data in store.files.items():
+        ctx.writer.add_file(domain, path, data)
+    return store if store.messages else None
+
+
 def answer_key(store: Optional[Store]) -> Optional[dict]:
     if store is None:
         return None
@@ -796,3 +808,11 @@ def answer_key(store: Optional[Store]) -> Optional[dict]:
         "status_updates": store.status_updates,
         "calls_left_out": store.calls_left_out,
     }
+
+
+def sections(persona: Persona, written: Mapping[str, Any]) -> dict:
+    """Chats in arrival order (each message's "sort"). None when the phone has no WhatsApp."""
+    return {"whatsapp": answer_key(written.get("whatsapp"))}
+
+
+STEP = Step("whatsapp", step, sections)
