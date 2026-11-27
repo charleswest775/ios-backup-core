@@ -21,7 +21,6 @@ from typing import Optional
 from backupgen import media
 from backupgen.container import BackupWriter, Device
 from backupgen.persona import Persona, load_persona
-from backupgen.sqlitegen import build
 from backupgen.writers import calendar as calendar_writer
 from backupgen.writers import calls as calls_writer
 from backupgen.writers import contacts as contacts_writer
@@ -32,6 +31,7 @@ from backupgen.writers import safari as safari_writer
 from backupgen.writers import voice_memos as voice_memos_writer
 from backupgen.writers import voicemail as voicemail_writer
 from backupgen.writers import whatsapp as whatsapp_writer
+from backupgen.writers.context import StepContext
 
 EXPECTED = "expected.json"
 
@@ -41,6 +41,24 @@ EXPECTED = "expected.json"
 DATA_TYPES = ("messages", "contacts", "calls", "voicemail", "notes", "photos", "browser_history",
               "calendar", "voice_memos", "health", "whatsapp")
 ENCRYPTED_ONLY = {"calls", "browser_history", "health"}
+
+# The write steps, in the order they run (see writers/context.py). Each builds its data type's
+# database(s), adds its files to the backup and returns what its part of the answer key needs,
+# kept under its data type (None: the backup holds none). They share one random generator in this
+# order, so a new writer goes last and draws from a generator of its own, as Calendar and Voice
+# Memos do: adding it to a pack then leaves the rest of that pack's backups as they were.
+STEPS = (
+    ("messages", messages_writer.step),
+    ("contacts", contacts_writer.step),
+    ("calls", calls_writer.step),
+    ("voicemail", voicemail_writer.step),
+    ("notes", notes_writer.step),
+    ("browser_history", safari_writer.step),
+    ("photos", photos_writer.step),
+    ("whatsapp", whatsapp_writer.step),
+    ("calendar", calendar_writer.step),
+    ("voice_memos", voice_memos_writer.step),
+)
 
 
 def default_seed(persona_id: str, snapshot_id: str, encrypted: bool) -> int:
@@ -81,130 +99,28 @@ def generate(
                           password=password, iterations=iterations, seed=rng.getrandbits(64), host=snapshot.host)
 
     with tempfile.TemporaryDirectory(prefix="backupgen-") as tmp:
-        tmp = Path(tmp)
-        written_messages: list = []
-        contact_rows: dict = {}
-
-        renderer = media.Renderer(persona, snapshot)
-
-        def fill_messages(db):
-            written_messages.extend(messages_writer.populate(db, persona, snapshot, rng, renderer))
-
-        contact_guids: dict = {}
-
-        def fill_contacts(db):
-            contact_rows.update(contacts_writer.populate(db, persona, snapshot, rng))
-            if db.table("ABPerson").has("guid"):
-                guids = dict(db.conn.execute("SELECT ROWID, guid FROM ABPerson"))
-                contact_guids.update({cid: guids.get(rowid) for cid, rowid in contact_rows.items()})
-
-        sms = build(tmp / "sms.db", snapshot.schema, "sms.db", fill_messages)
-        address_book = build(tmp / "AddressBook.sqlitedb", snapshot.schema, "AddressBook.sqlitedb", fill_contacts)
-        images = build(tmp / "AddressBookImages.sqlitedb", snapshot.schema, "AddressBookImages.sqlitedb", lambda db: None)
-        writer.add_file("HomeDomain", "Library/SMS/sms.db", sms)
-        for message in written_messages:
-            if message.attachment:
-                writer.add_file("MediaDomain", message.attachment[0], message.attachment[2])
-        writer.add_file("HomeDomain", "Library/AddressBook/AddressBook.sqlitedb", address_book)
-        writer.add_file("HomeDomain", "Library/AddressBook/AddressBookImages.sqlitedb", images)
-
-        written = {"messages": written_messages}
-        if persona.calls is not None or persona.voicemails is not None:
-            # The rng draws happen either way, so encrypting a backup doesn't change its other contents.
-            calls: list = []
-            history = build(tmp / "CallHistory.storedata", snapshot.schema, "CallHistory.storedata",
-                            lambda db: calls.extend(calls_writer.populate(db, persona, snapshot, rng)))
-            if password is not None:
-                writer.add_file("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata", history)
-                written["calls"] = calls
-        if persona.voicemails is not None:
-            voicemails: list = []
-            database = build(tmp / "voicemail.db", snapshot.schema, "voicemail.db",
-                             lambda db: voicemails.extend(voicemail_writer.populate(db, persona, snapshot, rng)))
-            writer.add_file("HomeDomain", "Library/Voicemail/voicemail.db", database)
-            for v in voicemails:
-                writer.add_file("HomeDomain", f"Library/Voicemail/{v.rowid}.amr", voicemail_writer.silent_amr(v.duration))
-                if v.transcript:
-                    writer.add_file("HomeDomain", f"Library/Voicemail/{v.rowid}.transcript",
-                                    voicemail_writer.transcript_archive(v.transcript, v.duration))
-            written["voicemail"] = voicemails
-        if persona.notes is not None:
-            notes: list = []
-            store = build(tmp / "NoteStore.sqlite", snapshot.schema, "NoteStore.sqlite",
-                          lambda db: notes.extend(notes_writer.populate(db, persona, snapshot, rng)))
-            writer.add_file("AppDomainGroup-group.com.apple.notes", "NoteStore.sqlite", store)
-            written["notes"] = notes
-        if persona.visits is not None:
-            visits: list = []
-            history = build(tmp / "History.db", snapshot.schema, "History.db",
-                            lambda db: visits.extend(safari_writer.populate(db, persona, snapshot, rng)))
-            if password is not None:
-                writer.add_file("HomeDomain", "Library/Safari/History.db", history)
-                written["browser_history"] = visits
-        if persona.photos is not None:
-            photos: list = []
-            library = build(tmp / "Photos.sqlite", snapshot.schema, "Photos.sqlite",
-                            lambda db: photos.extend(photos_writer.populate(db, persona, snapshot, rng, renderer,
-                                                                            contact_guids)))
-            writer.add_file("CameraRollDomain", "Media/PhotoData/Photos.sqlite", library)
-            for photo in photos:
-                writer.add_file("CameraRollDomain", photo.relative_path, photo.data)
-            written["photos"] = photos
-        whatsapp = None
-        if persona.whatsapp is not None:
-            # Last, so adding WhatsApp to a pack leaves the rest of its backups as they were.
-            whatsapp = whatsapp_writer.write(tmp, persona, snapshot, rng, renderer)
-            for (domain, path), data in whatsapp.files.items():
-                writer.add_file(domain, path, data)
-            written["whatsapp"] = whatsapp.messages
-        # Calendar and Voice Memos come after WhatsApp and draw from random generators of their own,
-        # so adding them to a pack leaves the rest of its backups as they were.
-        if persona.calendars is not None:
-            events: list = []
-            calendar_rng = random.Random(f"{persona.id}/{snapshot.id}/calendar")
-            database = build(tmp / "Calendar.sqlitedb", snapshot.schema, "Calendar.sqlitedb",
-                             lambda db: events.append(calendar_writer.populate(db, persona, snapshot, calendar_rng)))
-            writer.add_file(calendar_writer.DOMAIN, calendar_writer.PATH, database)
-            written["calendar"] = events[0]
-        if persona.voice_memos is not None:
-            memos = voice_memos_writer.write(tmp, persona, snapshot, random.Random(f"{persona.id}/{snapshot.id}/voice_memos"))
-            for (domain, path), data in memos.files.items():
-                writer.add_file(domain, path, data)
-            written["voice_memos"] = memos.memos
+        ctx = StepContext(persona, snapshot, rng, writer, media.Renderer(persona, snapshot), Path(tmp))
+        written = {}
+        for kind, step in STEPS:
+            result = step(ctx)
+            if result is not None:
+                written[kind] = result
 
     backup_dir = writer.finalize()
 
-    expected = answer_key(persona, snapshot_id, device, password, written, whatsapp)
+    expected = answer_key(persona, snapshot_id, device, password, written)
     (out_dir / EXPECTED).write_text(json.dumps(expected, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return backup_dir
 
 
-def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Optional[str], written: dict,
-               whatsapp: Optional[whatsapp_writer.Store] = None) -> dict:
+def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Optional[str], written: dict) -> dict:
+    """The answer key: the backup's identity, then each writer's part (see its answer_key) in a fixed order."""
     snapshot = persona.snapshots[snapshot_id]
-    cards = contacts_writer.visible_contacts(persona, snapshot)
-    chats = {chat.id: chat for chat in persona.chats}
-    conversations: dict[str, dict] = {}
-    messages = written["messages"]
-    for w in messages:
-        chat = chats[w.chat_id]
-        conv = conversations.setdefault(w.chat_id, {
-            "chat": chat.id,
-            "chat_identifier": w.chat_identifier,
-            "service": chat.service,
-            "is_group": chat.is_group,
-            "name": chat.name if chat.is_group else "",
-            "participants": [persona.contacts[p].handle for p in chat.participants],
-            "message_count": 0,
-        })
-        conv["message_count"] += 1
-        conv["last_message_date"] = w.date.isoformat()
-    present = {kind for kind, records in written.items() if records}
+    cards = written["contacts"]
+    present = {kind for kind, result in written.items() if result}
     # A written Calendar.sqlitedb or CloudRecordings.db is there even with nothing in it, as on a phone:
     # the readers then list the calendars, or answer "no_records", not "not_in_backup".
     present |= {"calendar", "voice_memos"} & written.keys()
-    if cards:
-        present.add("contacts")
     on_phone = {"calls": bool(persona.calls or persona.voicemails), "browser_history": bool(persona.visits)}
     left_out = {t for t in ENCRYPTED_ONLY if password is None and on_phone.get(t)}
     return {
@@ -217,64 +133,21 @@ def answer_key(persona: Persona, snapshot_id: str, device: Device, password: Opt
         "backup_date": snapshot.backup_date.isoformat(),
         "encrypted": password is not None,
         "password": password,
-        "contacts": [
-            {
-                "first": c.first, "last": c.last, "organization": c.organization,
-                "phones": [number for _, number in c.phones], "emails": [address for _, address in c.emails],
-                "is_owner": c is persona.owner,
-            }
-            for c in cards
-        ],
-        "conversations": sorted(conversations.values(), key=lambda c: c["chat_identifier"]),
-        "messages": [
-            {
-                "guid": w.guid, "chat_identifier": w.chat_identifier, "date": w.date.isoformat(),
-                "is_from_me": w.is_from_me, "sender_handle": w.sender_handle, "text": w.text, "is_reaction": w.is_reaction,
-                "attachment": {"name": w.attachment[1], "bytes": len(w.attachment[2])} if w.attachment else None,
-            }
-            for w in messages
-        ],
-        "calls": [
-            {
-                "date": c.date.isoformat(), "address": c.address, "contact": calls_writer.contact_name(cards, c.address),
-                "outgoing": c.outgoing, "answered": c.duration > 0, "duration": c.duration, "service": c.service,
-            }
-            for c in written.get("calls", [])
-        ],
-        "voicemails": [
-            {
-                "rowid": v.rowid, "date": v.date.isoformat(), "sender": v.sender,
-                "contact": calls_writer.contact_name(cards, v.sender), "duration": v.duration, "transcript": v.transcript,
-            }
-            for v in written.get("voicemail", [])
-        ],
-        "notes": [
-            {
-                "title": n.title, "text": n.text, "folder": n.folder, "created": n.created.isoformat(),
-                "modified": n.modified.isoformat(), "pinned": n.pinned, "shared_with": n.shared_with,
-                "deleted": n.deleted,
-            }
-            for n in written.get("notes", [])
-        ],
-        "browser_history": [
-            {"date": v.date.isoformat(), "url": v.url, "title": v.title} for v in written.get("browser_history", [])
-        ],
-        "photos": [
-            {
-                "id": p.id, "filename": p.filename, "date": p.date.isoformat(), "width": p.width, "height": p.height,
-                "favorite": p.favorite, "trashed": p.trashed, "lat": p.lat, "lon": p.lon, "albums": p.albums,
-                "uuid": p.uuid,
-            }
-            for p in written.get("photos", [])
-        ],
+        "contacts": contacts_writer.answer_key(persona, cards),
+        "conversations": messages_writer.conversations_answer_key(persona, written["messages"]),
+        "messages": messages_writer.answer_key(written["messages"]),
+        "calls": calls_writer.answer_key(written.get("calls"), cards),
+        "voicemails": voicemail_writer.answer_key(written.get("voicemail"), cards),
+        "notes": notes_writer.answer_key(written.get("notes")),
+        "browser_history": safari_writer.answer_key(written.get("browser_history")),
+        "photos": photos_writer.answer_key(written.get("photos")),
         # The People album (see writers/photos.py): every group, with the photos a reader should list for it.
-        "photo_people": photos_writer.people_answer_key(persona, written.get("photos", [])),
+        "photo_people": photos_writer.people_answer_key(persona, written.get("photos")),
         # Chats in arrival order (each message's "sort"); see writers/whatsapp.py. None when the phone has no WhatsApp.
-        "whatsapp": whatsapp_writer.answer_key(whatsapp) if whatsapp and whatsapp.messages else None,
+        "whatsapp": whatsapp_writer.answer_key(written.get("whatsapp")),
         # Shaped like the readers' records (see writers/calendar.py and writers/voice_memos.py); events in
         # row order, recordings newest first. None when the pack has no calendar.json / voice_memos.txt.
-        "calendar": ({"calendars": written["calendar"].calendars, "events": list(written["calendar"])}
-                     if "calendar" in written else None),
-        "voice_memos": written.get("voice_memos"),
+        "calendar": calendar_writer.answer_key(written.get("calendar")),
+        "voice_memos": voice_memos_writer.answer_key(written.get("voice_memos")),
         "absent": {t: "encrypted_only" if t in left_out else "none" for t in DATA_TYPES if t not in present},
     }

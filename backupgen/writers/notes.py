@@ -32,10 +32,13 @@ import re
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from typing import Optional
 
-from backupgen.persona import Contact, Note, Persona, Snapshot
+from backupgen.persona.core import Contact, Persona, Snapshot
+from backupgen.persona.notes import Note
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import CoreData, cocoa_seconds
+from backupgen.writers.context import StepContext
 
 _TITLE, _DASHED, _CHECKLIST = 0, 101, 103
 RECENTLY_DELETED = "Recently Deleted"
@@ -231,3 +234,24 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
                                    [share_address(c) for c in people], deleted))
     core.finish()
     return written
+
+
+def step(ctx: StepContext) -> Optional[list[WrittenNote]]:
+    """NoteStore.sqlite in the Notes app group. Returns the notes written."""
+    if ctx.persona.notes is None:
+        return None
+    notes: list[WrittenNote] = []
+    store = ctx.build("NoteStore.sqlite", lambda db: notes.extend(populate(db, ctx.persona, ctx.snapshot, ctx.rng)))
+    ctx.writer.add_file("AppDomainGroup-group.com.apple.notes", "NoteStore.sqlite", store)
+    return notes
+
+
+def answer_key(written: Optional[list[WrittenNote]]) -> list[dict]:
+    return [
+        {
+            "title": n.title, "text": n.text, "folder": n.folder, "created": n.created.isoformat(),
+            "modified": n.modified.isoformat(), "pinned": n.pinned, "shared_with": n.shared_with,
+            "deleted": n.deleted,
+        }
+        for n in written or []
+    ]

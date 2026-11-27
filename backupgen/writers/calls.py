@@ -22,9 +22,11 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Optional
 
-from backupgen.persona import Call, Persona, Snapshot
+from backupgen.persona.calls import Call
+from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import CoreData, cocoa_seconds, country_code
+from backupgen.writers.context import StepContext
 
 _CALL_TYPES = {"phone": 1, "facetime-video": 8, "facetime-audio": 16}
 _PROVIDERS = {"phone": "com.apple.Telephony", "facetime-video": "com.apple.FaceTime",
@@ -140,3 +142,28 @@ def contact_name(cards: list, address: str) -> Optional[str]:
         if digits and any("".join(ch for ch in n if ch.isdigit()) == digits for _, n in card.phones):
             return card.display_name
     return None
+
+
+def step(ctx: StepContext) -> Optional[list[WrittenCall]]:
+    """CallHistory.storedata, which only encrypted backups hold. Returns the calls written."""
+    if ctx.persona.calls is None and ctx.persona.voicemails is None:
+        return None
+    # The rng draws happen either way, so encrypting a backup doesn't change its other contents.
+    calls: list[WrittenCall] = []
+    history = ctx.build("CallHistory.storedata",
+                        lambda db: calls.extend(populate(db, ctx.persona, ctx.snapshot, ctx.rng)))
+    if not ctx.encrypted:
+        return None
+    ctx.writer.add_file("HomeDomain", "Library/CallHistoryDB/CallHistory.storedata", history)
+    return calls
+
+
+def answer_key(written: Optional[list[WrittenCall]], cards: list) -> list[dict]:
+    """The calls written, each named from ``cards`` (the contacts step's result)."""
+    return [
+        {
+            "date": c.date.isoformat(), "address": c.address, "contact": contact_name(cards, c.address),
+            "outgoing": c.outgoing, "answered": c.duration > 0, "duration": c.duration, "service": c.service,
+        }
+        for c in written or []
+    ]

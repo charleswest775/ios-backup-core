@@ -6,9 +6,10 @@ import random
 import uuid
 from datetime import datetime, time
 
-from backupgen.persona import Contact, Persona, Snapshot
+from backupgen.persona.core import Contact, Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import cocoa_seconds
+from backupgen.writers.context import StepContext
 
 PHONE, EMAIL = 3, 4
 LABELS = {
@@ -85,3 +86,34 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
     if store and store.has("MeIdentifier") and owner_rowid is not None:
         db.conn.execute('UPDATE ABStore SET MeIdentifier = ? WHERE ROWID = ?', (owner_rowid, store_id))
     return rowids
+
+
+def step(ctx: StepContext) -> list[Contact]:
+    """AddressBook.sqlitedb and an empty AddressBookImages.sqlitedb. Returns the cards written.
+
+    Leaves each card's guid in ``ctx.contact_guids`` for Photos' People album.
+    """
+    rows: dict[str, int] = {}
+
+    def fill(db: SchemaDatabase) -> None:
+        rows.update(populate(db, ctx.persona, ctx.snapshot, ctx.rng))
+        if db.table("ABPerson").has("guid"):
+            guids = dict(db.conn.execute("SELECT ROWID, guid FROM ABPerson"))
+            ctx.contact_guids.update({cid: guids.get(rowid) for cid, rowid in rows.items()})
+
+    address_book = ctx.build("AddressBook.sqlitedb", fill)
+    images = ctx.build("AddressBookImages.sqlitedb", lambda db: None)
+    ctx.writer.add_file("HomeDomain", "Library/AddressBook/AddressBook.sqlitedb", address_book)
+    ctx.writer.add_file("HomeDomain", "Library/AddressBook/AddressBookImages.sqlitedb", images)
+    return visible_contacts(ctx.persona, ctx.snapshot)
+
+
+def answer_key(persona: Persona, cards: list[Contact]) -> list[dict]:
+    return [
+        {
+            "first": c.first, "last": c.last, "organization": c.organization,
+            "phones": [number for _, number in c.phones], "emails": [address for _, address in c.emails],
+            "is_owner": c is persona.owner,
+        }
+        for c in cards
+    ]

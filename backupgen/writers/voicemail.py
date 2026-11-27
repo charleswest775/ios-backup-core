@@ -21,10 +21,12 @@ import re
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from typing import Optional
 
-from backupgen.persona import Persona, Snapshot
+from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
-from backupgen.writers.calls import address_of
+from backupgen.writers.calls import address_of, contact_name
+from backupgen.writers.context import StepContext
 
 _HEARD = 3  # what iOS stores once a voicemail has been played
 _AMR_FRAME = bytes([0x3C]) + bytes(31)  # one 20 ms frame at 12.2 kbit/s, all zero: silence
@@ -118,3 +120,30 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
         })
         written.append(WrittenVoicemail(rowid, when.replace(microsecond=0), sender, v.duration, v.transcript))
     return written
+
+
+def step(ctx: StepContext) -> Optional[list[WrittenVoicemail]]:
+    """voicemail.db, with each voicemail's .amr and its .transcript if it has one. Returns them."""
+    if ctx.persona.voicemails is None:
+        return None
+    voicemails: list[WrittenVoicemail] = []
+    database = ctx.build("voicemail.db",
+                         lambda db: voicemails.extend(populate(db, ctx.persona, ctx.snapshot, ctx.rng)))
+    ctx.writer.add_file("HomeDomain", "Library/Voicemail/voicemail.db", database)
+    for v in voicemails:
+        ctx.writer.add_file("HomeDomain", f"Library/Voicemail/{v.rowid}.amr", silent_amr(v.duration))
+        if v.transcript:
+            ctx.writer.add_file("HomeDomain", f"Library/Voicemail/{v.rowid}.transcript",
+                                transcript_archive(v.transcript, v.duration))
+    return voicemails
+
+
+def answer_key(written: Optional[list[WrittenVoicemail]], cards: list) -> list[dict]:
+    """The voicemails written, each named from ``cards`` (the contacts step's result)."""
+    return [
+        {
+            "rowid": v.rowid, "date": v.date.isoformat(), "sender": v.sender,
+            "contact": contact_name(cards, v.sender), "duration": v.duration, "transcript": v.transcript,
+        }
+        for v in written or []
+    ]

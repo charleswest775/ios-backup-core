@@ -455,6 +455,35 @@ def test_bad_chat_files_are_rejected(tmp_path, chat_text, message):
         load_persona("p", root=_pack(tmp_path, chat_text))
 
 
+def _with_options(tmp_path, persona_options=None, snapshot_options=None):
+    """A pack whose persona.json has these "options" (None: left out), the second for its first snapshot."""
+    root = _pack(tmp_path, "chat: c\nwith: riley\n\n== 2021-01-01\n10:00 me: hi\n")
+    path = root / "p" / "persona.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if persona_options is not None:
+        data["options"] = persona_options
+    if snapshot_options is not None:
+        data["snapshots"][0]["options"] = snapshot_options
+    path.write_text(json.dumps(data), encoding="utf-8")
+    return root
+
+
+def test_options_are_free_form_and_empty_when_left_out(tmp_path):
+    persona = load_persona("testpersona")
+    assert persona.options == {} and all(s.options == {} for s in persona.snapshots.values())
+    persona = load_persona("p", root=_with_options(tmp_path, {"any": [1, {"nested": True}]}, {"x": 1}))
+    assert persona.options == {"any": [1, {"nested": True}]}
+    assert persona.snapshots["ios15"].options == {"x": 1} and persona.snapshots["ios17"].options == {}
+
+
+@pytest.mark.parametrize("value", [[], "fast", 1, False])
+@pytest.mark.parametrize("on, where", [("persona", "persona.json"), ("snapshot", "persona.json snapshot ios15")])
+def test_options_must_be_a_json_object(tmp_path, value, on, where):
+    root = _with_options(tmp_path, **{f"{on}_options": value})
+    with pytest.raises(PersonaError, match=f"{where}: options should be a JSON object"):
+        load_persona("p", root=root)
+
+
 def test_sms_databases_have_no_wal_files(tmp_path):
     backup_dir = generate("testpersona", "ios15", tmp_path)
     manifest = sqlite3.connect(backup_dir / "Manifest.db")

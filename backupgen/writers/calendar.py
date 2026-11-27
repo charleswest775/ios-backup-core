@@ -52,9 +52,11 @@ from datetime import date, datetime, time, timedelta, timezone
 from typing import Optional
 from zoneinfo import ZoneInfo
 
-from backupgen.persona import EventDef, Persona, Snapshot
+from backupgen.persona.calendar import EventDef
+from backupgen.persona.core import Persona, Snapshot
 from backupgen.sqlitegen import SchemaDatabase
 from backupgen.writers import cocoa_seconds
+from backupgen.writers.context import StepContext
 
 DOMAIN = "HomeDomain"
 PATH = "Library/Calendar/Calendar.sqlitedb"
@@ -415,3 +417,22 @@ def populate(db: SchemaDatabase, persona: Persona, snapshot: Snapshot, rng: rand
     rows = sorted(writer.calendar_rows.values(), key=lambda c: c["_order"])
     writer.written.calendars = [{k: v for k, v in c.items() if not k.startswith("_")} for c in rows]
     return writer.written
+
+
+def step(ctx: StepContext) -> Optional[Written]:
+    """Calendar.sqlitedb, from a random generator of its own. Returns the events written, with ``.calendars``."""
+    persona, snapshot = ctx.persona, ctx.snapshot
+    if persona.calendars is None:
+        return None
+    events: list[Written] = []
+    rng = random.Random(f"{persona.id}/{snapshot.id}/calendar")
+    database = ctx.build("Calendar.sqlitedb", lambda db: events.append(populate(db, persona, snapshot, rng)))
+    ctx.writer.add_file(DOMAIN, PATH, database)
+    return events[0]
+
+
+def answer_key(written: Optional[Written]) -> Optional[dict]:
+    """Shaped like the reader's records: every calendar, and the events in row order. None: no calendar.json."""
+    if written is None:
+        return None
+    return {"calendars": written.calendars, "events": list(written)}

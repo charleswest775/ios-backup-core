@@ -56,9 +56,11 @@ from PIL import Image, ImageDraw
 
 from backupgen import SCHEMAS_DIR
 from backupgen.media import placeholder
-from backupgen.persona import WA_MISSING_PHOTO, Persona, Snapshot, WAChat, WAMessage
+from backupgen.persona.core import Persona, Snapshot
+from backupgen.persona.whatsapp import WA_MISSING_PHOTO, WAChat, WAMessage
 from backupgen.sqlitegen import build, load_schema
 from backupgen.writers import CoreData, cocoa_seconds
+from backupgen.writers.context import StepContext
 
 DOMAIN = "AppDomainGroup-group.net.whatsapp.WhatsApp.shared"
 PLIST = "Library/Preferences/group.net.whatsapp.WhatsApp.shared.plist"
@@ -768,6 +770,17 @@ def write(tmp: Path, persona: Persona, snapshot: Snapshot, rng: random.Random, r
     store.files[(DOMAIN, PLIST)] = plistlib.dumps(prefs, fmt=plistlib.FMT_BINARY)
     store.messages.sort(key=lambda w: (w.chat_id, w.sort))
     return store
+
+
+def step(ctx: StepContext) -> Optional[Store]:
+    """WhatsApp's databases, preferences and media. Returns them, or None when no chat has messages."""
+    if ctx.persona.whatsapp is None:
+        return None
+    # The last step to draw from ctx.rng, so adding WhatsApp to a pack leaves the rest of its backups as they were.
+    store = write(ctx.tmp, ctx.persona, ctx.snapshot, ctx.rng, ctx.renderer)
+    for (domain, path), data in store.files.items():
+        ctx.writer.add_file(domain, path, data)
+    return store if store.messages else None
 
 
 def answer_key(store: Optional[Store]) -> Optional[dict]:
