@@ -3,11 +3,11 @@
 A voicemail with a trashed_date is in Deleted, so is one with 0x8 and no
 trashed_date, and one with 0x80 is in Spam. Every value below is made up. Besides
 the bits the reader knows (0x1 heard, 0x8 deleted, 0x80 spam, and 0x2), the flag
-words carry a bit nothing here gives a meaning to (0x2000), so the reader is seen
+words carry a bit nothing here gives a meaning to (0x40000), so the reader is seen
 to ignore it.
 
-OE-79 (iOS 27.2) listed spam among the voicemails; OE-85 (iOS 18.7.2) listed
-three the phone didn't show and missed the one it did.
+OE-79 listed spam among the voicemails; OE-85 (iOS 18.7.2) listed three the
+phone didn't show and missed the one it did.
 """
 
 import os
@@ -31,13 +31,13 @@ MAIN = "Library/Voicemail/voicemail.db"
 ACCOUNT = "A-0B1C2D3E-4F50-4A6B-8C7D-9E0F1A2B3C4D"
 ACCOUNT_DB = f"Library/Voicemail/{ACCOUNT}/voicemail.db"
 
-LIVE = 0x2003        # heard, plus a bit with no meaning here
-UNHEARD = 0x2002
-SPAM = 0x2082
-TRASHED = 0x200A      # always with a trashed_date
-DELETED_LONG_AGO = 0x200B  # 0x8 and no trashed_date: in Deleted
-SPAM_TRASHED = 0x208A
-SPAM_DELETED = 0x2088
+LIVE = 0x40003       # heard, plus a bit with no meaning here
+UNHEARD = 0x40002
+SPAM = 0x40082
+TRASHED = 0x4000A     # always with a trashed_date
+DELETED_LONG_AGO = 0x4000B  # 0x8 and no trashed_date: in Deleted
+SPAM_TRASHED = 0x4008A
+SPAM_DELETED = 0x40088
 
 
 class _Backup:
